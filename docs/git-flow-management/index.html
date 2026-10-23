@@ -3,10 +3,10 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="git-flow-management — guía completa de la skill: invariantes, inspección obligatoria, detección de política, guardia de ramas protegidas, plan y confirmación, integración, verificación de cierre y recuperación.">
+<meta name="description" content="git-flow-management — guía completa de la skill: invariantes, clasificación proporcional, inspección, modelo de ramas, protocolo de commit con confirmación, guardia de ramas, integración, borrado de ramas, la push y recuperación.">
 <meta name="color-scheme" content="light dark">
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%230f766e'/%3E%3Cpath d='M12 9a3 3 0 1 0 0 .01M12 12v11' fill='none' stroke='%23ffffff' stroke-width='2.4' stroke-linecap='round'/%3E%3Ccircle cx='21' cy='9' r='3' fill='none' stroke='%23ffffff' stroke-width='2.4'/%3E%3Cpath d='M21 12v3a4 4 0 0 1-4 4h-5' fill='none' stroke='%23ffffff' stroke-width='2.4' stroke-linecap='round'/%3E%3C/svg%3E">
-<title>git-flow-management — Git como procedimiento verificable</title>
+<title>git-flow-management — Git con ceremonia proporcional y verificable</title>
 <script>
 (function () {
   try {
@@ -505,12 +505,12 @@
 
 <section class="hero" id="top">
   <div class="hero-inner">
-    <span class="pill"><span class="dot" aria-hidden="true"></span>una skill · diez invariantes · ninguna operación persistente sin confirmar</span>
-    <h1>Git como procedimiento <span class="grad">verificable</span></h1>
-    <p class="lead">Esta skill no dice «usa Git Flow»: obliga a inspeccionar, detectar la política aplicable, presentar un plan exacto, esperar una confirmación y demostrar con comandos de solo lectura que el resultado cumple el flujo. Si no se puede probar, no está terminado.</p>
+    <span class="pill"><span class="dot" aria-hidden="true"></span>una skill · once invariantes · ceremonia proporcional al riesgo</span>
+    <h1>Git con ceremonia <span class="grad">proporcional</span></h1>
+    <p class="lead">Esta skill no impone Git Flow a todo: clasifica la tarea, aplica la ceremonia mínima que mantiene el resultado fiable y deja siempre el commit a la espera de una confirmación explícita. En una tarea pequeña se permite el commit directo en <code>main</code>; en una normal o compleja se propone rama corta. Si no se puede probar el resultado, no está terminado.</p>
     <div class="hero-actions">
       <a class="btn btn-primary" href="#que-es">Qué es esta skill</a>
-      <a class="btn btn-ghost" href="#invariantes">Las diez invariantes</a>
+      <a class="btn btn-ghost" href="#invariantes">Las once invariantes</a>
       <a class="btn btn-ghost" href="#diagramas">Los diagramas</a>
     </div>
     <div class="status-strip" role="status">
@@ -524,14 +524,14 @@
   <nav class="toc" aria-label="Índice de la página">
     <h2>En esta página</h2>
     <a href="#que-es">1. Qué es esta skill</a>
-    <a href="#invariantes">2. Las diez invariantes</a>
-    <a href="#inspeccion">3. Inspección obligatoria</a>
+    <a href="#invariantes">2. Las once invariantes</a>
+    <a href="#inspeccion">3. Inspección proporcional</a>
     <a href="#clasificar">4. Clasificar el repositorio</a>
-    <a href="#politica">5. Política Git Flow por defecto</a>
-    <a href="#plan">6. Plan, confirmación y ejecución</a>
-    <a href="#guardia">7. Guardia de rama protegida</a>
-    <a href="#commits">8. Ramas y commits</a>
-    <a href="#integracion">9. Integración y conflictos</a>
+    <a href="#politica">5. Modelo de ramas</a>
+    <a href="#plan">6. Commit, plan y confirmación</a>
+    <a href="#guardia">7. Guardia de ramas</a>
+    <a href="#commits">8. Ramas, commits y push</a>
+    <a href="#integracion">9. Integración, conflicto y borrado</a>
     <a href="#releases">10. Release, hotfix y versionado</a>
     <a href="#verificacion">11. Verificación de cierre</a>
     <a href="#auditoria">12. Auditoría sin operación</a>
@@ -547,13 +547,13 @@
       <div class="section-head"><span class="section-num">1</span><h2 class="title">Qué es esta skill</h2></div>
       <p class="sub">Un procedimiento, no una intención. La diferencia se nota cuando algo sale mal: aquí siempre hay una inspección previa y una prueba posterior.</p>
       <p>La skill se llama <code>git-flow-management</code> en su frontmatter y vive en la carpeta <code>git-flow-management/</code>. Es obligatoria para cualquier operación Git: no se puede continuar un flujo ignorando sus comprobaciones porque alguien haya dicho «haz Git Flow», «haz un commit» o «sube los cambios».</p>
-      <p>Su ciclo tiene cuatro partes y ninguna es opcional: <strong>inspeccionar</strong> en solo lectura, <strong>detectar la política</strong> aplicable al repositorio, <strong>construir un plan concreto</strong> y pedir una única confirmación, <strong>ejecutar solo lo aprobado</strong> y probar el resultado. La skill nunca promete lo que no ha comprobado.</p>
+      <p>Su ciclo tiene cuatro partes y ninguna es opcional: <strong>clasificar</strong> la tarea por tamaño y riesgo, <strong>inspeccionar</strong> en solo lectura, <strong>preparar y presentar</strong> el commit o el plan completo, <strong>ejecutar solo lo confirmado</strong> y probar el resultado. La skill nunca promete lo que no ha comprobado.</p>
 
       <div class="table-wrap">
         <table>
           <thead><tr><th>Pieza</th><th>Qué contiene</th></tr></thead>
           <tbody>
-            <tr><td><code>SKILL.md</code></td><td>El cuerpo normativo: invariantes, inspección, clasificación, política por defecto, plan y confirmación, guardia de ramas protegidas, verificación de cierre y formato del resultado final.</td></tr>
+            <tr><td><code>SKILL.md</code></td><td>El cuerpo normativo: invariantes, clasificación proporcional, inspección, modelos de ramas, protocolo de commit, etapas agrupadas, guardia de ramas, verificación de cierre y formato del resultado final.</td></tr>
             <tr><td><code>references/</code></td><td>Nueve documentos de apoyo que se leen solo cuando la operación los necesita: detección, commits, operaciones, releases, integración, guardia, verificación, operaciones normales y recuperación.</td></tr>
             <tr><td><code>agents/openai.yaml</code></td><td>Interfaz de la skill: nombre visible «Git Flow seguro», icono y política de invocación (<code>allow_implicit_invocation: true</code>).</td></tr>
             <tr><td><code>assets/</code></td><td>El icono que declara <code>openai.yaml</code> (dos variantes, pequeña y grande) y las dos plantillas que se rellenan al presentar el plan y al cerrar.</td></tr>
@@ -565,19 +565,19 @@
 
       <h3>El bucle completo, en cuatro pasos</h3>
       <div class="flow">
-        <div class="flow-step"><code>inspección</code><strong>Observa</strong><p>Seis comandos de solo lectura para saber dónde estás, qué ramas existen, qué publica el remoto y qué dice el historial. No requiere confirmación.</p></div>
-        <div class="flow-step"><code>política</code><strong>Clasifica</strong><p>Seis categorías posibles, de «repositorio nuevo» a «política desconocida». De aquí sale qué reglas se aplican y cuáles no se deben inventar.</p></div>
-        <div class="flow-step"><code>plan</code><strong>Confirma</strong><p>Un plan con seis campos obligatorios y una pregunta cerrada. Una sola confirmación, válida solo para ese plan exacto.</p></div>
-        <div class="flow-step"><code>verificación</code><strong>Prueba</strong><p>Estado, commit, ascendencia, remoto y validación acordada. Sin evidencia, el resultado es INCOMPLETO o NO VERIFICADO, nunca «terminado».</p></div>
+        <div class="flow-step"><code>clasificación</code><strong>Mide</strong><p>Pequeña, normal o compleja. De aquí sale cuánta ceremonia hace falta: rama o no, cuántos commits y cuánta verificación.</p></div>
+        <div class="flow-step"><code>inspección</code><strong>Observa</strong><p>Un <code>git status</code> basta en una tarea pequeña; en normales y complejas se añaden ramas, remoto e historial. No requiere confirmación.</p></div>
+        <div class="flow-step"><code>commit</code><strong>Confirma</strong><p>Los cambios quedan preparados en el stage con su mensaje Conventional Commits en inglés. Se ejecuta solo lo que la confirmación enumera.</p></div>
+        <div class="flow-step"><code>verificación</code><strong>Prueba</strong><p>Estado, commit, ascendencia, referencias remotas y validación acordada, en la proporción que la tarea exige. Sin evidencia, el resultado es INCOMPLETO o NO VERIFICADO.</p></div>
       </div>
 
       <div class="note">
-        <p><strong>La regla mental.</strong> La unidad de trabajo de esta skill no es el comando: es el <em>plan verificado</em>. Un plan sin resultado comprobable no es un plan, es una intención, y las intenciones no se ejecutan.</p>
+        <p><strong>La regla mental.</strong> La unidad de trabajo de esta skill no es el comando: es el <em>commit confirmado</em>. Un cambio fuera del stage no está listo, y un commit sin confirmación es una decisión que el usuario no tomó.</p>
       </div>
     </section>
 
     <section id="invariantes" class="section">
-      <div class="section-head"><span class="section-num">2</span><h2 class="title">Las diez invariantes</h2></div>
+      <div class="section-head"><span class="section-num">2</span><h2 class="title">Las once invariantes</h2></div>
       <p class="sub">Son obligatorias y no admiten interpretación. Cada una existe porque su ausencia produce un daño concreto y difícil de deshacer.</p>
 
       <div class="table-wrap wrap-cells">
@@ -586,35 +586,41 @@
           <tbody>
             <tr><td><span class="sev sev-info">1</span></td><td>La skill es obligatoria para cualquier operación Git.</td><td>Que una frase como «haz un commit» desactive las comprobaciones.</td></tr>
             <tr><td><span class="sev sev-info">2</span></td><td>No se declara aplicado, integrado, publicado ni terminado nada sin verificarlo con comandos de solo lectura y mostrar el resultado.</td><td>Los «hecho» sin evidencia.</td></tr>
-            <tr><td><span class="sev sev-info">3</span></td><td>La política documentada del repositorio prevalece sobre el Git Flow genérico; nunca se relajan las protecciones contra operaciones destructivas ni se migra sin encargo explícito.</td><td>Imponer un modelo a un repositorio que ya tiene el suyo.</td></tr>
-            <tr><td><span class="sev sev-info">4</span></td><td>Ningún cambio persistente sin una única confirmación explícita del plan exacto: add, commit, creación o borrado de rama, merge, rebase, cherry-pick, tag, push, fetch --prune y cambios remotos.</td><td>Que la ejecución se adelante a la aprobación.</td></tr>
-            <tr><td><span class="sev sev-info">5</span></td><td>La confirmación no es global ni reutilizable: otra rama, otro conjunto de archivos, un conflicto, un nuevo push o una discrepancia invalidan el plan.</td><td>Reutilizar un «sí» para algo que el usuario no aprobó.</td></tr>
-            <tr><td><span class="sev sev-info">6</span></td><td>No se amplía el alcance: nada de add global, cambios ajenos, no rastreados ni <code>amend</code>, salvo que el plan aprobado lo nombre expresamente.</td><td>Commits que arrastran trabajo de otro.</td></tr>
-            <tr><td><span class="sev sev-warn">7</span></td><td>Nada de reset destructivo, <code>clean</code>, restauración desde otra revisión, borrado forzado de ramas, push forzado, borrado de etiquetas o ramas remotas, ni reescritura de historia, salvo autorización específica para ese comando.</td><td>Pérdida irreversible de trabajo.</td></tr>
-            <tr><td><span class="sev sev-error">8</span></td><td><code>main</code> y <code>develop</code> son ramas protegidas: nunca se prepara ni se ejecuta trabajo normal sobre ellas.</td><td>Commits de funcionalidad colados en la rama de producción.</td></tr>
-            <tr><td><span class="sev sev-error">9</span></td><td>Solo se cambian ramas protegidas mediante una integración verificada de una rama permitida, o de las que defina una política documentada. La excepción de <em>bootstrap</em> solo sirve para el commit inicial y la creación de develop.</td><td>Que la protección sea decorativa.</td></tr>
-            <tr><td><span class="sev sev-ok">10</span></td><td>Ante conflicto, estado inesperado, error o resultado distinto al plan: detente, no improvises una resolución, inspecciona y prepara un plan nuevo.</td><td>Resoluciones inventadas bajo presión.</td></tr>
+            <tr><td><span class="sev sev-info">3</span></td><td>La política documentada del repositorio prevalece sobre cualquier modelo genérico. Si no declara política, se aplica el modelo por defecto: <code>main</code> como línea estable y ramas cortas cuando la tarea lo justifica.</td><td>Imponer un modelo a un repositorio que ya tiene el suyo.</td></tr>
+            <tr><td><span class="sev sev-error">4</span></td><td>Ningún commit se ejecuta sin confirmación explícita: los cambios se dejan preparados en el stage, se propone el mensaje exacto y se espera la respuesta.</td><td>Que el commit se adelante a la aprobación.</td></tr>
+            <tr><td><span class="sev sev-info">5</span></td><td>La confirmación no es global ni reutilizable: cubre solo las etapas que enumera y el estado mostrado. Otra rama, otro conjunto de archivos, un conflicto, un push nuevo o una discrepancia la invalidan.</td><td>Reutilizar un «sí» para algo que el usuario no aprobó.</td></tr>
+            <tr><td><span class="sev sev-info">6</span></td><td>Varias etapas pueden presentarse juntas y confirmarse de una vez, pero nunca se aprovecha una confirmación previa para una etapa que no estaba en ella.</td><td>Encadenar trabajo nuevo bajo un permiso viejo.</td></tr>
+            <tr><td><span class="sev sev-info">7</span></td><td>No se amplía el alcance: nada de add global, cambios ajenos, no rastreados ni <code>amend</code>, salvo que el plan aprobado lo nombre expresamente.</td><td>Commits que arrastran trabajo de otro.</td></tr>
+            <tr><td><span class="sev sev-warn">8</span></td><td>Nada de reset destructivo, <code>clean</code>, restauración desde otra revisión, borrado forzado de ramas, push forzado, borrado de etiquetas o ramas remotas, ni reescritura de historia, salvo autorización específica para ese comando.</td><td>Pérdida irreversible de trabajo.</td></tr>
+            <tr><td><span class="sev sev-warn">9</span></td><td><code>develop</code>, cuando existe, es rama protegida: nunca se prepara trabajo normal sobre ella. <code>main</code> admite trabajo directo solo en tareas pequeñas y de riesgo contenido, siempre con stage revisado y confirmación posterior.</td><td>Ceremonia inútil en un lado y trabajo normal colado en producción en el otro.</td></tr>
+            <tr><td><span class="sev sev-error">10</span></td><td>Cualquier operación remota —push, fetch para integrar, pull o creación de referencias remotas— requiere confirmación propia, aunque el commit ya esté hecho y confirmado.</td><td>Publicar sin que nadie lo haya pedido.</td></tr>
+            <tr><td><span class="sev sev-ok">11</span></td><td>Ante conflicto, estado inesperado, error o resultado distinto al plan: detente, no improvises una resolución, inspecciona y prepara un plan nuevo.</td><td>Resoluciones inventadas bajo presión.</td></tr>
           </tbody>
         </table>
       </div>
 
       <div class="note">
-        <p><strong>El error que estas reglas evitan.</strong> Casi todos los desastres de Git no vienen de un comando difícil, sino de una cadena de decisiones razonables tomadas sin mirar el estado. La invariante 10 existe porque el momento de parar es justo cuando el resultado no coincide con el plan.</p>
+        <p><strong>El error que estas reglas evitan.</strong> Casi todos los desastres de Git no vienen de un comando difícil, sino de una cadena de decisiones razonables tomadas sin mirar el estado. La invariante 11 existe porque el momento de parar es justo cuando el resultado no coincide con el plan.</p>
       </div>
     </section>
 
     <section id="inspeccion" class="section">
-      <div class="section-head"><span class="section-num">3</span><h2 class="title">Inspección obligatoria</h2></div>
-      <p class="sub">Es de solo lectura y no pide permiso. Se ejecuta antes de proponer cualquier operación persistente, y su resultado se comunica.</p>
+      <div class="section-head"><span class="section-num">3</span><h2 class="title">Inspección proporcional</h2></div>
+      <p class="sub">Es de solo lectura y no pide permiso. Se ejecuta antes de proponer cualquier operación persistente, y su extensión depende del tamaño de la tarea.</p>
 
-      <div class="code"><pre><code>git rev-parse --show-toplevel
-git status --short --branch
-git branch --show-current
+      <h3>Comprobación de entrada, siempre</h3>
+      <div class="code"><pre><code>git status --short --branch</code></pre></div>
+
+      <p>Basta para una tarea pequeña y no se repite tras cada paso: sirve para conocer la rama y detectar cambios previos. Esos cambios del usuario se conservan; si afectan a los archivos que vas a tocar, se dicen antes de continuar.</p>
+
+      <h3>Antes de una operación persistente normal o compleja</h3>
+      <p>Amplía la mirada al historial, las ramas y el remoto:</p>
+      <div class="code"><pre><code>git branch --show-current
 git branch -a -vv
 git remote -v
 git log --graph --oneline --decorate --all -n 30</code></pre></div>
 
-      <p>Además de ejecutarlos, hay que <strong>leer la documentación de contribución y de flujo</strong> si existe: es la evidencia más fuerte para clasificar el repositorio y la que decide si el Git Flow genérico se aplica o no.</p>
+      <p>Y <strong>lee la documentación de contribución y de flujo</strong> si existe: es la evidencia más fuerte para clasificar el repositorio y la que decide si el modelo por defecto se aplica o no.</p>
 
       <h3>Para operaciones acotadas: inspección ampliada</h3>
       <p>La referencia de operaciones normales añade el detalle que hace falta antes de preparar archivos y commits. Separa explícitamente lo modificado, lo no rastreado, lo ya preparado, los archivos generados y los cambios ajenos al encargo.</p>
@@ -627,24 +633,23 @@ git log --oneline --decorate -n 12</code></pre></div>
 
       <div class="status-strip status-strip--prep" role="status">
         <span class="status-mark" aria-hidden="true">PREV</span>
-        <div><strong>Lo que hay que saber antes de empezar</strong><span>La rama actual, su commit, las ramas locales y remotas, el remoto configurado y la forma del historial. Sin esos cinco datos, cualquier plan es una suposición.</span></div>
+        <div><strong>Lo que hay que saber antes de empezar</strong><span>La rama actual, el tamaño de la tarea y si hay cambios previos que se puedan mezclar con el trabajo nuevo. Con eso se decide si hace falta rama o si basta el commit directo en <code>main</code>.</span></div>
       </div>
     </section>
 
     <section id="clasificar" class="section">
       <div class="section-head"><span class="section-num">4</span><h2 class="title">Clasificar el repositorio</h2></div>
-      <p class="sub">Antes de aplicar reglas hay que saber qué repositorio se tiene delante. La clasificación decide si se aplica Git Flow por defecto, se respeta otro modelo o se pide una decisión.</p>
+      <p class="sub">Antes de aplicar reglas hay que saber qué repositorio se tiene delante. La clasificación decide si se aplica el modelo por defecto, se respeta uno declarado o se pide una decisión. La proporcionalidad decide la ceremonia, no el modelo de ramas.</p>
 
-      <h3>Las seis categorías</h3>
+      <h3>Las cinco categorías</h3>
       <div class="table-wrap wrap-cells">
         <table>
           <thead><tr><th>Clasificación</th><th>Qué significa</th><th>Qué se hace</th></tr></thead>
           <tbody>
-            <tr><td>Nuevo</td><td>Todavía no tiene política de ramas.</td><td>Aplicar Git Flow por defecto.</td></tr>
-            <tr><td>Git Flow existente</td><td>Hay evidencia documental o práctica verificable de <code>main</code>/<code>master</code>, <code>develop</code> y ramas de trabajo asociadas.</td><td>Respetar nombres, destinos y reglas observadas.</td></tr>
-            <tr><td>Git Flow documentado, pendiente de evidencia operativa</td><td>Existe una guía aplicable, pero el historial aún no demuestra una feature, release o hotfix completados.</td><td>Tratar la guía como política obligatoria para el siguiente trabajo; no declarar que Git Flow ya está demostrado.</td></tr>
-            <tr><td>Git Flow local ligero documentado</td><td>Ramas cortas <code>feature/*</code>, <code>fix/*</code>, <code>docs/*</code>, <code>refactor/*</code> o <code>chore/*</code> desde <code>main</code>; sin develop, release ni hotfix por defecto; integración no fast-forward en <code>main</code>.</td><td>Seguir exactamente ese modelo, sin añadir piezas.</td></tr>
-            <tr><td>Política existente distinta</td><td>Otro modelo de ramas, ya en uso.</td><td>Conservarlo; no inventar develop, Issues, PR, SemVer, etiquetas ni reglas de merge.</td></tr>
+            <tr><td>Modelo por defecto</td><td>No hay política declarada y <code>main</code> es la única rama de larga vida, o ya se usan ramas cortas desde ella.</td><td>Aplicar proporcionalidad: rama solo cuando la tarea no es pequeña. No inventar <code>develop</code>.</td></tr>
+            <tr><td>Git Flow declarado</td><td>Documento o práctica verificable con <code>main</code>, <code>develop</code> y ramas de trabajo asociadas.</td><td>Respetar su tabla de bases y destinos desde el siguiente trabajo.</td></tr>
+            <tr><td>Git Flow documentado, pendiente de evidencia operativa</td><td>Existe una guía aplicable, pero el historial aún no demuestra una feature, release o hotfix completados.</td><td>Tratar la guía como política obligatoria; no declarar práctica demostrada.</td></tr>
+            <tr><td>Política existente distinta</td><td>Otro modelo de ramas, ya en uso.</td><td>Conservarlo; no añadir Issues, PR, SemVer, etiquetas ni reglas de merge que no declare.</td></tr>
             <tr><td>Desconocida</td><td>Evidencia contradictoria o inexistente.</td><td>Exponer la evidencia y pedir decisión antes de cualquier operación persistente.</td></tr>
           </tbody>
         </table>
@@ -670,11 +675,39 @@ git log --oneline --decorate -n 12</code></pre></div>
         <li>Usar el patrón de nombre que especifique el documento.</li>
         <li>No convertir la ausencia de remoto en un incumplimiento del flujo local.</li>
       </ul>
+
+      <div class="note">
+        <p><strong>Proporcionalidad no es laxitud.</strong> Si el repositorio declara ramas de trabajo obligatorias, una tarea pequeña no autoriza a saltárselas. Si no declara nada, una tarea pequeña no obliga a abrir rama.</p>
+      </div>
     </section>
 
     <section id="politica" class="section">
-      <div class="section-head"><span class="section-num">5</span><h2 class="title">Política Git Flow por defecto</h2></div>
-      <p class="sub">Se aplica a proyectos nuevos, y solo a proyectos nuevos. La base y el destino de cada tipo de rama no son sugerencias.</p>
+      <div class="section-head"><span class="section-num">5</span><h2 class="title">Modelo de ramas</h2></div>
+      <p class="sub">Dos modelos posibles y uno por defecto. Lo que cambia con el tamaño de la tarea es cuánta ceremonia se aplica, no qué modelo se inventa.</p>
+
+      <h3>Clasificación proporcional</h3>
+      <div class="table-wrap wrap-cells">
+        <table>
+          <thead><tr><th>Tamaño</th><th>Rama</th><th>Commit</th><th>Verificación</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Pequeña</strong><br>texto, documentación, configuración, corrección localizada</td><td>No obligatoria. Trabajo directo en <code>main</code> permitido.</td><td>Un commit coherente, siempre confirmado.</td><td>Revisar el diff y una comprobación localizada si existe.</td></tr>
+            <tr><td><strong>Normal</strong><br>funcionalidad completa, corrección de varios archivos</td><td>Rama corta recomendada si estás en <code>main</code>.</td><td>Un commit coherente; varios solo con una razón.</td><td>Validación principal del proyecto.</td></tr>
+            <tr><td><strong>Compleja</strong><br>cambio incompatible, migración, reestructuración amplia</td><td>Rama específica obligatoria.</td><td>Varios commits por unidad funcional cuando aporten recuperación.</td><td>Validación principal más comprobaciones de los puntos críticos.</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p><strong>Señales de que la tarea no es pequeña:</strong> toca código ejecutable en varios módulos, cambia datos, contratos públicos, seguridad o concurrencia, o no sabrías deshacerla con una lectura del diff. Ante la duda razonable, se trata como la categoría superior.</p>
+
+      <h3>El modelo por defecto: <code>main</code> y ramas cortas</h3>
+      <ul class="plain">
+        <li><code>main</code> contiene lo que está listo para usarse y no se abandona por reflejo.</li>
+        <li>Las ramas de trabajo se crean desde <code>main</code> y viven lo mínimo: <code>feature/&lt;slug&gt;</code>, <code>fix/&lt;slug&gt;</code>, <code>docs/&lt;slug&gt;</code>, <code>refactor/&lt;slug&gt;</code> o <code>chore/&lt;slug&gt;</code>.</li>
+        <li>Sin <code>develop</code>, <code>release/*</code> ni <code>hotfix/*</code> por defecto.</li>
+        <li>La integración en <code>main</code> se decide aparte del trabajo: nunca se fusiona por iniciativa propia.</li>
+        <li>La estrategia de integración es la que mantenga el historial claro para ese repositorio; si la política documentada fija <code>--no-ff</code>, se respeta.</li>
+      </ul>
+
+      <h3>Política Git Flow, solo si el repositorio la declara</h3>
 
       <div class="table-wrap">
         <table>
@@ -694,9 +727,7 @@ git log --oneline --decorate -n 12</code></pre></div>
       <ul class="plain">
         <li><code>develop</code> se crea desde el commit inicial de <code>main</code>.</li>
         <li>Cada rama de trabajo se crea desde su base obligatoria y se verifica la relación antes de trabajar en ella.</li>
-        <li>Commits atómicos y Conventional Commits.</li>
         <li>Se integra en ramas protegidas mediante PR cuando exista un mecanismo de revisión configurado; un merge local directo no es sustituto sin explicarlo.</li>
-        <li>Merge no fast-forward al integrar en <code>main</code> o <code>develop</code>, salvo política documentada distinta.</li>
         <li>Nada de squash ni rebase de una rama compartida o publicada sin regla documentada y aprobación explícita.</li>
         <li>Se conserva el <em>back-merge</em> de toda release y hotfix hacia <code>develop</code>.</li>
         <li>Si no existe sistema de incidencias, se usa <code>feature/&lt;slug&gt;</code> o <code>fix/&lt;slug&gt;</code>: no se inventa un identificador.</li>
@@ -709,124 +740,160 @@ git log --oneline --decorate -n 12</code></pre></div>
     </section>
 
     <section id="plan" class="section">
-      <div class="section-head"><span class="section-num">6</span><h2 class="title">Plan, confirmación y ejecución</h2></div>
-      <p class="sub">Después de inspeccionar, se presenta siempre este formato antes de cualquier cambio persistente. No es una plantilla decorativa: son los seis datos que el usuario necesita para decidir.</p>
+      <div class="section-head"><span class="section-num">6</span><h2 class="title">Commit, plan y confirmación</h2></div>
+      <p class="sub">Ningún commit se ejecuta sin confirmación previa. Los cambios se dejan preparados en el stage, con su mensaje ya redactado, y la respuesta del usuario decide si se ejecuta.</p>
+
+      <h3>Protocolo de commit, en seis pasos</h3>
+      <ol class="plain">
+        <li>Preparar únicamente las rutas que el plan enumera.</li>
+        <li>Revisar y mostrar el diff preparado.</li>
+        <li>Redactar el mensaje con Conventional Commits, nombre y descripción en inglés.</li>
+        <li>Presentar archivos, mensaje exacto, validación realizada, cuántos commits se proponen y cualquier hallazgo que requiera decidir algo. Los hallazgos se dicen antes del commit, no después.</li>
+        <li>Pedir confirmación explícita para ese commit o para los commits coherentes de la tarea.</li>
+        <li>Ejecutar exactamente el mensaje confirmado y verificar SHA, mensaje y archivos.</li>
+      </ol>
+
+      <div class="code"><pre><code>git add -- src/module.ts tests/module.test.ts
+git diff --cached
+
+git commit -m "feat(cli): add staged commit confirmation"
+git show --stat --oneline HEAD</code></pre></div>
+
+      <p>Si tras revisar el diff preparado el alcance debe cambiar, se vuelve al primer paso y se pide una confirmación nueva. Un mensaje confirmado no se reescribe por conveniencia.</p>
+
+      <h3>La plantilla del plan</h3>
+      <p>Para todo lo que exceda un commit pequeño se presenta este formato antes de cualquier cambio persistente. No es decorativa: son los datos que el usuario necesita para decidir.</p>
 
       <div class="code"><pre><code>## Estado detectado
 - Repositorio:
 - Rama actual y commit:
+- Tamaño de la tarea y motivo:
 - Política aplicable:
 - Árbol de trabajo:
 
 ## Plan propuesto
-- Operación:
+- Etapas incluidas en esta confirmación:
 - Archivos, commits o ramas afectados:
 - Origen → destino:
+- Mensaje de commit propuesto (Conventional Commits, inglés):
 - Validación previa:
 - Resultado verificable esperado:
 - Riesgos y reversibilidad:
 
 ## Confirmación requerida
-¿Apruebas exactamente este plan?</code></pre></div>
+¿Apruebas exactamente estas etapas y este mensaje?</code></pre></div>
 
       <h3>Qué hace útil a cada bloque</h3>
       <div class="grid cols-3">
         <div class="card">
           <div class="card-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M12 8v5M12 16h.01"></path></svg></div>
           <h3>Estado detectado</h3>
-          <p>Fija el punto de partida. Si mañana algo no cuadra, este bloque es la referencia de qué se creía cierto al aprobar.</p>
+          <p>Fija el punto de partida y el tamaño de la tarea. Si mañana algo no cuadra, este bloque es la referencia de qué se creía cierto al aprobar.</p>
         </div>
         <div class="card">
           <div class="card-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h16M4 12h10M4 18h7"></path></svg></div>
           <h3>Plan propuesto</h3>
-          <p>Enumera archivos, ramas, origen y destino. «Resultado verificable esperado» obliga a escribir qué comando probará que se cumplió.</p>
+          <p>Enumera etapas, archivos, ramas y el mensaje exacto de commit. «Resultado verificable esperado» obliga a escribir qué comando probará que se cumplió.</p>
         </div>
         <div class="card">
           <div class="card-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 11l3 3L22 4"></path><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path></svg></div>
           <h3>Confirmación</h3>
-          <p>Una pregunta cerrada: se aprueba ese plan o no se ejecuta. No hay confirmaciones parciales ni «adelanta lo que puedas».</p>
+          <p>Una pregunta cerrada: se aprueban esas etapas y ese mensaje, o no se ejecuta nada. No hay confirmaciones parciales ni «adelanta lo que puedas».</p>
         </div>
       </div>
 
+      <h3>Etapas agrupadas</h3>
+      <ul class="plain">
+        <li>Se pueden proponer varias etapas juntas —crear la rama, preparar, commitear, integrar, borrar la rama, publicar— y recibir una sola confirmación que las cubra todas.</li>
+        <li>La confirmación enumera las etapas que autoriza: lo que no enumere sigue sin autorizar.</li>
+        <li>No se hereda a trabajo posterior, a otro conjunto de archivos ni a otro push.</li>
+        <li>Si una etapa falla o el estado cambia, las restantes quedan sin autorizar y requieren un plan nuevo.</li>
+      </ul>
+
       <h3>Después de la confirmación</h3>
       <ul class="plain">
-        <li>Se ejecuta <strong>solo</strong> el plan aprobado, comando por comando.</li>
+        <li>Se ejecuta <strong>solo</strong> lo confirmado, comando por comando.</li>
         <li>Antes de cada comando remoto incluido, se revalida que el estado no ha cambiado.</li>
         <li>Si el estado cambió, se detiene la ejecución y se solicita un plan nuevo.</li>
         <li>Un conflicto, un error o un resultado distinto al previsto es una parada, no una adaptación.</li>
       </ul>
 
       <div class="note">
-        <p><strong>Por qué una sola confirmación y no varias.</strong> Porque pedir permiso a cada paso invita a aprobar sin leer, y pedirlo una vez para todo invita a ampliar el alcance. La skill resuelve la tensión con dos límites: el plan enumera exactamente qué se toca, y cualquier desviación lo invalida por completo.</p>
+        <p><strong>Por qué se confirma una vez y no se reaprovecha.</strong> Pedir permiso a cada paso invita a aprobar sin leer; reutilizar un «sí» viejo invita a ejecutar algo que nadie aprobó. La skill resuelve la tensión con dos límites: la confirmación enumera exactamente qué se toca, y cualquier desviación la invalida por completo.</p>
       </div>
     </section>
 
     <section id="guardia" class="section">
-      <div class="section-head"><span class="section-num">7</span><h2 class="title">Guardia de rama protegida</h2></div>
-      <p class="sub">La comprobación que más trabajo ahorra. Antes de preparar archivos o proponer un commit, se mira la rama actual; si es <code>main</code> o <code>develop</code>, hay una decisión obligatoria.</p>
+      <div class="section-head"><span class="section-num">7</span><h2 class="title">Guardia de ramas</h2></div>
+      <p class="sub">La comprobación que más trabajo ahorra. Antes de preparar archivos o proponer un commit se mira la rama actual y el tamaño de la tarea: juntos deciden si hay rama o no.</p>
 
       <div class="table-wrap wrap-cells">
         <table>
-          <thead><tr><th>Rama actual</th><th>Operación solicitada</th><th>Resultado obligatorio</th></tr></thead>
+          <thead><tr><th>Rama actual</th><th>Tamaño de la tarea</th><th>Resultado obligatorio</th></tr></thead>
           <tbody>
-            <tr><td><code>main</code></td><td>Trabajo normal, corrección, documentación o commit</td><td><span class="sev sev-error">Bloquear</span> y proponer hotfix si es producción, o la rama correcta según la política.</td></tr>
-            <tr><td><code>develop</code></td><td>Trabajo normal, corrección, documentación o commit</td><td><span class="sev sev-error">Bloquear</span> y proponer <code>feature</code> o <code>fix</code> desde develop.</td></tr>
-            <tr><td><code>main</code></td><td>Integrar una release o un hotfix</td><td><span class="sev sev-ok">Permitir</span> solo tras verificar origen, destino y plan aprobado.</td></tr>
+            <tr><td><code>main</code></td><td>Pequeña</td><td><span class="sev sev-ok">Permitir</span> trabajo directo: preparar rutas, revisar el diff, proponer mensaje y pedir confirmación.</td></tr>
+            <tr><td><code>main</code></td><td>Normal o compleja</td><td><span class="sev sev-warn">Proponer</span> una rama corta desde <code>main</code> y confirmarla antes de modificar archivos.</td></tr>
+            <tr><td><code>develop</code></td><td>Cualquier trabajo</td><td><span class="sev sev-error">Bloquear</span> y proponer <code>feature</code> o <code>fix</code> desde develop.</td></tr>
+            <tr><td><code>main</code></td><td>Integrar una rama de trabajo</td><td><span class="sev sev-ok">Permitir</span> solo tras verificar origen, destino y plan aprobado.</td></tr>
             <tr><td><code>develop</code></td><td>Integrar feature, fix, release o hotfix</td><td><span class="sev sev-ok">Permitir</span> solo tras verificar origen, destino y plan aprobado.</td></tr>
           </tbody>
         </table>
       </div>
 
-      <h3>Comprobación previa, en cinco pasos</h3>
+      <h3>Qué hace pequeña a una tarea</h3>
       <ul class="plain">
-        <li><strong>1.</strong> Identificar la rama actual.</li>
-        <li><strong>2.</strong> Clasificar la operación como trabajo o como integración.</li>
-        <li><strong>3.</strong> Si es trabajo sobre una rama protegida, no preparar archivos ni proponer un commit.</li>
-        <li><strong>4.</strong> Proponer crear la rama permitida desde la base obligatoria y pedir confirmación para ese plan.</li>
-        <li><strong>5.</strong> Tras crearla, verificar la rama actual y su relación con la base antes de continuar.</li>
+        <li>El diff es pequeño y su efecto se entiende leyéndolo.</li>
+        <li>No toca datos almacenados, contratos públicos, seguridad, concurrencia ni código ejecutable en varios módulos.</li>
+        <li>No hay cambios del usuario mezclados en los archivos afectados.</li>
+        <li>Se deshace revirtiendo el commit, sin reescribir historia.</li>
       </ul>
+      <p>Si alguna condición no se cumple, no es pequeña. Ante la duda, se propone una rama: cuesta un comando.</p>
 
-      <h3>La excepción directa a main</h3>
-      <p>Existe, pero es estrecha y hay que ganársela. Solo se permite un commit directo en <code>main</code> cuando el repositorio documenta una excepción explícita y, además, se prueba todo esto:</p>
+      <h3>Trabajo directo en main</h3>
+      <p>Permitido en tareas pequeñas, con estas condiciones:</p>
       <ul class="plain">
-        <li>Que cada ruta disponible y el diff completo cumplen <strong>todas</strong> las condiciones documentadas de trivialidad, aislamiento y reversibilidad.</li>
-        <li>Que el cambio se ha validado de forma proporcional.</li>
-        <li>Que existe una confirmación exacta <strong>posterior a la revisión</strong>, específica para ese commit.</li>
+        <li>Se preparan rutas enumeradas, nunca un add global.</li>
+        <li>Se revisa <code>git diff --cached</code> y se muestra.</li>
+        <li>Se propone el mensaje Conventional Commits en inglés.</li>
+        <li>Se pide confirmación explícita antes de ejecutar el commit.</li>
+        <li>Se verifica el commit y el estado del árbol después.</li>
       </ul>
-      <p>Si la excepción falta, es ambigua o alguna condición no se cumple, el plan se bloquea: se exige una rama de trabajo permitida.</p>
+      <p>No hay una excepción documentada que haya que demostrar: la proporcionalidad es la regla.</p>
 
       <h3>Evidencia de una integración</h3>
-      <p>Toda integración hacia una rama protegida debe identificar origen y destino permitidos, commits incluidos, mecanismo de revisión si existe, estrategia de merge, y la comprobación posterior de que el resultado está contenido en el destino.</p>
-
+      <p>Toda integración hacia una rama protegida debe identificar origen y destino permitidos, commits incluidos, mecanismo de revisión si existe, estrategia de merge, la comprobación posterior de que el resultado está contenido en el destino, y si la rama se borra después.</p>
       <div class="note">
         <p><strong>Si la rama actual no es la permitida</strong>, no se arregla con <code>checkout</code>, <code>rebase</code> o <code>merge</code> por iniciativa propia. Se explica la discrepancia y se prepara un plan separado: mover trabajo de rama también es una operación que se aprueba.</p>
       </div>
     </section>
 
     <section id="commits" class="section">
-      <div class="section-head"><span class="section-num">8</span><h2 class="title">Ramas y commits</h2></div>
-      <p class="sub">Nombres predecibles y commits que un revisor puede leer de uno en uno. La convención no es estética: es lo que permite saber qué contiene cada integración.</p>
+      <div class="section-head"><span class="section-num">8</span><h2 class="title">Ramas, commits y push</h2></div>
+      <p class="sub">Nombres predecibles, mensajes en inglés y un commit que un revisor puede leer de uno en uno. La convención no es estética: es lo que permite saber qué contiene cada integración.</p>
 
       <h3>Nombres de rama</h3>
       <ul class="plain">
         <li>Minúsculas y palabras separadas por guiones.</li>
-        <li>Con incidencia conocida: <code>feature/&lt;id&gt;-&lt;slug&gt;</code>, <code>fix/&lt;id&gt;-&lt;slug&gt;</code> o <code>hotfix/&lt;id&gt;-&lt;slug&gt;</code>.</li>
-        <li>Para una release: <code>release/&lt;version&gt;</code>.</li>
-        <li>No se crea una rama desde <code>main</code> cuando la tabla exige <code>develop</code>.</li>
+        <li>En el modelo por defecto la base es <code>main</code>: <code>feature/&lt;slug&gt;</code>, <code>fix/&lt;slug&gt;</code>, <code>docs/&lt;slug&gt;</code>, <code>refactor/&lt;slug&gt;</code> o <code>chore/&lt;slug&gt;</code>.</li>
+        <li>Con Git Flow declarado se respeta su base obligatoria: <code>feature/&lt;id&gt;-&lt;slug&gt;</code>, <code>fix/&lt;id&gt;-&lt;slug&gt;</code>, <code>hotfix/&lt;id&gt;-&lt;slug&gt;</code> y <code>release/&lt;version&gt;</code>.</li>
       </ul>
       <p>Antes de crear la rama, se verifica la base:</p>
       <div class="code"><pre><code>git merge-base --is-ancestor &lt;base&gt; HEAD
 git log -1 --oneline &lt;base&gt;</code></pre></div>
       <p>Si la base está desactualizada frente a su upstream, se informa del estado y se propone actualizarla como operación separada y confirmada.</p>
 
-      <h3>Commits convencionales</h3>
-      <div class="code"><pre><code>&lt;type&gt;(&lt;scope opcional&gt;): &lt;descripción en imperativo&gt;</code></pre></div>
+      <h3>Mensaje de commit</h3>
+      <p>Formato de <a href="https://www.conventionalcommits.org/es/v1.0.0-beta.2/">Conventional Commits</a>, con nombre y descripción en inglés:</p>
+      <div class="code"><pre><code>&lt;type&gt;(&lt;scope opcional&gt;): &lt;descripción en imperativo, en inglés&gt;</code></pre></div>
       <ul class="plain">
-        <li>Tipos permitidos: <code>feat</code>, <code>fix</code>, <code>docs</code>, <code>chore</code>, <code>refactor</code>, <code>test</code>, <code>style</code>, <code>perf</code>, <code>ci</code>, <code>build</code> y <code>revert</code>.</li>
-        <li>Un commit representa un cambio lógico.</li>
-        <li>Descripción breve, en imperativo y sin punto final.</li>
+        <li>Tipos habituales: <code>feat</code>, <code>fix</code>, <code>docs</code>, <code>chore</code>, <code>refactor</code>, <code>test</code>, <code>style</code>, <code>perf</code>, <code>ci</code>, <code>build</code> y <code>revert</code>.</li>
+        <li>Un commit representa un cambio lógico coherente, no un archivo ni un paso intermedio.</li>
+        <li>Por defecto, una tarea completa cabe en un commit aunque afecte a varios archivos.</li>
+        <li>Varios commits solo con una razón clara: separar cambios independientes, facilitar una revisión concreta o conservar una recuperación útil.</li>
+        <li>Descripción breve, en imperativo, en inglés y sin punto final.</li>
         <li>Sin firmas de IA ni líneas <code>Co-Authored-By</code> salvo solicitud expresa.</li>
-        <li>Una ruptura compatible se marca con <code>!</code> o con un pie <code>BREAKING CHANGE</code>.</li>
+        <li>Una ruptura se marca con <code>!</code> o con un pie <code>BREAKING CHANGE</code>.</li>
+        <li>El cuerpo puede nombrar la tarea que lo sostiene, por ejemplo <code>Refs: tk-141</code>, cuando el proyecto usa un tablero.</li>
       </ul>
 
       <h3>Preparación segura</h3>
@@ -834,20 +901,36 @@ git log -1 --oneline &lt;base&gt;</code></pre></div>
         <li>Inspeccionar cambios rastreados, no rastreados y ya preparados.</li>
         <li>Separar explícitamente lo que queda fuera del commit.</li>
         <li>Preparar únicamente rutas enumeradas: <code>git add -- &lt;rutas&gt;</code>.</li>
-        <li>Revisar el diff preparado con <code>git diff --cached</code> antes de pedir confirmación.</li>
-        <li>Ejecutar la validación acordada antes y después, si procede.</li>
+        <li>Revisar el diff preparado con <code>git diff --cached</code> y mostrarlo.</li>
+        <li>Presentar el mensaje exacto y pedir confirmación antes de commitear.</li>
+        <li>Ejecutar el commit confirmado y verificar SHA, mensaje y archivos.</li>
       </ol>
 
       <div class="note">
         <p><strong><code>git add .</code> y <code>git add -A</code></strong> requieren un plan que explique por qué todos los cambios pertenecen juntos. En la práctica, casi nunca es cierto: siempre hay un archivo temporal, un log o una prueba que no debía entrar.</p>
       </div>
 
+      <h3>Push</h3>
+      <p>Cualquier <code>push</code>, incluido el de una rama nueva, requiere confirmación previa específica y revalidación del estado justo antes de ejecutarlo. Un commit confirmado no autoriza a publicarlo.</p>
+      <div class="code"><pre><code>git push -u origin &lt;rama&gt;
+git ls-remote --heads origin</code></pre></div>
+
       <p>La verificación posterior al commit es corta y suficiente: <code>git show --stat --oneline HEAD</code> y <code>git status --short --branch</code>. Si el SHA no existe o el diff no coincide con los archivos aprobados, el paso no está terminado.</p>
     </section>
 
     <section id="integracion" class="section">
-      <div class="section-head"><span class="section-num">9</span><h2 class="title">Integración y conflictos</h2></div>
-      <p class="sub">Antes de proponer merge, rebase o cherry-pick se lee la referencia de integración. El método se elige por contexto, no por costumbre.</p>
+      <div class="section-head"><span class="section-num">9</span><h2 class="title">Integración, conflicto y borrado</h2></div>
+      <p class="sub">Integrar una rama es una decisión distinta de trabajar en ella, y borrarla es una tercera decisión. Ninguna ocurre por inercia.</p>
+
+      <h3>La integración se decide aparte</h3>
+      <p>Se puede incluir en el plan junto con el commit y el borrado de la rama, y recibir una sola confirmación que enumere las tres etapas. Lo que no se hace es fusionar por iniciativa propia. Antes de integrar se comprueba brevemente:</p>
+      <ul class="plain">
+        <li>Que la tarea está terminada y la validación acordada se ha ejecutado.</li>
+        <li>Que no hay cambios del usuario que vayan a perderse.</li>
+        <li>Que la rama que se integra es la correcta y deriva de la base esperada.</li>
+      </ul>
+
+      <p>La estrategia la fija la política del repositorio; si no fija ninguna, se elige la que mantenga el historial claro y sencillo para ese repositorio. <code>--no-ff</code> no es obligatorio por sí mismo.</p>
 
       <div class="table-wrap wrap-cells">
         <table>
@@ -862,6 +945,14 @@ git log -1 --oneline &lt;base&gt;</code></pre></div>
 
       <h3>El plan previo de integración</h3>
       <p>Antes de tocar nada se muestra: origen, destino, commits incluidos, ancestro común, posibilidad de fast-forward, efecto sobre la historia, validación y riesgo de conflicto. Con eso, la decisión de integrar deja de ser una apuesta.</p>
+
+      <h3>Después de integrar</h3>
+      <ol class="plain">
+        <li>Comprobar el estado final y mostrar la contención con evidencia.</li>
+        <li>Si la rama ya no se necesita, informar del nombre, del contenido integrado y del comando <code>git branch -d &lt;rama&gt;</code>, y pedir confirmación antes de borrarla.</li>
+        <li>Si el usuario no confirma el borrado, dejar la rama y decirlo en el informe final.</li>
+      </ol>
+      <p>Prefiere <code>git branch -d</code>, que se niega a borrar trabajo no integrado. Una rama con trabajo no integrado, o una rama remota, no se borra sin autorización específica.</p>
 
       <h3>Cuando aparece un conflicto</h3>
       <ol class="plain">
@@ -879,7 +970,7 @@ git log -1 --oneline &lt;base&gt;</code></pre></div>
 
     <section id="releases" class="section">
       <div class="section-head"><span class="section-num">10</span><h2 class="title">Release, hotfix y versionado</h2></div>
-      <p class="sub">Dos operaciones que tocan producción y que tienen mucho en común: rama corta, cambios mínimos, dos destinos y verificación en ambos.</p>
+      <p class="sub">Dos operaciones que tocan producción y que solo existen cuando el repositorio declara Git Flow o el usuario lo encarga. Mucho en común: rama corta, cambios mínimos, dos destinos y verificación en ambos.</p>
 
       <h3>SemVer, solo si es aplicable</h3>
       <p>Se usa <code>MAJOR.MINOR.PATCH</code> únicamente si el proyecto declara Semantic Versioning o el usuario ha adoptado esa política:</p>
@@ -903,10 +994,10 @@ git log -1 --oneline &lt;base&gt;</code></pre></div>
             <li>Verificar que <code>release/&lt;version&gt;</code> procede de <code>develop</code>.</li>
             <li>Limitar los cambios a estabilización, versión, notas y correcciones aprobadas.</li>
             <li>Comprobar ubicaciones de versión y changelog, si existen.</li>
-            <li>Integrar en <code>main</code> mediante el mecanismo previsto.</li>
+            <li>Integrar en <code>main</code> mediante el mecanismo previsto, con autorización.</li>
             <li>Crear etiqueta y publicación solo si están en el plan aprobado.</li>
             <li>Integrar el resultado de <code>main</code> de vuelta a <code>develop</code>.</li>
-            <li>Verificar que ambos destinos contienen la release.</li>
+            <li>Verificar que ambos destinos contienen la release y proponer el borrado de la rama, con su confirmación.</li>
           </ul>
         </div>
         <div class="role-block">
@@ -917,19 +1008,19 @@ git log -1 --oneline &lt;base&gt;</code></pre></div>
             <li>Mantener el parche mínimo y validado.</li>
             <li>Integrar en <code>main</code> y publicar etiqueta solo si procede.</li>
             <li>Integrar el mismo resultado de vuelta a <code>develop</code>.</li>
-            <li>Verificar que <code>main</code> y <code>develop</code> contienen la corrección.</li>
+            <li>Verificar que <code>main</code> y <code>develop</code> contienen la corrección y proponer el borrado de la rama.</li>
           </ul>
         </div>
       </div>
 
       <div class="note">
-        <p><strong>Una rama integrada no se borra por el hecho de estarlo.</strong> Ni la de release ni la de hotfix. El borrado es una operación aparte y necesita autorización específica: es justo la rama que querrás mirar cuando algo falle dos semanas después.</p>
+        <p><strong>Una rama integrada no se borra sin decirlo.</strong> Tampoco la de release ni la de hotfix. Cuando ya no se necesita, se informa del nombre, de que su contenido está en <code>main</code> y del comando propuesto, y se pide confirmación. Si no la hay, la rama se queda: es justo la que querrás mirar cuando algo falle dos semanas después.</p>
       </div>
     </section>
 
     <section id="verificacion" class="section">
       <div class="section-head"><span class="section-num">11</span><h2 class="title">Verificación de cierre</h2></div>
-      <p class="sub">Un flujo solo es COMPLETO si pasan todas las comprobaciones aplicables. No hay «casi».</p>
+      <p class="sub">Un flujo solo es COMPLETO si pasan todas las comprobaciones aplicables. Y «aplicables» depende del tamaño de la tarea: no hay «casi», pero tampoco una lista fija que se repite mecánicamente.</p>
 
       <div class="code"><pre><code>git status --short --branch
 git log --graph --oneline --decorate --all -n 40
@@ -940,16 +1031,30 @@ git ls-remote --tags &lt;remote&gt;</code></pre></div>
 
       <p>La comprobación de ascendencia está automatizada: <code>scripts/verify-branch.sh &lt;ancestro&gt; &lt;descendiente&gt; [remoto]</code> informa de la contención y del estado de publicación, y su código de salida es la prueba (0 verificado, 1 no verificado, 2 uso inválido).</p>
 
+      <h3>Comprobaciones por tamaño</h3>
+      <div class="table-wrap wrap-cells">
+        <table>
+          <thead><tr><th>Tamaño</th><th>Obligatorio antes de cerrar</th></tr></thead>
+          <tbody>
+            <tr><td>Pequeña</td><td>Estado del árbol, SHA y mensaje del commit, validación localizada si existe.</td></tr>
+            <tr><td>Normal</td><td>Lo anterior más contención en <code>main</code> cuando hubo integración y validación principal del proyecto.</td></tr>
+            <tr><td>Compleja</td><td>Lo anterior más comprobaciones de los puntos críticos y de cada rama implicada.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
       <h3>Qué se comprueba según la operación</h3>
       <div class="table-wrap wrap-cells">
         <table>
           <thead><tr><th>Operación</th><th>Condiciones que deben cumplirse</th></tr></thead>
           <tbody>
             <tr><td>Creación de rama</td><td>La rama existe y es la actual o está identificada; su commit de base es descendiente de la base obligatoria; no hay cambios no previstos en el árbol.</td></tr>
-            <tr><td>Commit</td><td>El SHA existe; el mensaje cumple la convención; el diff coincide con los archivos aprobados; la validación terminó con el resultado declarado.</td></tr>
+            <tr><td>Commit</td><td>El SHA existe; el mensaje cumple el formato Conventional Commits con descripción en inglés; el diff coincide con los archivos aprobados; la validación terminó con el resultado declarado; el árbol queda en el estado anunciado.</td></tr>
+            <tr><td>Rama corta integrada en <code>main</code></td><td>La rama existía y derivaba de <code>main</code>; el resultado está contenido en <code>main</code>; si se borró, era la correcta, estaba integrada y su borrado se confirmó.</td></tr>
             <tr><td>Feature o fix integrado</td><td>La rama fuente deriva de <code>develop</code>; el resultado está contenido en <code>develop</code>; no aparece integrado directamente en <code>main</code> como sustituto del paso por develop; la PR o mecanismo de revisión está identificado cuando existe.</td></tr>
             <tr><td>Release integrada</td><td>Release deriva de <code>develop</code>; el resultado está contenido en <code>main</code>; el resultado de <code>main</code> está contenido en <code>develop</code>; etiqueta, versión y changelog verificados si estaban en el plan.</td></tr>
             <tr><td>Hotfix integrado</td><td>Hotfix deriva de <code>main</code>; el resultado está contenido en <code>main</code>; el resultado de <code>main</code> está contenido en <code>develop</code>; etiqueta o publicación verificadas si estaban en el plan.</td></tr>
+            <tr><td>Publicación</td><td>Cada comando remoto ejecutado estaba en la confirmación que lo autorizaba; la referencia remota esperada existe y apunta al commit declarado; no hubo push forzado ni borrado remoto sin autorización específica.</td></tr>
           </tbody>
         </table>
       </div>
@@ -974,12 +1079,12 @@ git ls-remote --tags &lt;remote&gt;</code></pre></div>
       <ol class="plain">
         <li>Estado de rama y árbol de trabajo.</li>
         <li>SHA, mensaje y archivos del commit, cuando exista.</li>
-        <li>Ramas, relaciones de ascendencia e integración previstas.</li>
+        <li>Ramas, relaciones de ascendencia e integración previstas, cuando haya integración.</li>
         <li>Remoto, referencias o etiquetas publicadas, cuando aplique.</li>
         <li>La validación acordada.</li>
         <li>La lista de comprobación aplicable de la referencia de verificación.</li>
       </ol>
-      <p>Si falla una comprobación de una operación ya iniciada, el resultado es <strong>INCOMPLETO</strong> o <strong>NO VERIFICADO</strong>, no «terminado». Se explica qué condición falta y no se pasa a la siguiente fase.</p>
+      <p>En una tarea pequeña bastan los puntos 1, 2 y 5. Si falla una comprobación de una operación ya iniciada, el resultado es <strong>INCOMPLETO</strong> o <strong>NO VERIFICADO</strong>, no «terminado». Se explica qué condición falta y no se pasa a la siguiente fase.</p>
     </section>
 
     <section id="auditoria" class="section">
@@ -999,7 +1104,7 @@ git ls-remote --tags &lt;remote&gt;</code></pre></div>
       </div>
 
       <h3>Cómo se informa un repositorio recién preparado</h3>
-      <p>Para un repositorio con <code>main</code> y <code>develop</code> en el mismo commit inicial, política documental clara y sin ramas auxiliares históricas, la respuesta correcta es esta, y no un «INCOMPLETO»:</p>
+      <p>Para un repositorio con política documental clara, <code>main</code> estable y sin ramas auxiliares históricas, la respuesta correcta es esta, y no un «INCOMPLETO»:</p>
       <div class="code"><pre><code>Política: DOCUMENTADA
 Estructura: PREPARADA
 Evidencia operativa: PENDIENTE DE PRIMER CICLO
@@ -1039,14 +1144,14 @@ Incumplimiento activo: NO EVIDENCIADO</code></pre></div>
         <table>
           <thead><tr><th>Archivo</th><th>Cuándo se lee</th><th>Qué aporta</th></tr></thead>
           <tbody>
-            <tr><td><code>references/normal-operations.md</code></td><td>Inspección ampliada antes de preparar archivos y commits acotados.</td><td>Bloque de <code>git diff</code> para separar lo modificado, lo no rastreado y lo preparado; comandos de preparación por rutas enumeradas y verificación del commit.</td></tr>
+            <tr><td><code>references/normal-operations.md</code></td><td>Inspección ampliada y comandos de preparación, commit, integración, limpieza y push.</td><td>Bloques de <code>git diff</code> para separar lo modificado, lo no rastreado y lo preparado; <code>git add -- &lt;rutas&gt;</code>; <code>git commit -m</code> confirmado; <code>git branch -d</code> y comandos remotos con su revalidación.</td></tr>
             <tr><td><code>references/workflow-detection.md</code></td><td>Tras la inspección, en un repositorio existente.</td><td>Jerarquía de evidencia, tabla de clasificación y regla de adaptación.</td></tr>
-            <tr><td><code>references/commits-and-branches.md</code></td><td>Al crear una rama o preparar un commit con la política por defecto.</td><td>Nombres de rama, verificación de la base, Conventional Commits y preparación segura.</td></tr>
-            <tr><td><code>references/git-flow-operations.md</code></td><td>Para cada tipo de rama de Git Flow.</td><td>Pasos verificables de feature, fix, release y hotfix.</td></tr>
+            <tr><td><code>references/commits-and-branches.md</code></td><td>Al crear una rama o preparar un commit, con el modelo por defecto o con Git Flow declarado.</td><td>Nombres de rama, verificación de la base, mensaje Conventional Commits en inglés, preparación segura, regla de confirmación y limpieza tras integrar.</td></tr>
+            <tr><td><code>references/git-flow-operations.md</code></td><td>Solo en un repositorio con Git Flow declarado.</td><td>Pasos verificables de feature, fix, release y hotfix, con confirmación del commit y propuesta de borrado.</td></tr>
             <tr><td><code>references/releases-and-versioning.md</code></td><td>Solo al preparar una release o un hotfix con versionado de producto.</td><td>SemVer aplicable, pasos de release y de hotfix, y regla de no borrar ramas integradas.</td></tr>
             <tr><td><code>references/integration-and-conflicts.md</code></td><td>Antes de integrar y en cuanto aparece un conflicto.</td><td>Selección de método, plan previo y procedimiento de conflicto.</td></tr>
-            <tr><td><code>references/protected-branch-guard.md</code></td><td>Siempre que la rama actual sea <code>main</code> o <code>develop</code>.</td><td>Tabla de decisión, comprobación previa y evidencia exigida a una integración.</td></tr>
-            <tr><td><code>references/flow-verification.md</code></td><td>Después de cualquier operación Git Flow.</td><td>Comandos de evidencia, comprobaciones por operación y los tres estados del resultado.</td></tr>
+            <tr><td><code>references/protected-branch-guard.md</code></td><td>Siempre que la rama actual sea <code>main</code> o <code>develop</code>, y al decidir si hace falta rama.</td><td>Tabla de decisión por rama y tamaño, qué hace pequeña a una tarea, condiciones del trabajo directo en <code>main</code> y evidencia exigida a una integración.</td></tr>
+            <tr><td><code>references/flow-verification.md</code></td><td>Después de cualquier operación Git.</td><td>Comandos de evidencia, comprobaciones por tamaño y por operación, comprobaciones de publicación y los tres estados del resultado.</td></tr>
             <tr><td><code>references/recovery-and-dangerous-operations.md</code></td><td>Solo ante una petición explícita de recuperar, sobrescribir o borrar.</td><td>Autorización específica y orden de recuperación.</td></tr>
           </tbody>
         </table>
@@ -1055,9 +1160,9 @@ Incumplimiento activo: NO EVIDENCIADO</code></pre></div>
       <h3>Interfaz de la skill</h3>
       <div class="code"><pre><code>interface:
   display_name: Git Flow seguro
-  short_description: Gestiona Git con flujo verificable
-  default_prompt: Usa $git-flow-management para planificar y ejecutar una operación
-    Git segura.
+  short_description: Gestiona Git con ceremonia proporcional y verificable
+  default_prompt: Usa $git-flow-management para preparar un commit con su mensaje,
+    pedir confirmación y verificar el resultado antes de darlo por hecho.
   icon_small: assets/icon.svg
   icon_large: assets/icon.svg
 policy:
@@ -1078,14 +1183,16 @@ policy:
       <div class="section-head"><span class="section-num">15</span><h2 class="title">Preguntas cortas</h2></div>
       <p class="sub">Las dudas que aparecen en la primera sesión, con la respuesta directa.</p>
 
-      <div class="qa"><h3>¿Tengo que aprobar cada comando?</h3><p>No. Apruebas un plan que enumera los comandos y su resultado esperado. La skill ejecuta solo ese plan y vuelve a pedir permiso si el estado cambió, si hay un conflicto o si el resultado se desvía.</p></div>
-      <div class="qa"><h3>Estoy en <code>main</code> y el cambio es de una línea. ¿Puedo commitear?</h3><p>Solo si el repositorio documenta una excepción directa y el diff completo cumple todas sus condiciones de trivialidad, aislamiento y reversibilidad, con validación y confirmación posterior a la revisión. Si la excepción falta o es ambigua, se bloquea y se propone la rama correcta.</p></div>
-      <div class="qa"><h3>¿La skill aplica Git Flow a cualquier repositorio?</h3><p>No. En uno nuevo, sí. En uno existente, detecta su política: si tiene otro modelo lo conserva, y si la evidencia es contradictoria expone los hechos y pide una decisión. Nunca migra un repositorio sin encargo explícito.</p></div>
+      <div class="qa"><h3>¿Tengo que aprobar cada comando?</h3><p>No. Apruebas un commit o un plan que enumera las etapas y su resultado esperado. Pero el commit nunca se ejecuta sin esa confirmación, y si el estado cambia, hay un conflicto o el resultado se desvía, se vuelve a preguntar.</p></div>
+      <div class="qa"><h3>Estoy en <code>main</code> y el cambio es pequeño. ¿Puedo commitear?</h3><p>Sí, si la tarea es pequeña y de riesgo contenido: se preparan rutas enumeradas, se muestra el diff, se propone el mensaje en inglés y se pide confirmación. No hace falta una excepción documentada. Si la tarea es normal o compleja, se propone una rama corta.</p></div>
+      <div class="qa"><h3>¿En qué idioma va el mensaje de commit?</h3><p>En inglés: nombre y descripción con el formato Conventional Commits, por ejemplo <code>fix(cli): reject empty paths</code>. El resto del proyecto sigue el idioma que le corresponda.</p></div>
+      <div class="qa"><h3>¿La skill aplica Git Flow a cualquier repositorio?</h3><p>No. El modelo por defecto es <code>main</code> con ramas cortas y sin <code>develop</code>. Git Flow se aplica solo si el repositorio lo declara; si declara otro modelo, se conserva; si la evidencia es contradictoria, se exponen los hechos y se pide una decisión.</p></div>
       <div class="qa"><h3>¿Por qué no puedo usar <code>git add .</code>?</h3><p>Porque prepara todo lo que haya, incluido lo que no forma parte del encargo: archivos temporales, logs, cambios de otro. Se preparan rutas enumeradas, y si de verdad todo pertenece junto, el plan debe explicar por qué.</p></div>
-      <div class="qa"><h3>He integrado la feature. ¿Borro la rama?</h3><p>No por el hecho de haberla integrado. El borrado es una operación aparte con autorización específica. La misma regla vale para releases y hotfixes.</p></div>
+      <div class="qa"><h3>He integrado la feature. ¿Borro la rama?</h3><p>Se propone, se informa del nombre y del comando <code>git branch -d</code>, y se pide confirmación. Si no la hay, la rama se queda. Una rama con trabajo no integrado, o una remota, no se borra sin autorización específica.</p></div>
+      <div class="qa"><h3>¿Y el <code>push</code>?</h3><p>Requiere confirmación propia, aunque el commit ya esté confirmado y hecho. Un commit aprobado no autoriza a publicarlo, y una rama nueva tampoco se sube sola.</p></div>
       <div class="qa"><h3>Hay un conflicto. ¿Lo resuelvo y sigo?</h3><p>No sin un plan nuevo. Primero se informa de los archivos afectados y se ofrecen tres salidas: resolver archivos concretos, abortar o pausar. Resolver exige una decisión semántica por archivo y su propia confirmación.</p></div>
       <div class="qa"><h3>¿Puedo hacer rebase de mi rama?</h3><p>Solo si es privada y no está publicada. Una rama compartida o ya publicada no se rebasa ni se aplasta sin una regla documentada y aprobación explícita.</p></div>
-      <div class="qa"><h3>El repositorio está vacío salvo <code>main</code>. ¿Qué hago?</h3><p>Es un repositorio nuevo: se aplica la política por defecto y se crea <code>develop</code> desde el commit inicial de <code>main</code>. La excepción de bootstrap cubre exactamente eso, el commit inicial y la creación de develop.</p></div>
+      <div class="qa"><h3>El repositorio solo tiene <code>main</code>. ¿Creo <code>develop</code>?</h3><p>No. El modelo por defecto no usa <code>develop</code>: se trabaja en <code>main</code> para tareas pequeñas y en ramas cortas desde <code>main</code> para el resto. Crear <code>develop</code> requiere que el repositorio lo declare.</p></div>
       <div class="qa"><h3>Me equivoqué con un commit. ¿<code>reset --hard</code>?</h3><p>Primero se inspecciona estado, historial y <code>reflog</code>, y se prefiere revertir o un commit correctivo. Un reset destructivo exige autorización para ese comando concreto, con las consecuencias expuestas, y se verifica antes de cualquier paso siguiente.</p></div>
       <div class="qa"><h3>¿Por qué el resultado dice NO VERIFICADO y no INCOMPLETO?</h3><p>Porque son cosas distintas. INCOMPLETO significa que una condición obligatoria falló o no se ejecutó; NO VERIFICADO significa que no hay evidencia suficiente para afirmar nada. La skill prefiere el segundo antes que una conclusión sin pruebas.</p></div>
       <div class="qa"><h3>He creado una rama. ¿Basta con eso?</h3><p>No. Hay que verificar que el commit de base es descendiente de la base obligatoria y que no hay cambios no previstos en el árbol. Publicarla es otra operación que no ocurre automáticamente.</p></div>
@@ -1098,8 +1205,12 @@ policy:
 
       <div class="code"><pre><code>## Resultado verificado
 - Estado:
+- Tamaño de la tarea:
 - Operación realizada:
 - Evidencia Git:
+- Commit: creado / no creado / pendiente de autorización
+- Rama de trabajo: borrada / conservada / no aplicaba
+- Push: realizado / no realizado / pendiente de autorización
 - Validaciones:
 - Tipo de resultado: EJECUCIÓN | AUDITORÍA
 - Flujo ejecutado: COMPLETO | INCOMPLETO | NO VERIFICADO | NO APLICA
@@ -1111,6 +1222,10 @@ policy:
         <table>
           <thead><tr><th>Campo</th><th>Qué admite</th></tr></thead>
           <tbody>
+            <tr><td>Tamaño de la tarea</td><td>Pequeña, normal o compleja, con el motivo que la clasificó.</td></tr>
+            <tr><td>Commit</td><td><code>creado</code>, <code>no creado</code> o <code>pendiente de autorización</code>. Los cambios preparados y sin commitear son un resultado válido.</td></tr>
+            <tr><td>Rama de trabajo</td><td><code>borrada</code>, <code>conservada</code> o <code>no aplicaba</code>. Si se conserva, se dice por qué.</td></tr>
+            <tr><td>Push</td><td><code>realizado</code>, <code>no realizado</code> o <code>pendiente de autorización</code>.</td></tr>
             <tr><td>Tipo de resultado</td><td><code>EJECUCIÓN</code> si se hizo algo; <code>AUDITORÍA</code> si solo se inspeccionó.</td></tr>
             <tr><td>Flujo ejecutado</td><td><code>COMPLETO</code>, <code>INCOMPLETO</code>, <code>NO VERIFICADO</code> o <code>NO APLICA</code>.</td></tr>
             <tr><td>Política y evidencia operativa</td><td>Los estados de auditoría cuando el encargo no ejecutó un ciclo: política, estructura, evidencia operativa e incumplimiento activo.</td></tr>

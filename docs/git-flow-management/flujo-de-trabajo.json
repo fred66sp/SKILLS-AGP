@@ -3,7 +3,7 @@
   "diagram_type": "workflow",
   "meta": {
     "title": "Flujo de trabajo de la skill de Git",
-    "subtitle": "De la inspección al resultado verificado: qué lee la skill, dónde se detiene, qué confirma la persona y qué se prueba antes de decir «hecho».",
+    "subtitle": "De la clasificación al resultado verificado: cuánta ceremonia pide la tarea, qué queda en el stage, qué confirma la persona y qué se prueba antes de decir «hecho».",
     "locale": "es",
     "output": "docs/git-flow-management/flujo-de-trabajo.html",
     "visual_preset": "signal-flow",
@@ -12,11 +12,11 @@
   "lanes": [
     {
       "id": "persona",
-      "label": "Persona y encargo"
+      "label": "Persona y permiso"
     },
     {
       "id": "skill",
-      "label": "La skill: decidir y ejecutar"
+      "label": "La skill: medir y ejecutar"
     },
     {
       "id": "arbol",
@@ -24,20 +24,20 @@
     },
     {
       "id": "control",
-      "label": "Guardia y evidencia",
+      "label": "Parada y evidencia",
       "variant": "exception"
     }
   ],
   "phases": [
     {
       "id": "entrada",
-      "label": "Inspección",
+      "label": "Medir",
       "fromCol": 0,
       "toCol": 1
     },
     {
       "id": "juicio",
-      "label": "Política y plan",
+      "label": "Commit y plan",
       "fromCol": 2,
       "toCol": 3,
       "variant": "emphasis"
@@ -59,7 +59,7 @@
   "groups": [
     {
       "id": "politica",
-      "label": "Política aplicable",
+      "label": "Ceremonia",
       "lane": "skill",
       "fromCol": 1,
       "toCol": 2,
@@ -92,7 +92,7 @@
       "col": 0,
       "type": "external",
       "label": "Encargo de Git",
-      "sublabel": "commit · merge · release",
+      "sublabel": "commit · merge · push",
       "tag": "nada se ejecuta aún",
       "icon": "start"
     },
@@ -101,9 +101,9 @@
       "lane": "persona",
       "col": 3,
       "type": "external",
-      "label": "Confirmación única",
-      "sublabel": "solo para ese plan",
-      "tag": "otra rama lo invalida",
+      "label": "Confirmación",
+      "sublabel": "enumera las etapas",
+      "tag": "no se reaprovecha",
       "icon": "person"
     },
     {
@@ -111,15 +111,15 @@
       "lane": "arbol",
       "col": 1,
       "type": "database",
-      "label": "Rama, árbol y remoto",
-      "sublabel": "status · branch · log"
+      "label": "Rama y árbol",
+      "sublabel": "status · branch · diff"
     },
     {
       "id": "destino",
       "lane": "arbol",
       "col": 5,
       "type": "database",
-      "label": "Llegó al destino",
+      "label": "Destino alcanzado",
       "sublabel": "merge-base · ls-remote"
     },
     {
@@ -127,8 +127,8 @@
       "lane": "skill",
       "col": 0,
       "type": "backend",
-      "label": "Inspección obligatoria",
-      "sublabel": "seis comandos de solo lectura",
+      "label": "Inspección",
+      "sublabel": "un status; más si toca",
       "tag": "no pide permiso"
     },
     {
@@ -137,34 +137,34 @@
       "col": 1,
       "type": "backend",
       "label": "Clasificación",
-      "sublabel": "seis categorías posibles",
-      "tag": "documentada > práctica"
+      "sublabel": "pequeña · normal · compleja",
+      "tag": "decide la ceremonia"
     },
     {
       "id": "guardia",
       "lane": "skill",
       "col": 2,
       "type": "security",
-      "label": "Rama protegida",
+      "label": "Guardia de ramas",
       "sublabel": "main · develop",
-      "tag": "se detiene y propone rama"
+      "tag": "rama o commit directo"
     },
     {
       "id": "plan",
       "lane": "skill",
       "col": 3,
       "type": "backend",
-      "label": "Plan de seis campos",
-      "sublabel": "estado · plan · confirmación",
-      "tag": "resultado verificable"
+      "label": "Commit en el stage",
+      "sublabel": "rutas · diff · mensaje",
+      "tag": "aún sin ejecutar"
     },
     {
       "id": "ejecuta",
       "lane": "skill",
       "col": 4,
       "type": "backend",
-      "label": "Ejecución del plan",
-      "sublabel": "solo lo aprobado",
+      "label": "Ejecución",
+      "sublabel": "solo lo confirmado",
       "tag": "sin add global"
     },
     {
@@ -217,21 +217,21 @@
       "id": "evidencia",
       "from": "inspeccion",
       "to": "clasifica",
-      "label": "evidencia",
+      "label": "tamaño",
       "role": "main"
     },
     {
       "id": "seis-categorias",
       "from": "clasifica",
       "to": "guardia",
-      "label": "6 categorías",
+      "label": "ceremonia",
       "role": "main"
     },
     {
       "id": "rama-permitida",
       "from": "guardia",
       "to": "plan",
-      "label": "rama válida",
+      "label": "rama o main",
       "variant": "emphasis",
       "role": "main"
     },
@@ -247,7 +247,7 @@
       "id": "aprobacion",
       "from": "plan",
       "to": "confirma",
-      "label": "aprobación",
+      "label": "diff y mensaje",
       "variant": "emphasis",
       "role": "main"
     },
@@ -263,7 +263,7 @@
       "id": "solo-aprobado",
       "from": "ejecuta",
       "to": "verifica",
-      "label": "solo lo aprobado",
+      "label": "solo lo confirmado",
       "role": "main"
     },
     {
@@ -295,20 +295,20 @@
   "cards": [
     {
       "dot": "cyan",
-      "title": "Qué se lee y qué se decide",
+      "title": "Qué se mide y qué se prepara",
       "items": [
-        "La inspección es de solo lectura y no requiere confirmación: seis comandos que fijan rama, commit, árbol, remoto e historial",
-        "La clasificación decide qué política se aplica; sin evidencia se pide una decisión en lugar de suponer",
-        "El plan siempre tiene la misma forma: estado detectado, plan propuesto y una pregunta cerrada"
+        "La clasificación decide la ceremonia: una tarea pequeña admite commit directo en main; una normal o compleja propone rama corta desde main",
+        "La inspección es de solo lectura y crece con el tamaño: un status en una tarea pequeña, ramas, remoto e historial en las demás",
+        "Antes de preguntar nada, los cambios ya están en el stage con su mensaje Conventional Commits en inglés"
       ]
     },
     {
       "dot": "rose",
       "title": "Dónde se detiene",
       "items": [
-        "Sobre main o develop no se prepara nada: se bloquea y se propone la rama permitida desde su base",
-        "Un conflicto, un error o un resultado distinto al plan es una parada, no una adaptación",
-        "Si el estado cambió antes de un comando remoto, la confirmación deja de valer"
+        "Sobre develop no se prepara trabajo normal: se bloquea y se propone feature o fix desde su base",
+        "Sin confirmación no hay commit, ni siquiera en una tarea pequeña y de una línea",
+        "Un conflicto, un error o un resultado distinto al plan es una parada; el push y el borrado de rama piden su propia confirmación"
       ]
     },
     {
@@ -316,8 +316,8 @@
       "title": "Qué se prueba al cerrar",
       "items": [
         "Estado de rama y árbol, SHA y mensaje del commit, y el diff real frente al aprobado",
-        "Ascendencia y contención en el destino, más las referencias publicadas en el remoto",
-        "COMPLETO exige todas las comprobaciones aplicables; si falta una, es INCOMPLETO o NO VERIFICADO"
+        "Contención en el destino cuando hubo integración, y la referencia remota solo si hubo push autorizado",
+        "COMPLETO exige las comprobaciones aplicables al tamaño; si falta una, es INCOMPLETO o NO VERIFICADO"
       ]
     }
   ]
