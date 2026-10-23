@@ -1,50 +1,78 @@
 ---
 name: git-flow-management
-description: "Gestiona y verifica flujos de trabajo de Git seguros: impone la política Git Flow requerida en repositorios nuevos, conserva y verifica el flujo existente en repositorios ya establecidos, y cubre ramas, commits, PR, merges, releases, hotfixes, conflictos y recuperación. Úsala siempre que el agente vaya a realizar o planificar cualquier operación Git. Exige una aprobación explícita para cada plan concreto de operación persistente; no da por completado ningún paso de Git Flow sin haber verificado la ascendencia de ramas, los destinos de integración y el estado resultante. No la uses para operaciones ajenas a Git, ni para migrar a Git Flow un repositorio que ya declara otra política de ramas sin un encargo explícito de migración."
+description: "Gestiona y verifica operaciones Git con ceremonia proporcional al tamaño y al riesgo: permite el commit directo en main en tareas pequeñas y exige rama corta en las normales o complejas, conservando la política que el repositorio declare. Deja siempre los cambios preparados en el stage con un mensaje Conventional Commits en inglés y pide confirmación explícita antes de commitear, antes de borrar una rama ya integrada y antes de cualquier push. Úsala siempre que el agente vaya a realizar o planificar cualquier operación Git: ramas, commits, integraciones, releases, hotfixes, conflictos, publicación y recuperación. No la uses para operaciones ajenas a Git ni para migrar una política de ramas sin encargo explícito."
 ---
 
-# Gestión de Git y Git Flow
+# Gestión de Git con ceremonia proporcional
 
-Gestiona Git como un procedimiento verificable, no como una intención. Inspecciona, detecta la política aplicable, construye un plan concreto, solicita una confirmación, ejecuta únicamente lo aprobado y prueba que el resultado cumple el flujo.
+Gestiona Git como un procedimiento verificable, no como una intención. Clasifica la tarea por tamaño y riesgo, aplica la ceremonia mínima que mantiene el resultado fiable, presenta lo que vas a ejecutar, espera confirmación y demuestra el resultado con comandos de solo lectura.
+
+La seguridad no debe convertir cada cambio en un trámite pesado. Una corrección de texto no merece el mismo procedimiento que una migración.
 
 ## Invariantes obligatorias
 
-1. Esta skill es obligatoria para cualquier operación Git. No continúes un flujo ignorando sus comprobaciones porque el usuario haya dicho “haz Git Flow”, “haz un commit” o “sube los cambios”.
+1. Esta skill es obligatoria para cualquier operación Git. No continúes un flujo ignorando sus comprobaciones porque el usuario haya dicho «haz Git Flow», «haz un commit» o «sube los cambios».
 2. No declares que se ha aplicado Git Flow, se ha integrado una rama, se ha publicado un cambio o se ha terminado una release sin verificarlo con comandos de solo lectura y mostrar el resultado.
-3. La política Git documentada del repositorio prevalece sobre el Git Flow genérico. Para un proyecto nuevo, aplica Git Flow por defecto; para uno existente, detecta y respeta su política documentada o su práctica verificable, sin relajar nunca las protecciones genéricas contra operaciones destructivas ni migrarlo sin encargo explícito.
-4. No ejecutes ningún cambio persistente sin una única confirmación explícita del plan exacto. Incluye add, commit, creación o borrado de rama, merge, rebase, cherry-pick, tag, push, fetch --prune y cambios remotos.
-5. La confirmación no es global ni reutilizable. Una rama distinta, un conjunto de archivos distinto, un conflicto, un nuevo push o una discrepancia invalidan el plan.
-6. No amplíes el alcance. No uses add global, no incluyas cambios ajenos, no incluyas no rastreados ni hagas amend salvo que el plan aprobado lo nombre expresamente.
-7. No uses reset destructivo, clean, restauración desde otra revisión, borrado forzado de ramas, push forzado, borrado de etiquetas o ramas remotas, ni reescritura de historia salvo autorización específica para ese comando. Lee [recuperación y operaciones peligrosas](references/recovery-and-dangerous-operations.md).
-8. Main y develop son ramas protegidas. Nunca prepares, confirmes ni ejecutes trabajo normal, commits de funcionalidad, correcciones o cambios de documentación mientras la rama actual sea main o develop, salvo una excepción directa a main documentada y plenamente probada conforme a la guardia. En otro caso, detente y propone crear la rama de trabajo correcta desde su base obligatoria.
-9. Solo permite cambios en main o develop mediante una integración verificada de una rama permitida: feature o fix hacia develop; release o hotfix hacia main y después hacia develop; o las ramas y destinos que defina una política documentada. La excepción de bootstrap solo sirve para el commit inicial y la creación de develop.
-10. Ante conflicto, estado inesperado, error o resultado diferente al plan, detente. No improvises una resolución; inspecciona y prepara un nuevo plan.
+3. La política Git documentada del repositorio prevalece sobre cualquier modelo genérico. Si el repositorio no declara política, aplica el modelo por defecto de esta skill: `main` como línea estable y ramas cortas de trabajo cuando la tarea lo justifique.
+4. Ningún commit se ejecuta sin confirmación explícita. Deja los cambios preparados en el stage, propón el mensaje exacto y pide confirmación antes de crear nada.
+5. La confirmación no es global ni reutilizable. Cubre únicamente las etapas que enumera y el estado concreto que has mostrado. Una rama distinta, un conjunto de archivos distinto, un conflicto, un push nuevo o una discrepancia invalidan la confirmación.
+6. Puedes presentar varias etapas en un mismo plan y recibir una sola confirmación conjunta, pero nunca aprovechar una confirmación previa para una etapa que no estaba en ella.
+7. No amplíes el alcance. No uses add global, no incluyas cambios ajenos, no incluyas no rastreados ni hagas amend salvo que el plan aprobado lo nombre expresamente.
+8. No uses reset destructivo, clean, restauración desde otra revisión, borrado forzado de ramas, push forzado, borrado de etiquetas o ramas remotas, ni reescritura de historia salvo autorización específica para ese comando. Lee [recuperación y operaciones peligrosas](references/recovery-and-dangerous-operations.md).
+9. `develop`, cuando existe, es una rama protegida: nunca prepares trabajo normal sobre ella. `main` admite trabajo directo solo en tareas pequeñas y de riesgo contenido, siempre con stage revisado y confirmación posterior. En una tarea normal o compleja desde `main`, propón una rama corta de trabajo antes de modificar archivos.
+10. Cualquier operación remota —push, fetch para integrar, pull o creación de referencias remotas— requiere confirmación propia, aunque el commit ya esté hecho y confirmado.
+11. Ante conflicto, estado inesperado, error o resultado distinto del plan, detente. No improvises una resolución; inspecciona y prepara un nuevo plan.
 
-## Inspección obligatoria
+## Clasificación proporcional
 
-La inspección es de solo lectura y no requiere confirmación. Antes de proponer una operación persistente, ejecuta y comunica al menos:
+Clasifica sin interrumpir al usuario cuando la clasificación no cambie una decisión importante. Ante la duda razonable, trátala como la categoría superior.
+
+| Tamaño | Ejemplos | Rama | Commit | Verificación |
+|---|---|---|---|---|
+| Pequeña | Texto, documentación, configuración o corrección localizada; diff pequeño y reversible | No obligatoria. Trabajo directo en `main` permitido | Un commit coherente | Revisar el diff y ejecutar una comprobación localizada si existe |
+| Normal | Funcionalidad completa, corrección de varios archivos, cambio coordinado | Rama corta recomendada si estás en `main` | Un commit coherente; varios solo con una razón | Validación principal del proyecto |
+| Compleja | Cambio incompatible, migración, reestructuración amplia, riesgo de recuperación | Rama específica obligatoria | Varios commits por unidad funcional cuando aporten recuperación o revisión | Validación principal más comprobaciones de los puntos críticos |
+
+Señales de que la tarea no es pequeña: toca código ejecutable en varios módulos, cambia datos, contratos públicos, seguridad o concurrencia, o no sabrías deshacerla con una lectura del diff.
+
+## Inspección proporcional
+
+La inspección es de solo lectura y no requiere confirmación. Al empezar, comprueba el estado y no lo repitas tras cada paso:
 
 ~~~bash
-git rev-parse --show-toplevel
 git status --short --branch
+~~~
+
+Esa comprobación basta para una tarea pequeña. Amplía la inspección antes de proponer una operación persistente de una tarea normal o compleja:
+
+~~~bash
 git branch --show-current
 git branch -a -vv
 git remote -v
 git log --graph --oneline --decorate --all -n 30
 ~~~
 
-Lee la documentación de contribución y de flujo si existe. Consulta [detección de política](references/workflow-detection.md) si hay dudas. Para operaciones acotadas —crear una rama, preparar archivos, revisar el diff preparado— lee [operaciones normales](references/normal-operations.md).
+Lee la documentación de contribución y de flujo si existe; prevalece sobre esta skill. Consulta [detección de política](references/workflow-detection.md) si hay dudas. Para operaciones acotadas —crear una rama, preparar archivos, revisar el diff preparado— lee [operaciones normales](references/normal-operations.md).
 
-Clasifica el repositorio:
+Debes conservar los cambios previos del usuario: no los sobrescribas ni los mezcles en silencio. Si afectan a los archivos que vas a tocar, dilo antes de continuar. No actualices `main` desde un remoto por iniciativa propia.
 
-- Nuevo: todavía no tiene una política de ramas. Aplica Git Flow por defecto.
-- Git Flow existente: hay evidencia documental o práctica verificable de main/master, develop y ramas de trabajo asociadas.
-- Git Flow documentado, pendiente de evidencia operativa: existe una guía de flujo aplicable, pero el historial aún no demuestra una feature, release o hotfix completados. Trata la guía como política obligatoria para el siguiente trabajo, pero no declares que Git Flow ya está demostrado en la práctica.
-- Git Flow local ligero documentado: ramas cortas `feature/*`, `fix/*`, `docs/*`, `refactor/*` o `chore/*` desde main; sin develop, release ni hotfix por defecto; integración no fast-forward en main.
-- Política existente distinta: conserva su modelo; no inventes develop, Issues, PR, SemVer, etiquetas ni reglas de merge.
+## Clasificación del repositorio
+
+- Modelo por defecto: `main` como única rama de larga vida, ramas cortas `feature/*`, `fix/*`, `docs/*`, `refactor/*` o `chore/*` cuando la tarea no es pequeña.
+- Política Git Flow declarada: existe evidencia documental o práctica verificable de `main`, `develop` y ramas de trabajo asociadas. Aplica la tabla condicional de más abajo.
+- Git Flow documentado, pendiente de evidencia operativa: la guía es obligatoria para el siguiente trabajo, pero no declares que Git Flow está demostrado en la práctica.
+- Política existente distinta: conserva su modelo; no inventes `develop`, Issues, PR, SemVer, etiquetas ni reglas de merge.
 - Política desconocida: informa de la evidencia y pide decisión antes de una operación persistente.
 
-## Política Git Flow por defecto para proyectos nuevos
+## Modelo por defecto: `main` y ramas cortas
+
+- `main` contiene lo que está listo para usarse y no se abandona por reflejo.
+- Las ramas de trabajo se crean desde `main` y viven lo mínimo.
+- Sin `develop`, `release/*` ni `hotfix/*` por defecto.
+- La integración en `main` se decide aparte del trabajo: nunca fusiones por iniciativa propia.
+- La estrategia de integración es la que mantenga el historial claro para ese repositorio; si la política documentada fija `--no-ff`, respétala.
+
+## Política Git Flow, solo si el repositorio la declara
 
 | Tipo | Base obligatoria | Destino obligatorio | Propósito |
 |---|---|---|---|
@@ -57,58 +85,91 @@ Clasifica el repositorio:
 
 Usa feature/<slug> o fix/<slug> si no existe sistema de incidencias. No inventes un identificador. No presupongas que está instalada la extensión git-flow: usa Git normal.
 
-Para esta política:
-
-- crea develop desde el commit inicial de main;
-- crea cada rama de trabajo desde su base obligatoria y verifica la relación antes de trabajar;
-- usa commits atómicos y Conventional Commits, según [commits y ramas](references/commits-and-branches.md);
-- integra en ramas protegidas mediante PR cuando exista un mecanismo de revisión configurado; no hagas un merge local directo como sustituto sin explicarlo;
-- usa merge no fast-forward al integrar en main o develop, salvo política documentada distinta;
-- no hagas squash ni rebase de una rama compartida o publicada salvo regla documentada y aprobación explícita;
-- conserva el back-merge de toda release y hotfix hacia develop.
+Para esta política: crea develop desde el commit inicial de main; crea cada rama de trabajo desde su base obligatoria y verifica la relación antes de trabajar; integra en ramas protegidas mediante PR cuando exista un mecanismo de revisión configurado; conserva el back-merge de toda release y hotfix hacia develop.
 
 Lee [operaciones Git Flow verificables](references/git-flow-operations.md) para cada tipo de rama. Lee [releases y versionado](references/releases-and-versioning.md) solo al preparar una release o hotfix.
 
-## Plan, confirmación y ejecución
+## Protocolo de commit
 
-Tras inspeccionar, rellena la [plantilla de plan](assets/plan-template.md) y preséntala antes de cualquier cambio persistente. No improvises el formato: esos campos son los que el usuario necesita para decidir.
+Ningún commit se ejecuta sin confirmación previa. El orden es siempre este:
+
+1. Prepara únicamente las rutas que el plan enumera:
+
+~~~bash
+git add -- src/module.ts tests/module.test.ts
+git diff --cached
+~~~
+
+2. Redacta el mensaje según [Conventional Commits](https://www.conventionalcommits.org/es/v1.0.0-beta.2/), con nombre y descripción en inglés:
+
+~~~text
+<tipo>(<ámbito opcional>): <descripción breve en imperativo, en inglés>
+~~~
+
+3. Presenta antes de commitear: archivos preparados, mensaje exacto, validación realizada, cuántos commits propones y cualquier hallazgo que requiera una decisión del usuario. Los hallazgos se dicen antes del commit, no después.
+4. Pide confirmación explícita para ese commit o para los commits coherentes de la tarea actual.
+5. Ejecuta exactamente el mensaje confirmado con `git commit -m`.
+6. Verifica y muestra SHA, mensaje y archivos del commit.
+
+Si tras revisar el diff preparado descubres que el alcance debe cambiar, vuelve al paso 1 y pide una confirmación nueva. Un mensaje confirmado no se reescribe por conveniencia.
+
+Detalle de convenciones, preparación segura y cierre en [commits y ramas](references/commits-and-branches.md).
+
+## Etapas agrupadas y confirmación conjunta
+
+Puedes proponer varias etapas en un solo plan —crear la rama, preparar archivos, commitear, integrar, borrar la rama, publicar— y recibir una única confirmación que las cubra todas.
+
+- La confirmación enumera las etapas que autoriza. Lo que no enumere sigue sin autorizar.
+- La autorización no se hereda a trabajo posterior, a otro conjunto de archivos ni a otro push.
+- Si una etapa del plan falla o el estado cambia, las etapas restantes quedan sin autorizar y requieren un plan nuevo.
+
+## Push y borrado de ramas
+
+- Cualquier `push`, incluido el de una rama nueva, requiere confirmación previa específica y revalidación del estado justo antes de ejecutarlo.
+- Tras integrar una rama de trabajo en `main`, si ya no hace falta, informa del nombre, del estado integrado y del comando propuesto, y pide confirmación antes de borrarla. Prefiere `git branch -d`, que se niega a borrar trabajo no integrado.
+- No borres una rama con trabajo no integrado, ni local ni remota, sin autorización específica.
+
+## Guardia de rama
+
+Antes de preparar archivos o proponer un commit, comprueba la rama actual y el tamaño de la tarea.
+
+- Rama actual `main`, tarea pequeña: permite preparar y commitear directamente, con el protocolo de commit y su confirmación. No requiere excepción documentada.
+- Rama actual `main`, tarea normal o compleja: propón una rama corta desde `main` y pide confirmación para crearla antes de modificar archivos.
+- Rama actual `develop`: bloquea el trabajo normal. Propón feature, fix, release o hotfix desde la base correcta.
+- Rama actual `main` o `develop` y operación de integración: verifica origen permitido, destino permitido y evidencia de revisión cuando exista.
+- Rama actual distinta de las permitidas para ese tipo de trabajo: no lo arregles con checkout, rebase o merge por iniciativa propia; explica la discrepancia y prepara un plan separado.
+
+Lee [guardia de ramas](references/protected-branch-guard.md) en cualquier operación que empiece en `main` o `develop`.
+
+## Plan y confirmación
+
+Tras inspeccionar y clasificar, rellena la [plantilla de plan](assets/plan-template.md) y preséntala antes de cualquier cambio persistente. No improvises el formato: esos campos son los que el usuario necesita para decidir.
 
 Después de la confirmación, ejecuta solo el plan. Antes de cada comando remoto incluido, revalida que el estado no haya cambiado. Si cambió, detente y solicita un nuevo plan.
 
-## Guardia de rama protegida
-
-Antes de preparar archivos o proponer un commit, comprueba la rama actual.
-
-- Si es main y la operación es trabajo normal, comprueba primero si el repositorio documenta una excepción directa, estrecha y explícita. Permite un commit directo solo tras probar que cada ruta disponible y el diff completo cumplen todas las condiciones documentadas de trivialidad, aislamiento y reversibilidad, validar proporcionalmente el cambio y obtener una confirmación exacta posterior a la revisión para ese commit. Si la excepción falta, es ambigua o alguna condición no se cumple, bloquea el plan y exige una rama de trabajo permitida.
-- Si es develop y la operación es trabajo normal, bloquea el plan. Informa de la rama protegida y propone únicamente crear feature, fix, release o hotfix desde la base correcta.
-- Si es main o develop y la operación es una integración, verifica primero origen permitido, destino permitido y evidencia de revisión cuando exista.
-- Si la rama actual no es una rama permitida para el tipo de trabajo, no intentes arreglarlo con checkout, rebase o merge por iniciativa propia: explica la discrepancia y prepara un plan separado.
-
-Lee [guardia de ramas protegidas](references/protected-branch-guard.md) en cualquier operación que empiece en main o develop.
-
 ## Verificación de cierre
 
-Después de ejecutar, no digas “hecho” hasta comprobar y mostrar:
+Después de ejecutar, no digas «hecho» hasta comprobar y mostrar lo que corresponda al tamaño de la tarea:
 
 1. estado de rama y árbol de trabajo;
 2. SHA, mensaje y archivos del commit cuando exista;
-3. ramas, relaciones de ascendencia e integración previstas; `scripts/verify-branch.sh <ancestro> <descendiente> [remoto]` comprueba la contención y sale con 0 si se cumple, 1 si no y 2 si el uso es inválido;
+3. ramas, relaciones de ascendencia e integración previstas, cuando haya integración; `scripts/verify-branch.sh <ancestro> <descendiente> [remoto]` comprueba la contención y sale con 0 si se cumple, 1 si no y 2 si el uso es inválido;
 4. remoto, referencias o etiquetas publicadas cuando aplique;
 5. validación acordada;
 6. lista de comprobación aplicable en [verificación de flujo](references/flow-verification.md).
 
-Si falla una comprobación de una operación que ya se ha iniciado, el resultado es INCOMPLETO o NO VERIFICADO, no “terminado”. Explica qué condición falta y no pases a la siguiente fase.
+Para una tarea pequeña, los puntos 1, 2 y 5 suelen ser suficientes. Si falla una comprobación de una operación ya iniciada, el resultado es INCOMPLETO o NO VERIFICADO, no «terminado».
 
 ## Auditoría sin operación
 
-Si el encargo solo inspecciona documentación, ramas e historial, no uses INCOMPLETO para describir un ciclo Git Flow que aún no se ha iniciado. Separa:
+Si el encargo solo inspecciona documentación, ramas e historial, no uses INCOMPLETO para describir un ciclo que aún no se ha iniciado. Separa:
 
 - Política: DOCUMENTADA | NO DOCUMENTADA | CONTRADICTORIA.
 - Estructura: PREPARADA | PARCIAL | AUSENTE.
 - Evidencia operativa: DEMOSTRADA | PENDIENTE DE PRIMER CICLO | INSUFICIENTE.
 - Incumplimiento activo: SÍ | NO | NO VERIFICABLE.
 
-Para un repositorio con main y develop en el mismo commit inicial, política documental clara y sin ramas auxiliares históricas, informa:
+Para un repositorio con política documental clara, `main` estable y sin ramas auxiliares históricas, informa:
 
 ~~~text
 Política: DOCUMENTADA
