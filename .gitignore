@@ -1,0 +1,135 @@
+# ============================================================================
+# SKILLS-AGP — ignore rules
+#
+# Four layers, in this order: OS/editor noise, dependencies and build output,
+# secrets and credentials, local AI-tool state. Then transient files.
+# Deliverables stay tracked: src/ holds the skills and docs/ holds the guides
+# and the generated diagrams with their delivery receipts.
+#
+# AI-era note: .gitignore stops a file from being committed; it does not stop
+# an AI agent from reading it off disk. Keep the large generated pages in
+# .cursorignore/.aiignore instead of hiding them here, or the documentation
+# would stop being reproducible.
+# ============================================================================
+
+# --- OS noise ---------------------------------------------------------------
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+.Trash-*
+
+# --- Editors and IDE --------------------------------------------------------
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+*.bak
+*.orig
+*.rej
+
+# --- Dependencies and build output -----------------------------------------
+node_modules/
+npm-debug.log
+yarn-error.log
+.pnpm-debug.log
+dist/
+build/
+out/
+coverage/
+.parcel-cache/
+.turbo/
+.next/
+
+# --- Python -----------------------------------------------------------------
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+env/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.ipynb_checkpoints/
+
+# --- Secrets and credentials ------------------------------------------------
+# Environment files: the example is the only one that belongs in git.
+.env
+.env.*
+!.env.example
+.envrc
+# Keys, certificates and stores
+*.pem
+*.key
+*.crt
+*.p12
+*.pfx
+*.jks
+*.keystore
+id_rsa*
+id_ed25519*
+*.ppk
+*.kdbx
+# Cloud and CLI credentials
+.aws/
+.gcloud/
+.ssh/
+.netrc
+.npmrc
+.pypirc
+.vault-token
+.terraform/
+*.tfstate
+*.tfstate.*
+# Credential payloads
+*credentials*.json
+*serviceaccount*.json
+application_default_credentials.json
+token.json
+secrets/
+.secrets/
+
+# --- Local AI-tool state ----------------------------------------------------
+# Per-machine caches, sessions and settings. None of this belongs in git.
+# .atl/ and .codegraph/ also carry their own .gitignore with the same intent.
+.atl/
+# .alt/ is a guard: nothing creates it today, but it is kept ignored on purpose.
+.alt/
+.codegraph/
+.harnessed/
+.impeccable/
+.lore/
+.pi/
+.wrangler/
+# .skills/ is tracked on purpose: it holds the third-party skills this setup
+# depends on, so both machines run the same toolset (see README.md).
+.claude/
+.cursor/
+.windsurf/
+.gemini/
+.codex/
+.continue/
+.aider*
+.specstory/
+# MCP and gateway configs can carry API keys.
+.mcp.json
+mcp.json
+# The AI exclusion layer (.cursorignore/.aiignore) is shared with the team, so
+# nothing here may hide it; .cursor/ and .claude/ above only match directories.
+
+# --- Transient files and local databases ------------------------------------
+*.log
+*.tmp
+*.temp
+tmp/
+.cache/
+*.db
+*.db-journal
+*.sqlite
+*.sqlite3

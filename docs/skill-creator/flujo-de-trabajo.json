@@ -1,0 +1,277 @@
+{
+  "schema_version": 2,
+  "diagram_type": "workflow",
+  "meta": {
+    "title": "Flujo de trabajo de la skill skill-creator",
+    "subtitle": "Del encargo al directorio desplegable: qué se escribe primero, dónde bloquea el validador, qué se mueve a las referencias y qué se audita antes de decir que la skill está lista.",
+    "locale": "es",
+    "output": "docs/skill-creator/flujo-de-trabajo.html",
+    "visual_preset": "signal-flow",
+    "quality_profile": "showcase"
+  },
+  "lanes": [
+    {
+      "id": "persona",
+      "label": "Persona y encargo"
+    },
+    {
+      "id": "skill",
+      "label": "La skill: escribir y validar"
+    },
+    {
+      "id": "paquete",
+      "label": "El directorio producido"
+    },
+    {
+      "id": "control",
+      "label": "Puertas y auditoría",
+      "variant": "exception"
+    }
+  ],
+  "phases": [
+    {
+      "id": "metadatos",
+      "label": "Metadatos",
+      "fromCol": 0,
+      "toCol": 1
+    },
+    {
+      "id": "puerta",
+      "label": "Validación",
+      "fromCol": 2,
+      "toCol": 2,
+      "variant": "emphasis"
+    },
+    {
+      "id": "construccion",
+      "label": "Estructura y redacción",
+      "fromCol": 3,
+      "toCol": 4
+    },
+    {
+      "id": "auditoria",
+      "label": "Auditoría final",
+      "fromCol": 5,
+      "toCol": 5,
+      "variant": "security"
+    }
+  ],
+  "groups": [
+    {
+      "id": "automatica",
+      "label": "Puerta automática",
+      "lane": "skill",
+      "fromCol": 1,
+      "toCol": 2,
+      "variant": "emphasis"
+    },
+    {
+      "id": "checklist",
+      "label": "19 comprobaciones",
+      "lane": "control",
+      "fromCol": 4,
+      "toCol": 5,
+      "variant": "security"
+    }
+  ],
+  "mainPath": [
+    "encargo",
+    "metadatos",
+    "valida",
+    "estructura",
+    "cuerpo",
+    "checklist",
+    "resultado"
+  ],
+  "nodes": [
+    {
+      "id": "encargo",
+      "lane": "persona",
+      "col": 0,
+      "type": "external",
+      "label": "Encargo de skill",
+      "sublabel": "una capacidad nueva",
+      "tag": "nada se crea aún",
+      "icon": "start"
+    },
+    {
+      "id": "metadatos",
+      "lane": "skill",
+      "col": 1,
+      "type": "backend",
+      "label": "Nombre y descripción",
+      "sublabel": "1-64 · 1.024 caracteres",
+      "tag": "carpeta = nombre"
+    },
+    {
+      "id": "valida",
+      "lane": "skill",
+      "col": 2,
+      "type": "security",
+      "label": "validate-metadata.py",
+      "sublabel": "código 0 o corrección",
+      "tag": "bloquea el paso 2"
+    },
+    {
+      "id": "estructura",
+      "lane": "skill",
+      "col": 3,
+      "type": "backend",
+      "label": "Tres carpetas",
+      "sublabel": "scripts · references · assets",
+      "tag": "un nivel de profundidad"
+    },
+    {
+      "id": "cuerpo",
+      "lane": "skill",
+      "col": 4,
+      "type": "backend",
+      "label": "SKILL.md",
+      "sublabel": "imperativo · ≤ 500 líneas",
+      "tag": "el detalle se lee JiT"
+    },
+    {
+      "id": "corrige",
+      "lane": "control",
+      "col": 2,
+      "type": "security",
+      "label": "Corrección del campo",
+      "sublabel": "error con prefijo",
+      "tag": "se reescribe y se repite",
+      "icon": "stop"
+    },
+    {
+      "id": "checklist",
+      "lane": "control",
+      "col": 4,
+      "type": "security",
+      "label": "Checklist final",
+      "sublabel": "5 bloques · 19 ítems",
+      "tag": "todas en Pass"
+    },
+    {
+      "id": "directorio",
+      "lane": "paquete",
+      "col": 3,
+      "type": "database",
+      "label": "Directorio de la skill",
+      "sublabel": "SKILL.md + tres carpetas"
+    },
+    {
+      "id": "resultado",
+      "lane": "control",
+      "col": 5,
+      "type": "frontend",
+      "label": "Skill desplegable",
+      "sublabel": "se descubre y se ejecuta",
+      "icon": "success"
+    }
+  ],
+  "edges": [
+    {
+      "id": "pide",
+      "from": "encargo",
+      "to": "metadatos",
+      "label": "pide",
+      "variant": "emphasis",
+      "role": "main"
+    },
+    {
+      "id": "somete",
+      "from": "metadatos",
+      "to": "valida",
+      "label": "somete",
+      "role": "main"
+    },
+    {
+      "id": "rechaza",
+      "from": "valida",
+      "to": "corrige",
+      "label": "código 1",
+      "variant": "security",
+      "role": "return"
+    },
+    {
+      "id": "reejecuta",
+      "from": "corrige",
+      "to": "valida",
+      "label": "reejecuta",
+      "variant": "dashed",
+      "role": "branch"
+    },
+    {
+      "id": "aprueba",
+      "from": "valida",
+      "to": "estructura",
+      "label": "código 0",
+      "variant": "emphasis",
+      "role": "main"
+    },
+    {
+      "id": "crea",
+      "from": "estructura",
+      "to": "directorio",
+      "label": "crea",
+      "role": "main"
+    },
+    {
+      "id": "redacta",
+      "from": "estructura",
+      "to": "cuerpo",
+      "label": "redacta",
+      "role": "main"
+    },
+    {
+      "id": "audita",
+      "from": "cuerpo",
+      "to": "checklist",
+      "label": "audita",
+      "role": "main"
+    },
+    {
+      "id": "pendiente",
+      "from": "checklist",
+      "to": "cuerpo",
+      "label": "casilla sin Pass",
+      "variant": "security",
+      "role": "return"
+    },
+    {
+      "id": "cierra",
+      "from": "checklist",
+      "to": "resultado",
+      "label": "todas en Pass",
+      "variant": "emphasis",
+      "role": "main"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "Qué se escribe primero",
+      "items": [
+        "El nombre y la descripción se redactan antes de crear ninguna carpeta: son los únicos campos que el agente ve antes de disparar la skill",
+        "El validador comprueba el patrón del nombre, la longitud de la descripción y la ausencia de primera y segunda persona",
+        "La descripción lleva disparadores positivos y negativos; sin ellos la skill se activa donde no debe o no se activa nunca"
+      ]
+    },
+    {
+      "dot": "rose",
+      "title": "Dónde se detiene",
+      "items": [
+        "Con código de salida 1 no se crea la estructura: se identifica el error por su prefijo, se reescribe el campo y se vuelve a ejecutar",
+        "STYLE WARNING también sale con 1: un aviso de estilo es un bloqueo del paso, no una sugerencia",
+        "Si el SKILL.md pasa de 500 líneas, el bloque más grande se mueve a references/ antes de seguir"
+      ]
+    },
+    {
+      "dot": "emerald",
+      "title": "Qué se prueba al cerrar",
+      "items": [
+        "Que no queden huecos de alucinación: puntos donde el agente tendría que suponer un paso, una ruta o un formato",
+        "Que todas las rutas sean relativas y usen barras inclinadas",
+        "Que las 19 comprobaciones de la checklist estén en Pass; una sin marcar deja la skill sin desplegar"
+      ]
+    }
+  ]
+}

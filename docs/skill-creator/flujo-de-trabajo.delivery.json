@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "4d479ce8-6f57-4e45-af60-338da17ac591",
+  "status": "current",
+  "command": "deliver",
+  "type": "workflow",
+  "input": "C:\\SKILLS-AGP\\docs\\skill-creator\\flujo-de-trabajo.json",
+  "output": "C:\\SKILLS-AGP\\docs\\skill-creator\\flujo-de-trabajo.html",
+  "specification": {
+    "sha256": "8e278e8e66bdd0739b338c7cddacc1803accc497676597b5b384fc08927ae987",
+    "bytes": 6737
+  },
+  "artifact": {
+    "sha256": "43e35245bf68b678c2384fe7353461f0f53d38094ca6f040b23f6aacaf22a279",
+    "bytes": 833563
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "97fcc65c-6dd3-4104-b328-2733b9423b33",
+  "status": "current",
+  "command": "deliver",
+  "type": "architecture",
+  "input": "C:\\SKILLS-AGP\\docs\\skill-creator\\arquitectura.json",
+  "output": "C:\\SKILLS-AGP\\docs\\skill-creator\\arquitectura.html",
+  "specification": {
+    "sha256": "d1e54745f915b9aab28ed7ac3fc69c3d63ad7d5bcfa2f9cbfc43cb6114d54e33",
+    "bytes": 5966
+  },
+  "artifact": {
+    "sha256": "071b29d0367ed428a304419a65d5027c5d243d753f6cf9026cadf785915435e1",
+    "bytes": 832932
+  }
+}

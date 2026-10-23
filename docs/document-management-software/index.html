@@ -1,0 +1,1125 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="document-management-software — guía completa de la skill: inventario y responsabilidad de cada artefacto documental, grados de certeza por afirmación, reglas de redacción, auditoría de solo lectura, verificación de cierre y el script doc-inventory.py.">
+<meta name="color-scheme" content="light dark">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%231e40af'/%3E%3Cpath d='M11 7h7l4 4v14H11z' fill='none' stroke='%23ffffff' stroke-width='2.2' stroke-linejoin='round'/%3E%3Cpath d='M18 7v4h4' fill='none' stroke='%23ffffff' stroke-width='2.2' stroke-linejoin='round'/%3E%3Cpath d='M14 17h6M14 21h4' fill='none' stroke='%23ffffff' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E">
+<title>document-management-software — Documentación con fuente de verdad</title>
+<script>
+(function () {
+  try {
+    var p = JSON.parse(localStorage.getItem("document-management-software:prefs") || "{}");
+    var t = p.theme || (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+    document.documentElement.setAttribute("data-theme", t);
+  } catch (e) { document.documentElement.setAttribute("data-theme", "light"); }
+})();
+</script>
+<style>
+  /* Identidad visual: azul de archivo (índigo) con azul cielo como segundo
+     acento. Donde el color lleva texto se usa la variante oscurecida, que
+     mantiene el contraste AA sobre el fondo claro. */
+  :root {
+    --bg: #f8fafc;
+    --bg-elev: #ffffff;
+    --bg-soft: #f1f5f9;
+    --text: #0f172a;
+    --muted: #5f6b80;
+    --border: #e2e8f0;
+    --border-strong: #cbd5e1;
+    --accent: #1e40af;
+    --accent-2: #0ea5e9;
+    --accent-3: #6366f1;
+    --accent-soft: rgba(30, 64, 175, .10);
+    --ok: #10b981;
+    --warn: #f59e0b;
+    --ok-text: #047857;
+    --warn-text: #b45309;
+    --error-text: #b91c1c;
+    --code-bg: #0a0f1c;
+    --code-text: #e5e7eb;
+    --code-border: #1f2937;
+    --shadow: 0 1px 2px rgba(15, 23, 42, .05), 0 8px 24px -12px rgba(15, 23, 42, .18);
+    --shadow-lg: 0 20px 60px -30px rgba(15, 23, 42, .35);
+    --radius: 16px;
+    --radius-sm: 10px;
+    /* No se descargan tipografías: si Inter o JetBrains Mono no están
+       instaladas, el navegador cae en la pila del sistema. */
+    --font: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    --mono: "JetBrains Mono", ui-monospace, "SF Mono", "Fira Code", Menlo, Consolas, monospace;
+  }
+  :root[data-theme="dark"] {
+    --bg: #0a0f1c;
+    --bg-elev: #111827;
+    --bg-soft: #1f2937;
+    --text: #e5e7eb;
+    --muted: #94a3b8;
+    --border: #334155;
+    --border-strong: #475569;
+    --accent: #93c5fd;
+    --accent-2: #60a5fa;
+    --accent-3: #a5b4fc;
+    --accent-soft: rgba(147, 197, 253, .14);
+    --ok: #34d399;
+    --warn: #fbbf24;
+    --ok-text: #34d399;
+    --warn-text: #fbbf24;
+    --error-text: #f87171;
+    --code-bg: #070b16;
+    --code-text: #e5e7eb;
+    --code-border: #1f2937;
+    --shadow: 0 1px 2px rgba(0, 0, 0, .4), 0 12px 32px -18px rgba(0, 0, 0, .8);
+    --shadow-lg: 0 24px 70px -34px rgba(0, 0, 0, .9);
+  }
+
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; scroll-padding-top: 88px; }
+  body {
+    margin: 0;
+    font-family: var(--font);
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  a { color: var(--accent); text-decoration: none; }
+  a:hover { text-decoration: underline; text-underline-offset: 3px; }
+  code, pre, kbd { font-family: var(--mono); }
+
+  .topbar {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 12px clamp(16px, 4vw, 40px);
+    background: color-mix(in srgb, var(--bg) 82%, transparent);
+    -webkit-backdrop-filter: saturate(180%) blur(14px);
+    backdrop-filter: saturate(180%) blur(14px);
+    border-bottom: 1px solid var(--border);
+  }
+  .brand { display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--text); }
+  .brand:hover { text-decoration: none; }
+  .brand-mark {
+    display: block;
+    width: 34px; height: 34px;
+    border-radius: 10px;
+    box-shadow: var(--shadow);
+    overflow: hidden;
+  }
+  .brand-mark svg { width: 100%; height: 100%; display: block; }
+  .brand-name { font-weight: 700; letter-spacing: -.02em; font-size: 15px; }
+  .brand-name small { display: block; font-weight: 500; color: var(--muted); font-size: 11px; letter-spacing: .04em; text-transform: uppercase; }
+  .topbar-spacer { flex: 1; }
+
+  .icon-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    height: 36px;
+    padding: 0 12px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: var(--bg-elev);
+    color: var(--text);
+    font: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: border-color .15s, background .15s, transform .1s;
+  }
+  .icon-btn:hover { border-color: var(--border-strong); }
+  .icon-btn:active { transform: translateY(1px); }
+  .icon-btn svg { width: 16px; height: 16px; }
+  :root[data-theme="light"] .icon-sun { display: none; }
+  :root[data-theme="dark"] .icon-moon { display: none; }
+
+  .hero {
+    position: relative;
+    overflow: hidden;
+    padding: clamp(48px, 9vw, 104px) clamp(16px, 4vw, 40px) clamp(40px, 6vw, 72px);
+    border-bottom: 1px solid var(--border);
+  }
+  .hero::before {
+    content: "";
+    position: absolute;
+    inset: -40% -10% auto -10%;
+    height: 420px;
+    background:
+      radial-gradient(60% 60% at 22% 30%, color-mix(in srgb, var(--accent) 26%, transparent), transparent 70%),
+      radial-gradient(50% 50% at 70% 6%, color-mix(in srgb, var(--accent-2) 22%, transparent), transparent 70%),
+      radial-gradient(42% 42% at 92% 26%, color-mix(in srgb, var(--accent-3) 20%, transparent), transparent 70%);
+    filter: blur(6px);
+    pointer-events: none;
+  }
+  .hero-inner { position: relative; max-width: 1080px; margin: 0 auto; }
+  .pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 5px 12px;
+    border: 1px solid var(--border-strong);
+    border-radius: 999px;
+    background: var(--bg-elev);
+    color: var(--muted);
+    font-size: 12.5px;
+    font-weight: 600;
+    letter-spacing: .01em;
+  }
+  .pill .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--ok); box-shadow: 0 0 0 3px color-mix(in srgb, var(--ok) 22%, transparent); }
+  .hero h1 {
+    margin: 22px 0 0;
+    font-size: clamp(34px, 6vw, 62px);
+    line-height: 1.04;
+    letter-spacing: -.035em;
+    font-weight: 800;
+  }
+  .hero h1 .grad { color: var(--accent); }
+  .hero p.lead {
+    margin: 20px 0 0;
+    max-width: 660px;
+    font-size: clamp(16px, 2.2vw, 19px);
+    color: var(--muted);
+  }
+  .hero-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 30px; }
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 11px 18px;
+    border-radius: var(--radius-sm);
+    font-weight: 650;
+    font-size: 14.5px;
+    border: 1px solid transparent;
+    cursor: pointer;
+    transition: transform .12s, box-shadow .2s, border-color .15s;
+  }
+  .btn:hover { text-decoration: none; transform: translateY(-1px); }
+  .btn-primary { background: linear-gradient(135deg, var(--accent), var(--accent-2)); color: #fff; box-shadow: var(--shadow); }
+  .btn-ghost { background: var(--bg-elev); border-color: var(--border-strong); color: var(--text); }
+
+  .layout {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: clamp(32px, 5vw, 60px) clamp(16px, 4vw, 40px) 80px;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 48px;
+  }
+  @media (min-width: 1020px) {
+    .layout { grid-template-columns: 214px minmax(0, 1fr); gap: 56px; }
+  }
+  .toc { display: none; }
+  @media (min-width: 1020px) {
+    .toc { display: block; position: sticky; top: 84px; align-self: start; }
+    .toc h2 { font-size: 11px; text-transform: uppercase; letter-spacing: .1em; color: var(--muted); margin: 0 0 12px; }
+    .toc a {
+      display: block;
+      padding: 7px 12px;
+      border-left: 2px solid var(--border);
+      color: var(--muted);
+      font-size: 14px;
+      font-weight: 550;
+    }
+    .toc a:hover { color: var(--text); text-decoration: none; }
+    .toc a.active { color: var(--accent); border-left-color: var(--accent); background: var(--accent-soft); border-radius: 0 8px 8px 0; }
+  }
+  main { min-width: 0; }
+  section { scroll-margin-top: 88px; }
+  section + section { margin-top: 64px; }
+  .section-head { display: flex; align-items: center; gap: 12px; margin-bottom: 8px; }
+  .section-num {
+    display: grid; place-items: center;
+    width: 30px; height: 30px;
+    border-radius: 9px;
+    background: var(--accent-soft);
+    color: var(--accent);
+    font-size: 13px;
+    font-weight: 800;
+    font-variant-numeric: tabular-nums;
+  }
+  h2.title { margin: 0; font-size: clamp(22px, 3vw, 28px); letter-spacing: -.02em; }
+  .section > p.sub { margin: 6px 0 24px; color: var(--muted); max-width: 74ch; }
+  h3 { margin: 30px 0 10px; font-size: 17px; letter-spacing: -.01em; }
+
+  .grid { display: grid; gap: 16px; }
+  .grid + .grid, .grid + .note, .grid + h3 { margin-top: 24px; }
+  @media (min-width: 640px) { .grid.cols-2 { grid-template-columns: 1fr 1fr; } .grid.cols-3 { grid-template-columns: repeat(3, 1fr); } }
+  .card {
+    background: var(--bg-elev);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px;
+    box-shadow: var(--shadow);
+  }
+  .card h3 { margin: 0 0 6px; font-size: 15px; }
+  .card p { margin: 0; color: var(--muted); font-size: 14px; }
+  .card p + p { margin-top: 8px; }
+  .card ul { margin: 8px 0 0; padding-left: 18px; color: var(--muted); font-size: 13.5px; }
+  .card li + li { margin-top: 4px; }
+  .card .card-ico {
+    display: grid; place-items: center;
+    width: 34px; height: 34px; margin-bottom: 12px;
+    border-radius: 9px;
+    background: var(--accent-soft); color: var(--accent);
+  }
+  .card .card-ico svg { width: 18px; height: 18px; }
+
+  .table-wrap { overflow-x: auto; border: 1px solid var(--border); border-radius: var(--radius); background: var(--bg-elev); box-shadow: var(--shadow); }
+  .table-wrap + .note, .table-wrap + p { margin-top: 16px; }
+  table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  thead th {
+    text-align: left;
+    padding: 12px 16px;
+    background: var(--bg-soft);
+    color: var(--muted);
+    font-size: 11.5px;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    border-bottom: 1px solid var(--border);
+    white-space: nowrap;
+  }
+  tbody td { padding: 11px 16px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  tbody tr:last-child td { border-bottom: 0; }
+  tbody tr:hover { background: color-mix(in srgb, var(--accent) 3%, transparent); }
+  td code, th code { font-size: 12.8px; }
+  tbody td:first-child { white-space: nowrap; }
+  .table-wrap.wrap-cells td:first-child { white-space: normal; }
+  .table-wrap.wrap-cells td code { overflow-wrap: anywhere; }
+  /* En pantallas estrechas, la primera columna deja de ir en una sola línea:
+     con nowrap, los nombres largos se parten mal. */
+  @media (max-width: 640px) {
+    table { font-size: 13.5px; }
+    thead th, tbody td { padding: 9px 12px; }
+    tbody td:first-child { white-space: normal; }
+  }
+
+  .sev {
+    display: inline-block;
+    min-width: 60px;
+    text-align: center;
+    padding: 2px 8px;
+    border-radius: 6px;
+    font-family: var(--mono);
+    font-size: 11.5px;
+    font-weight: 700;
+    letter-spacing: .02em;
+    text-transform: uppercase;
+  }
+  .sev-error { background: color-mix(in srgb, #ef4444 16%, transparent); color: var(--error-text); }
+  .sev-warn { background: color-mix(in srgb, var(--warn) 20%, transparent); color: var(--warn-text); }
+  .sev-ok { background: color-mix(in srgb, var(--ok) 16%, transparent); color: var(--ok-text); }
+  .sev-info { background: color-mix(in srgb, var(--accent) 16%, transparent); color: var(--accent); }
+
+  .code { position: relative; margin: 14px 0; }
+  .code pre {
+    margin: 0;
+    padding: 16px 52px 16px 18px;
+    background: var(--code-bg);
+    color: var(--code-text);
+    border: 1px solid var(--code-border);
+    border-radius: var(--radius);
+    overflow-x: auto;
+    font-size: 13.2px;
+    line-height: 1.6;
+    box-shadow: var(--shadow);
+  }
+  .code pre code { background: none; padding: 0; color: inherit; font-size: inherit; }
+  .code .copy {
+    position: absolute;
+    top: 9px; right: 9px;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    height: 30px;
+    padding: 0 9px;
+    border: 1px solid var(--code-border);
+    border-radius: 8px;
+    background: color-mix(in srgb, var(--code-bg) 60%, #ffffff 8%);
+    color: #c8d2e8;
+    font: inherit;
+    font-size: 11.5px;
+    font-weight: 600;
+    cursor: pointer;
+    opacity: 0;
+    transition: opacity .15s, border-color .15s;
+  }
+  .code:hover .copy, .code .copy:focus-visible { opacity: 1; }
+  .code .copy:hover { border-color: #3b4c72; }
+  @media (hover: none) { .code .copy { opacity: 1; } }
+  .code .copy.copied { color: var(--ok); border-color: var(--ok); }
+  .code .copy svg { width: 13px; height: 13px; }
+  p code, li code, td code {
+    background: var(--bg-soft);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: .08em .42em;
+    font-size: .88em;
+  }
+  .note {
+    display: flex;
+    gap: 12px;
+    padding: 14px 16px;
+    border-left: 1px solid var(--accent);
+    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+    background: var(--accent-soft);
+    font-size: 14px;
+    margin: 16px 0;
+  }
+  .note strong { color: var(--text); }
+  .note p { margin: 0; }
+  .note p + p { margin-top: 8px; }
+
+  .status-strip {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    max-width: 720px;
+    margin-top: 28px;
+    padding: 14px 16px;
+    border: 1px solid color-mix(in srgb, var(--ok) 42%, var(--border));
+    border-radius: var(--radius-sm);
+    background: color-mix(in srgb, var(--ok) 8%, var(--bg-elev));
+  }
+  .status-mark {
+    flex: 0 0 auto;
+    display: grid;
+    place-items: center;
+    width: 30px;
+    height: 30px;
+    border-radius: 9px;
+    background: color-mix(in srgb, var(--ok) 18%, transparent);
+    color: var(--ok-text);
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: .04em;
+  }
+  .status-strip strong { display: block; font-size: 14px; }
+  .status-strip span:not(.status-mark) { display: block; margin-top: 2px; color: var(--muted); font-size: 13px; }
+  .status-strip--prep { border-color: color-mix(in srgb, var(--warn) 42%, var(--border)); background: color-mix(in srgb, var(--warn) 8%, var(--bg-elev)); }
+  .status-strip--prep .status-mark { background: color-mix(in srgb, var(--warn) 20%, transparent); color: var(--warn-text); }
+
+  .flow { display: grid; grid-template-columns: 1fr; gap: 12px; }
+  @media (min-width: 640px) { .flow { grid-template-columns: repeat(2, 1fr); } }
+  .flow-step {
+    min-height: 142px;
+    padding: 16px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    background: var(--bg-elev);
+  }
+  .flow-step code { color: var(--accent); font-weight: 700; }
+  .flow-step strong { display: block; margin-top: 10px; font-size: 15px; }
+  .flow-step p { margin: 5px 0 0; color: var(--muted); font-size: 13.5px; }
+
+  .role-grid { display: grid; grid-template-columns: 1fr; gap: 16px; margin-top: 24px; }
+  @media (min-width: 640px) { .role-grid { grid-template-columns: repeat(2, 1fr); } }
+  .role-block {
+    padding: 18px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    background: var(--bg-elev);
+  }
+  .role-label {
+    display: block;
+    color: var(--accent);
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+  }
+  .role-block h3 { margin: 10px 0 7px; font-size: 17px; }
+  .role-block p { margin: 0; color: var(--muted); font-size: 13.5px; }
+  .role-block ul { margin: 12px 0 0; padding-left: 18px; color: var(--muted); font-size: 13px; }
+  .role-block li + li { margin-top: 5px; }
+
+  a.card-link { display: block; text-decoration: none; color: inherit; transition: border-color .15s, transform .12s; }
+  a.card-link:hover { text-decoration: none; border-color: var(--accent); transform: translateY(-1px); }
+  a.card-link:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+  a.card-link .go { display: inline-block; margin-top: 12px; color: var(--accent); font-weight: 650; font-size: 13.5px; }
+  a.card-link .card-ico { transition: background .15s; }
+
+  .footer {
+    border-top: 1px solid var(--border);
+    padding: 28px clamp(16px, 4vw, 40px);
+    color: var(--muted);
+    font-size: 13.5px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px 20px;
+    align-items: center;
+    justify-content: space-between;
+    max-width: 1180px;
+    margin: 0 auto;
+  }
+  .footer code { background: var(--bg-soft); border: 1px solid var(--border); border-radius: 6px; padding: 1px 6px; }
+  .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+  ::selection { background: color-mix(in srgb, var(--accent) 30%, transparent); }
+  @media (prefers-reduced-motion: reduce) { * { scroll-behavior: auto !important; transition: none !important; } }
+
+  .qa { border-bottom: 1px solid var(--border); padding: 18px 0; }
+  .qa:last-child { border-bottom: 0; }
+  .qa h3 { margin: 0 0 6px; font-size: 15.5px; }
+  .qa p { margin: 0; color: var(--muted); font-size: 14px; }
+  .qa p + p { margin-top: 8px; }
+  ul.plain { margin: 10px 0 0; padding-left: 20px; color: var(--muted); font-size: 14.5px; }
+  ul.plain li + li { margin-top: 6px; }
+  .cmd { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+  .cmd .sig { color: var(--muted); font-weight: 500; font-size: 13.5px; }
+  /* Una rejilla de pasos seguida de una tabla necesita el mismo aire que una
+     rejilla seguida de otra: sin esta regla la tabla queda pegada al último
+     paso, porque ni `.flow` ni `.table-wrap` traen margen propio. */
+  .flow + .table-wrap, .grid + .table-wrap { margin-top: 24px; }
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <a class="brand" href="#top">
+    <span class="brand-mark" aria-hidden="true">
+      <svg viewBox="0 0 32 32" role="presentation">
+        <defs>
+          <linearGradient id="brand-grad" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="#1e40af"></stop>
+            <stop offset="1" stop-color="#0ea5e9"></stop>
+          </linearGradient>
+        </defs>
+        <rect width="32" height="32" fill="url(#brand-grad)"></rect>
+        <path d="M11 7h7l4 4v14H11z" fill="none" stroke="#ffffff" stroke-width="2" stroke-linejoin="round"></path>
+        <path d="M18 7v4h4" fill="none" stroke="#ffffff" stroke-width="2" stroke-linejoin="round"></path>
+        <path d="M14 17h6M14 21h4" fill="none" stroke="#ffffff" stroke-width="1.8" stroke-linecap="round"></path>
+      </svg>
+    </span>
+    <span class="brand-name">document-management-software<small>gestión documental de software</small></span>
+  </a>
+  <span class="topbar-spacer"></span>
+  <button class="icon-btn" id="theme-toggle" type="button" aria-label="Cambiar a tema oscuro">
+    <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"></path></svg>
+    <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"></path></svg>
+    <span>Tema</span>
+  </button>
+</header>
+
+<section class="hero" id="top">
+  <div class="hero-inner">
+    <span class="pill"><span class="dot" aria-hidden="true"></span>una skill · siete pasos · cada afirmación con su fuente</span>
+    <h1>Documentación con <span class="grad">fuente de verdad</span></h1>
+    <p class="lead">Esta skill no produce documentos: decide cuáles merecen existir, elige la intervención más pequeña que resuelve el problema, escribe solo lo que una fuente sostiene y comprueba que lo afirmado sigue siendo cierto. Inventario determinista antes de escribir, certeza por afirmación y auditoría de solo lectura al cerrar.</p>
+    <div class="hero-actions">
+      <a class="btn btn-primary" href="#que-es">Qué es esta skill</a>
+      <a class="btn btn-ghost" href="#certeza">La certeza de una afirmación</a>
+      <a class="btn btn-ghost" href="#diagramas">Los diagramas</a>
+    </div>
+    <div class="status-strip" role="status">
+      <span class="status-mark" aria-hidden="true">OK</span>
+      <div><strong>Todo lo que hay aquí sale del paquete instalado</strong><span>Las reglas, tablas, límites, plantillas y salidas de comandos de esta página están copiados de <code>SKILL.md</code>, de las cuatro referencias y de <code>scripts/doc-inventory.py</code>. Si algo no está en el paquete, no se presenta como regla.</span></div>
+    </div>
+  </div>
+</section>
+
+<div class="layout">
+  <nav class="toc" aria-label="Índice de la página">
+    <h2>En esta página</h2>
+    <a href="#que-es">1. Qué es esta skill</a>
+    <a href="#problema">2. El problema que resuelve</a>
+    <a href="#invariantes">3. Las diez invariantes</a>
+    <a href="#procedimiento">4. El procedimiento en siete pasos</a>
+    <a href="#inventario">5. Inventario: qué merece existir</a>
+    <a href="#certeza">6. La certeza de una afirmación</a>
+    <a href="#redaccion">7. Reglas de redacción</a>
+    <a href="#auditoria">8. Auditoría de solo lectura</a>
+    <a href="#verificacion">9. Verificación de cierre</a>
+    <a href="#ficheros">10. Los ficheros del paquete</a>
+    <a href="#en-este-repositorio">11. Cómo se usa aquí</a>
+    <a href="#limites">12. Errores y límites</a>
+    <a href="#preguntas">13. Preguntas cortas</a>
+    <a href="#diagramas">14. Los diagramas</a>
+  </nav>
+
+  <main>
+    <section id="que-es" class="section">
+      <div class="section-head"><span class="section-num">1</span><h2 class="title">Qué es esta skill</h2></div>
+      <p class="sub">Un procedimiento documental, no un generador de texto. Su resultado es una decisión —qué se escribe, dónde vive y qué se elimina— sostenida por evidencia y verificada al cerrar.</p>
+
+      <p>La documentación de un proyecto de software se degrada de tres maneras previsibles: afirma cosas que nadie comprobó, repite el mismo dato en dos sitios que después divergen, y sigue describiendo un estado que el código ya abandonó. La skill ataca las tres en el mismo orden en que aparecen: primero inventaría lo que existe, después fija el grado de certeza de cada afirmación y solo entonces escribe la intervención mínima.</p>
+
+      <div class="grid cols-2">
+        <div class="card">
+          <div class="card-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg></div>
+          <h3>Lo que decide</h3>
+          <p>Si un artefacto nuevo hace falta, qué responsabilidad tendría y si el conocimiento cabe en uno que ya existe. La creación es la última opción de la escala, no la primera.</p>
+          <p>Cuando el proyecto ya documenta su convención —carpeta <code>docs/</code>, ADR, formato de CHANGELOG— la respeta aunque no sea la que usaría.</p>
+        </div>
+        <div class="card">
+          <div class="card-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 11l3 3L22 4"></path><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path></svg></div>
+          <h3>Lo que exige</h3>
+          <p>Cada afirmación material con su fuente y su grado: confirmada, inferencia, propuesta, desconocida, contradictoria u obsoleta.</p>
+          <p>Al cerrar, el inventario se repite y cada afirmación modificada se contrasta antes de dar nada por terminado.</p>
+        </div>
+      </div>
+
+      <div class="table-wrap wrap-cells">
+        <table>
+          <thead><tr><th>Cuándo aplica</th><th>Cuándo no</th></tr></thead>
+          <tbody>
+            <tr><td>Crear, revisar, actualizar o auditar README, PRD, SDD, arquitectura, ADR, API, instalación, operación o runbooks.</td><td>Contenido comercial, artículos o material de marketing.</td></tr>
+            <tr><td>Detectar documentación obsoleta, contradictoria o duplicada.</td><td>Documentación de producto no técnica.</td></tr>
+            <tr><td>Decidir si un artefacto documental merece existir.</td><td>La descripción de una skill de agente, que tiene su propia skill.</td></tr>
+            <tr><td>Consolidar conocimiento repartido sin fuente canónica.</td><td>Sustituir tests, contratos ejecutables, comentarios de código o mensajes de commit.</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>Los disparadores negativos están dentro de la <code>description</code> y son lo que evita que la skill se active para escribir un artículo o para reescribir un test.</p>
+    </section>
+
+    <section id="problema" class="section">
+      <div class="section-head"><span class="section-num">2</span><h2 class="title">El problema que resuelve</h2></div>
+      <p class="sub">Cuatro defectos con la misma causa: escribir antes de saber. La skill los hace difíciles por construcción, no por buena voluntad.</p>
+
+      <div class="grid cols-2">
+        <div class="card">
+          <h3>Relleno de plantilla</h3>
+          <p>Una sección vacía se completa con generalidades porque el documento «debe» tenerla. El resultado parece completo y no aporta nada verificable.</p>
+          <p><strong>Lo impide:</strong> una sección sin información verificable se elimina, no se rellena.</p>
+        </div>
+        <div class="card">
+          <h3>Dos fuentes de verdad</h3>
+          <p>El mismo dato vive en dos documentos sin referencia entre ellos. Nadie sabe cuál es el vigente y ambos acaban siendo falsos.</p>
+          <p><strong>Lo impide:</strong> antes de añadir información se comprueba si ya está documentada y dónde corresponde que viva.</p>
+        </div>
+      </div>
+
+      <div class="grid cols-2">
+        <div class="card">
+          <h3>Documentación caducada</h3>
+          <p>Un README antiguo describe una función que el código ya no implementa. Quien lo lee construye sobre una realidad que no existe.</p>
+          <p><strong>Lo impide:</strong> el estado implementado se contrasta con código, tests y configuración antes de escribirlo en presente.</p>
+        </div>
+        <div class="card">
+          <h3>Inferencia disfrazada de hecho</h3>
+          <p>Una conclusión razonable se redacta como afirmación directa. Nadie la vuelve a comprobar porque parece sustentada.</p>
+          <p><strong>Lo impide:</strong> la clasificación de certeza ocurre antes de redactar, y lo no sustentado baja de grado en lugar de completarse.</p>
+        </div>
+      </div>
+
+      <div class="note">
+        <p><strong>El coste no es el texto: es la confianza.</strong> Una afirmación falsa en un runbook se ejecuta en producción. Una contradicción no resuelta obliga a reabrir una decisión que ya estaba tomada. Por eso la skill prefiere menos documentación correcta a más documentación plausible.</p>
+      </div>
+    </section>
+
+    <section id="invariantes" class="section">
+      <div class="section-head"><span class="section-num">3</span><h2 class="title">Las diez invariantes</h2></div>
+      <p class="sub">No son recomendaciones de estilo. Cada una existe porque su ausencia produce un defecto concreto.</p>
+
+      <ul class="plain">
+        <li><strong>No se empieza a escribir.</strong> Ninguna redacción es válida sin delimitar el encargo y localizar las fuentes disponibles.</li>
+        <li><strong>No se convierte una suposición plausible en un hecho documental.</strong> Toda afirmación material debe poder rastrearse hasta una fuente concreta.</li>
+        <li><strong>Una afirmación material tiene una sola fuente canónica.</strong> Antes de escribir se comprueba si ya está documentada y dónde corresponde que viva.</li>
+        <li><strong>La documentación es proporcional</strong> al riesgo, a la audiencia y al coste de reconstruir el conocimiento. Un documento que nadie consulta y nada evita es un defecto.</li>
+        <li><strong>Actualizar prevalece sobre duplicar;</strong> corregir prevalece sobre ampliar; no crear prevalece sobre corregir cuando lo existente ya es correcto.</li>
+        <li><strong>Estado implementado e intención futura son afirmaciones distintas</strong> y no se mezclan en el mismo párrafo sin señalarlo.</li>
+        <li><strong>La política documental del repositorio prevalece</strong> sobre cualquier estructura genérica.</li>
+        <li><strong>No se destruye conocimiento válido para simplificar.</strong> Antes de eliminar, se determina qué información quedaría sin representación.</li>
+        <li><strong>No se declara terminada una intervención documental</strong> sin ejecutar la verificación del paso 6 y mostrar su resultado.</li>
+        <li><strong>Ante una contradicción no se resuelve con redacción ambigua:</strong> se hace visible y se pide decisión si el alcance no permite resolverla.</li>
+      </ul>
+
+      <div class="note">
+        <p><strong>Las tres que más se incumplen.</strong> La primera (escribir antes de leer), la segunda (inferencia como hecho) y la novena (cerrar sin verificar). Comparten causa: tratar la documentación como una tarea de redacción y no como una afirmación que alguien va a usar para decidir o ejecutar.</p>
+      </div>
+    </section>
+
+    <section id="procedimiento" class="section">
+      <div class="section-head"><span class="section-num">4</span><h2 class="title">El procedimiento en siete pasos</h2></div>
+      <p class="sub">Secuencia obligatoria. La profundidad se adapta al encargo; el orden no.</p>
+
+      <div class="flow">
+        <div class="flow-step"><code>paso 1</code><strong>Delimitar</strong><p>Qué operación se pide —crear, actualizar, auditar o responder—, para quién, con qué fuente y si se describe el estado actual o una intención.</p></div>
+        <div class="flow-step"><code>paso 2</code><strong>Inventariar</strong><p>Ejecutar <code>doc-inventory.py</code>, asignar responsabilidad a cada artefacto y resumir qué está cubierto, qué falta y qué está cubierto dos veces.</p></div>
+        <div class="flow-step"><code>paso 3</code><strong>Fijar la certeza</strong><p>Clasificar cada afirmación antes de redactarla y explorar de forma dirigida las fuentes necesarias.</p></div>
+        <div class="flow-step"><code>paso 4</code><strong>Elegir la intervención mínima</strong><p>Una sola acción de una escala de siete, justificada por escrito si afecta a más de un documento.</p></div>
+        <div class="flow-step"><code>paso 5</code><strong>Redactar</strong><p>Terminología del proyecto, rutas y comandos exactos, marcas explícitas para propuesta e inferencia, y ninguna sección vacía.</p></div>
+        <div class="flow-step"><code>paso 6</code><strong>Verificar</strong><p>Repetir el inventario, recorrer la lista de comprobación y contrastar cada afirmación modificada contra su fuente.</p></div>
+        <div class="flow-step"><code>paso 7</code><strong>Cerrar con evidencia</strong><p>Cinco campos rellenados con evidencia; lo que no se puede sustentar se enumera como pendiente con la pregunta que lo desbloquea.</p></div>
+      </div>
+
+      <div class="table-wrap wrap-cells">
+        <table>
+          <thead><tr><th>Paso</th><th>Qué lo detiene</th><th>Qué se hace entonces</th></tr></thead>
+          <tbody>
+            <tr><td>1 · Delimitar</td><td>Falta una fuente imprescindible o el encargo mezcla intención y estado.</td><td>Una sola pregunta concreta y detenerse. No interrogar para rellenar una plantilla.</td></tr>
+            <tr><td>2 · Inventariar</td><td>El script sale con 3: hay hallazgos reales.</td><td>Tratarlos como entrada del paso 4 y decidir cuáles se corrigen y cuáles se reportan.</td></tr>
+            <tr><td>3 · Certeza</td><td>Dos fuentes reclaman la misma responsabilidad.</td><td>No redactar un término medio: exponer ambas y pedir decisión.</td></tr>
+            <tr><td>4 · Intervención</td><td>La intervención detectada es un refactor documental masivo.</td><td>Informar del coste y del riesgo de revisión antes de ejecutarlo.</td></tr>
+            <tr><td>5 · Redactar</td><td>Una sección no aporta información verificable.</td><td>Eliminarla en lugar de rellenarla con generalidades.</td></tr>
+            <tr><td>6 · Verificar</td><td>Un enlace nuevo roto o un encabezado duplicado nuevo.</td><td>Es una regresión de este cambio: se corrige, no se documenta como excepción.</td></tr>
+            <tr><td>7 · Cerrar</td><td>Un campo del cierre no se puede rellenar con evidencia.</td><td>Ese campo es el hallazgo, no una omisión de forma.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="inventario" class="section">
+      <div class="section-head"><span class="section-num">5</span><h2 class="title">Inventario: qué artefacto merece existir</h2></div>
+      <p class="sub">Cada documento responde a una pregunta. Si dos responden a la misma, uno sobra o debe pasar a ser una referencia del otro.</p>
+
+      <div class="table-wrap wrap-cells">
+        <table>
+          <thead><tr><th>Artefacto</th><th>Responde a</th><th>Merece existir cuando</th></tr></thead>
+          <tbody>
+            <tr><td><code>README.md</code></td><td>Qué es el proyecto y cómo empezar.</td><td>Alguien va a ejecutar, instalar o modificar el repositorio.</td></tr>
+            <tr><td><code>CONTRIBUTING.md</code></td><td>Cómo se integra trabajo.</td><td>Hay más de un colaborador o una política que no es evidente.</td></tr>
+            <tr><td>PRD</td><td>Qué problema se resuelve y para quién.</td><td>Hay decisiones de producto que no se deducen del código.</td></tr>
+            <tr><td>SDD / arquitectura</td><td>Cómo está estructurado el sistema y por qué.</td><td>La estructura no es evidente leyendo un único módulo.</td></tr>
+            <tr><td>ADR</td><td>Por qué se tomó una decisión y qué se descartó.</td><td>Reabrirla cuesta trabajo y su contexto no es evidente.</td></tr>
+            <tr><td>API / contratos</td><td>Qué expone el sistema, con qué tipos y errores.</td><td>Existe un contrato que otros consumen.</td></tr>
+            <tr><td>Operación / runbook</td><td>Qué hacer en producción.</td><td>Hay procedimientos que se ejecutan con presión y sin margen de error.</td></tr>
+            <tr><td>Guía de feature</td><td>Qué se va a construir y en qué estado está.</td><td>El trabajo dura varias sesiones o lo retoma otra persona.</td></tr>
+            <tr><td><code>CHANGELOG.md</code></td><td>Qué cambió para quien consume el proyecto.</td><td>El proyecto se publica o se integra en otros.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>La escala de decisión</h3>
+      <ul class="plain">
+        <li><strong>Formular la pregunta</strong> que el nuevo artefacto respondería, antes de crear nada.</li>
+        <li><strong>Si ya tiene respuesta correcta:</strong> no se crea nada, se enlaza.</li>
+        <li><strong>Si la tiene incorrecta o incompleta:</strong> se actualiza en lugar de crear.</li>
+        <li><strong>Si está repartida sin fuente canónica:</strong> se consolida antes de añadir otro documento.</li>
+        <li><strong>Solo si no tiene sitio donde vivir:</strong> se crea el artefacto mínimo con esa responsabilidad.</li>
+      </ul>
+
+      <h3>El inventario es un comando, no una lectura</h3>
+      <p>El paso 2 no se hace «mirando la carpeta». Se ejecuta un script que devuelve siempre la misma forma y los mismos hallazgos:</p>
+      <div class="code"><pre><code>python3 scripts/doc-inventory.py --root &lt;directorio&gt; [--glob "*.md"] [--json]</code></pre></div>
+
+      <div class="table-wrap wrap-cells">
+        <table>
+          <thead><tr><th>Salida</th><th>Significado</th><th>Qué se hace</th></tr></thead>
+          <tbody>
+            <tr><td><span class="sev sev-ok">0</span></td><td>Inventario completo sin hallazgos.</td><td>Se continúa con el inventario como línea base.</td></tr>
+            <tr><td><span class="sev sev-warn">3</span></td><td>Hay hallazgos: enlaces relativos rotos, documentos sin H1, documentos sin contenido o encabezados H2 repetidos entre documentos.</td><td>Es entrada del paso 4: se decide cuáles se corrigen ahora y cuáles se reportan.</td></tr>
+            <tr><td><span class="sev sev-error">2</span></td><td>Error de uso: la ruta no existe, no es un directorio o el patrón incluye separadores de ruta.</td><td>Se corrige el argumento. No se sustituye el script por una exploración manual.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="note">
+        <p><strong>Por qué un script y no una revisión a ojo.</strong> Un modelo que revisa un árbol de documentación enumera distinto cada vez: omite un fichero, olvida un enlace, cuenta dos veces un encabezado. El script no decide nada —no dice si un duplicado es correcto— pero garantiza que la lista de candidatos es la misma en cada ejecución y que su código de salida se puede citar como evidencia.</p>
+      </div>
+    </section>
+
+    <section id="certeza" class="section">
+      <div class="section-head"><span class="section-num">6</span><h2 class="title">La certeza de una afirmación</h2></div>
+      <p class="sub">Antes de redactar, cada afirmación material recibe un grado. La clasificación no se imprime en todos los documentos: se hace visible cuando afecta a una decisión, a un riesgo o a la implementación.</p>
+
+      <div class="table-wrap wrap-cells">
+        <table>
+          <thead><tr><th>Grado</th><th>Cómo se redacta</th><th>Acción obligatoria</th></tr></thead>
+          <tbody>
+            <tr><td><strong>CONFIRMADO</strong></td><td>Afirmación directa, sin matices.</td><td>Citar la fuente en la verificación de cierre.</td></tr>
+            <tr><td><strong>INFERENCIA</strong></td><td>«Se infiere de…», «La implementación sugiere…».</td><td>Señalar qué la sustenta y qué falta para confirmarla.</td></tr>
+            <tr><td><strong>PROPUESTA</strong></td><td>«Se propone…», «Queda abierto…».</td><td>Separarla del estado actual en una sección propia.</td></tr>
+            <tr><td><strong>UNKNOWN</strong></td><td>«No determinado en este alcance».</td><td>Enumerarla como pendiente con la pregunta que la desbloquea.</td></tr>
+            <tr><td><strong>CONTRADICCIÓN</strong></td><td>«La fuente A afirma X; la fuente B afirma Y».</td><td>No elegir por cuenta propia: reportar y pedir decisión.</td></tr>
+            <tr><td><strong>OBSOLETO</strong></td><td>Eliminar o marcar como histórico con su motivo.</td><td>Comprobar antes que no sea la única representación del conocimiento.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Qué confirma cada fuente y qué no</h3>
+      <div class="table-wrap wrap-cells">
+        <table>
+          <thead><tr><th>Fuente</th><th>Confirma</th><th>No confirma</th></tr></thead>
+          <tbody>
+            <tr><td>Código</td><td>Comportamiento implementado, nombres, rutas, valores por defecto.</td><td>Intención del producto ni comportamiento deseado.</td></tr>
+            <tr><td>Tests</td><td>Comportamiento que el proyecto considera obligatorio.</td><td>Comportamiento no cubierto ni decisiones de diseño.</td></tr>
+            <tr><td>Configuración y esquemas</td><td>Contratos, variables, tipos, límites.</td><td>Comportamiento en tiempo de ejecución.</td></tr>
+            <tr><td>Historial Git</td><td>Qué cambió, cuándo y en qué contexto.</td><td>Que lo documentado siga vigente.</td></tr>
+            <tr><td>Documentación existente</td><td>Intención declarada por el proyecto.</td><td>Que se corresponda con el estado implementado.</td></tr>
+            <tr><td>Decisión explícita de la persona</td><td>Requisito o política adoptada.</td><td>Detalles técnicos no decididos.</td></tr>
+            <tr><td>Documentación externa oficial</td><td>Comportamiento de la dependencia en la versión consultada.</td><td>Cómo la usa o la configura este proyecto.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>El mismo dato, mal y bien</h3>
+      <div class="code"><pre><code># Mal: dos afirmaciones, una de ellas no sustentada
+La API admite paginación por cursor y devuelve 50 registros por defecto.
+
+# Bien: el hecho con su fuente, y el hueco declarado
+La implementación devuelve 50 registros por defecto (src/api/list.ts:42).
+No se determinó si existe paginación por cursor: no aparece en el código
+revisado ni en la especificación.</code></pre></div>
+
+      <div class="code"><pre><code># Mal: una propuesta redactada como estado
+Los usuarios podrán exportar en PDF en la próxima versión.
+
+# Bien: intención separada del estado implementado
+Propuesta: exportación en PDF. No está implementada ni decidida;
+queda pendiente de aprobación.</code></pre></div>
+
+      <div class="note">
+        <p><strong>Una contradicción no se resuelve redactando.</strong> Si dos fuentes tienen responsabilidad sobre la misma afirmación, el resultado es una exposición con las dos fuentes y una pregunta. Si la contradicción es entre documentación e implementación, y la documentación es la especificación vigente, el arreglo puede corresponder al software y no al texto: por eso la skill no actualiza en ese caso sin autorización.</p>
+      </div>
+    </section>
+
+    <section id="redaccion" class="section">
+      <div class="section-head"><span class="section-num">7</span><h2 class="title">Reglas de redacción</h2></div>
+      <p class="sub">Escribir para quien mantiene, no para impresionar. Cinco reglas y una consecuencia: eliminar antes de añadir.</p>
+
+      <ul class="plain">
+        <li><strong>Proporcionalidad:</strong> la extensión responde a complejidad real, audiencia, riesgo y coste de reconstruir el conocimiento. Un proyecto pequeño puede necesitar muy poca documentación.</li>
+        <li><strong>DRY documental:</strong> cada conocimiento importante tiene una fuente canónica y el resto la referencia. La repetición breve es aceptable cuando no crea dos verdades que puedan divergir.</li>
+        <li><strong>Terminología idéntica:</strong> el término que ya usa el proyecto, sin alternar sinónimos. Un sinónimo nuevo en documentación se convierte en una entidad nueva para quien lee.</li>
+        <li><strong>Estado e intención separados:</strong> lo implementado en presente y sustentado; lo decidido y pendiente marcado; lo propuesto marcado; lo descartado conservado como histórico con su motivo.</li>
+        <li><strong>Exactitud operativa:</strong> comandos, rutas, nombres y valores copiados de la fuente. No se inventan ejemplos que puedan confundirse con valores reales.</li>
+      </ul>
+
+      <h3>El DRY no es dogmático</h3>
+      <p>Antes de escribir se responden cuatro preguntas: ¿ya está documentado?, ¿dónde debería vivir canónicamente?, ¿necesita repetirse aquí o basta un enlace?, y si se repite, ¿existe riesgo real de divergencia futura? Lo que nunca es aceptable es mantener a mano una segunda representación completa de un contrato que ya se genera o se ejecuta.</p>
+
+      <div class="table-wrap wrap-cells">
+        <table>
+          <thead><tr><th>Señal de sobre-documentación</th><th>Señal de sub-documentación</th></tr></thead>
+          <tbody>
+            <tr><td>Secciones de plantilla vacías o con generalidades.</td><td>Conocimiento crítico que solo existe en la cabeza de una persona.</td></tr>
+            <tr><td>El mismo dato en dos documentos sin referencia entre ellos.</td><td>Decisiones que se reabren porque nadie registró el porqué.</td></tr>
+            <tr><td>Documentos que describen el estado obsoleto junto a la fuente vigente.</td><td>Procedimientos operativos que se reconstruyen cada vez.</td></tr>
+            <tr><td>Un documento por tarea trivial.</td><td>Instalación que solo funciona siguiendo pasos no escritos.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="note">
+        <p><strong>Preservar el porqué.</strong> Cuando una decisión no es evidente y su contexto evita repetir una investigación o un error, se conservan cinco datos concisos: problema, restricciones, decisión, razón y consecuencias. Lo que no se hace es convertir cada cambio trivial en una decisión arquitectónica.</p>
+      </div>
+    </section>
+
+    <section id="auditoria" class="section">
+      <div class="section-head"><span class="section-num">8</span><h2 class="title">Auditoría de solo lectura</h2></div>
+      <p class="sub">Auditar no es corregir estilo. Es localizar lo que puede inducir a error y ordenarlo por impacto, sin tocar nada hasta que exista un encargo explícito.</p>
+
+      <h3>Qué se busca, por orden de impacto</h3>
+      <ul class="plain">
+        <li>Afirmaciones sin soporte verificable.</li>
+        <li>Documentación obsoleta que contradice el estado implementado.</li>
+        <li>Contradicciones entre fuentes con la misma responsabilidad.</li>
+        <li>Conocimiento importante ausente: lo que se reconstruye cada vez.</li>
+        <li>Duplicación: el mismo dato en dos documentos sin referencia.</li>
+        <li>Documentos sin responsabilidad clara o con responsabilidad solapada.</li>
+        <li>Mezcla de intención, implementación y propuesta sin señalarlo.</li>
+        <li>Enlaces relativos rotos y referencias a rutas inexistentes.</li>
+        <li>Instrucciones imposibles de ejecutar o de verificar.</li>
+        <li>Contexto decisional perdido en decisiones que se reabren.</li>
+      </ul>
+
+      <h3>El veredicto va por clases, no en bloque</h3>
+      <div class="table-wrap wrap-cells">
+        <table>
+          <thead><tr><th>Clase</th><th>Valores posibles</th></tr></thead>
+          <tbody>
+            <tr><td>Cobertura de la responsabilidad</td><td>CUBIERTA · PARCIAL · AUSENTE</td></tr>
+            <tr><td>Correspondencia con el software</td><td>CONFIRMADA · DIVERGENTE · NO VERIFICABLE</td></tr>
+            <tr><td>Consistencia interna</td><td>CONSISTENTE · CONTRADICTORIA</td></tr>
+            <tr><td>Vigencia</td><td>VIGENTE · OBSOLETA · HISTÓRICA</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>Una falta de verificación no es un incumplimiento: es un límite del alcance, y se declara como tal. Confundir ambos produce informes que acusan al proyecto de defectos que solo son huecos de la revisión.</p>
+
+      <h3>Falsos positivos que no se ignoran, se deciden</h3>
+      <div class="table-wrap wrap-cells">
+        <table>
+          <thead><tr><th>Hallazgo del script</th><th>Cuándo es correcto</th></tr></thead>
+          <tbody>
+            <tr><td>Encabezado repetido entre dos documentos</td><td>Dos documentos cubren la misma sección con audiencias distintas. Se decide explícitamente, no se ignora.</td></tr>
+            <tr><td>Enlace relativo roto a una ruta generada</td><td>El repositorio documenta ese paso de generación previo a compilar.</td></tr>
+            <tr><td>Afirmación sin fuente</td><td>Es una decisión de la persona no registrada: se pregunta antes de borrarla.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="verificacion" class="section">
+      <div class="section-head"><span class="section-num">9</span><h2 class="title">Verificación de cierre</h2></div>
+      <p class="sub">El paso 6 no es una relectura. Es una lista de comprobaciones con un resultado que se muestra.</p>
+
+      <div class="table-wrap wrap-cells">
+        <table>
+          <thead><tr><th>Comprobación</th><th>Cómo se hace</th><th>Qué la invalida</th></tr></thead>
+          <tbody>
+            <tr><td>Inventario posterior</td><td><code>doc-inventory.py --root &lt;ruta&gt;</code> después del cambio.</td><td>Un enlace nuevo roto o un encabezado duplicado nuevo.</td></tr>
+            <tr><td>Sustento por afirmación</td><td>Contraste de cada afirmación modificada contra su fuente.</td><td>Una afirmación que no se sostiene en el alcance disponible.</td></tr>
+            <tr><td>Contenido eliminado</td><td>Comparación del contenido anterior con el nuevo.</td><td>Haber borrado la única representación de un conocimiento válido.</td></tr>
+            <tr><td>Terminología</td><td>Contraste con los términos que ya usa el proyecto.</td><td>Un sinónimo nuevo sin justificación.</td></tr>
+            <tr><td>Comandos y rutas</td><td>Verificación de que existen en el estado actual.</td><td>Documentar un comando no confirmado como si estuviera disponible.</td></tr>
+            <tr><td>Coherencia interna</td><td>Ejemplos frente a la explicación que los acompaña.</td><td>Un ejemplo que contradice el texto.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>El cierre son cinco líneas, no un párrafo</h3>
+      <div class="code"><pre><code>Intervención: &lt;ninguna | corrección | actualización | creación | auditoría&gt;
+Artefactos: &lt;rutas relativas tocadas, o "ninguno"&gt;
+Verificación: &lt;comando ejecutado y su código de salida&gt;
+Afirmaciones no sustentadas: &lt;lista, o "ninguna"&gt;
+Pendiente: &lt;qué falta y qué pregunta lo desbloquea, o "nada"&gt;</code></pre></div>
+
+      <div class="note">
+        <p><strong>Si falla una comprobación, el resultado no es «terminado».</strong> Es INCOMPLETO o NO VERIFICADO, con la condición que falta nombrada. La misma regla vale para un campo del cierre que no se puede rellenar: ese campo vacío es el hallazgo.</p>
+      </div>
+    </section>
+
+    <section id="ficheros" class="section">
+      <div class="section-head"><span class="section-num">10</span><h2 class="title">Los ficheros del paquete</h2></div>
+      <p class="sub">Ocho ficheros, un solo nivel de profundidad en cada carpeta y ninguna documentación para personas dentro del paquete. Esta página vive fuera precisamente por eso.</p>
+
+      <div class="code"><pre><code>document-management-software/
+├── SKILL.md                        # obligatorio: 96 líneas, siete pasos
+├── references/
+│   ├── document-inventory.md       # responsabilidad por artefacto
+│   ├── evidence-and-claims.md      # grados de certeza y fuentes
+│   ├── authoring-rules.md          # proporcionalidad, DRY, terminología
+│   └── audit-checklist.md          # auditoría y verificación de cierre
+├── assets/
+│   ├── documentation-plan-template.md
+│   └── audit-report-template.md
+└── scripts/
+    └── doc-inventory.py            # inventario y hallazgos deterministas</code></pre></div>
+
+      <div class="table-wrap wrap-cells">
+        <table>
+          <thead><tr><th>Fichero</th><th>Se lee</th><th>Qué aporta</th></tr></thead>
+          <tbody>
+            <tr><td><code>SKILL.md</code></td><td>Siempre, al disparar la skill.</td><td>Diez invariantes, siete pasos, criterios de parada, gestión de errores y formato de cierre.</td></tr>
+            <tr><td><code>references/document-inventory.md</code></td><td>Paso 2, al decidir si un artefacto hace falta.</td><td>Responsabilidad de cada tipo de documento y señales de exceso o defecto.</td></tr>
+            <tr><td><code>references/evidence-and-claims.md</code></td><td>Paso 3, cuando una afirmación no está sustentada a la vista.</td><td>Grados de certeza, verificación por tipo de fuente, tratamiento de contradicciones.</td></tr>
+            <tr><td><code>references/authoring-rules.md</code></td><td>Paso 5, antes de escribir o reescribir.</td><td>Proporcionalidad, DRY documental, terminología, estado frente a intención.</td></tr>
+            <tr><td><code>references/audit-checklist.md</code></td><td>Paso 6, al verificar o auditar.</td><td>Hallazgos por impacto, veredicto por clases y lista de cierre.</td></tr>
+            <tr><td><code>assets/documentation-plan-template.md</code></td><td>Paso 4, si el encargo toca más de un documento.</td><td>Encargo, estado actual, intervención propuesta, afirmaciones por decidir.</td></tr>
+            <tr><td><code>assets/audit-report-template.md</code></td><td>Paso 7, en auditorías o con hallazgos abiertos.</td><td>Alcance, veredicto por clases, hallazgos con impacto y pendientes.</td></tr>
+            <tr><td><code>scripts/doc-inventory.py</code></td><td>Pasos 2 y 6, siempre.</td><td>Inventario, enlaces rotos, documentos sin título o sin contenido, encabezados repetidos.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="note">
+        <p><strong>Divulgación progresiva.</strong> El cuerpo principal navega y decide; los detalles viven en ficheros que el agente lee solo cuando la operación concreta los pide. Esa separación es lo que permite que la skill sea estricta sin consumir contexto en cada conversación.</p>
+      </div>
+    </section>
+
+    <section id="en-este-repositorio" class="section">
+      <div class="section-head"><span class="section-num">11</span><h2 class="title">Cómo se usa aquí</h2></div>
+      <p class="sub">La skill se aplicó a su propio paquete antes de publicarlo. Estos son los comandos que se ejecutaron y lo que devolvieron, sin editar.</p>
+
+      <h3>Metadatos</h3>
+      <div class="code"><pre><code>$ python3 .skills/skill-creator/scripts/validate-metadata.py \
+    --name "document-management-software" --description "…"
+SUCCESS: Metadata is valid and optimized for discovery.
+# código de salida: 0 · descripción de 838 caracteres sobre 1.024</code></pre></div>
+
+      <h3>Inventario del paquete</h3>
+      <div class="code"><pre><code>$ python3 src/document-management-software/scripts/doc-inventory.py \
+    --root src/document-management-software
+Inventario de 7 documentos en …/src/document-management-software
+
+Hallazgos
+Ninguno.
+# código de salida: 0 · SKILL.md con 7 enlaces relativos, todos resueltos</code></pre></div>
+
+      <h3>Lo que encontró en el resto del repositorio</h3>
+      <div class="code"><pre><code>$ python3 src/document-management-software/scripts/doc-inventory.py --root src
+# código de salida: 3
+- sin H1: git-flow-management/assets/plan-template.md
+- sin H1: git-flow-management/assets/result-template.md
+- encabezado repetido: "hotfix" en git-flow-operations.md, releases-and-versioning.md
+- encabezado repetido: "release" en git-flow-operations.md, releases-and-versioning.md</code></pre></div>
+      <p>Los cuatro hallazgos son de otra skill y quedaron reportados, no corregidos: no formaban parte del encargo. Ese es el comportamiento que la skill prescribe — se reporta con evidencia y se deja la decisión a quien corresponda.</p>
+
+      <div class="status-strip" role="status">
+        <span class="status-mark" aria-hidden="true">OK</span>
+        <div><strong>Dos defectos se corrigieron gracias a la propia verificación</strong><span>La sección de referencias de <code>SKILL.md</code> usaba rutas en backticks, que el script no puede comprobar; se convirtieron en enlaces reales y pasaron a verificarse. Y dos encabezados genéricos —«Invariantes obligatorias» y «Resultado final»— colisionaban con los de <code>git-flow-management</code>; se titularon por dominio. Sin el inventario, ninguno de los dos se habría visto.</span></div>
+      </div>
+    </section>
+
+    <section id="limites" class="section">
+      <div class="section-head"><span class="section-num">12</span><h2 class="title">Errores y límites</h2></div>
+      <p class="sub">Qué hace la skill cuando el encargo no encaja en el camino previsto.</p>
+
+      <div class="qa"><h3>El script sale con 2</h3><p>Es un error de uso: la ruta no existe, no es un directorio o el patrón incluye separadores. Se corrige el argumento. No se sustituye el script por una exploración manual del árbol, porque entonces la evidencia deja de ser reproducible.</p></div>
+      <div class="qa"><h3>El script sale con 3</h3><p>Hay hallazgos reales. Se tratan como entrada del paso 4: para cada uno se decide si se corrige en este encargo o se reporta. Ignorarlos convierte la verificación en un trámite.</p></div>
+      <div class="qa"><h3>La fuente contradice la documentación existente</h3><p>Primero se determina qué fuente tiene responsabilidad sobre esa afirmación. Si ambas la reclaman, se reporta la contradicción y no se elige por cuenta propia. Si la documentación es la especificación vigente, el arreglo puede corresponder al software.</p></div>
+      <div class="qa"><h3>El repositorio no documenta convención documental</h3><p>Se aplica la estructura mínima justificada por el contenido y no se importa una plantilla completa. Proponer un cambio de convención es un encargo aparte.</p></div>
+      <div class="qa"><h3>Se pide documentar algo que aún no existe en el software</h3><p>Se redacta como propuesta explícita, nunca como estado actual. La distinción entre intención e implementación es una invariante, no un matiz de estilo.</p></div>
+      <div class="qa"><h3>No se puede consultar la versión usada de una dependencia</h3><p>No se le atribuye comportamiento a esa versión: se declara la limitación. Una fuente externa sin versión identificable no sustenta una afirmación.</p></div>
+      <div class="qa"><h3>La intervención detectada es un refactor documental masivo</h3><p>Se informa del coste y del riesgo de revisión antes de ejecutarlo. La documentación se protege igual que el código: un cambio que nadie puede revisar no es una mejora.</p></div>
+    </section>
+
+    <section id="preguntas" class="section">
+      <div class="section-head"><span class="section-num">13</span><h2 class="title">Preguntas cortas</h2></div>
+      <p class="sub">Las dudas que aparecen en la primera conversación con la skill.</p>
+
+      <div class="qa"><h3>¿Escribe la documentación o solo la revisa?</h3><p>Las dos cosas, según el encargo: crear, actualizar, auditar sin modificar o responder una pregunta sobre el estado documental. La auditoría es de solo lectura y no toca artefactos sin un encargo explícito.</p></div>
+      <div class="qa"><h3>¿Siempre crea un documento nuevo cuando falta información?</h3><p>No. La creación es la última opción de la escala: nada, corregir, actualizar, consolidar, referenciar y solo entonces crear. Si el conocimiento cabe en un artefacto existente sin degradar su responsabilidad, no se crea otro.</p></div>
+      <div class="qa"><h3>¿Qué diferencia hay entre inferencia y propuesta?</h3><p>La inferencia es una conclusión derivada de evidencia existente; la propuesta es un diseño que nadie ha adoptado todavía. La primera se confirma o se degrada; la segunda se aprueba o se descarta. Confundirlas convierte una idea en un hecho.</p></div>
+      <div class="qa"><h3>¿Se puede pedir que documente sin leer el código?</h3><p>Se puede, pero el resultado serán propuestas y huecos declarados, no estado implementado. Si el encargo es describir el comportamiento actual, la lectura de fuentes es parte del trabajo.</p></div>
+      <div class="qa"><h3>¿Por qué no basta con el código como documentación?</h3><p>Porque el código expresa el estado implementado y no la intención, ni las restricciones, ni por qué se descartaron alternativas. Y porque quien necesita operar el sistema no lee el código para saber qué hacer en una incidencia.</p></div>
+      <div class="qa"><h3>¿Qué pasa si el proyecto ya tiene su propia estructura documental?</h3><p>Se respeta. La invariante séptima es explícita: la política documental del repositorio prevalece sobre cualquier estructura genérica. Proponer otra cosa es un encargo aparte y explícito.</p></div>
+      <div class="qa"><h3>¿Sirve para documentar una dependencia externa?</h3><p>Sí, con límites: se prioriza la documentación oficial, se identifica la versión consultada y se documenta cómo y por qué la usa el proyecto; no se copia su documentación entera.</p></div>
+      <div class="qa"><h3>¿El cierre es obligatorio aunque el cambio sea de una línea?</h3><p>Sí, con tamaño proporcional: cinco líneas donde «Artefactos» y «Verificación» pueden ser «ninguno» y el código de salida de un solo comando. Lo que no se puede es declarar terminado sin ninguna comprobación.</p></div>
+      <div class="qa"><h3>¿Sustituye a los tests o a los contratos ejecutables?</h3><p>No, y lo dicen sus disparadores negativos. Un contrato que se puede ejecutar se documenta enlazándolo, no reescribiéndolo a mano; dos representaciones completas del mismo contrato divergen siempre.</p></div>
+    </section>
+
+    <section id="diagramas" class="section">
+      <div class="section-head"><span class="section-num">14</span><h2 class="title">Los diagramas</h2></div>
+      <p class="sub">Las dos vistas del mismo procedimiento: el recorrido del encargo al cierre verificado, y las piezas que sostienen la skill.</p>
+
+      <div class="grid cols-2">
+        <a class="card card-link" href="flujo-de-trabajo.html">
+          <div class="card-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h6v5H4zM14 13h6v5h-6z"></path><path d="M10 8.5h2a2 2 0 0 1 2 2v5"></path></svg></div>
+          <h3>Flujo de trabajo</h3>
+          <p>Del encargo al cierre probado: qué se inventaría, en qué momento se fija la certeza, dónde se detiene el flujo ante una contradicción y qué se comprueba antes de dar un documento por terminado.</p>
+          <span class="go">Abrir el diagrama →</span>
+        </a>
+        <a class="card card-link" href="arquitectura.html">
+          <div class="card-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1.5"></rect><rect x="14" y="3" width="7" height="7" rx="1.5"></rect><rect x="3" y="14" width="7" height="7" rx="1.5"></rect><rect x="14" y="14" width="7" height="7" rx="1.5"></rect></svg></div>
+          <h3>Arquitectura</h3>
+          <p>El paquete instalado, las puertas de la evidencia y la superficie sobre la que actúa: <code>SKILL.md</code>, las cuatro referencias, el repositorio leído y la documentación escrita.</p>
+          <span class="go">Abrir el diagrama →</span>
+        </a>
+      </div>
+
+      <p>Los dos son navegables: se puede cambiar el tema, alternar el estilo visual, trazar una ruta entre dos nodos, buscar por etiqueta y exportar a SVG, PNG, WebM o tarjeta para compartir.</p>
+
+      <div class="code"><pre><code># requiere archify 3.2.0 (github.com/tt-a1i/archify, tag v3.2.0)
+node &lt;ruta-a-archify&gt;/archify/bin/archify.mjs deliver workflow \
+  docs/document-management-software/flujo-de-trabajo.json \
+  docs/document-management-software/flujo-de-trabajo.html --quality showcase
+
+node &lt;ruta-a-archify&gt;/archify/bin/archify.mjs deliver architecture \
+  docs/document-management-software/arquitectura.json \
+  docs/document-management-software/arquitectura.html --quality showcase</code></pre></div>
+
+      <div class="note">
+        <p><strong>Cómo se generan.</strong> Los dos son artefactos de <em>archify</em> 3.2.0: un candidato JSON describe el diagrama y el renderizador produce un HTML autónomo con temas, movimiento y exportación. Los candidatos están al lado de cada página y la CLI escribe su recibo <code>.delivery.json</code> con los <code>sha256</code> del spec y del artefacto. La entrega es reproducible: el mismo spec devuelve el mismo HTML.</p>
+      </div>
+    </section>
+  </main>
+</div>
+
+<footer class="footer">
+  <span><code>docs/document-management-software/</code> · skill <code>document-management-software</code> · documento en español</span>
+  <span><a href="#top">Volver arriba</a> · <a href="../../src/document-management-software/SKILL.md">SKILL.md</a> · <a href="flujo-de-trabajo.html">Flujo</a> · <a href="arquitectura.html">Arquitectura</a></span>
+  <span>Página estática: no envía datos ni carga recursos externos · <code>docs/document-management-software/index.html</code></span>
+</footer>
+
+<script>
+(function () {
+  "use strict";
+
+  var STORAGE_KEY = "document-management-software:prefs";
+  var root = document.documentElement;
+
+  var COPY_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>';
+  var CHECK_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>';
+
+  function updateThemeLabel() {
+    var btn = document.getElementById("theme-toggle");
+    if (!btn) { return; }
+    var dark = root.getAttribute("data-theme") === "dark";
+    btn.setAttribute("aria-label", dark ? "Cambiar a tema claro" : "Cambiar a tema oscuro");
+  }
+
+  function applyTheme(theme) {
+    if (theme !== "dark" && theme !== "light") { theme = "light"; }
+    root.setAttribute("data-theme", theme);
+    updateThemeLabel();
+  }
+
+  var prefs = {};
+  try { prefs = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}"); } catch (e) { prefs = {}; }
+
+  var initialTheme = prefs.theme;
+  if (initialTheme !== "dark" && initialTheme !== "light") {
+    initialTheme = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+  }
+  applyTheme(initialTheme);
+
+  function savePrefs() {
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(prefs)); } catch (e) {}
+  }
+
+  var themeBtn = document.getElementById("theme-toggle");
+  if (themeBtn) {
+    themeBtn.addEventListener("click", function () {
+      prefs.theme = root.getAttribute("data-theme") === "dark" ? "light" : "dark";
+      applyTheme(prefs.theme);
+      savePrefs();
+    });
+  }
+
+  // El botón de copiar no se escribe en el marcado: se crea aquí para que
+  // añadir un bloque de código no obligue a recordar su botón.
+  document.querySelectorAll(".code").forEach(function (block) {
+    if (block.querySelector(".copy")) { return; }
+    var btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "copy";
+    btn.innerHTML = COPY_ICON + "<span>Copiar</span>";
+    btn.setAttribute("aria-label", "Copiar");
+    block.appendChild(btn);
+
+    btn.addEventListener("click", function () {
+      var pre = block.querySelector("pre");
+      var code = (pre && (pre.querySelector("code") || pre)) || null;
+      if (!code) { return; }
+      var done = function () {
+        btn.classList.add("copied");
+        btn.innerHTML = CHECK_ICON + "<span>Copiado</span>";
+        btn.setAttribute("aria-label", "Copiado");
+        setTimeout(function () {
+          btn.classList.remove("copied");
+          btn.innerHTML = COPY_ICON + "<span>Copiar</span>";
+          btn.setAttribute("aria-label", "Copiar");
+        }, 1600);
+      };
+      var text = code.textContent;
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(done, done);
+      } else {
+        var ta = document.createElement("textarea");
+        ta.value = text;
+        ta.style.position = "fixed";
+        ta.style.opacity = "0";
+        document.body.appendChild(ta);
+        ta.select();
+        try { document.execCommand("copy"); } catch (e) {}
+        document.body.removeChild(ta);
+        done();
+      }
+    });
+  });
+
+  if ("IntersectionObserver" in window) {
+    var links = {};
+    document.querySelectorAll(".toc a").forEach(function (a) { links[a.getAttribute("href").slice(1)] = a; });
+    var observer = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) {
+          Object.keys(links).forEach(function (id) { links[id].classList.remove("active"); });
+          if (links[entry.target.id]) { links[entry.target.id].classList.add("active"); }
+        }
+      });
+    }, { rootMargin: "-20% 0px -70% 0px", threshold: 0 });
+    document.querySelectorAll("main section").forEach(function (s) { observer.observe(s); });
+  }
+})();
+</script>
+</body>
+</html>

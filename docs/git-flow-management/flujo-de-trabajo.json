@@ -1,0 +1,324 @@
+{
+  "schema_version": 2,
+  "diagram_type": "workflow",
+  "meta": {
+    "title": "Flujo de trabajo de la skill de Git",
+    "subtitle": "De la inspección al resultado verificado: qué lee la skill, dónde se detiene, qué confirma la persona y qué se prueba antes de decir «hecho».",
+    "locale": "es",
+    "output": "docs/git-flow-management/flujo-de-trabajo.html",
+    "visual_preset": "signal-flow",
+    "quality_profile": "showcase"
+  },
+  "lanes": [
+    {
+      "id": "persona",
+      "label": "Persona y encargo"
+    },
+    {
+      "id": "skill",
+      "label": "La skill: decidir y ejecutar"
+    },
+    {
+      "id": "arbol",
+      "label": "Rama y remoto"
+    },
+    {
+      "id": "control",
+      "label": "Guardia y evidencia",
+      "variant": "exception"
+    }
+  ],
+  "phases": [
+    {
+      "id": "entrada",
+      "label": "Inspección",
+      "fromCol": 0,
+      "toCol": 1
+    },
+    {
+      "id": "juicio",
+      "label": "Política y plan",
+      "fromCol": 2,
+      "toCol": 3,
+      "variant": "emphasis"
+    },
+    {
+      "id": "ejecucion",
+      "label": "Ejecución",
+      "fromCol": 4,
+      "toCol": 4
+    },
+    {
+      "id": "cierre",
+      "label": "Cierre probado",
+      "fromCol": 5,
+      "toCol": 5,
+      "variant": "security"
+    }
+  ],
+  "groups": [
+    {
+      "id": "politica",
+      "label": "Política aplicable",
+      "lane": "skill",
+      "fromCol": 1,
+      "toCol": 2,
+      "variant": "emphasis"
+    },
+    {
+      "id": "prueba",
+      "label": "Prueba de solo lectura",
+      "lane": "control",
+      "fromCol": 4,
+      "toCol": 5,
+      "variant": "security"
+    }
+  ],
+  "mainPath": [
+    "encargo",
+    "inspeccion",
+    "clasifica",
+    "guardia",
+    "plan",
+    "confirma",
+    "ejecuta",
+    "verifica",
+    "resultado"
+  ],
+  "nodes": [
+    {
+      "id": "encargo",
+      "lane": "persona",
+      "col": 0,
+      "type": "external",
+      "label": "Encargo de Git",
+      "sublabel": "commit · merge · release",
+      "tag": "nada se ejecuta aún",
+      "icon": "start"
+    },
+    {
+      "id": "confirma",
+      "lane": "persona",
+      "col": 3,
+      "type": "external",
+      "label": "Confirmación única",
+      "sublabel": "solo para ese plan",
+      "tag": "otra rama lo invalida",
+      "icon": "person"
+    },
+    {
+      "id": "arbol",
+      "lane": "arbol",
+      "col": 1,
+      "type": "database",
+      "label": "Rama, árbol y remoto",
+      "sublabel": "status · branch · log"
+    },
+    {
+      "id": "destino",
+      "lane": "arbol",
+      "col": 5,
+      "type": "database",
+      "label": "Llegó al destino",
+      "sublabel": "merge-base · ls-remote"
+    },
+    {
+      "id": "inspeccion",
+      "lane": "skill",
+      "col": 0,
+      "type": "backend",
+      "label": "Inspección obligatoria",
+      "sublabel": "seis comandos de solo lectura",
+      "tag": "no pide permiso"
+    },
+    {
+      "id": "clasifica",
+      "lane": "skill",
+      "col": 1,
+      "type": "backend",
+      "label": "Clasificación",
+      "sublabel": "seis categorías posibles",
+      "tag": "documentada > práctica"
+    },
+    {
+      "id": "guardia",
+      "lane": "skill",
+      "col": 2,
+      "type": "security",
+      "label": "Rama protegida",
+      "sublabel": "main · develop",
+      "tag": "se detiene y propone rama"
+    },
+    {
+      "id": "plan",
+      "lane": "skill",
+      "col": 3,
+      "type": "backend",
+      "label": "Plan de seis campos",
+      "sublabel": "estado · plan · confirmación",
+      "tag": "resultado verificable"
+    },
+    {
+      "id": "ejecuta",
+      "lane": "skill",
+      "col": 4,
+      "type": "backend",
+      "label": "Ejecución del plan",
+      "sublabel": "solo lo aprobado",
+      "tag": "sin add global"
+    },
+    {
+      "id": "parada",
+      "lane": "control",
+      "col": 2,
+      "type": "security",
+      "label": "Parada obligatoria",
+      "sublabel": "conflicto, error o desvío",
+      "tag": "sin improvisar",
+      "icon": "stop"
+    },
+    {
+      "id": "verifica",
+      "lane": "control",
+      "col": 4,
+      "type": "security",
+      "label": "Verificación",
+      "sublabel": "estado · SHA · ascendencia",
+      "tag": "evidencia mostrada"
+    },
+    {
+      "id": "resultado",
+      "lane": "control",
+      "col": 5,
+      "type": "frontend",
+      "label": "Resultado",
+      "sublabel": "completo o no verificado",
+      "icon": "success"
+    }
+  ],
+  "edges": [
+    {
+      "id": "pide",
+      "from": "encargo",
+      "to": "inspeccion",
+      "label": "pide",
+      "variant": "emphasis",
+      "role": "main"
+    },
+    {
+      "id": "estado",
+      "from": "inspeccion",
+      "to": "arbol",
+      "label": "lee estado",
+      "variant": "dashed",
+      "role": "branch"
+    },
+    {
+      "id": "evidencia",
+      "from": "inspeccion",
+      "to": "clasifica",
+      "label": "evidencia",
+      "role": "main"
+    },
+    {
+      "id": "seis-categorias",
+      "from": "clasifica",
+      "to": "guardia",
+      "label": "6 categorías",
+      "role": "main"
+    },
+    {
+      "id": "rama-permitida",
+      "from": "guardia",
+      "to": "plan",
+      "label": "rama válida",
+      "variant": "emphasis",
+      "role": "main"
+    },
+    {
+      "id": "bloquea",
+      "from": "guardia",
+      "to": "parada",
+      "label": "protegida",
+      "variant": "security",
+      "role": "return"
+    },
+    {
+      "id": "aprobacion",
+      "from": "plan",
+      "to": "confirma",
+      "label": "aprobación",
+      "variant": "emphasis",
+      "role": "main"
+    },
+    {
+      "id": "autoriza",
+      "from": "confirma",
+      "to": "ejecuta",
+      "label": "una vez",
+      "variant": "emphasis",
+      "role": "main"
+    },
+    {
+      "id": "solo-aprobado",
+      "from": "ejecuta",
+      "to": "verifica",
+      "label": "solo lo aprobado",
+      "role": "main"
+    },
+    {
+      "id": "desvio",
+      "from": "ejecuta",
+      "to": "parada",
+      "label": "desvío",
+      "variant": "security",
+      "role": "return",
+      "fromSide": "left",
+      "toSide": "right"
+    },
+    {
+      "id": "prueba-destino",
+      "from": "verifica",
+      "to": "destino",
+      "label": "comprueba",
+      "role": "main"
+    },
+    {
+      "id": "cierra",
+      "from": "verifica",
+      "to": "resultado",
+      "label": "todas pasan",
+      "variant": "emphasis",
+      "role": "main"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "Qué se lee y qué se decide",
+      "items": [
+        "La inspección es de solo lectura y no requiere confirmación: seis comandos que fijan rama, commit, árbol, remoto e historial",
+        "La clasificación decide qué política se aplica; sin evidencia se pide una decisión en lugar de suponer",
+        "El plan siempre tiene la misma forma: estado detectado, plan propuesto y una pregunta cerrada"
+      ]
+    },
+    {
+      "dot": "rose",
+      "title": "Dónde se detiene",
+      "items": [
+        "Sobre main o develop no se prepara nada: se bloquea y se propone la rama permitida desde su base",
+        "Un conflicto, un error o un resultado distinto al plan es una parada, no una adaptación",
+        "Si el estado cambió antes de un comando remoto, la confirmación deja de valer"
+      ]
+    },
+    {
+      "dot": "emerald",
+      "title": "Qué se prueba al cerrar",
+      "items": [
+        "Estado de rama y árbol, SHA y mensaje del commit, y el diff real frente al aprobado",
+        "Ascendencia y contención en el destino, más las referencias publicadas en el remoto",
+        "COMPLETO exige todas las comprobaciones aplicables; si falta una, es INCOMPLETO o NO VERIFICADO"
+      ]
+    }
+  ]
+}

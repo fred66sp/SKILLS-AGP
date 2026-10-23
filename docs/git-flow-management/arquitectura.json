@@ -1,0 +1,146 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "Arquitectura de la skill git-flow-management",
+    "subtitle": "Qué piezas la componen, qué puertas impone y sobre qué superficie actúa: el paquete instalado, los controles del flujo y el repositorio operado.",
+    "locale": "es",
+    "output": "docs/git-flow-management/arquitectura.html",
+    "quality_profile": "showcase"
+  },
+  "components": [
+    {
+      "id": "persona",
+      "type": "external",
+      "label": "Persona",
+      "sublabel": "aprueba o rechaza",
+      "icon": "person",
+      "pos": [40, 80],
+      "size": [130, 60]
+    },
+    {
+      "id": "agente",
+      "type": "external",
+      "label": "Agente anfitrión",
+      "sublabel": "Codex · Pi · Claude Code",
+      "pos": [240, 80],
+      "size": [170, 64]
+    },
+    {
+      "id": "skill",
+      "type": "frontend",
+      "label": "SKILL.md",
+      "sublabel": "diez invariantes · ocho secciones",
+      "pos": [480, 80],
+      "size": [170, 64]
+    },
+    {
+      "id": "guardia",
+      "type": "security",
+      "label": "Guardia de rama protegida",
+      "sublabel": "main · develop",
+      "icon": "decision",
+      "pos": [740, 80],
+      "size": [170, 64]
+    },
+    {
+      "id": "plan",
+      "type": "security",
+      "label": "Plan y confirmación",
+      "sublabel": "seis campos · una vez",
+      "pos": [1000, 80],
+      "size": [170, 64]
+    },
+    {
+      "id": "refs",
+      "type": "database",
+      "label": "references/",
+      "sublabel": "nueve documentos",
+      "tag": "se leen cuando toca",
+      "pos": [480, 280],
+      "size": [170, 64]
+    },
+    {
+      "id": "repo",
+      "type": "database",
+      "label": "Repositorio Git",
+      "sublabel": "rama · árbol · historial",
+      "pos": [740, 280],
+      "size": [170, 64]
+    },
+    {
+      "id": "verif",
+      "type": "security",
+      "label": "Verificación de cierre",
+      "sublabel": "solo lectura",
+      "tag": "evidencia o nada",
+      "pos": [1000, 280],
+      "size": [170, 64]
+    },
+    {
+      "id": "remoto",
+      "type": "cloud",
+      "label": "Remoto",
+      "sublabel": "origin · heads · tags",
+      "pos": [740, 460],
+      "size": [170, 64]
+    }
+  ],
+  "boundaries": [
+    {
+      "kind": "region",
+      "label": "Paquete instalado",
+      "wraps": ["skill", "refs"]
+    },
+    {
+      "kind": "region",
+      "label": "Decisión y confirmación",
+      "wraps": ["guardia", "plan"]
+    },
+    {
+      "kind": "security-group",
+      "label": "Superficie operada · fuera de la skill",
+      "wraps": ["repo", "remoto"]
+    }
+  ],
+  "connections": [
+    { "id": "encarga", "from": "persona", "to": "agente", "label": "encarga", "variant": "emphasis" },
+    { "id": "carga", "from": "agente", "to": "skill", "label": "carga", "variant": "emphasis" },
+    { "id": "aplica", "from": "skill", "to": "guardia", "label": "aplica", "variant": "emphasis" },
+    { "id": "propone", "from": "guardia", "to": "plan", "label": "propone", "variant": "emphasis" },
+    { "id": "consulta", "from": "skill", "to": "refs", "label": "consulta", "variant": "dashed" },
+    { "id": "crea-rama", "from": "guardia", "to": "repo", "label": "crea la rama" },
+    { "id": "exige", "from": "plan", "to": "verif", "label": "exige evidencia" },
+    { "id": "comprueba", "from": "verif", "to": "repo", "label": "comprueba", "variant": "emphasis" },
+    { "id": "origin", "from": "repo", "to": "remoto", "label": "origin" }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "El paquete instalado",
+      "items": [
+        "SKILL.md es el cuerpo normativo: invariantes, inspección, clasificación, política por defecto, plan y verificación",
+        "references/ son nueve documentos que solo se abren cuando la operación concreta los pide",
+        "agents/openai.yaml declara «Git Flow seguro» y permite la invocación implícita; assets/ guarda el icono y las dos plantillas, y scripts/verify-branch.sh comprueba ascendencia y contención"
+      ]
+    },
+    {
+      "dot": "rose",
+      "title": "Las puertas del flujo",
+      "items": [
+        "La guardia bloquea cualquier trabajo sobre main o develop y propone la rama permitida desde su base",
+        "El plan obliga a una confirmación única y no reutilizable, posterior a la revisión del diff",
+        "La verificación no acepta prosa: exige estado, SHA, ascendencia y referencias remotas"
+      ]
+    },
+    {
+      "dot": "emerald",
+      "title": "Lo que la skill no hace",
+      "items": [
+        "No crea Issues, PR obligatorias, SemVer ni reglas de merge si la política documentada no las exige",
+        "No migra un repositorio existente a Git Flow ni borra ramas por el hecho de estar integradas",
+        "No reescribe historia, no hace push forzado y no ejecuta nada destructivo sin autorización específica"
+      ]
+    }
+  ]
+}

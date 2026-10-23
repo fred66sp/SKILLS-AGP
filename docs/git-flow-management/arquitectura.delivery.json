@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "0bfba7ac-ad98-4f53-b21c-72f9a561334a",
+  "status": "current",
+  "command": "deliver",
+  "type": "architecture",
+  "input": "C:\\SKILLS-AGP\\docs\\git-flow-management\\arquitectura.json",
+  "output": "C:\\SKILLS-AGP\\docs\\git-flow-management\\arquitectura.html",
+  "specification": {
+    "sha256": "2495b81ea909690e64cff335fe80137c6df1530b88de73eac5511d4db8398da1",
+    "bytes": 4875
+  },
+  "artifact": {
+    "sha256": "5ab5d14d20254274515b79651ff0f2d4f6d4b5e3b6843871f2de73e5b791e888",
+    "bytes": 831136
+  }
+}

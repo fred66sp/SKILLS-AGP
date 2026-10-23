@@ -1,0 +1,260 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "Arquitectura de la skill document-management-software",
+    "subtitle": "Qué piezas la componen, qué puertas impone y sobre qué superficie actúa: el paquete instalado, la evidencia que decide y la documentación del proyecto.",
+    "locale": "es",
+    "output": "docs/document-management-software/arquitectura.html",
+    "quality_profile": "showcase"
+  },
+  "components": [
+    {
+      "id": "persona",
+      "type": "external",
+      "label": "Persona",
+      "sublabel": "decide el alcance",
+      "icon": "person",
+      "pos": [
+        40,
+        80
+      ],
+      "size": [
+        130,
+        60
+      ]
+    },
+    {
+      "id": "agente",
+      "type": "external",
+      "label": "Agente anfitrión",
+      "sublabel": "Pi · Claude Code · Codex",
+      "pos": [
+        240,
+        80
+      ],
+      "size": [
+        170,
+        64
+      ]
+    },
+    {
+      "id": "skill",
+      "type": "frontend",
+      "label": "SKILL.md",
+      "sublabel": "siete pasos · diez invariantes",
+      "pos": [
+        480,
+        80
+      ],
+      "size": [
+        170,
+        64
+      ]
+    },
+    {
+      "id": "certeza",
+      "type": "security",
+      "label": "Certeza por afirmación",
+      "sublabel": "seis grados",
+      "icon": "decision",
+      "pos": [
+        740,
+        80
+      ],
+      "size": [
+        170,
+        64
+      ]
+    },
+    {
+      "id": "intervencion",
+      "type": "security",
+      "label": "Intervención mínima",
+      "sublabel": "actualizar antes que crear",
+      "pos": [
+        1000,
+        80
+      ],
+      "size": [
+        170,
+        64
+      ]
+    },
+    {
+      "id": "refs",
+      "type": "database",
+      "label": "references/",
+      "sublabel": "cuatro documentos",
+      "tag": "se leen cuando toca",
+      "pos": [
+        480,
+        280
+      ],
+      "size": [
+        170,
+        64
+      ]
+    },
+    {
+      "id": "repo",
+      "type": "database",
+      "label": "Repositorio",
+      "sublabel": "código · tests · config · git",
+      "pos": [
+        740,
+        280
+      ],
+      "size": [
+        170,
+        64
+      ]
+    },
+    {
+      "id": "verif",
+      "type": "security",
+      "label": "Verificación de cierre",
+      "sublabel": "solo lectura",
+      "tag": "evidencia o nada",
+      "pos": [
+        1000,
+        280
+      ],
+      "size": [
+        170,
+        64
+      ]
+    },
+    {
+      "id": "docs",
+      "type": "database",
+      "label": "Documentación del proyecto",
+      "sublabel": "README · ADR · runbooks",
+      "pos": [
+        740,
+        460
+      ],
+      "size": [
+        170,
+        64
+      ]
+    }
+  ],
+  "boundaries": [
+    {
+      "kind": "region",
+      "label": "Paquete instalado",
+      "wraps": [
+        "skill",
+        "refs"
+      ]
+    },
+    {
+      "kind": "region",
+      "label": "Decisión y evidencia",
+      "wraps": [
+        "certeza",
+        "intervencion"
+      ]
+    },
+    {
+      "kind": "security-group",
+      "label": "Superficie leída y escrita · fuera de la skill",
+      "wraps": [
+        "repo",
+        "docs"
+      ]
+    }
+  ],
+  "connections": [
+    {
+      "id": "encarga",
+      "from": "persona",
+      "to": "agente",
+      "label": "encarga",
+      "variant": "emphasis"
+    },
+    {
+      "id": "carga",
+      "from": "agente",
+      "to": "skill",
+      "label": "carga",
+      "variant": "emphasis"
+    },
+    {
+      "id": "exige",
+      "from": "skill",
+      "to": "certeza",
+      "label": "exige certeza",
+      "variant": "emphasis"
+    },
+    {
+      "id": "decide",
+      "from": "certeza",
+      "to": "intervencion",
+      "label": "decide",
+      "variant": "emphasis"
+    },
+    {
+      "id": "consulta",
+      "from": "skill",
+      "to": "refs",
+      "label": "consulta",
+      "variant": "dashed"
+    },
+    {
+      "id": "lee",
+      "from": "certeza",
+      "to": "repo",
+      "label": "consulta la fuente"
+    },
+    {
+      "id": "exige-evidencia",
+      "from": "intervencion",
+      "to": "verif",
+      "label": "exige evidencia"
+    },
+    {
+      "id": "contrasta",
+      "from": "verif",
+      "to": "repo",
+      "label": "contrasta",
+      "variant": "emphasis"
+    },
+    {
+      "id": "contiene",
+      "from": "repo",
+      "to": "docs",
+      "label": "contiene"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "El paquete instalado",
+      "items": [
+        "SKILL.md es el cuerpo normativo: diez invariantes, siete pasos con criterio de parada y un cierre de cinco campos con evidencia",
+        "references/ son cuatro documentos de carga justo a tiempo: inventario y responsabilidad, certeza de las afirmaciones, reglas de redacción y auditoría",
+        "scripts/doc-inventory.py aporta lo que no debe decidir el modelo —enlaces rotos, documentos sin título, encabezados duplicados— y assets/ guarda las plantillas de plan e informe"
+      ]
+    },
+    {
+      "dot": "rose",
+      "title": "Las puertas de la evidencia",
+      "items": [
+        "Ninguna afirmación material se escribe sin fuente; si la hay pero es parcial, la redacción baja de grado en lugar de completarse",
+        "La intervención mínima se elige en orden: nada, corregir, actualizar, consolidar, referenciar y solo al final crear",
+        "La verificación exige repetir el inventario y contrastar cada afirmación modificada contra su fuente antes de cerrar"
+      ]
+    },
+    {
+      "dot": "emerald",
+      "title": "Lo que la skill no hace",
+      "items": [
+        "No inventa requisitos, decisiones ni arquitectura para que un documento parezca completo",
+        "No sustituye tests, contratos ejecutables, comentarios de código ni mensajes de commit",
+        "No borra contenido para simplificar ni cambia la terminología establecida por preferencia de estilo"
+      ]
+    }
+  ]
+}

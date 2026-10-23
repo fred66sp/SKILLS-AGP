@@ -1,0 +1,14 @@
+interface:
+  display_name: Git Flow seguro
+  short_description: Gestiona Git con flujo verificable
+  default_prompt: Usa $git-flow-management para planificar y ejecutar una operación
+    Git segura.
+  icon_small: assets/icon.svg
+  icon_large: assets/icon.svg
+policy:
+  products:
+  - chatgpt
+  - codex
+  - api
+  - atlas
+  allow_implicit_invocation: true

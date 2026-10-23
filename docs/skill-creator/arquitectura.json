@@ -1,0 +1,279 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "Arquitectura de la skill skill-creator",
+    "subtitle": "Qué piezas la componen, qué puertas impone y qué superficie escribe: el paquete instalado, la validación y el directorio que la skill produce.",
+    "locale": "es",
+    "output": "docs/skill-creator/arquitectura.html",
+    "quality_profile": "showcase"
+  },
+  "components": [
+    {
+      "id": "persona",
+      "type": "external",
+      "label": "Persona",
+      "sublabel": "encarga la skill",
+      "icon": "person",
+      "pos": [
+        40,
+        80
+      ],
+      "size": [
+        130,
+        60
+      ]
+    },
+    {
+      "id": "agente",
+      "type": "external",
+      "label": "Agente anfitrión",
+      "sublabel": "Codex · Pi · Claude Code",
+      "pos": [
+        240,
+        80
+      ],
+      "size": [
+        170,
+        64
+      ]
+    },
+    {
+      "id": "skill",
+      "type": "frontend",
+      "label": "SKILL.md",
+      "sublabel": "seis pasos · una puerta",
+      "pos": [
+        480,
+        80
+      ],
+      "size": [
+        170,
+        64
+      ]
+    },
+    {
+      "id": "validador",
+      "type": "security",
+      "label": "validate-metadata.py",
+      "sublabel": "nombre · descripción",
+      "icon": "decision",
+      "pos": [
+        740,
+        80
+      ],
+      "size": [
+        170,
+        64
+      ]
+    },
+    {
+      "id": "paquete",
+      "type": "database",
+      "label": "Directorio de la skill",
+      "sublabel": "SKILL.md + tres carpetas",
+      "pos": [
+        1000,
+        80
+      ],
+      "size": [
+        170,
+        64
+      ]
+    },
+    {
+      "id": "scripts",
+      "type": "database",
+      "label": "scripts/",
+      "sublabel": "CLIs deterministas",
+      "tag": "un solo propósito",
+      "pos": [
+        480,
+        240
+      ],
+      "size": [
+        170,
+        64
+      ]
+    },
+    {
+      "id": "assets",
+      "type": "database",
+      "label": "assets/",
+      "sublabel": "plantillas de salida",
+      "tag": "se copian",
+      "pos": [
+        480,
+        400
+      ],
+      "size": [
+        170,
+        64
+      ]
+    },
+    {
+      "id": "refs",
+      "type": "database",
+      "label": "references/",
+      "sublabel": "contexto plano",
+      "tag": "se lee cuando toca",
+      "pos": [
+        480,
+        560
+      ],
+      "size": [
+        170,
+        64
+      ]
+    },
+    {
+      "id": "checklist",
+      "type": "security",
+      "label": "references/checklist.md",
+      "sublabel": "19 comprobaciones",
+      "tag": "todas en Pass",
+      "pos": [
+        740,
+        240
+      ],
+      "size": [
+        170,
+        64
+      ]
+    },
+    {
+      "id": "docs",
+      "type": "frontend",
+      "label": "docs/ · esta página",
+      "sublabel": "fuera del paquete",
+      "tag": "no consume contexto",
+      "pos": [
+        1000,
+        280
+      ],
+      "size": [
+        170,
+        64
+      ]
+    }
+  ],
+  "boundaries": [
+    {
+      "kind": "region",
+      "label": "Paquete instalado",
+      "wraps": [
+        "skill",
+        "scripts",
+        "assets",
+        "refs"
+      ]
+    },
+    {
+      "kind": "security-group",
+      "label": "Puertas automáticas",
+      "wraps": [
+        "validador",
+        "checklist"
+      ]
+    },
+    {
+      "kind": "region",
+      "label": "Documentación del repositorio",
+      "wraps": [
+        "docs"
+      ]
+    }
+  ],
+  "connections": [
+    {
+      "id": "encarga",
+      "from": "persona",
+      "to": "agente",
+      "label": "encarga",
+      "variant": "emphasis"
+    },
+    {
+      "id": "carga",
+      "from": "agente",
+      "to": "skill",
+      "label": "carga",
+      "variant": "emphasis"
+    },
+    {
+      "id": "valida",
+      "from": "skill",
+      "to": "validador",
+      "label": "valida",
+      "variant": "emphasis"
+    },
+    {
+      "id": "aprueba",
+      "from": "validador",
+      "to": "paquete",
+      "label": "código 0"
+    },
+    {
+      "id": "delega",
+      "from": "skill",
+      "to": "scripts",
+      "label": "delega lo frágil",
+      "variant": "dashed"
+    },
+    {
+      "id": "copia",
+      "from": "skill",
+      "to": "assets",
+      "label": "copia plantillas",
+      "variant": "dashed"
+    },
+    {
+      "id": "consulta",
+      "from": "skill",
+      "to": "refs",
+      "label": "abre cuando toca",
+      "variant": "dashed"
+    },
+    {
+      "id": "audita",
+      "from": "skill",
+      "to": "checklist",
+      "label": "audita al cerrar"
+    },
+    {
+      "id": "documenta",
+      "from": "paquete",
+      "to": "docs",
+      "label": "se documenta en",
+      "variant": "dashed"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "El paquete instalado",
+      "items": [
+        "SKILL.md es el cuerpo normativo: metadatos, seis pasos, divulgación progresiva y gestión de errores",
+        "references/ y assets/ guardan el contexto y las plantillas que solo se leen cuando la operación los pide; scripts/ guarda los CLIs deterministas",
+        "Los tres directorios mantienen un único nivel de profundidad y no contienen documentación para personas"
+      ]
+    },
+    {
+      "dot": "rose",
+      "title": "Las puertas",
+      "items": [
+        "validate-metadata.py devuelve 0 o 1: con 1 no se crea la estructura, se corrige el metadato",
+        "La comprobación de estilo trata la primera y la segunda persona como un fallo, no como una observación",
+        "La checklist de 19 comprobaciones exige Pass en todas antes de considerar la skill desplegable"
+      ]
+    },
+    {
+      "dot": "emerald",
+      "title": "Lo que la skill no hace",
+      "items": [
+        "No escribe README, CHANGELOG ni guías de instalación dentro del paquete de la skill",
+        "No empaqueta código de librería: la lógica de larga vida pertenece a las CLI del repositorio",
+        "No aplica a documentación general ni a código que no consume un agente"
+      ]
+    }
+  ]
+}

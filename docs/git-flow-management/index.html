@@ -1,0 +1,1269 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="git-flow-management — guía completa de la skill: invariantes, inspección obligatoria, detección de política, guardia de ramas protegidas, plan y confirmación, integración, verificación de cierre y recuperación.">
+<meta name="color-scheme" content="light dark">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%230f766e'/%3E%3Cpath d='M12 9a3 3 0 1 0 0 .01M12 12v11' fill='none' stroke='%23ffffff' stroke-width='2.4' stroke-linecap='round'/%3E%3Ccircle cx='21' cy='9' r='3' fill='none' stroke='%23ffffff' stroke-width='2.4'/%3E%3Cpath d='M21 12v3a4 4 0 0 1-4 4h-5' fill='none' stroke='%23ffffff' stroke-width='2.4' stroke-linecap='round'/%3E%3C/svg%3E">
+<title>git-flow-management — Git como procedimiento verificable</title>
+<script>
+(function () {
+  try {
+    var p = JSON.parse(localStorage.getItem("git-flow-management:prefs") || "{}");
+    var t = p.theme || (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+    document.documentElement.setAttribute("data-theme", t);
+  } catch (e) { document.documentElement.setAttribute("data-theme", "light"); }
+})();
+</script>
+<style>
+  /* Identidad visual: verde de verificación (teal) con azul como segundo
+     acento. Donde el color lleva texto se usa la variante oscurecida, que
+     mantiene el contraste AA sobre el fondo claro. */
+  :root {
+    --bg: #f8fafc;
+    --bg-elev: #ffffff;
+    --bg-soft: #f1f5f9;
+    --text: #0f172a;
+    --muted: #5f6b80;
+    --border: #e2e8f0;
+    --border-strong: #cbd5e1;
+    --accent: #0f766e;
+    --accent-2: #2563eb;
+    --accent-3: #0891b2;
+    --accent-soft: rgba(15, 118, 110, .10);
+    --ok: #10b981;
+    --warn: #f59e0b;
+    --ok-text: #047857;
+    --warn-text: #b45309;
+    --error-text: #b91c1c;
+    --code-bg: #0a0f1c;
+    --code-text: #e5e7eb;
+    --code-border: #1f2937;
+    --shadow: 0 1px 2px rgba(15, 23, 42, .05), 0 8px 24px -12px rgba(15, 23, 42, .18);
+    --shadow-lg: 0 20px 60px -30px rgba(15, 23, 42, .35);
+    --radius: 16px;
+    --radius-sm: 10px;
+    /* No se descargan tipografías: si Inter o JetBrains Mono no están
+       instaladas, el navegador cae en la pila del sistema. */
+    --font: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    --mono: "JetBrains Mono", ui-monospace, "SF Mono", "Fira Code", Menlo, Consolas, monospace;
+  }
+  :root[data-theme="dark"] {
+    --bg: #0a0f1c;
+    --bg-elev: #111827;
+    --bg-soft: #1f2937;
+    --text: #e5e7eb;
+    --muted: #94a3b8;
+    --border: #334155;
+    --border-strong: #475569;
+    --accent: #2dd4bf;
+    --accent-2: #60a5fa;
+    --accent-3: #22d3ee;
+    --accent-soft: rgba(45, 212, 191, .14);
+    --ok: #34d399;
+    --warn: #fbbf24;
+    --ok-text: #34d399;
+    --warn-text: #fbbf24;
+    --error-text: #f87171;
+    --code-bg: #070b16;
+    --code-text: #e5e7eb;
+    --code-border: #1f2937;
+    --shadow: 0 1px 2px rgba(0, 0, 0, .4), 0 12px 32px -18px rgba(0, 0, 0, .8);
+    --shadow-lg: 0 24px 70px -34px rgba(0, 0, 0, .9);
+  }
+
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; scroll-padding-top: 88px; }
+  body {
+    margin: 0;
+    font-family: var(--font);
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  a { color: var(--accent); text-decoration: none; }
+  a:hover { text-decoration: underline; text-underline-offset: 3px; }
+  code, pre, kbd { font-family: var(--mono); }
+
+  .topbar {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 12px clamp(16px, 4vw, 40px);
+    background: color-mix(in srgb, var(--bg) 82%, transparent);
+    -webkit-backdrop-filter: saturate(180%) blur(14px);
+    backdrop-filter: saturate(180%) blur(14px);
+    border-bottom: 1px solid var(--border);
+  }
+  .brand { display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--text); }
+  .brand:hover { text-decoration: none; }
+  .brand-mark {
+    display: block;
+    width: 34px; height: 34px;
+    border-radius: 10px;
+    box-shadow: var(--shadow);
+    overflow: hidden;
+  }
+  .brand-mark svg { width: 100%; height: 100%; display: block; }
+  .brand-name { font-weight: 700; letter-spacing: -.02em; font-size: 15px; }
+  .brand-name small { display: block; font-weight: 500; color: var(--muted); font-size: 11px; letter-spacing: .04em; text-transform: uppercase; }
+  .topbar-spacer { flex: 1; }
+
+  .icon-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    height: 36px;
+    padding: 0 12px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: var(--bg-elev);
+    color: var(--text);
+    font: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: border-color .15s, background .15s, transform .1s;
+  }
+  .icon-btn:hover { border-color: var(--border-strong); }
+  .icon-btn:active { transform: translateY(1px); }
+  .icon-btn svg { width: 16px; height: 16px; }
+  :root[data-theme="light"] .icon-sun { display: none; }
+  :root[data-theme="dark"] .icon-moon { display: none; }
+
+  .hero {
+    position: relative;
+    overflow: hidden;
+    padding: clamp(48px, 9vw, 104px) clamp(16px, 4vw, 40px) clamp(40px, 6vw, 72px);
+    border-bottom: 1px solid var(--border);
+  }
+  .hero::before {
+    content: "";
+    position: absolute;
+    inset: -40% -10% auto -10%;
+    height: 420px;
+    background:
+      radial-gradient(60% 60% at 22% 30%, color-mix(in srgb, var(--accent) 26%, transparent), transparent 70%),
+      radial-gradient(50% 50% at 70% 6%, color-mix(in srgb, var(--accent-2) 22%, transparent), transparent 70%),
+      radial-gradient(42% 42% at 92% 26%, color-mix(in srgb, var(--accent-3) 20%, transparent), transparent 70%);
+    filter: blur(6px);
+    pointer-events: none;
+  }
+  .hero-inner { position: relative; max-width: 1080px; margin: 0 auto; }
+  .pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 5px 12px;
+    border: 1px solid var(--border-strong);
+    border-radius: 999px;
+    background: var(--bg-elev);
+    color: var(--muted);
+    font-size: 12.5px;
+    font-weight: 600;
+    letter-spacing: .01em;
+  }
+  .pill .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--ok); box-shadow: 0 0 0 3px color-mix(in srgb, var(--ok) 22%, transparent); }
+  .hero h1 {
+    margin: 22px 0 0;
+    font-size: clamp(34px, 6vw, 62px);
+    line-height: 1.04;
+    letter-spacing: -.035em;
+    font-weight: 800;
+  }
+  .hero h1 .grad { color: var(--accent); }
+  .hero p.lead {
+    margin: 20px 0 0;
+    max-width: 660px;
+    font-size: clamp(16px, 2.2vw, 19px);
+    color: var(--muted);
+  }
+  .hero-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 30px; }
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 11px 18px;
+    border-radius: var(--radius-sm);
+    font-weight: 650;
+    font-size: 14.5px;
+    border: 1px solid transparent;
+    cursor: pointer;
+    transition: transform .12s, box-shadow .2s, border-color .15s;
+  }
+  .btn:hover { text-decoration: none; transform: translateY(-1px); }
+  .btn-primary { background: linear-gradient(135deg, var(--accent), var(--accent-2)); color: #fff; box-shadow: var(--shadow); }
+  .btn-ghost { background: var(--bg-elev); border-color: var(--border-strong); color: var(--text); }
+
+  .layout {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: clamp(32px, 5vw, 60px) clamp(16px, 4vw, 40px) 80px;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 48px;
+  }
+  @media (min-width: 1020px) {
+    .layout { grid-template-columns: 214px minmax(0, 1fr); gap: 56px; }
+  }
+  .toc { display: none; }
+  @media (min-width: 1020px) {
+    .toc { display: block; position: sticky; top: 84px; align-self: start; }
+    .toc h2 { font-size: 11px; text-transform: uppercase; letter-spacing: .1em; color: var(--muted); margin: 0 0 12px; }
+    .toc a {
+      display: block;
+      padding: 7px 12px;
+      border-left: 2px solid var(--border);
+      color: var(--muted);
+      font-size: 14px;
+      font-weight: 550;
+    }
+    .toc a:hover { color: var(--text); text-decoration: none; }
+    .toc a.active { color: var(--accent); border-left-color: var(--accent); background: var(--accent-soft); border-radius: 0 8px 8px 0; }
+  }
+  main { min-width: 0; }
+  section { scroll-margin-top: 88px; }
+  section + section { margin-top: 64px; }
+  .section-head { display: flex; align-items: center; gap: 12px; margin-bottom: 8px; }
+  .section-num {
+    display: grid; place-items: center;
+    width: 30px; height: 30px;
+    border-radius: 9px;
+    background: var(--accent-soft);
+    color: var(--accent);
+    font-size: 13px;
+    font-weight: 800;
+    font-variant-numeric: tabular-nums;
+  }
+  h2.title { margin: 0; font-size: clamp(22px, 3vw, 28px); letter-spacing: -.02em; }
+  .section > p.sub { margin: 6px 0 24px; color: var(--muted); max-width: 74ch; }
+  h3 { margin: 30px 0 10px; font-size: 17px; letter-spacing: -.01em; }
+
+  .grid { display: grid; gap: 16px; }
+  .grid + .grid, .grid + .note, .grid + h3 { margin-top: 24px; }
+  @media (min-width: 640px) { .grid.cols-2 { grid-template-columns: 1fr 1fr; } .grid.cols-3 { grid-template-columns: repeat(3, 1fr); } }
+  .card {
+    background: var(--bg-elev);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px;
+    box-shadow: var(--shadow);
+  }
+  .card h3 { margin: 0 0 6px; font-size: 15px; }
+  .card p { margin: 0; color: var(--muted); font-size: 14px; }
+  .card p + p { margin-top: 8px; }
+  .card ul { margin: 8px 0 0; padding-left: 18px; color: var(--muted); font-size: 13.5px; }
+  .card li + li { margin-top: 4px; }
+  .card .card-ico {
+    display: grid; place-items: center;
+    width: 34px; height: 34px; margin-bottom: 12px;
+    border-radius: 9px;
+    background: var(--accent-soft); color: var(--accent);
+  }
+  .card .card-ico svg { width: 18px; height: 18px; }
+
+  .table-wrap { overflow-x: auto; border: 1px solid var(--border); border-radius: var(--radius); background: var(--bg-elev); box-shadow: var(--shadow); }
+  .table-wrap + .note, .table-wrap + p { margin-top: 16px; }
+  table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  thead th {
+    text-align: left;
+    padding: 12px 16px;
+    background: var(--bg-soft);
+    color: var(--muted);
+    font-size: 11.5px;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    border-bottom: 1px solid var(--border);
+    white-space: nowrap;
+  }
+  tbody td { padding: 11px 16px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  tbody tr:last-child td { border-bottom: 0; }
+  tbody tr:hover { background: color-mix(in srgb, var(--accent) 3%, transparent); }
+  td code, th code { font-size: 12.8px; }
+  tbody td:first-child { white-space: nowrap; }
+  .table-wrap.wrap-cells td:first-child { white-space: normal; }
+  .table-wrap.wrap-cells td code { overflow-wrap: anywhere; }
+  /* En pantallas estrechas, la primera columna deja de ir en una sola línea:
+     con nowrap, los nombres largos se parten mal. */
+  @media (max-width: 640px) {
+    table { font-size: 13.5px; }
+    thead th, tbody td { padding: 9px 12px; }
+    tbody td:first-child { white-space: normal; }
+  }
+
+  .sev {
+    display: inline-block;
+    min-width: 60px;
+    text-align: center;
+    padding: 2px 8px;
+    border-radius: 6px;
+    font-family: var(--mono);
+    font-size: 11.5px;
+    font-weight: 700;
+    letter-spacing: .02em;
+    text-transform: uppercase;
+  }
+  .sev-error { background: color-mix(in srgb, #ef4444 16%, transparent); color: var(--error-text); }
+  .sev-warn { background: color-mix(in srgb, var(--warn) 20%, transparent); color: var(--warn-text); }
+  .sev-ok { background: color-mix(in srgb, var(--ok) 16%, transparent); color: var(--ok-text); }
+  .sev-info { background: color-mix(in srgb, var(--accent) 16%, transparent); color: var(--accent); }
+
+  .code { position: relative; margin: 14px 0; }
+  .code pre {
+    margin: 0;
+    padding: 16px 52px 16px 18px;
+    background: var(--code-bg);
+    color: var(--code-text);
+    border: 1px solid var(--code-border);
+    border-radius: var(--radius);
+    overflow-x: auto;
+    font-size: 13.2px;
+    line-height: 1.6;
+    box-shadow: var(--shadow);
+  }
+  .code pre code { background: none; padding: 0; color: inherit; font-size: inherit; }
+  .code .copy {
+    position: absolute;
+    top: 9px; right: 9px;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    height: 30px;
+    padding: 0 9px;
+    border: 1px solid var(--code-border);
+    border-radius: 8px;
+    background: color-mix(in srgb, var(--code-bg) 60%, #ffffff 8%);
+    color: #c8d2e8;
+    font: inherit;
+    font-size: 11.5px;
+    font-weight: 600;
+    cursor: pointer;
+    opacity: 0;
+    transition: opacity .15s, border-color .15s;
+  }
+  .code:hover .copy, .code .copy:focus-visible { opacity: 1; }
+  .code .copy:hover { border-color: #3b4c72; }
+  @media (hover: none) { .code .copy { opacity: 1; } }
+  .code .copy.copied { color: var(--ok); border-color: var(--ok); }
+  .code .copy svg { width: 13px; height: 13px; }
+  p code, li code, td code {
+    background: var(--bg-soft);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: .08em .42em;
+    font-size: .88em;
+  }
+  .note {
+    display: flex;
+    gap: 12px;
+    padding: 14px 16px;
+    border-left: 1px solid var(--accent);
+    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+    background: var(--accent-soft);
+    font-size: 14px;
+    margin: 16px 0;
+  }
+  .note strong { color: var(--text); }
+  .note p { margin: 0; }
+  .note p + p { margin-top: 8px; }
+
+  .status-strip {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    max-width: 720px;
+    margin-top: 28px;
+    padding: 14px 16px;
+    border: 1px solid color-mix(in srgb, var(--ok) 42%, var(--border));
+    border-radius: var(--radius-sm);
+    background: color-mix(in srgb, var(--ok) 8%, var(--bg-elev));
+  }
+  .status-mark {
+    flex: 0 0 auto;
+    display: grid;
+    place-items: center;
+    width: 30px;
+    height: 30px;
+    border-radius: 9px;
+    background: color-mix(in srgb, var(--ok) 18%, transparent);
+    color: var(--ok-text);
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: .04em;
+  }
+  .status-strip strong { display: block; font-size: 14px; }
+  .status-strip span:not(.status-mark) { display: block; margin-top: 2px; color: var(--muted); font-size: 13px; }
+  .status-strip--prep { border-color: color-mix(in srgb, var(--warn) 42%, var(--border)); background: color-mix(in srgb, var(--warn) 8%, var(--bg-elev)); }
+  .status-strip--prep .status-mark { background: color-mix(in srgb, var(--warn) 20%, transparent); color: var(--warn-text); }
+
+  .flow { display: grid; grid-template-columns: 1fr; gap: 12px; }
+  @media (min-width: 640px) { .flow { grid-template-columns: repeat(2, 1fr); } }
+  .flow-step {
+    min-height: 142px;
+    padding: 16px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    background: var(--bg-elev);
+  }
+  .flow-step code { color: var(--accent); font-weight: 700; }
+  .flow-step strong { display: block; margin-top: 10px; font-size: 15px; }
+  .flow-step p { margin: 5px 0 0; color: var(--muted); font-size: 13.5px; }
+
+  .role-grid { display: grid; grid-template-columns: 1fr; gap: 16px; margin-top: 24px; }
+  @media (min-width: 640px) { .role-grid { grid-template-columns: repeat(2, 1fr); } }
+  .role-block {
+    padding: 18px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    background: var(--bg-elev);
+  }
+  .role-label {
+    display: block;
+    color: var(--accent);
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+  }
+  .role-block h3 { margin: 10px 0 7px; font-size: 17px; }
+  .role-block p { margin: 0; color: var(--muted); font-size: 13.5px; }
+  .role-block ul { margin: 12px 0 0; padding-left: 18px; color: var(--muted); font-size: 13px; }
+  .role-block li + li { margin-top: 5px; }
+
+  a.card-link { display: block; text-decoration: none; color: inherit; transition: border-color .15s, transform .12s; }
+  a.card-link:hover { text-decoration: none; border-color: var(--accent); transform: translateY(-1px); }
+  a.card-link:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+  a.card-link .go { display: inline-block; margin-top: 12px; color: var(--accent); font-weight: 650; font-size: 13.5px; }
+  a.card-link .card-ico { transition: background .15s; }
+
+  .footer {
+    border-top: 1px solid var(--border);
+    padding: 28px clamp(16px, 4vw, 40px);
+    color: var(--muted);
+    font-size: 13.5px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px 20px;
+    align-items: center;
+    justify-content: space-between;
+    max-width: 1180px;
+    margin: 0 auto;
+  }
+  .footer code { background: var(--bg-soft); border: 1px solid var(--border); border-radius: 6px; padding: 1px 6px; }
+  .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+  ::selection { background: color-mix(in srgb, var(--accent) 30%, transparent); }
+  @media (prefers-reduced-motion: reduce) { * { scroll-behavior: auto !important; transition: none !important; } }
+
+  .qa { border-bottom: 1px solid var(--border); padding: 18px 0; }
+  .qa:last-child { border-bottom: 0; }
+  .qa h3 { margin: 0 0 6px; font-size: 15.5px; }
+  .qa p { margin: 0; color: var(--muted); font-size: 14px; }
+  .qa p + p { margin-top: 8px; }
+  ul.plain { margin: 10px 0 0; padding-left: 20px; color: var(--muted); font-size: 14.5px; }
+  ul.plain li + li { margin-top: 6px; }
+  .cmd { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+  .cmd .sig { color: var(--muted); font-weight: 500; font-size: 13.5px; }
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <a class="brand" href="#top">
+    <span class="brand-mark" aria-hidden="true">
+      <svg viewBox="0 0 32 32" role="presentation">
+        <defs>
+          <linearGradient id="brand-grad" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="#14b8a6"></stop>
+            <stop offset="1" stop-color="#2563eb"></stop>
+          </linearGradient>
+        </defs>
+        <rect width="32" height="32" fill="url(#brand-grad)"></rect>
+        <path d="M12 22V9" fill="none" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round"></path>
+        <circle cx="12" cy="8.2" r="2.6" fill="none" stroke="#ffffff" stroke-width="2.2"></circle>
+        <circle cx="20.5" cy="8.2" r="2.6" fill="none" stroke="#ffffff" stroke-width="2.2"></circle>
+        <path d="M20.5 10.8v2.6a3.4 3.4 0 0 1-3.4 3.4H12" fill="none" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round"></path>
+        <circle cx="12" cy="22.2" r="2.6" fill="none" stroke="#ffffff" stroke-width="2.2"></circle>
+      </svg>
+    </span>
+    <span class="brand-name">git-flow-management<small>skill de Git verificable</small></span>
+  </a>
+  <span class="topbar-spacer"></span>
+  <button class="icon-btn" id="theme-toggle" type="button" aria-label="Cambiar a tema oscuro">
+    <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"></path></svg>
+    <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"></path></svg>
+    <span>Tema</span>
+  </button>
+</header>
+
+<section class="hero" id="top">
+  <div class="hero-inner">
+    <span class="pill"><span class="dot" aria-hidden="true"></span>una skill · diez invariantes · ninguna operación persistente sin confirmar</span>
+    <h1>Git como procedimiento <span class="grad">verificable</span></h1>
+    <p class="lead">Esta skill no dice «usa Git Flow»: obliga a inspeccionar, detectar la política aplicable, presentar un plan exacto, esperar una confirmación y demostrar con comandos de solo lectura que el resultado cumple el flujo. Si no se puede probar, no está terminado.</p>
+    <div class="hero-actions">
+      <a class="btn btn-primary" href="#que-es">Qué es esta skill</a>
+      <a class="btn btn-ghost" href="#invariantes">Las diez invariantes</a>
+      <a class="btn btn-ghost" href="#diagramas">Los diagramas</a>
+    </div>
+    <div class="status-strip" role="status">
+      <span class="status-mark" aria-hidden="true">OK</span>
+      <div><strong>Todo lo que hay aquí sale de la propia skill</strong><span>Las reglas, tablas, plantillas y estados de esta página están copiados de <code>SKILL.md</code> y de sus nueve referencias. No hay criterios añadidos ni interpretaciones libres: si algo no está en la skill, no se presenta como regla.</span></div>
+    </div>
+  </div>
+</section>
+
+<div class="layout">
+  <nav class="toc" aria-label="Índice de la página">
+    <h2>En esta página</h2>
+    <a href="#que-es">1. Qué es esta skill</a>
+    <a href="#invariantes">2. Las diez invariantes</a>
+    <a href="#inspeccion">3. Inspección obligatoria</a>
+    <a href="#clasificar">4. Clasificar el repositorio</a>
+    <a href="#politica">5. Política Git Flow por defecto</a>
+    <a href="#plan">6. Plan, confirmación y ejecución</a>
+    <a href="#guardia">7. Guardia de rama protegida</a>
+    <a href="#commits">8. Ramas y commits</a>
+    <a href="#integracion">9. Integración y conflictos</a>
+    <a href="#releases">10. Release, hotfix y versionado</a>
+    <a href="#verificacion">11. Verificación de cierre</a>
+    <a href="#auditoria">12. Auditoría sin operación</a>
+    <a href="#peligrosas">13. Operaciones peligrosas</a>
+    <a href="#referencias">14. Las referencias</a>
+    <a href="#preguntas">15. Preguntas cortas</a>
+    <a href="#resultado">16. Resultado final</a>
+    <a href="#diagramas">17. Los diagramas</a>
+  </nav>
+
+  <main>
+    <section id="que-es" class="section">
+      <div class="section-head"><span class="section-num">1</span><h2 class="title">Qué es esta skill</h2></div>
+      <p class="sub">Un procedimiento, no una intención. La diferencia se nota cuando algo sale mal: aquí siempre hay una inspección previa y una prueba posterior.</p>
+      <p>La skill se llama <code>git-flow-management</code> en su frontmatter y vive en la carpeta <code>git-flow-management/</code>. Es obligatoria para cualquier operación Git: no se puede continuar un flujo ignorando sus comprobaciones porque alguien haya dicho «haz Git Flow», «haz un commit» o «sube los cambios».</p>
+      <p>Su ciclo tiene cuatro partes y ninguna es opcional: <strong>inspeccionar</strong> en solo lectura, <strong>detectar la política</strong> aplicable al repositorio, <strong>construir un plan concreto</strong> y pedir una única confirmación, <strong>ejecutar solo lo aprobado</strong> y probar el resultado. La skill nunca promete lo que no ha comprobado.</p>
+
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Pieza</th><th>Qué contiene</th></tr></thead>
+          <tbody>
+            <tr><td><code>SKILL.md</code></td><td>El cuerpo normativo: invariantes, inspección, clasificación, política por defecto, plan y confirmación, guardia de ramas protegidas, verificación de cierre y formato del resultado final.</td></tr>
+            <tr><td><code>references/</code></td><td>Nueve documentos de apoyo que se leen solo cuando la operación los necesita: detección, commits, operaciones, releases, integración, guardia, verificación, operaciones normales y recuperación.</td></tr>
+            <tr><td><code>agents/openai.yaml</code></td><td>Interfaz de la skill: nombre visible «Git Flow seguro», icono y política de invocación (<code>allow_implicit_invocation: true</code>).</td></tr>
+            <tr><td><code>assets/</code></td><td>El icono que declara <code>openai.yaml</code> (dos variantes, pequeña y grande) y las dos plantillas que se rellenan al presentar el plan y al cerrar.</td></tr>
+            <tr><td><code>scripts/</code></td><td><code>verify-branch.sh</code>: comprueba ascendencia y contención entre dos referencias y sale con 0 si se cumple, 1 si no y 2 si el uso es inválido.</td></tr>
+            <tr><td><code>docs/</code></td><td>Esta página. Vive fuera del directorio de la skill y <code>SKILL.md</code> no la enlaza, así que documentar aquí no consume contexto del modelo.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>El bucle completo, en cuatro pasos</h3>
+      <div class="flow">
+        <div class="flow-step"><code>inspección</code><strong>Observa</strong><p>Seis comandos de solo lectura para saber dónde estás, qué ramas existen, qué publica el remoto y qué dice el historial. No requiere confirmación.</p></div>
+        <div class="flow-step"><code>política</code><strong>Clasifica</strong><p>Seis categorías posibles, de «repositorio nuevo» a «política desconocida». De aquí sale qué reglas se aplican y cuáles no se deben inventar.</p></div>
+        <div class="flow-step"><code>plan</code><strong>Confirma</strong><p>Un plan con seis campos obligatorios y una pregunta cerrada. Una sola confirmación, válida solo para ese plan exacto.</p></div>
+        <div class="flow-step"><code>verificación</code><strong>Prueba</strong><p>Estado, commit, ascendencia, remoto y validación acordada. Sin evidencia, el resultado es INCOMPLETO o NO VERIFICADO, nunca «terminado».</p></div>
+      </div>
+
+      <div class="note">
+        <p><strong>La regla mental.</strong> La unidad de trabajo de esta skill no es el comando: es el <em>plan verificado</em>. Un plan sin resultado comprobable no es un plan, es una intención, y las intenciones no se ejecutan.</p>
+      </div>
+    </section>
+
+    <section id="invariantes" class="section">
+      <div class="section-head"><span class="section-num">2</span><h2 class="title">Las diez invariantes</h2></div>
+      <p class="sub">Son obligatorias y no admiten interpretación. Cada una existe porque su ausencia produce un daño concreto y difícil de deshacer.</p>
+
+      <div class="table-wrap wrap-cells">
+        <table>
+          <thead><tr><th>#</th><th>Invariante</th><th>Qué impide</th></tr></thead>
+          <tbody>
+            <tr><td><span class="sev sev-info">1</span></td><td>La skill es obligatoria para cualquier operación Git.</td><td>Que una frase como «haz un commit» desactive las comprobaciones.</td></tr>
+            <tr><td><span class="sev sev-info">2</span></td><td>No se declara aplicado, integrado, publicado ni terminado nada sin verificarlo con comandos de solo lectura y mostrar el resultado.</td><td>Los «hecho» sin evidencia.</td></tr>
+            <tr><td><span class="sev sev-info">3</span></td><td>La política documentada del repositorio prevalece sobre el Git Flow genérico; nunca se relajan las protecciones contra operaciones destructivas ni se migra sin encargo explícito.</td><td>Imponer un modelo a un repositorio que ya tiene el suyo.</td></tr>
+            <tr><td><span class="sev sev-info">4</span></td><td>Ningún cambio persistente sin una única confirmación explícita del plan exacto: add, commit, creación o borrado de rama, merge, rebase, cherry-pick, tag, push, fetch --prune y cambios remotos.</td><td>Que la ejecución se adelante a la aprobación.</td></tr>
+            <tr><td><span class="sev sev-info">5</span></td><td>La confirmación no es global ni reutilizable: otra rama, otro conjunto de archivos, un conflicto, un nuevo push o una discrepancia invalidan el plan.</td><td>Reutilizar un «sí» para algo que el usuario no aprobó.</td></tr>
+            <tr><td><span class="sev sev-info">6</span></td><td>No se amplía el alcance: nada de add global, cambios ajenos, no rastreados ni <code>amend</code>, salvo que el plan aprobado lo nombre expresamente.</td><td>Commits que arrastran trabajo de otro.</td></tr>
+            <tr><td><span class="sev sev-warn">7</span></td><td>Nada de reset destructivo, <code>clean</code>, restauración desde otra revisión, borrado forzado de ramas, push forzado, borrado de etiquetas o ramas remotas, ni reescritura de historia, salvo autorización específica para ese comando.</td><td>Pérdida irreversible de trabajo.</td></tr>
+            <tr><td><span class="sev sev-error">8</span></td><td><code>main</code> y <code>develop</code> son ramas protegidas: nunca se prepara ni se ejecuta trabajo normal sobre ellas.</td><td>Commits de funcionalidad colados en la rama de producción.</td></tr>
+            <tr><td><span class="sev sev-error">9</span></td><td>Solo se cambian ramas protegidas mediante una integración verificada de una rama permitida, o de las que defina una política documentada. La excepción de <em>bootstrap</em> solo sirve para el commit inicial y la creación de develop.</td><td>Que la protección sea decorativa.</td></tr>
+            <tr><td><span class="sev sev-ok">10</span></td><td>Ante conflicto, estado inesperado, error o resultado distinto al plan: detente, no improvises una resolución, inspecciona y prepara un plan nuevo.</td><td>Resoluciones inventadas bajo presión.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="note">
+        <p><strong>El error que estas reglas evitan.</strong> Casi todos los desastres de Git no vienen de un comando difícil, sino de una cadena de decisiones razonables tomadas sin mirar el estado. La invariante 10 existe porque el momento de parar es justo cuando el resultado no coincide con el plan.</p>
+      </div>
+    </section>
+
+    <section id="inspeccion" class="section">
+      <div class="section-head"><span class="section-num">3</span><h2 class="title">Inspección obligatoria</h2></div>
+      <p class="sub">Es de solo lectura y no pide permiso. Se ejecuta antes de proponer cualquier operación persistente, y su resultado se comunica.</p>
+
+      <div class="code"><pre><code>git rev-parse --show-toplevel
+git status --short --branch
+git branch --show-current
+git branch -a -vv
+git remote -v
+git log --graph --oneline --decorate --all -n 30</code></pre></div>
+
+      <p>Además de ejecutarlos, hay que <strong>leer la documentación de contribución y de flujo</strong> si existe: es la evidencia más fuerte para clasificar el repositorio y la que decide si el Git Flow genérico se aplica o no.</p>
+
+      <h3>Para operaciones acotadas: inspección ampliada</h3>
+      <p>La referencia de operaciones normales añade el detalle que hace falta antes de preparar archivos y commits. Separa explícitamente lo modificado, lo no rastreado, lo ya preparado, los archivos generados y los cambios ajenos al encargo.</p>
+      <div class="code"><pre><code>git status --short --branch
+git diff --stat
+git diff -- &lt;paths&gt;
+git diff --cached --stat
+git diff --cached -- &lt;paths&gt;
+git log --oneline --decorate -n 12</code></pre></div>
+
+      <div class="status-strip status-strip--prep" role="status">
+        <span class="status-mark" aria-hidden="true">PREV</span>
+        <div><strong>Lo que hay que saber antes de empezar</strong><span>La rama actual, su commit, las ramas locales y remotas, el remoto configurado y la forma del historial. Sin esos cinco datos, cualquier plan es una suposición.</span></div>
+      </div>
+    </section>
+
+    <section id="clasificar" class="section">
+      <div class="section-head"><span class="section-num">4</span><h2 class="title">Clasificar el repositorio</h2></div>
+      <p class="sub">Antes de aplicar reglas hay que saber qué repositorio se tiene delante. La clasificación decide si se aplica Git Flow por defecto, se respeta otro modelo o se pide una decisión.</p>
+
+      <h3>Las seis categorías</h3>
+      <div class="table-wrap wrap-cells">
+        <table>
+          <thead><tr><th>Clasificación</th><th>Qué significa</th><th>Qué se hace</th></tr></thead>
+          <tbody>
+            <tr><td>Nuevo</td><td>Todavía no tiene política de ramas.</td><td>Aplicar Git Flow por defecto.</td></tr>
+            <tr><td>Git Flow existente</td><td>Hay evidencia documental o práctica verificable de <code>main</code>/<code>master</code>, <code>develop</code> y ramas de trabajo asociadas.</td><td>Respetar nombres, destinos y reglas observadas.</td></tr>
+            <tr><td>Git Flow documentado, pendiente de evidencia operativa</td><td>Existe una guía aplicable, pero el historial aún no demuestra una feature, release o hotfix completados.</td><td>Tratar la guía como política obligatoria para el siguiente trabajo; no declarar que Git Flow ya está demostrado.</td></tr>
+            <tr><td>Git Flow local ligero documentado</td><td>Ramas cortas <code>feature/*</code>, <code>fix/*</code>, <code>docs/*</code>, <code>refactor/*</code> o <code>chore/*</code> desde <code>main</code>; sin develop, release ni hotfix por defecto; integración no fast-forward en <code>main</code>.</td><td>Seguir exactamente ese modelo, sin añadir piezas.</td></tr>
+            <tr><td>Política existente distinta</td><td>Otro modelo de ramas, ya en uso.</td><td>Conservarlo; no inventar develop, Issues, PR, SemVer, etiquetas ni reglas de merge.</td></tr>
+            <tr><td>Desconocida</td><td>Evidencia contradictoria o inexistente.</td><td>Exponer la evidencia y pedir decisión antes de cualquier operación persistente.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Jerarquía de evidencia</h3>
+      <p>Cuando las señales no coinciden, manda la más fuerte. El orden es este y no se invierte:</p>
+      <ul class="plain">
+        <li><strong>1.</strong> Documentación que declara una política operativa o su precedencia.</li>
+        <li><strong>2.</strong> Ramas remotas activas, protecciones conocidas y mecanismos de revisión.</li>
+        <li><strong>3.</strong> Historial de integración y relaciones entre ramas.</li>
+        <li><strong>4.</strong> Ramas locales y convenciones de nombre.</li>
+      </ul>
+
+      <div class="note">
+        <p><strong>Dos trampas clásicas.</strong> Que exista un documento no prueba que el flujo se haya ejecutado correctamente. Y que exista una rama llamada <code>develop</code> tampoco prueba Git Flow. La skill distingue siempre tres cosas: política declarada, estructura presente y uso demostrado.</p>
+      </div>
+
+      <h3>La regla de adaptación</h3>
+      <p>En un repositorio existente, una guía explícita puede obligar el siguiente trabajo aunque la historia no haya dado todavía una prueba operativa. Eso no autoriza a migrar ni a inventar infraestructura. Para una política documental sobria:</p>
+      <ul class="plain">
+        <li>No añadir Issues, PR obligatorias, SemVer, remoto ni reglas de merge si el documento no los exige.</li>
+        <li>Usar el patrón de nombre que especifique el documento.</li>
+        <li>No convertir la ausencia de remoto en un incumplimiento del flujo local.</li>
+      </ul>
+    </section>
+
+    <section id="politica" class="section">
+      <div class="section-head"><span class="section-num">5</span><h2 class="title">Política Git Flow por defecto</h2></div>
+      <p class="sub">Se aplica a proyectos nuevos, y solo a proyectos nuevos. La base y el destino de cada tipo de rama no son sugerencias.</p>
+
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Tipo</th><th>Base obligatoria</th><th>Destino obligatorio</th><th>Propósito</th></tr></thead>
+          <tbody>
+            <tr><td><code>main</code></td><td>—</td><td>—</td><td>Código listo para producción; releases etiquetadas.</td></tr>
+            <tr><td><code>develop</code></td><td><code>main</code></td><td>—</td><td>Integración de la siguiente versión.</td></tr>
+            <tr><td><code>feature/&lt;id&gt;-&lt;slug&gt;</code></td><td><code>develop</code></td><td><code>develop</code></td><td>Nueva funcionalidad.</td></tr>
+            <tr><td><code>fix/&lt;id&gt;-&lt;slug&gt;</code></td><td><code>develop</code></td><td><code>develop</code></td><td>Corrección no productiva.</td></tr>
+            <tr><td><code>release/&lt;version&gt;</code></td><td><code>develop</code></td><td><code>main</code> y después <code>develop</code></td><td>Preparación de release.</td></tr>
+            <tr><td><code>hotfix/&lt;id&gt;-&lt;slug&gt;</code></td><td><code>main</code></td><td><code>main</code> y después <code>develop</code></td><td>Corrección urgente de producción.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Reglas que acompañan a la tabla</h3>
+      <ul class="plain">
+        <li><code>develop</code> se crea desde el commit inicial de <code>main</code>.</li>
+        <li>Cada rama de trabajo se crea desde su base obligatoria y se verifica la relación antes de trabajar en ella.</li>
+        <li>Commits atómicos y Conventional Commits.</li>
+        <li>Se integra en ramas protegidas mediante PR cuando exista un mecanismo de revisión configurado; un merge local directo no es sustituto sin explicarlo.</li>
+        <li>Merge no fast-forward al integrar en <code>main</code> o <code>develop</code>, salvo política documentada distinta.</li>
+        <li>Nada de squash ni rebase de una rama compartida o publicada sin regla documentada y aprobación explícita.</li>
+        <li>Se conserva el <em>back-merge</em> de toda release y hotfix hacia <code>develop</code>.</li>
+        <li>Si no existe sistema de incidencias, se usa <code>feature/&lt;slug&gt;</code> o <code>fix/&lt;slug&gt;</code>: no se inventa un identificador.</li>
+        <li>No se presupone que la extensión <code>git-flow</code> está instalada: se usa Git normal.</li>
+      </ul>
+
+      <div class="note">
+        <p><strong>El back-merge no es un detalle.</strong> Es lo que evita que la siguiente release reabra un fallo ya corregido en producción. Por eso toda release y todo hotfix se integran en los dos destinos, y se verifica que ambos contienen el resultado.</p>
+      </div>
+    </section>
+
+    <section id="plan" class="section">
+      <div class="section-head"><span class="section-num">6</span><h2 class="title">Plan, confirmación y ejecución</h2></div>
+      <p class="sub">Después de inspeccionar, se presenta siempre este formato antes de cualquier cambio persistente. No es una plantilla decorativa: son los seis datos que el usuario necesita para decidir.</p>
+
+      <div class="code"><pre><code>## Estado detectado
+- Repositorio:
+- Rama actual y commit:
+- Política aplicable:
+- Árbol de trabajo:
+
+## Plan propuesto
+- Operación:
+- Archivos, commits o ramas afectados:
+- Origen → destino:
+- Validación previa:
+- Resultado verificable esperado:
+- Riesgos y reversibilidad:
+
+## Confirmación requerida
+¿Apruebas exactamente este plan?</code></pre></div>
+
+      <h3>Qué hace útil a cada bloque</h3>
+      <div class="grid cols-3">
+        <div class="card">
+          <div class="card-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M12 8v5M12 16h.01"></path></svg></div>
+          <h3>Estado detectado</h3>
+          <p>Fija el punto de partida. Si mañana algo no cuadra, este bloque es la referencia de qué se creía cierto al aprobar.</p>
+        </div>
+        <div class="card">
+          <div class="card-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h16M4 12h10M4 18h7"></path></svg></div>
+          <h3>Plan propuesto</h3>
+          <p>Enumera archivos, ramas, origen y destino. «Resultado verificable esperado» obliga a escribir qué comando probará que se cumplió.</p>
+        </div>
+        <div class="card">
+          <div class="card-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 11l3 3L22 4"></path><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path></svg></div>
+          <h3>Confirmación</h3>
+          <p>Una pregunta cerrada: se aprueba ese plan o no se ejecuta. No hay confirmaciones parciales ni «adelanta lo que puedas».</p>
+        </div>
+      </div>
+
+      <h3>Después de la confirmación</h3>
+      <ul class="plain">
+        <li>Se ejecuta <strong>solo</strong> el plan aprobado, comando por comando.</li>
+        <li>Antes de cada comando remoto incluido, se revalida que el estado no ha cambiado.</li>
+        <li>Si el estado cambió, se detiene la ejecución y se solicita un plan nuevo.</li>
+        <li>Un conflicto, un error o un resultado distinto al previsto es una parada, no una adaptación.</li>
+      </ul>
+
+      <div class="note">
+        <p><strong>Por qué una sola confirmación y no varias.</strong> Porque pedir permiso a cada paso invita a aprobar sin leer, y pedirlo una vez para todo invita a ampliar el alcance. La skill resuelve la tensión con dos límites: el plan enumera exactamente qué se toca, y cualquier desviación lo invalida por completo.</p>
+      </div>
+    </section>
+
+    <section id="guardia" class="section">
+      <div class="section-head"><span class="section-num">7</span><h2 class="title">Guardia de rama protegida</h2></div>
+      <p class="sub">La comprobación que más trabajo ahorra. Antes de preparar archivos o proponer un commit, se mira la rama actual; si es <code>main</code> o <code>develop</code>, hay una decisión obligatoria.</p>
+
+      <div class="table-wrap wrap-cells">
+        <table>
+          <thead><tr><th>Rama actual</th><th>Operación solicitada</th><th>Resultado obligatorio</th></tr></thead>
+          <tbody>
+            <tr><td><code>main</code></td><td>Trabajo normal, corrección, documentación o commit</td><td><span class="sev sev-error">Bloquear</span> y proponer hotfix si es producción, o la rama correcta según la política.</td></tr>
+            <tr><td><code>develop</code></td><td>Trabajo normal, corrección, documentación o commit</td><td><span class="sev sev-error">Bloquear</span> y proponer <code>feature</code> o <code>fix</code> desde develop.</td></tr>
+            <tr><td><code>main</code></td><td>Integrar una release o un hotfix</td><td><span class="sev sev-ok">Permitir</span> solo tras verificar origen, destino y plan aprobado.</td></tr>
+            <tr><td><code>develop</code></td><td>Integrar feature, fix, release o hotfix</td><td><span class="sev sev-ok">Permitir</span> solo tras verificar origen, destino y plan aprobado.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Comprobación previa, en cinco pasos</h3>
+      <ul class="plain">
+        <li><strong>1.</strong> Identificar la rama actual.</li>
+        <li><strong>2.</strong> Clasificar la operación como trabajo o como integración.</li>
+        <li><strong>3.</strong> Si es trabajo sobre una rama protegida, no preparar archivos ni proponer un commit.</li>
+        <li><strong>4.</strong> Proponer crear la rama permitida desde la base obligatoria y pedir confirmación para ese plan.</li>
+        <li><strong>5.</strong> Tras crearla, verificar la rama actual y su relación con la base antes de continuar.</li>
+      </ul>
+
+      <h3>La excepción directa a main</h3>
+      <p>Existe, pero es estrecha y hay que ganársela. Solo se permite un commit directo en <code>main</code> cuando el repositorio documenta una excepción explícita y, además, se prueba todo esto:</p>
+      <ul class="plain">
+        <li>Que cada ruta disponible y el diff completo cumplen <strong>todas</strong> las condiciones documentadas de trivialidad, aislamiento y reversibilidad.</li>
+        <li>Que el cambio se ha validado de forma proporcional.</li>
+        <li>Que existe una confirmación exacta <strong>posterior a la revisión</strong>, específica para ese commit.</li>
+      </ul>
+      <p>Si la excepción falta, es ambigua o alguna condición no se cumple, el plan se bloquea: se exige una rama de trabajo permitida.</p>
+
+      <h3>Evidencia de una integración</h3>
+      <p>Toda integración hacia una rama protegida debe identificar origen y destino permitidos, commits incluidos, mecanismo de revisión si existe, estrategia de merge, y la comprobación posterior de que el resultado está contenido en el destino.</p>
+
+      <div class="note">
+        <p><strong>Si la rama actual no es la permitida</strong>, no se arregla con <code>checkout</code>, <code>rebase</code> o <code>merge</code> por iniciativa propia. Se explica la discrepancia y se prepara un plan separado: mover trabajo de rama también es una operación que se aprueba.</p>
+      </div>
+    </section>
+
+    <section id="commits" class="section">
+      <div class="section-head"><span class="section-num">8</span><h2 class="title">Ramas y commits</h2></div>
+      <p class="sub">Nombres predecibles y commits que un revisor puede leer de uno en uno. La convención no es estética: es lo que permite saber qué contiene cada integración.</p>
+
+      <h3>Nombres de rama</h3>
+      <ul class="plain">
+        <li>Minúsculas y palabras separadas por guiones.</li>
+        <li>Con incidencia conocida: <code>feature/&lt;id&gt;-&lt;slug&gt;</code>, <code>fix/&lt;id&gt;-&lt;slug&gt;</code> o <code>hotfix/&lt;id&gt;-&lt;slug&gt;</code>.</li>
+        <li>Para una release: <code>release/&lt;version&gt;</code>.</li>
+        <li>No se crea una rama desde <code>main</code> cuando la tabla exige <code>develop</code>.</li>
+      </ul>
+      <p>Antes de crear la rama, se verifica la base:</p>
+      <div class="code"><pre><code>git merge-base --is-ancestor &lt;base&gt; HEAD
+git log -1 --oneline &lt;base&gt;</code></pre></div>
+      <p>Si la base está desactualizada frente a su upstream, se informa del estado y se propone actualizarla como operación separada y confirmada.</p>
+
+      <h3>Commits convencionales</h3>
+      <div class="code"><pre><code>&lt;type&gt;(&lt;scope opcional&gt;): &lt;descripción en imperativo&gt;</code></pre></div>
+      <ul class="plain">
+        <li>Tipos permitidos: <code>feat</code>, <code>fix</code>, <code>docs</code>, <code>chore</code>, <code>refactor</code>, <code>test</code>, <code>style</code>, <code>perf</code>, <code>ci</code>, <code>build</code> y <code>revert</code>.</li>
+        <li>Un commit representa un cambio lógico.</li>
+        <li>Descripción breve, en imperativo y sin punto final.</li>
+        <li>Sin firmas de IA ni líneas <code>Co-Authored-By</code> salvo solicitud expresa.</li>
+        <li>Una ruptura compatible se marca con <code>!</code> o con un pie <code>BREAKING CHANGE</code>.</li>
+      </ul>
+
+      <h3>Preparación segura</h3>
+      <ol class="plain">
+        <li>Inspeccionar cambios rastreados, no rastreados y ya preparados.</li>
+        <li>Separar explícitamente lo que queda fuera del commit.</li>
+        <li>Preparar únicamente rutas enumeradas: <code>git add -- &lt;rutas&gt;</code>.</li>
+        <li>Revisar el diff preparado con <code>git diff --cached</code> antes de pedir confirmación.</li>
+        <li>Ejecutar la validación acordada antes y después, si procede.</li>
+      </ol>
+
+      <div class="note">
+        <p><strong><code>git add .</code> y <code>git add -A</code></strong> requieren un plan que explique por qué todos los cambios pertenecen juntos. En la práctica, casi nunca es cierto: siempre hay un archivo temporal, un log o una prueba que no debía entrar.</p>
+      </div>
+
+      <p>La verificación posterior al commit es corta y suficiente: <code>git show --stat --oneline HEAD</code> y <code>git status --short --branch</code>. Si el SHA no existe o el diff no coincide con los archivos aprobados, el paso no está terminado.</p>
+    </section>
+
+    <section id="integracion" class="section">
+      <div class="section-head"><span class="section-num">9</span><h2 class="title">Integración y conflictos</h2></div>
+      <p class="sub">Antes de proponer merge, rebase o cherry-pick se lee la referencia de integración. El método se elige por contexto, no por costumbre.</p>
+
+      <div class="table-wrap wrap-cells">
+        <table>
+          <thead><tr><th>Método</th><th>Cuándo usarlo</th><th>Cuándo no</th></tr></thead>
+          <tbody>
+            <tr><td><code>merge</code></td><td>La rama es compartida o la política conserva topología.</td><td>La política exige linealidad.</td></tr>
+            <tr><td><code>rebase</code></td><td>La rama es privada y no publicada.</td><td>La rama se comparte o ya está publicada.</td></tr>
+            <tr><td><code>cherry-pick</code></td><td>Debe trasladarse un commit aislado.</td><td>Debe integrarse una rama completa.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>El plan previo de integración</h3>
+      <p>Antes de tocar nada se muestra: origen, destino, commits incluidos, ancestro común, posibilidad de fast-forward, efecto sobre la historia, validación y riesgo de conflicto. Con eso, la decisión de integrar deja de ser una apuesta.</p>
+
+      <h3>Cuando aparece un conflicto</h3>
+      <ol class="plain">
+        <li>Detenerse e informar de la operación y de los archivos afectados.</li>
+        <li>No editar ni preparar marcadores de conflicto automáticamente.</li>
+        <li>Ofrecer tres salidas: resolver archivos concretos, abortar o pausar.</li>
+        <li>Para resolver, presentar una decisión semántica por archivo y pedir confirmación de un plan nuevo.</li>
+        <li>Verificar que no quedan archivos sin fusionar y ejecutar la validación acordada.</li>
+      </ol>
+
+      <div class="note">
+        <p><strong>Resolver un conflicto no es limpiar marcadores.</strong> Es decidir qué comportamiento sobrevive en cada archivo. Por eso la resolución es un plan nuevo con su propia confirmación: el «sí» anterior aprobaba una integración limpia, no una decisión semántica que entonces nadie había visto.</p>
+      </div>
+    </section>
+
+    <section id="releases" class="section">
+      <div class="section-head"><span class="section-num">10</span><h2 class="title">Release, hotfix y versionado</h2></div>
+      <p class="sub">Dos operaciones que tocan producción y que tienen mucho en común: rama corta, cambios mínimos, dos destinos y verificación en ambos.</p>
+
+      <h3>SemVer, solo si es aplicable</h3>
+      <p>Se usa <code>MAJOR.MINOR.PATCH</code> únicamente si el proyecto declara Semantic Versioning o el usuario ha adoptado esa política:</p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Componente</th><th>Cuándo sube</th></tr></thead>
+          <tbody>
+            <tr><td><code>MAJOR</code></td><td>Cambio incompatible.</td></tr>
+            <tr><td><code>MINOR</code></td><td>Funcionalidad compatible nueva.</td></tr>
+            <tr><td><code>PATCH</code></td><td>Corrección compatible.</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>Una versión no se deduce solo del tipo de commit: se comprueban los cambios públicos, el historial y la política del proyecto.</p>
+
+      <div class="role-grid">
+        <div class="role-block">
+          <span class="role-label">release</span>
+          <h3>Siete pasos, en orden</h3>
+          <ul>
+            <li>Verificar que <code>release/&lt;version&gt;</code> procede de <code>develop</code>.</li>
+            <li>Limitar los cambios a estabilización, versión, notas y correcciones aprobadas.</li>
+            <li>Comprobar ubicaciones de versión y changelog, si existen.</li>
+            <li>Integrar en <code>main</code> mediante el mecanismo previsto.</li>
+            <li>Crear etiqueta y publicación solo si están en el plan aprobado.</li>
+            <li>Integrar el resultado de <code>main</code> de vuelta a <code>develop</code>.</li>
+            <li>Verificar que ambos destinos contienen la release.</li>
+          </ul>
+        </div>
+        <div class="role-block">
+          <span class="role-label">hotfix</span>
+          <h3>Cinco pasos, parche mínimo</h3>
+          <ul>
+            <li>Verificar que <code>hotfix/&lt;id&gt;-&lt;slug&gt;</code> procede de <code>main</code>.</li>
+            <li>Mantener el parche mínimo y validado.</li>
+            <li>Integrar en <code>main</code> y publicar etiqueta solo si procede.</li>
+            <li>Integrar el mismo resultado de vuelta a <code>develop</code>.</li>
+            <li>Verificar que <code>main</code> y <code>develop</code> contienen la corrección.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="note">
+        <p><strong>Una rama integrada no se borra por el hecho de estarlo.</strong> Ni la de release ni la de hotfix. El borrado es una operación aparte y necesita autorización específica: es justo la rama que querrás mirar cuando algo falle dos semanas después.</p>
+      </div>
+    </section>
+
+    <section id="verificacion" class="section">
+      <div class="section-head"><span class="section-num">11</span><h2 class="title">Verificación de cierre</h2></div>
+      <p class="sub">Un flujo solo es COMPLETO si pasan todas las comprobaciones aplicables. No hay «casi».</p>
+
+      <div class="code"><pre><code>git status --short --branch
+git log --graph --oneline --decorate --all -n 40
+git merge-base --is-ancestor &lt;ancestor&gt; &lt;descendant&gt;
+git branch -vv
+git ls-remote --heads &lt;remote&gt;
+git ls-remote --tags &lt;remote&gt;</code></pre></div>
+
+      <p>La comprobación de ascendencia está automatizada: <code>scripts/verify-branch.sh &lt;ancestro&gt; &lt;descendiente&gt; [remoto]</code> informa de la contención y del estado de publicación, y su código de salida es la prueba (0 verificado, 1 no verificado, 2 uso inválido).</p>
+
+      <h3>Qué se comprueba según la operación</h3>
+      <div class="table-wrap wrap-cells">
+        <table>
+          <thead><tr><th>Operación</th><th>Condiciones que deben cumplirse</th></tr></thead>
+          <tbody>
+            <tr><td>Creación de rama</td><td>La rama existe y es la actual o está identificada; su commit de base es descendiente de la base obligatoria; no hay cambios no previstos en el árbol.</td></tr>
+            <tr><td>Commit</td><td>El SHA existe; el mensaje cumple la convención; el diff coincide con los archivos aprobados; la validación terminó con el resultado declarado.</td></tr>
+            <tr><td>Feature o fix integrado</td><td>La rama fuente deriva de <code>develop</code>; el resultado está contenido en <code>develop</code>; no aparece integrado directamente en <code>main</code> como sustituto del paso por develop; la PR o mecanismo de revisión está identificado cuando existe.</td></tr>
+            <tr><td>Release integrada</td><td>Release deriva de <code>develop</code>; el resultado está contenido en <code>main</code>; el resultado de <code>main</code> está contenido en <code>develop</code>; etiqueta, versión y changelog verificados si estaban en el plan.</td></tr>
+            <tr><td>Hotfix integrado</td><td>Hotfix deriva de <code>main</code>; el resultado está contenido en <code>main</code>; el resultado de <code>main</code> está contenido en <code>develop</code>; etiqueta o publicación verificadas si estaban en el plan.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Los tres estados</h3>
+      <div class="grid cols-3">
+        <div class="card">
+          <h3><span class="sev sev-ok">Completo</span></h3>
+          <p>Todas las comprobaciones aplicables pasan.</p>
+        </div>
+        <div class="card">
+          <h3><span class="sev sev-warn">Incompleto</span></h3>
+          <p>Alguna condición obligatoria no se ha ejecutado o ha fallado.</p>
+        </div>
+        <div class="card">
+          <h3><span class="sev sev-error">No verificado</span></h3>
+          <p>No hay evidencia suficiente para afirmar el resultado.</p>
+        </div>
+      </div>
+
+      <h3>Antes de decir «hecho», se muestra</h3>
+      <ol class="plain">
+        <li>Estado de rama y árbol de trabajo.</li>
+        <li>SHA, mensaje y archivos del commit, cuando exista.</li>
+        <li>Ramas, relaciones de ascendencia e integración previstas.</li>
+        <li>Remoto, referencias o etiquetas publicadas, cuando aplique.</li>
+        <li>La validación acordada.</li>
+        <li>La lista de comprobación aplicable de la referencia de verificación.</li>
+      </ol>
+      <p>Si falla una comprobación de una operación ya iniciada, el resultado es <strong>INCOMPLETO</strong> o <strong>NO VERIFICADO</strong>, no «terminado». Se explica qué condición falta y no se pasa a la siguiente fase.</p>
+    </section>
+
+    <section id="auditoria" class="section">
+      <div class="section-head"><span class="section-num">12</span><h2 class="title">Auditoría sin operación</h2></div>
+      <p class="sub">Cuando el encargo solo es mirar documentación, ramas e historial, no se describe un ciclo que aún no ha empezado: se separan cuatro ejes.</p>
+
+      <div class="table-wrap wrap-cells">
+        <table>
+          <thead><tr><th>Eje</th><th>Valores posibles</th></tr></thead>
+          <tbody>
+            <tr><td>Política</td><td><code>DOCUMENTADA</code> · <code>NO DOCUMENTADA</code> · <code>CONTRADICTORIA</code></td></tr>
+            <tr><td>Estructura</td><td><code>PREPARADA</code> · <code>PARCIAL</code> · <code>AUSENTE</code></td></tr>
+            <tr><td>Evidencia operativa</td><td><code>DEMOSTRADA</code> · <code>PENDIENTE DE PRIMER CICLO</code> · <code>INSUFICIENTE</code></td></tr>
+            <tr><td>Incumplimiento activo</td><td><code>SÍ</code> · <code>NO</code> · <code>NO VERIFICABLE</code></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Cómo se informa un repositorio recién preparado</h3>
+      <p>Para un repositorio con <code>main</code> y <code>develop</code> en el mismo commit inicial, política documental clara y sin ramas auxiliares históricas, la respuesta correcta es esta, y no un «INCOMPLETO»:</p>
+      <div class="code"><pre><code>Política: DOCUMENTADA
+Estructura: PREPARADA
+Evidencia operativa: PENDIENTE DE PRIMER CICLO
+Incumplimiento activo: NO EVIDENCIADO</code></pre></div>
+
+      <div class="note">
+        <p><strong>La distinción que evita falsos diagnósticos.</strong> Una falta de historial no es una ejecución incompleta ni un incumplimiento. Confundirlos convierte una auditoría honesta en una acusación sin pruebas.</p>
+      </div>
+    </section>
+
+    <section id="peligrosas" class="section">
+      <div class="section-head"><span class="section-num">13</span><h2 class="title">Operaciones peligrosas y recuperación</h2></div>
+      <p class="sub">La referencia de recuperación solo se abre cuando alguien pide explícitamente recuperar, sobrescribir, borrar o reescribir historial. Y entonces cambia el estándar de la confirmación.</p>
+
+      <h3>Autorización específica, no genérica</h3>
+      <p>Hay que exponer los datos o la historia que podrían perderse, el alcance local o remoto, las alternativas seguras y el comando exacto. Se exige una confirmación que autorice <strong>ese comando concreto</strong>. Una aprobación genérica no sirve.</p>
+
+      <h3>Orden de recuperación</h3>
+      <ol class="plain">
+        <li>Inspeccionar estado, historial y <code>reflog</code>.</li>
+        <li>Identificar los commits recuperables y preservar la evidencia.</li>
+        <li>Preferir revertir o crear un commit correctivo.</li>
+        <li>Usar reset destructivo, <code>clean</code>, force push o borrado solo cuando el usuario acepte expresamente sus consecuencias.</li>
+      </ol>
+      <p>Y una regla de ejecución que no admite excepciones: <strong>no se encadenan comandos destructivos</strong>. Se verifica después de cada comando autorizado.</p>
+
+      <div class="note">
+        <p><strong>Por qué no se encadenan.</strong> Porque un destructivo que falla a medias es el peor estado posible: ni lo de antes ni lo de después, y sin saber dónde quedó. Encadenar convierte un error recuperable en una reconstrucción manual.</p>
+      </div>
+    </section>
+
+    <section id="referencias" class="section">
+      <div class="section-head"><span class="section-num">14</span><h2 class="title">Las referencias de la skill</h2></div>
+      <p class="sub">Nueve documentos que no se cargan siempre: cada uno se abre cuando la operación concreta lo pide. Ese es el truco para que la skill sea estricta sin ser pesada.</p>
+
+      <div class="table-wrap wrap-cells">
+        <table>
+          <thead><tr><th>Archivo</th><th>Cuándo se lee</th><th>Qué aporta</th></tr></thead>
+          <tbody>
+            <tr><td><code>references/normal-operations.md</code></td><td>Inspección ampliada antes de preparar archivos y commits acotados.</td><td>Bloque de <code>git diff</code> para separar lo modificado, lo no rastreado y lo preparado; comandos de preparación por rutas enumeradas y verificación del commit.</td></tr>
+            <tr><td><code>references/workflow-detection.md</code></td><td>Tras la inspección, en un repositorio existente.</td><td>Jerarquía de evidencia, tabla de clasificación y regla de adaptación.</td></tr>
+            <tr><td><code>references/commits-and-branches.md</code></td><td>Al crear una rama o preparar un commit con la política por defecto.</td><td>Nombres de rama, verificación de la base, Conventional Commits y preparación segura.</td></tr>
+            <tr><td><code>references/git-flow-operations.md</code></td><td>Para cada tipo de rama de Git Flow.</td><td>Pasos verificables de feature, fix, release y hotfix.</td></tr>
+            <tr><td><code>references/releases-and-versioning.md</code></td><td>Solo al preparar una release o un hotfix con versionado de producto.</td><td>SemVer aplicable, pasos de release y de hotfix, y regla de no borrar ramas integradas.</td></tr>
+            <tr><td><code>references/integration-and-conflicts.md</code></td><td>Antes de integrar y en cuanto aparece un conflicto.</td><td>Selección de método, plan previo y procedimiento de conflicto.</td></tr>
+            <tr><td><code>references/protected-branch-guard.md</code></td><td>Siempre que la rama actual sea <code>main</code> o <code>develop</code>.</td><td>Tabla de decisión, comprobación previa y evidencia exigida a una integración.</td></tr>
+            <tr><td><code>references/flow-verification.md</code></td><td>Después de cualquier operación Git Flow.</td><td>Comandos de evidencia, comprobaciones por operación y los tres estados del resultado.</td></tr>
+            <tr><td><code>references/recovery-and-dangerous-operations.md</code></td><td>Solo ante una petición explícita de recuperar, sobrescribir o borrar.</td><td>Autorización específica y orden de recuperación.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Interfaz de la skill</h3>
+      <div class="code"><pre><code>interface:
+  display_name: Git Flow seguro
+  short_description: Gestiona Git con flujo verificable
+  default_prompt: Usa $git-flow-management para planificar y ejecutar una operación
+    Git segura.
+  icon_small: assets/icon.svg
+  icon_large: assets/icon.svg
+policy:
+  products:
+  - chatgpt
+  - codex
+  - api
+  - atlas
+  allow_implicit_invocation: true</code></pre></div>
+      <p>La invocación implícita está permitida: la skill se activa cuando la conversación implica una operación Git, aunque el usuario no la nombre.</p>
+
+      <div class="note">
+        <p><strong>Esta página no consume contexto.</strong> Vive en <code>docs/</code>, fuera del directorio de la skill, y <code>SKILL.md</code> no la referencia: la skill solo carga lo que enlaza. Documentar en detalle no la hace más lenta ni más cara.</p>
+      </div>
+    </section>
+
+    <section id="preguntas" class="section">
+      <div class="section-head"><span class="section-num">15</span><h2 class="title">Preguntas cortas</h2></div>
+      <p class="sub">Las dudas que aparecen en la primera sesión, con la respuesta directa.</p>
+
+      <div class="qa"><h3>¿Tengo que aprobar cada comando?</h3><p>No. Apruebas un plan que enumera los comandos y su resultado esperado. La skill ejecuta solo ese plan y vuelve a pedir permiso si el estado cambió, si hay un conflicto o si el resultado se desvía.</p></div>
+      <div class="qa"><h3>Estoy en <code>main</code> y el cambio es de una línea. ¿Puedo commitear?</h3><p>Solo si el repositorio documenta una excepción directa y el diff completo cumple todas sus condiciones de trivialidad, aislamiento y reversibilidad, con validación y confirmación posterior a la revisión. Si la excepción falta o es ambigua, se bloquea y se propone la rama correcta.</p></div>
+      <div class="qa"><h3>¿La skill aplica Git Flow a cualquier repositorio?</h3><p>No. En uno nuevo, sí. En uno existente, detecta su política: si tiene otro modelo lo conserva, y si la evidencia es contradictoria expone los hechos y pide una decisión. Nunca migra un repositorio sin encargo explícito.</p></div>
+      <div class="qa"><h3>¿Por qué no puedo usar <code>git add .</code>?</h3><p>Porque prepara todo lo que haya, incluido lo que no forma parte del encargo: archivos temporales, logs, cambios de otro. Se preparan rutas enumeradas, y si de verdad todo pertenece junto, el plan debe explicar por qué.</p></div>
+      <div class="qa"><h3>He integrado la feature. ¿Borro la rama?</h3><p>No por el hecho de haberla integrado. El borrado es una operación aparte con autorización específica. La misma regla vale para releases y hotfixes.</p></div>
+      <div class="qa"><h3>Hay un conflicto. ¿Lo resuelvo y sigo?</h3><p>No sin un plan nuevo. Primero se informa de los archivos afectados y se ofrecen tres salidas: resolver archivos concretos, abortar o pausar. Resolver exige una decisión semántica por archivo y su propia confirmación.</p></div>
+      <div class="qa"><h3>¿Puedo hacer rebase de mi rama?</h3><p>Solo si es privada y no está publicada. Una rama compartida o ya publicada no se rebasa ni se aplasta sin una regla documentada y aprobación explícita.</p></div>
+      <div class="qa"><h3>El repositorio está vacío salvo <code>main</code>. ¿Qué hago?</h3><p>Es un repositorio nuevo: se aplica la política por defecto y se crea <code>develop</code> desde el commit inicial de <code>main</code>. La excepción de bootstrap cubre exactamente eso, el commit inicial y la creación de develop.</p></div>
+      <div class="qa"><h3>Me equivoqué con un commit. ¿<code>reset --hard</code>?</h3><p>Primero se inspecciona estado, historial y <code>reflog</code>, y se prefiere revertir o un commit correctivo. Un reset destructivo exige autorización para ese comando concreto, con las consecuencias expuestas, y se verifica antes de cualquier paso siguiente.</p></div>
+      <div class="qa"><h3>¿Por qué el resultado dice NO VERIFICADO y no INCOMPLETO?</h3><p>Porque son cosas distintas. INCOMPLETO significa que una condición obligatoria falló o no se ejecutó; NO VERIFICADO significa que no hay evidencia suficiente para afirmar nada. La skill prefiere el segundo antes que una conclusión sin pruebas.</p></div>
+      <div class="qa"><h3>He creado una rama. ¿Basta con eso?</h3><p>No. Hay que verificar que el commit de base es descendiente de la base obligatoria y que no hay cambios no previstos en el árbol. Publicarla es otra operación que no ocurre automáticamente.</p></div>
+      <div class="qa"><h3>¿La skill sirve para un repositorio sin remoto?</h3><p>Sí. Un flujo local no incumple nada por no tener remoto: las comprobaciones de <code>ls-remote</code> simplemente no aplican. Lo que no se hace es convertir esa ausencia en un incumplimiento inventado.</p></div>
+    </section>
+
+    <section id="resultado" class="section">
+      <div class="section-head"><span class="section-num">16</span><h2 class="title">Resultado final</h2></div>
+      <p class="sub">Todo cierre usa la misma forma. Si no se puede rellenar un campo con evidencia, ese es el hallazgo.</p>
+
+      <div class="code"><pre><code>## Resultado verificado
+- Estado:
+- Operación realizada:
+- Evidencia Git:
+- Validaciones:
+- Tipo de resultado: EJECUCIÓN | AUDITORÍA
+- Flujo ejecutado: COMPLETO | INCOMPLETO | NO VERIFICADO | NO APLICA
+- Política y evidencia operativa: [usar estados de auditoría cuando corresponda]
+- Diferencias respecto al plan:</code></pre></div>
+
+      <h3>Cómo se lee</h3>
+      <div class="table-wrap wrap-cells">
+        <table>
+          <thead><tr><th>Campo</th><th>Qué admite</th></tr></thead>
+          <tbody>
+            <tr><td>Tipo de resultado</td><td><code>EJECUCIÓN</code> si se hizo algo; <code>AUDITORÍA</code> si solo se inspeccionó.</td></tr>
+            <tr><td>Flujo ejecutado</td><td><code>COMPLETO</code>, <code>INCOMPLETO</code>, <code>NO VERIFICADO</code> o <code>NO APLICA</code>.</td></tr>
+            <tr><td>Política y evidencia operativa</td><td>Los estados de auditoría cuando el encargo no ejecutó un ciclo: política, estructura, evidencia operativa e incumplimiento activo.</td></tr>
+            <tr><td>Diferencias respecto al plan</td><td>Lo que no coincidió. Si no hay diferencias, se dice; no se omite el campo.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="note">
+        <p><strong>El valor de este formato.</strong> Obliga a separar lo que se hizo de lo que se probó, y a distinguir una ejecución de una auditoría. Un informe que no puede rellenar «Evidencia Git» está describiendo una intención, y las intenciones no se firman.</p>
+      </div>
+    </section>
+
+    <section id="diagramas" class="section">
+      <div class="section-head"><span class="section-num">17</span><h2 class="title">Los diagramas</h2></div>
+      <p class="sub">Las dos vistas del mismo procedimiento, por otros dos caminos: el proceso paso a paso y las piezas que lo sostienen.</p>
+      <div class="grid cols-2">
+        <a class="card card-link" href="flujo-de-trabajo.html">
+          <div class="card-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h6v5H4zM14 13h6v5h-6z"></path><path d="M10 8.5h2a2 2 0 0 1 2 2v5"></path></svg></div>
+          <h3>Flujo de trabajo</h3>
+          <p>Del encargo al resultado verificado: qué lee la skill antes de tocar nada, dónde se detiene el flujo, qué confirma la persona y qué se prueba antes de decir «hecho». Incluye la parada obligatoria por conflicto, error o desvío.</p>
+          <span class="go">Abrir el diagrama →</span>
+        </a>
+        <a class="card card-link" href="arquitectura.html">
+          <div class="card-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1.5"></rect><rect x="14" y="3" width="7" height="7" rx="1.5"></rect><rect x="3" y="14" width="7" height="7" rx="1.5"></rect><rect x="14" y="14" width="7" height="7" rx="1.5"></rect></svg></div>
+          <h3>Arquitectura</h3>
+          <p>Los nueve componentes —paquete instalado, puertas de decisión y superficie operada—, con su remoto y las tres fronteras que la skill no cruza sola.</p>
+          <span class="go">Abrir el diagrama →</span>
+        </a>
+      </div>
+      <p>Los dos son navegables: se puede cambiar el tema, alternar el estilo visual, trazar una ruta entre dos nodos, buscar por etiqueta y exportar a SVG, PNG, WebM o tarjeta para compartir. La leyenda y el pie de cada nodo se generan desde el propio candidato, no se dibujan a mano.</p>
+      <div class="code"><pre><code># requiere archify 3.2.0 (github.com/tt-a1i/archify, tag v3.2.0)
+node &lt;ruta-a-archify&gt;/archify/bin/archify.mjs deliver workflow \
+  docs/git-flow-management/flujo-de-trabajo.json \
+  docs/git-flow-management/flujo-de-trabajo.html --quality showcase
+
+node &lt;ruta-a-archify&gt;/archify/bin/archify.mjs deliver architecture \
+  docs/git-flow-management/arquitectura.json \
+  docs/git-flow-management/arquitectura.html --quality showcase</code></pre></div>
+      <div class="note">
+        <p><strong>Cómo se generan.</strong> Los dos son artefactos de <em>archify</em> 3.2.0: un <code>candidate.json</code> describe el diagrama y el renderizador produce un HTML autónomo con temas, movimiento y exportación. Los candidatos —<code>flujo-de-trabajo.json</code> y <code>arquitectura.json</code>— están al lado de cada página, así que se corrigen y se vuelven a entregar con la CLI de archify 3.2.0, que escribe su recibo <code>.delivery.json</code> junto al HTML. El de arquitectura no cita fuentes <code>archivo:línea</code>: el paquete todavía no tiene una revisión publicada en un remoto contra la que verificarlas.</p>
+      </div>
+    </section>
+  </main>
+</div>
+
+<footer class="footer">
+  <span><code>git-flow-management/</code> · skill <code>git-flow-management</code> · documento en español</span>
+  <span><a href="#top">Volver arriba</a> · <a href="../../src/git-flow-management/SKILL.md">SKILL.md</a> · <a href="flujo-de-trabajo.html">Flujo</a> · <a href="arquitectura.html">Arquitectura</a></span>
+  <span>Página estática: no envía datos ni carga recursos externos · <code>docs/git-flow-management/index.html</code></span>
+</footer>
+
+<script>
+(function () {
+  "use strict";
+
+  var STORAGE_KEY = "git-flow-management:prefs";
+  var root = document.documentElement;
+
+  var COPY_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>';
+  var CHECK_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>';
+
+  function updateThemeLabel() {
+    var btn = document.getElementById("theme-toggle");
+    if (!btn) { return; }
+    var dark = root.getAttribute("data-theme") === "dark";
+    btn.setAttribute("aria-label", dark ? "Cambiar a tema claro" : "Cambiar a tema oscuro");
+  }
+
+  function applyTheme(theme) {
+    if (theme !== "dark" && theme !== "light") { theme = "light"; }
+    root.setAttribute("data-theme", theme);
+    updateThemeLabel();
+  }
+
+  var prefs = {};
+  try { prefs = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}"); } catch (e) { prefs = {}; }
+
+  var initialTheme = prefs.theme;
+  if (initialTheme !== "dark" && initialTheme !== "light") {
+    initialTheme = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+  }
+  applyTheme(initialTheme);
+
+  function savePrefs() {
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(prefs)); } catch (e) {}
+  }
+
+  var themeBtn = document.getElementById("theme-toggle");
+  if (themeBtn) {
+    themeBtn.addEventListener("click", function () {
+      prefs.theme = root.getAttribute("data-theme") === "dark" ? "light" : "dark";
+      applyTheme(prefs.theme);
+      savePrefs();
+    });
+  }
+
+  // El botón de copiar no se escribe en el marcado: se crea aquí para que
+  // añadir un bloque de código no obligue a recordar su botón.
+  document.querySelectorAll(".code").forEach(function (block) {
+    if (block.querySelector(".copy")) { return; }
+    var btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "copy";
+    btn.innerHTML = COPY_ICON + "<span>Copiar</span>";
+    btn.setAttribute("aria-label", "Copiar");
+    block.appendChild(btn);
+
+    btn.addEventListener("click", function () {
+      var pre = block.querySelector("pre");
+      var code = (pre && (pre.querySelector("code") || pre)) || null;
+      if (!code) { return; }
+      var done = function () {
+        btn.classList.add("copied");
+        btn.innerHTML = CHECK_ICON + "<span>Copiado</span>";
+        btn.setAttribute("aria-label", "Copiado");
+        setTimeout(function () {
+          btn.classList.remove("copied");
+          btn.innerHTML = COPY_ICON + "<span>Copiar</span>";
+          btn.setAttribute("aria-label", "Copiar");
+        }, 1600);
+      };
+      var text = code.textContent;
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(done, done);
+      } else {
+        var ta = document.createElement("textarea");
+        ta.value = text;
+        ta.style.position = "fixed";
+        ta.style.opacity = "0";
+        document.body.appendChild(ta);
+        ta.select();
+        try { document.execCommand("copy"); } catch (e) {}
+        document.body.removeChild(ta);
+        done();
+      }
+    });
+  });
+
+  if ("IntersectionObserver" in window) {
+    var links = {};
+    document.querySelectorAll(".toc a").forEach(function (a) { links[a.getAttribute("href").slice(1)] = a; });
+    var observer = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) {
+          Object.keys(links).forEach(function (id) { links[id].classList.remove("active"); });
+          if (links[entry.target.id]) { links[entry.target.id].classList.add("active"); }
+        }
+      });
+    }, { rootMargin: "-20% 0px -70% 0px", threshold: 0 });
+    document.querySelectorAll("main section").forEach(function (s) { observer.observe(s); });
+  }
+})();
+</script>
+</body>
+</html>

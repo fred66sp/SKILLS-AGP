@@ -1,0 +1,303 @@
+{
+  "schema_version": 2,
+  "diagram_type": "workflow",
+  "meta": {
+    "title": "Flujo de trabajo de la skill documental",
+    "subtitle": "Del encargo al cierre probado: qué se inventaría, en qué momento se fija la certeza de una afirmación, dónde se detiene el flujo y qué se comprueba antes de decir que un documento está terminado.",
+    "locale": "es",
+    "output": "docs/document-management-software/flujo-de-trabajo.html",
+    "visual_preset": "signal-flow",
+    "quality_profile": "showcase"
+  },
+  "lanes": [
+    {
+      "id": "persona",
+      "label": "Persona y encargo"
+    },
+    {
+      "id": "skill",
+      "label": "La skill: inventariar y escribir"
+    },
+    {
+      "id": "fuentes",
+      "label": "Fuentes y destino"
+    },
+    {
+      "id": "control",
+      "label": "Evidencia y paradas",
+      "variant": "exception"
+    }
+  ],
+  "phases": [
+    {
+      "id": "entrada",
+      "label": "Delimitar e inventariar",
+      "fromCol": 0,
+      "toCol": 1
+    },
+    {
+      "id": "juicio",
+      "label": "Certeza e intervención",
+      "fromCol": 2,
+      "toCol": 3,
+      "variant": "emphasis"
+    },
+    {
+      "id": "escritura",
+      "label": "Escritura",
+      "fromCol": 4,
+      "toCol": 4
+    },
+    {
+      "id": "cierre",
+      "label": "Cierre probado",
+      "fromCol": 5,
+      "toCol": 5,
+      "variant": "security"
+    }
+  ],
+  "groups": [
+    {
+      "id": "antes-de-escribir",
+      "label": "Nada se escribe sin fuente",
+      "lane": "skill",
+      "fromCol": 2,
+      "toCol": 3,
+      "variant": "emphasis"
+    },
+    {
+      "id": "prueba",
+      "label": "Prueba de solo lectura",
+      "lane": "control",
+      "fromCol": 4,
+      "toCol": 5,
+      "variant": "security"
+    }
+  ],
+  "mainPath": [
+    "encargo",
+    "delimita",
+    "inventario",
+    "certeza",
+    "intervencion",
+    "redacta",
+    "verifica",
+    "resultado"
+  ],
+  "nodes": [
+    {
+      "id": "encargo",
+      "lane": "persona",
+      "col": 0,
+      "type": "external",
+      "label": "Encargo documental",
+      "sublabel": "crear · actualizar · auditar",
+      "tag": "nada se escribe aún",
+      "icon": "start"
+    },
+    {
+      "id": "delimita",
+      "lane": "skill",
+      "col": 0,
+      "type": "backend",
+      "label": "Delimitar",
+      "sublabel": "qué · para quién",
+      "tag": "una pregunta si bloquea"
+    },
+    {
+      "id": "inventario",
+      "lane": "skill",
+      "col": 1,
+      "type": "backend",
+      "label": "Inventario",
+      "sublabel": "doc-inventory.py",
+      "tag": "enlaces y duplicados"
+    },
+    {
+      "id": "certeza",
+      "lane": "skill",
+      "col": 2,
+      "type": "backend",
+      "label": "Certeza",
+      "sublabel": "seis grados",
+      "tag": "sin fuente no se escribe"
+    },
+    {
+      "id": "intervencion",
+      "lane": "skill",
+      "col": 3,
+      "type": "backend",
+      "label": "Intervención mínima",
+      "sublabel": "actualizar > crear",
+      "tag": "siete opciones"
+    },
+    {
+      "id": "redacta",
+      "lane": "skill",
+      "col": 4,
+      "type": "backend",
+      "label": "Redacción",
+      "sublabel": "valores exactos",
+      "tag": "sin inventar ejemplos"
+    },
+    {
+      "id": "repo",
+      "lane": "fuentes",
+      "col": 1,
+      "type": "database",
+      "label": "Fuentes",
+      "sublabel": "código · tests · git"
+    },
+    {
+      "id": "docs",
+      "lane": "fuentes",
+      "col": 5,
+      "type": "database",
+      "label": "Documento verificado",
+      "sublabel": "una fuente canónica"
+    },
+    {
+      "id": "contradiccion",
+      "lane": "control",
+      "col": 2,
+      "type": "security",
+      "label": "Contradicción",
+      "sublabel": "dos fuentes en conflicto",
+      "tag": "se pide decisión",
+      "icon": "stop"
+    },
+    {
+      "id": "verifica",
+      "lane": "control",
+      "col": 4,
+      "type": "security",
+      "label": "Verificación",
+      "sublabel": "inventario y contraste",
+      "tag": "evidencia mostrada"
+    },
+    {
+      "id": "resultado",
+      "lane": "control",
+      "col": 5,
+      "type": "frontend",
+      "label": "Resultado",
+      "sublabel": "cinco campos",
+      "icon": "success"
+    }
+  ],
+  "edges": [
+    {
+      "id": "pide",
+      "from": "encargo",
+      "to": "delimita",
+      "label": "pide",
+      "variant": "emphasis",
+      "role": "main"
+    },
+    {
+      "id": "alcance",
+      "from": "delimita",
+      "to": "inventario",
+      "label": "alcance acotado",
+      "role": "main"
+    },
+    {
+      "id": "recorre",
+      "from": "inventario",
+      "to": "repo",
+      "label": "recorre",
+      "variant": "dashed",
+      "role": "branch"
+    },
+    {
+      "id": "cobertura",
+      "from": "inventario",
+      "to": "certeza",
+      "label": "cobertura actual",
+      "role": "main"
+    },
+    {
+      "id": "choca",
+      "from": "certeza",
+      "to": "contradiccion",
+      "label": "choca",
+      "variant": "security",
+      "role": "return"
+    },
+    {
+      "id": "minima",
+      "from": "certeza",
+      "to": "intervencion",
+      "label": "sustentado",
+      "variant": "emphasis",
+      "role": "main"
+    },
+    {
+      "id": "escribe",
+      "from": "intervencion",
+      "to": "redacta",
+      "label": "una sola acción",
+      "role": "main"
+    },
+    {
+      "id": "prueba",
+      "from": "redacta",
+      "to": "verifica",
+      "label": "antes de cerrar",
+      "role": "main"
+    },
+    {
+      "id": "fuente-ausente",
+      "from": "redacta",
+      "to": "contradiccion",
+      "label": "fuente ausente",
+      "variant": "security",
+      "role": "return"
+    },
+    {
+      "id": "confirma",
+      "from": "verifica",
+      "to": "docs",
+      "label": "confirma",
+      "variant": "emphasis",
+      "role": "main"
+    },
+    {
+      "id": "cierra",
+      "from": "verifica",
+      "to": "resultado",
+      "label": "todas pasan",
+      "variant": "emphasis",
+      "role": "main"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "Qué se lee antes de escribir",
+      "items": [
+        "El encargo se delimita con cuatro datos: qué se pide, para quién, con qué fuente y si se describe el estado actual o una intención futura",
+        "El inventario es determinista: el script recorre el árbol y devuelve enlaces rotos, documentos sin título, documentos vacíos y encabezados repetidos",
+        "Cada afirmación material recibe un grado de certeza antes de redactarse; si no hay fuente, no se escribe como hecho"
+      ]
+    },
+    {
+      "dot": "rose",
+      "title": "Dónde se detiene",
+      "items": [
+        "Una contradicción entre dos fuentes con la misma responsabilidad no se resuelve con una redacción ambigua: se expone y se pide decisión",
+        "Si el encargo mezcla intención y estado implementado sin aclararlo, se formula una sola pregunta y se espera",
+        "Si falta la fuente de una afirmación, la redacción baja al grado que sí se sostiene en lugar de rellenarse"
+      ]
+    },
+    {
+      "dot": "emerald",
+      "title": "Qué se prueba al cerrar",
+      "items": [
+        "El inventario se repite después del cambio: un enlace nuevo roto es una regresión de este encargo",
+        "Cada afirmación modificada se contrasta contra su fuente, y el contenido eliminado se revisa por si era la única representación de algo válido",
+        "El cierre publica cinco campos con evidencia; un campo que no se puede rellenar es el hallazgo, no una omisión de forma"
+      ]
+    }
+  ]
+}
