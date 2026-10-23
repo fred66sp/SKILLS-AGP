@@ -2,8 +2,8 @@
 """Comprobación determinista de archivos `.feature` contra las reglas de buen Gherkin.
 
 Uso:
-    python3 scripts/check-feature.py --path <archivo.feature> [--json]
-                                     [--max-steps N] [--max-outline-rows N]
+    python tools/check-feature.py --path <archivo.feature> [--json]
+                                  [--max-steps N] [--max-outline-rows N]
 
 Salida por stdout: un hallazgo por línea con su código, si es determinista o candidato,
 la posición `archivo:linea`, la evidencia del paso y el mensaje para autocorregirse. Al

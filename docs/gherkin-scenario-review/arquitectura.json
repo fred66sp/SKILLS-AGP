@@ -37,7 +37,7 @@
     {
       "id": "script",
       "type": "backend",
-      "label": "check-feature.py",
+      "label": "tools/check-feature.py",
       "sublabel": "única pieza ejecutable",
       "tag": "stdlib-only, sin red",
       "pos": [740, 80],
@@ -222,7 +222,7 @@
       "dot": "emerald",
       "title": "La única pieza ejecutable",
       "items": [
-        "check-feature.py: parser Gherkin bilingüe —inglés y español, con # language:—, stdlib-only, sin dependencias ni red",
+        "tools/check-feature.py: parser Gherkin bilingüe —inglés y español, con # language:—, stdlib-only, sin dependencias ni red. CLI compartida del repositorio, fuera del paquete de la skill",
         "Trece comprobaciones: seis códigos deterministas, cinco candidatos heurísticos y dos umbrales declarados, --max-steps 9 y --max-outline-rows 5",
         "Códigos de salida 0, 3 y 2; cada hallazgo sale con su código, su regla, el archivo, la línea y la evidencia literal del paso"
       ]

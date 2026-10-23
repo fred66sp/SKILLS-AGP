@@ -13,7 +13,7 @@ No opina de estrategia, de cobertura de negocio ni de código de automatización
 
 1. Esta skill solo revisa texto Gherkin que ya existe: un archivo `.feature` o un bloque de escenarios aportado en el encargo. Si el encargo pide descubrir comportamientos, escribir escenarios desde una historia de usuario o implementar la automatización, se declara el fuera de alcance y se revisa únicamente lo que ya esté escrito.
 2. El archivo del usuario no se modifica. Cada hallazgo lleva una reescritura propuesta dentro del informe; aplicar esa reescritura es un encargo aparte.
-3. Ninguna revisión de memoria. Se ejecuta `scripts/check-feature.py` sobre cada archivo y se leen las referencias aplicables antes de emitir un veredicto. La regla se cita por nombre y por número.
+3. Ninguna revisión de memoria. Se ejecuta `tools/check-feature.py` sobre cada archivo y se leen las referencias aplicables antes de emitir un veredicto. La regla se cita por nombre y por número.
 4. Se separa hecho de estimación. Lo que mide el script es un hecho reproducible; lo que juzga el criterio sobre legibilidad, equivalencia o independencia de un comportamiento es estimación. Un hallazgo de estimación no se redacta como violación determinista, y un `APTO` nunca se apoya solo en estimaciones.
 5. Cada hallazgo cita regla, archivo, número de línea y evidencia literal del paso. Sin línea citada no hay hallazgo.
 6. Un escenario con más de un comportamiento es el hallazgo de mayor prioridad. No se propone dividirlo sin nombrar qué comportamiento queda en cada parte y qué `Dado` nuevo lo situaría.
@@ -35,8 +35,10 @@ No opina de estrategia, de cobertura de negocio ni de código de automatización
 Ejecuta el script por archivo y conserva stdout, stderr y el código de salida:
 
 ~~~bash
-python scripts/check-feature.py --path features/documentation-build.feature
+python tools/check-feature.py --path features/documentation-build.feature
 ~~~
+
+El script es una CLI compartida del repositorio, no una pieza del paquete: búscalo siempre por esa ruta y desde la raíz. Si `tools/check-feature.py` no existe en tu máquina, informa de la ruta que falta y para ahí; no escribas un parseo propio.
 
 1. Con `--json` cuando el informe necesite volcar los hallazgos sin reescribirlos a mano.
 2. El código `2` significa uso inválido: corrige la invocación antes de seguir. No sustituyas el script por un parseo improvisado.

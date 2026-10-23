@@ -1,6 +1,6 @@
 # Las cuatro reglas como comprobaciones
 
-Léelo en el paso 3 del procedimiento. Aplica cada regla como una comprobación sobre el texto del `.feature`, con el código de `scripts/check-feature.py` que la mide. Reglas y criterios: los de la nota de la bóveda; los ejemplos están vueltos a situar en el desarrollo de software por petición del usuario, y el criterio que ilustran no cambia. Los códigos `unparseable-block` y `outline-missing-placeholder` no son de las cuatro reglas: son estructura, y un bloque con uno de esos hallazgos no es un artefacto de comportamiento revisable.
+Léelo en el paso 3 del procedimiento. Aplica cada regla como una comprobación sobre el texto del `.feature`, con el código de `tools/check-feature.py` que la mide. Reglas y criterios: los de la nota de la bóveda; los ejemplos están vueltos a situar en el desarrollo de software por petición del usuario, y el criterio que ilustran no cambia. Los códigos `unparseable-block` y `outline-missing-placeholder` no son de las cuatro reglas: son estructura, y un bloque con uno de esos hallazgos no es un artefacto de comportamiento revisable.
 
 ## Regla 1 — regla de oro: legible sin contexto
 

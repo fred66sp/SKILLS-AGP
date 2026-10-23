@@ -7,7 +7,7 @@ Rellena este informe en el paso 8 del procedimiento de `SKILL.md`. Copia la estr
 
 - Palabras clave detectadas: `# language: es` | `# language: en` | sin encabezado (inferido por <motivo>)
 - Stack declarado por el proyecto: <cucumber-js | cucumber-jvm | pytest-bdd | behave | Reqnroll | godog | sin stack>
-- Comprobación determinista: `python scripts/check-feature.py --path <ruta>` → exit <0|3|2>
+- Comprobación determinista: `python tools/check-feature.py --path <ruta>` → exit <0|3|2>
 - Parseo verificado por el runner: <comando ejecutado y resultado> | no verificado (<motivo>)
 
 ## Veredicto del archivo

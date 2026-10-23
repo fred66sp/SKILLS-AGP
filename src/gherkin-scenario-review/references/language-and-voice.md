@@ -63,7 +63,7 @@ Un `.feature` usa un solo idioma de palabras clave, declarado en la primera lín
 | `Y` / `Pero` | `And` / `But` |
 | `Antecedentes` | `Background` |
 
-Sin encabezado no hay idioma declarado: `scripts/check-feature.py` acepta los dos conjuntos y usa `# language:` solo para saber qué idioma declara el archivo, de modo que un `# language:` no soportado es error de uso (código 2). El runner no es tan tolerante: trabaja con el dialecto declarado, así que un escenario a medias entre `Dado` y `Given` deja pasos sin reconocer. Si el script no reconoce las palabras clave, revisa con los dos conjuntos, informa del motivo y marca el parseo como pendiente de `# language:`.
+Sin encabezado no hay idioma declarado: `tools/check-feature.py` acepta los dos conjuntos y usa `# language:` solo para saber qué idioma declara el archivo, de modo que un `# language:` no soportado es error de uso (código 2). El runner no es tan tolerante: trabaja con el dialecto declarado, así que un escenario a medias entre `Dado` y `Given` deja pasos sin reconocer. Si el script no reconoce las palabras clave, revisa con los dos conjuntos, informa del motivo y marca el parseo como pendiente de `# language:`.
 
 El texto de los pasos sigue el idioma del negocio, no el de las palabras clave: en un archivo con `# language: en` es correcto que un paso afirme `el informe señala la ruta del enlace roto` si ese es el vocabulario del equipo. Los dos fixtures del paquete muestran los dos conjuntos: `../assets/example-feature-good.feature` está escrito con palabras en español y `../assets/example-feature-bad.feature`, en inglés.
 
