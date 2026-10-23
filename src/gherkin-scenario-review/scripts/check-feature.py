@@ -175,7 +175,7 @@ def parse(path):
     if lang is not None and lang not in SUPPORTED_LANGS:
         return None, (
             f"idioma declarado `# language: {lang}` no soportado; solo se soportan "
-            f"'en' y 'es' — quite el encabezado o revise el archivo con ese idioma configurado"
+            f"'en' y 'es' — quita el encabezado o revisa el archivo con ese idioma configurado"
         )
 
     blocks = []
@@ -321,7 +321,7 @@ def check_step_order(blocks, _limits):
                     "regla": 1,
                     "message": "`Dado`/`Given` después de la acción (primera acción en la línea "
                                f"{seen_action['line']}): el orden debe ser setup → acción → verificación; "
-                               "conviértalo en estado inicial antes del `Cuando` o divida el escenario",
+                               "conviértelo en estado inicial antes del `Cuando` o divide el escenario",
                 })
     return findings
 
@@ -359,7 +359,7 @@ def check_unparseable(blocks, _limits):
             "rule": "unparseable-block", "deterministic": True, "line": 1, "regla": 0,
             "evidence": "(sin encabezado de funcionalidad)",
             "message": "el archivo no declara `Feature:` ni `Característica:`: no hay artefacto de "
-                       "comportamiento que revisar; confirme que el encargo apunta a un `.feature`",
+                       "comportamiento que revisar; confirma que el encargo apunta a un `.feature`",
         })
     for block in blocks:
         if block["kind"] == "orphan-step":
@@ -401,7 +401,7 @@ def check_multiple_action(blocks, _limits):
                 "rule": "multiple-action-outcome", "deterministic": True, "line": step["line"],
                 "regla": 2, "evidence": step["source"],
                 "message": f"segunda acción con su verificación en `{block['name']}`: son dos "
-                           "comportamientos. Divida el escenario y sitúe el segundo con su propio "
+                           "comportamientos. Divide el escenario y sitúa el segundo con su propio "
                            "`Dado`, aunque empiece en mitad de la acción",
             })
     return findings
@@ -421,8 +421,8 @@ def check_too_many_steps(blocks, limits):
                 "evidence": f"{describe(block)}: {block['name']}",
                 "message": f"{total} pasos efectivos ({len(block['steps'])} del escenario más "
                            f"{background_steps} de `Background`), el máximo declarado es "
-                           f"{limits['max_steps']}: suba de nivel y deje el detalle en la "
-                           "automatización, o divida comportamientos",
+                           f"{limits['max_steps']}: sube de nivel y deja el detalle en la "
+                           "automatización, o divide comportamientos",
             })
     return findings
 
@@ -483,7 +483,7 @@ def check_redundant_examples(blocks, limits):
                 "rule": "redundant-examples", "deterministic": False, "line": examples["header_line"],
                 "regla": 3, "evidence": f"{len(rows)} filas en `Examples`",
                 "message": f"{len(rows)} filas superan el umbral de {limits['max_outline_rows']}: "
-                           "confirme si de verdad hay esa cantidad de clases de equivalencia; cada "
+                           "confirma si de verdad hay esa cantidad de clases de equivalencia; cada "
                            "fila es una prueba que se ejecuta",
             })
         varying = []
@@ -495,8 +495,8 @@ def check_redundant_examples(blocks, limits):
             findings.append({
                 "rule": "redundant-examples", "deterministic": False, "line": examples["header_line"],
                 "regla": 3, "evidence": f"todas las filas difieren solo en `{varying[0]}`",
-                "message": "las filas cambian únicamente una columna: compruebe si son la misma "
-                           "clase de equivalencia repetida; si lo son, deje un ejemplo",
+                "message": "las filas cambian únicamente una columna: comprueba si son la misma "
+                           "clase de equivalencia repetida; si lo son, deja un ejemplo",
             })
     return findings
 
@@ -513,7 +513,7 @@ def check_low_level_vocab(blocks, _limits):
                     "rule": "low-level-vocab", "deterministic": False, "line": step["line"], "regla": 1,
                     "evidence": step["source"],
                     "message": "el paso describe el cómo (" + ", ".join(sorted(set(matched))) +
-                               "): suba al qué quiere el usuario; el detalle mecánico vive en los "
+                               "): sube al qué quiere el usuario; el detalle mecánico vive en los "
                                "hooks y en la automatización",
                 })
     return findings
@@ -531,8 +531,8 @@ def check_person_mixed(blocks, _limits):
                 "rule": "person-mixed", "deterministic": False, "line": block["line"], "regla": 4,
                 "evidence": f"primera persona en la línea {first[0]['line']}, tercera en la "
                             f"línea {third[0]['line']}",
-                "message": "el escenario mezcla `yo` con actores en tercera persona: elija tercera "
-                           "persona y reescriba los pasos, que además podrán reutilizarse sueltos",
+                "message": "el escenario mezcla `yo` con actores en tercera persona: elige tercera "
+                           "persona y reescribe los pasos, que además podrán reutilizarse sueltos",
             })
     return findings
 
@@ -548,7 +548,7 @@ def check_no_subject_verb(blocks, _limits):
                     "rule": "no-subject-verb", "deterministic": False, "line": step["line"], "regla": 4,
                     "evidence": step["source"],
                     "message": "el paso no tiene sujeto y predicado legibles: fuera de su "
-                               "escenario no se sabría qué verificar con él; reescríbalo como frase "
+                               "escenario no se sabría qué verificar con él; reescríbelo como frase "
                                "completa",
                 })
     return findings
