@@ -35,7 +35,7 @@ No opina de estrategia, de cobertura de negocio ni de código de automatización
 Ejecuta el script por archivo y conserva stdout, stderr y el código de salida:
 
 ~~~bash
-python scripts/check-feature.py --path features/carrito.feature
+python scripts/check-feature.py --path features/documentation-build.feature
 ~~~
 
 1. Con `--json` cuando el informe necesite volcar los hallazgos sin reescribirlos a mano.

@@ -35,6 +35,8 @@ S11. Evidencia obligatoria antes de declarar terminada la entrega: `validate-met
 
 S12. Ningún commit se ejecuta sin confirmación explítica, siguiendo `src/git-flow-management/SKILL.md` y `CONTRIBUTING.md`: cambios preparados en el stage, mensaje Conventional Commits en inglés, barrido previo de `README.md`, `CHANGELOG.md`, registro de skills y referencias cruzadas antes de pedir la confirmación.
 
+S13. Dominio de los ejemplos: todo ejemplo de Gherkin que aparezca en la skill (referencias, plantillas y los dos fixtures de `assets/`) modela comportamiento de desarrollo de software — compilación de documentación, códigos de salida de una CLI, pasos de un pipeline de CI, hallazgos de un validador con su severidad, reconstrucción incremental — y nunca compra de zapatos ni e-commerce. Las reglas se citan de la nota fuente; el dominio de los ejemplos es el pedido por el usuario.
+
 ## Tasks
 
 | ID | Tarea | Specs | Unidad de commit |
@@ -50,7 +52,7 @@ S12. Ningún commit se ejecuta sin confirmación explítica, siguiendo `src/git-
 
 ### Límites de rebanada
 
-T1 a T5 son autoría pura y cada uno se mantiene por debajo de las ~400 líneas del repositorio. T4 puede pasarlas si los cinco `references/` por stack crecen: en ese caso se parte en `T4a` JS/TS + Python + detección y `T4b` Java + .NET + Go, con un commit por mitad. T6 incluye HTML generados por archify, que no cuentan como autoría: lo revisable son los `*.json` y sus recibos.
+T1 a T5 son autoría pura y cada uno se mantiene por debajo de las ~400 líneas del repositorio. Excepción declarada: `scripts/check-feature.py` son 674 líneas de una sola responsabilidad determinista (un parser Gherkin bilingüe y trece comprobaciones); partirlo rompería el contrato único de `--path`, así que viaja como unidad única, revisable por función (`classify`, `parse`, un `check_*` por código) y con los dos fixtures como evidencia en el mismo commit. T4 puede pasarlas si los cinco `references/` por stack crecen: en ese caso se parte en `T4a` JS/TS + Python + detección y `T4b` Java + .NET + Go, con un commit por mitad. T6 incluye HTML generados por archify, que no cuentan como autoría: lo revisable son los `*.json` y sus recibos.
 
 ## Log
 
@@ -78,4 +80,10 @@ L11 Evidencia T3 (RED → GREEN): RED observado con parser y solo `missing-then`
 
 L12 Hallazgo de entorno al corregir: un `\b` escrito como `"\b"` dentro del JSON de la herramienta de edición llegó al fichero como carácter de retroceso (0x08), así que `THIRD_PERSON_RE` nunca casaba y `person-mixed` no disparaba. Corregido con `\u0008` en el oldText y `\\b` en el newText. Nota para la casa: en los argumentos JSON de `edit`/`write`, las secuencias de escape de regex se escriben con doble barra.
 
-L13 Defecto de escritura observado: sustituir el byte 0x08 con `python` (`open(...,'wb')`, `io.open`, con `flush` y `os.fsync`) no persistía en el disco (`changed: False` releyendo el fichero); la misma sustitución con la herramienta `edit` sí persistió. Para correcciones de este fichero se usa `edit`, no `python`. 
+L13 Defecto de escritura observado: sustituir el byte 0x08 con `python` (`open(...,'wb')`, `io.open`, con `flush` y `os.fsync`) no persistía en el disco (`changed: False` releyendo el fichero); la misma sustitución con la herramienta `edit` sí persistió. Para correcciones de este fichero se usa `edit`, no `python`.
+
+L14 (corrección del usuario, literal): «enfoca a el desarrollo de software, no a compra de zapatos, etc.» Entra como S13. Reabre T1 (el ejemplo de invocación del `SKILL.md` apuntaba a `features/carrito.feature`), T2 (la orden de delegación pedía reutilizar los ejemplos de zapatos de la nota: desviada la orden con `subagent_send_message` a los dos workers en curso) y T3 (los dos fixtures se reescriben con dominio de desarrollo de software conservando las trece violaciones previstas).
+
+L15 Los dos workers de texto (T2 y T4) se lanzaron con handoff canónico después de dos intentos rechazados: el primer rechazo exigía el encabezado literal `## Allowed edit surfaces` con una ruta por línea, y el segundo exigía la forma `Spec: odd/tasks/<feature>.md, T<n>` dentro de la tarea. La tercera versión salió. Al fallar el segundo intento el runtime mandaba escribir la unidad inline; se hizo T3 inline y luego se delegó T2 y T4 con el handoff correcto.
+
+L16 Corrección aplicada por S13: cambia el dominio de los fixtures. `assets/example-feature-good.feature` modela el build de documentación en español (`# language: es`, enlaces relativos rotos, reconstrucción incremental, severidad de hallazgos del validador) y `assets/example-feature-bad.feature` modela la pipeline de CI y el validador en inglés. El ejemplo de invocación del `SKILL.md` pasa a `features/documentation-build.feature`. `THIRD_PERSON_RE` se amplía con actores de desarrollo (developer, maintainer, engineer, reviewer, compiler, validator, pipeline y sus equivalentes en español), porque el listado anterior solo conocía actores de tienda. Verificación tras el cambio: good fixture 0 hallazgos y exit 0; bad fixture 21 hallazgos (10 deterministas, 11 candidatos) y exit 3, con los trece códigos disparando; `--json` devuelve 21 objetos; ruta no válida (`/dev/null`) sale 2; `--help` lista deterministas y candidatos. Se eliminó código muerto (`effective_steps`, `find_all_blocks`, un `return` duplicado en `parse`).
