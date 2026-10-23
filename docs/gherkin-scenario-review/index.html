@@ -1,0 +1,1102 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="gherkin-scenario-review — guía de la skill: las cuatro reglas de buen Gherkin como contrato de revisión, el script determinista check-feature.py con sus trece comprobaciones, la separación entre hecho medible y estimación del criterio, el informe con veredicto cerrado y los límites del alcance.">
+<meta name="color-scheme" content="light dark">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23166534'/%3E%3Cpath d='M9 9h14M9 15h11M9 21h8' stroke='%23ffffff' stroke-width='2.2' stroke-linecap='round'/%3E%3Cpath d='M19 21l2.6 2.6L27 17' fill='none' stroke='%23a3e635' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+<title>gherkin-scenario-review — Revisión de escenarios Gherkin</title>
+<script>
+(function () {
+  try {
+    var p = JSON.parse(localStorage.getItem("gherkin-scenario-review:prefs") || "{}");
+    var t = p.theme || (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+    document.documentElement.setAttribute("data-theme", t);
+  } catch (e) { document.documentElement.setAttribute("data-theme", "light"); }
+})();
+</script>
+<style>
+  /* Identidad visual: verde pepinillo con lima como segundo acento. Donde el
+     color lleva texto se usa la variante oscurecida, que mantiene el
+     contraste AA sobre el fondo claro. */
+  :root {
+    --bg: #f8fafc;
+    --bg-elev: #ffffff;
+    --bg-soft: #f1f5f9;
+    --text: #0f172a;
+    --muted: #5f6b80;
+    --border: #e2e8f0;
+    --border-strong: #cbd5e1;
+    --accent: #166534;
+    --accent-2: #65a30d;
+    --accent-3: #15803d;
+    --accent-soft: rgba(22, 101, 52, .10);
+    --ok: #10b981;
+    --warn: #f59e0b;
+    --ok-text: #047857;
+    --warn-text: #b45309;
+    --error-text: #b91c1c;
+    --code-bg: #0a0f1c;
+    --code-text: #e5e7eb;
+    --code-border: #1f2937;
+    --shadow: 0 1px 2px rgba(15, 23, 42, .05), 0 8px 24px -12px rgba(15, 23, 42, .18);
+    --shadow-lg: 0 20px 60px -30px rgba(15, 23, 42, .35);
+    --radius: 16px;
+    --radius-sm: 10px;
+    /* No se descargan tipografías: si Inter o JetBrains Mono no están
+       instaladas, el navegador cae en la pila del sistema. */
+    --font: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    --mono: "JetBrains Mono", ui-monospace, "SF Mono", "Fira Code", Menlo, Consolas, monospace;
+  }
+  :root[data-theme="dark"] {
+    --bg: #0a0f1c;
+    --bg-elev: #111827;
+    --bg-soft: #1f2937;
+    --text: #e5e7eb;
+    --muted: #94a3b8;
+    --border: #334155;
+    --border-strong: #475569;
+    --accent: #86efac;
+    --accent-2: #a3e635;
+    --accent-3: #4ade80;
+    --accent-soft: rgba(134, 239, 172, .14);
+    --ok: #34d399;
+    --warn: #fbbf24;
+    --ok-text: #34d399;
+    --warn-text: #fbbf24;
+    --error-text: #f87171;
+    --code-bg: #070b16;
+    --code-text: #e5e7eb;
+    --code-border: #1f2937;
+    --shadow: 0 1px 2px rgba(0, 0, 0, .4), 0 12px 32px -18px rgba(0, 0, 0, .8);
+    --shadow-lg: 0 24px 70px -34px rgba(0, 0, 0, .9);
+  }
+
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; scroll-padding-top: 88px; }
+  body {
+    margin: 0;
+    font-family: var(--font);
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  a { color: var(--accent); text-decoration: none; }
+  a:hover { text-decoration: underline; text-underline-offset: 3px; }
+  code, pre, kbd { font-family: var(--mono); }
+
+  .topbar {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 12px clamp(16px, 4vw, 40px);
+    background: color-mix(in srgb, var(--bg) 82%, transparent);
+    -webkit-backdrop-filter: saturate(180%) blur(14px);
+    backdrop-filter: saturate(180%) blur(14px);
+    border-bottom: 1px solid var(--border);
+  }
+  .brand { display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--text); }
+  .brand:hover { text-decoration: none; }
+  .brand-mark {
+    display: block;
+    width: 34px; height: 34px;
+    border-radius: 10px;
+    box-shadow: var(--shadow);
+    overflow: hidden;
+  }
+  .brand-mark svg { width: 100%; height: 100%; display: block; }
+  .brand-name { font-weight: 700; letter-spacing: -.02em; font-size: 15px; }
+  .brand-name small { display: block; font-weight: 500; color: var(--muted); font-size: 11px; letter-spacing: .04em; text-transform: uppercase; }
+  .topbar-spacer { flex: 1; }
+
+  .icon-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    height: 36px;
+    padding: 0 12px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: var(--bg-elev);
+    color: var(--text);
+    font: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: border-color .15s, background .15s, transform .1s;
+  }
+  .icon-btn:hover { border-color: var(--border-strong); }
+  .icon-btn:active { transform: translateY(1px); }
+  .icon-btn svg { width: 16px; height: 16px; }
+  :root[data-theme="light"] .icon-sun { display: none; }
+  :root[data-theme="dark"] .icon-moon { display: none; }
+
+  .hero {
+    position: relative;
+    overflow: hidden;
+    padding: clamp(48px, 9vw, 104px) clamp(16px, 4vw, 40px) clamp(40px, 6vw, 72px);
+    border-bottom: 1px solid var(--border);
+  }
+  .hero::before {
+    content: "";
+    position: absolute;
+    inset: -40% -10% auto -10%;
+    height: 420px;
+    background:
+      radial-gradient(60% 60% at 22% 30%, color-mix(in srgb, var(--accent) 26%, transparent), transparent 70%),
+      radial-gradient(50% 50% at 70% 6%, color-mix(in srgb, var(--accent-2) 22%, transparent), transparent 70%),
+      radial-gradient(42% 42% at 92% 26%, color-mix(in srgb, var(--accent-3) 20%, transparent), transparent 70%);
+    filter: blur(6px);
+    pointer-events: none;
+  }
+  .hero-inner { position: relative; max-width: 1080px; margin: 0 auto; }
+  .pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 5px 12px;
+    border: 1px solid var(--border-strong);
+    border-radius: 999px;
+    background: var(--bg-elev);
+    color: var(--muted);
+    font-size: 12.5px;
+    font-weight: 600;
+    letter-spacing: .01em;
+  }
+  .pill .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--ok); box-shadow: 0 0 0 3px color-mix(in srgb, var(--ok) 22%, transparent); }
+  .hero h1 {
+    margin: 22px 0 0;
+    font-size: clamp(34px, 6vw, 62px);
+    line-height: 1.04;
+    letter-spacing: -.035em;
+    font-weight: 800;
+  }
+  .hero h1 .grad { color: var(--accent); }
+  .hero p.lead {
+    margin: 20px 0 0;
+    max-width: 660px;
+    font-size: clamp(16px, 2.2vw, 19px);
+    color: var(--muted);
+  }
+  .hero-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 30px; }
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 11px 18px;
+    border-radius: var(--radius-sm);
+    font-weight: 650;
+    font-size: 14.5px;
+    border: 1px solid transparent;
+    cursor: pointer;
+    transition: transform .12s, box-shadow .2s, border-color .15s;
+  }
+  .btn:hover { text-decoration: none; transform: translateY(-1px); }
+  .btn-primary { background: linear-gradient(135deg, var(--accent), var(--accent-2)); color: #fff; box-shadow: var(--shadow); }
+  .btn-ghost { background: var(--bg-elev); border-color: var(--border-strong); color: var(--text); }
+
+  .layout {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: clamp(32px, 5vw, 60px) clamp(16px, 4vw, 40px) 80px;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 48px;
+  }
+  @media (min-width: 1020px) {
+    .layout { grid-template-columns: 214px minmax(0, 1fr); gap: 56px; }
+  }
+  .toc { display: none; }
+  @media (min-width: 1020px) {
+    .toc { display: block; position: sticky; top: 84px; align-self: start; }
+    .toc h2 { font-size: 11px; text-transform: uppercase; letter-spacing: .1em; color: var(--muted); margin: 0 0 12px; }
+    .toc a {
+      display: block;
+      padding: 7px 12px;
+      border-left: 2px solid var(--border);
+      color: var(--muted);
+      font-size: 14px;
+      font-weight: 550;
+    }
+    .toc a:hover { color: var(--text); text-decoration: none; }
+    .toc a.active { color: var(--accent); border-left-color: var(--accent); background: var(--accent-soft); border-radius: 0 8px 8px 0; }
+  }
+  main { min-width: 0; }
+  section { scroll-margin-top: 88px; }
+  section + section { margin-top: 64px; }
+  .section-head { display: flex; align-items: center; gap: 12px; margin-bottom: 8px; }
+  .section-num {
+    display: grid; place-items: center;
+    width: 30px; height: 30px;
+    border-radius: 9px;
+    background: var(--accent-soft);
+    color: var(--accent);
+    font-size: 13px;
+    font-weight: 800;
+    font-variant-numeric: tabular-nums;
+  }
+  h2.title { margin: 0; font-size: clamp(22px, 3vw, 28px); letter-spacing: -.02em; }
+  .section > p.sub { margin: 6px 0 24px; color: var(--muted); max-width: 74ch; }
+  h3 { margin: 30px 0 10px; font-size: 17px; letter-spacing: -.01em; }
+
+  .grid { display: grid; gap: 16px; }
+  .grid + .grid, .grid + .note, .grid + h3 { margin-top: 24px; }
+  @media (min-width: 640px) { .grid.cols-2 { grid-template-columns: 1fr 1fr; } .grid.cols-3 { grid-template-columns: repeat(3, 1fr); } }
+  .card {
+    background: var(--bg-elev);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px;
+    box-shadow: var(--shadow);
+  }
+  .card h3 { margin: 0 0 6px; font-size: 15px; }
+  .card p { margin: 0; color: var(--muted); font-size: 14px; }
+  .card p + p { margin-top: 8px; }
+  .card ul { margin: 8px 0 0; padding-left: 18px; color: var(--muted); font-size: 13.5px; }
+  .card li + li { margin-top: 4px; }
+  .card .card-ico {
+    display: grid; place-items: center;
+    width: 34px; height: 34px; margin-bottom: 12px;
+    border-radius: 9px;
+    background: var(--accent-soft); color: var(--accent);
+  }
+  .card .card-ico svg { width: 18px; height: 18px; }
+
+  .table-wrap { overflow-x: auto; border: 1px solid var(--border); border-radius: var(--radius); background: var(--bg-elev); box-shadow: var(--shadow); }
+  .table-wrap + .note, .table-wrap + p { margin-top: 16px; }
+  table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  thead th {
+    text-align: left;
+    padding: 12px 16px;
+    background: var(--bg-soft);
+    color: var(--muted);
+    font-size: 11.5px;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    border-bottom: 1px solid var(--border);
+    white-space: nowrap;
+  }
+  tbody td { padding: 11px 16px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  tbody tr:last-child td { border-bottom: 0; }
+  tbody tr:hover { background: color-mix(in srgb, var(--accent) 3%, transparent); }
+  td code, th code { font-size: 12.8px; }
+  tbody td:first-child { white-space: nowrap; }
+  .table-wrap.wrap-cells td:first-child { white-space: normal; }
+  .table-wrap.wrap-cells td code { overflow-wrap: anywhere; }
+  /* En pantallas estrechas, la primera columna deja de ir en una sola línea:
+     con nowrap, los nombres largos se parten mal. */
+  @media (max-width: 640px) {
+    table { font-size: 13.5px; }
+    thead th, tbody td { padding: 9px 12px; }
+    tbody td:first-child { white-space: normal; }
+  }
+
+  .sev {
+    display: inline-block;
+    min-width: 60px;
+    text-align: center;
+    padding: 2px 8px;
+    border-radius: 6px;
+    font-family: var(--mono);
+    font-size: 11.5px;
+    font-weight: 700;
+    letter-spacing: .02em;
+    text-transform: uppercase;
+  }
+  .sev-error { background: color-mix(in srgb, #ef4444 16%, transparent); color: var(--error-text); }
+  .sev-warn { background: color-mix(in srgb, var(--warn) 20%, transparent); color: var(--warn-text); }
+  .sev-ok { background: color-mix(in srgb, var(--ok) 16%, transparent); color: var(--ok-text); }
+  .sev-info { background: color-mix(in srgb, var(--accent) 16%, transparent); color: var(--accent); }
+
+  .code { position: relative; margin: 14px 0; }
+  .code pre {
+    margin: 0;
+    padding: 16px 52px 16px 18px;
+    background: var(--code-bg);
+    color: var(--code-text);
+    border: 1px solid var(--code-border);
+    border-radius: var(--radius);
+    overflow-x: auto;
+    font-size: 13.2px;
+    line-height: 1.6;
+    box-shadow: var(--shadow);
+  }
+  .code pre code { background: none; padding: 0; color: inherit; font-size: inherit; }
+  .code .copy {
+    position: absolute;
+    top: 9px; right: 9px;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    height: 30px;
+    padding: 0 9px;
+    border: 1px solid var(--code-border);
+    border-radius: 8px;
+    background: color-mix(in srgb, var(--code-bg) 60%, #ffffff 8%);
+    color: #c8d2e8;
+    font: inherit;
+    font-size: 11.5px;
+    font-weight: 600;
+    cursor: pointer;
+    opacity: 0;
+    transition: opacity .15s, border-color .15s;
+  }
+  .code:hover .copy, .code .copy:focus-visible { opacity: 1; }
+  .code .copy:hover { border-color: #3b4c72; }
+  @media (hover: none) { .code .copy { opacity: 1; } }
+  .code .copy.copied { color: var(--ok); border-color: var(--ok); }
+  .code .copy svg { width: 13px; height: 13px; }
+  p code, li code, td code {
+    background: var(--bg-soft);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: .08em .42em;
+    font-size: .88em;
+  }
+  .note {
+    display: flex;
+    gap: 12px;
+    padding: 14px 16px;
+    border-left: 1px solid var(--accent);
+    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+    background: var(--accent-soft);
+    font-size: 14px;
+    margin: 16px 0;
+  }
+  .note strong { color: var(--text); }
+  .note p { margin: 0; }
+  .note p + p { margin-top: 8px; }
+
+  .status-strip {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    max-width: 720px;
+    margin-top: 28px;
+    padding: 14px 16px;
+    border: 1px solid color-mix(in srgb, var(--ok) 42%, var(--border));
+    border-radius: var(--radius-sm);
+    background: color-mix(in srgb, var(--ok) 8%, var(--bg-elev));
+  }
+  .status-mark {
+    flex: 0 0 auto;
+    display: grid;
+    place-items: center;
+    width: 30px;
+    height: 30px;
+    border-radius: 9px;
+    background: color-mix(in srgb, var(--ok) 18%, transparent);
+    color: var(--ok-text);
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: .04em;
+  }
+  .status-strip strong { display: block; font-size: 14px; }
+  .status-strip span:not(.status-mark) { display: block; margin-top: 2px; color: var(--muted); font-size: 13px; }
+
+  .flow { display: grid; grid-template-columns: 1fr; gap: 12px; }
+  @media (min-width: 640px) { .flow { grid-template-columns: repeat(2, 1fr); } }
+  .flow-step {
+    min-height: 142px;
+    padding: 16px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    background: var(--bg-elev);
+  }
+  .flow-step code { color: var(--accent); font-weight: 700; }
+  .flow-step strong { display: block; margin-top: 10px; font-size: 15px; }
+  .flow-step p { margin: 5px 0 0; color: var(--muted); font-size: 13.5px; }
+
+  .role-grid { display: grid; grid-template-columns: 1fr; gap: 16px; margin-top: 24px; }
+  @media (min-width: 640px) { .role-grid { grid-template-columns: repeat(2, 1fr); } }
+  .role-block {
+    padding: 18px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    background: var(--bg-elev);
+  }
+  .role-label {
+    display: block;
+    color: var(--accent);
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+  }
+  .role-block h3 { margin: 10px 0 7px; font-size: 17px; }
+  .role-block p { margin: 0; color: var(--muted); font-size: 13.5px; }
+  .role-block ul { margin: 12px 0 0; padding-left: 18px; color: var(--muted); font-size: 13px; }
+  .role-block li + li { margin-top: 5px; }
+
+  a.card-link { display: block; text-decoration: none; color: inherit; transition: border-color .15s, transform .12s; }
+  a.card-link:hover { text-decoration: none; border-color: var(--accent); transform: translateY(-1px); }
+  a.card-link:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+  a.card-link .go { display: inline-block; margin-top: 12px; color: var(--accent); font-weight: 650; font-size: 13.5px; }
+  a.card-link .card-ico { transition: background .15s; }
+
+  .footer {
+    border-top: 1px solid var(--border);
+    padding: 28px clamp(16px, 4vw, 40px);
+    color: var(--muted);
+    font-size: 13.5px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px 20px;
+    align-items: center;
+    justify-content: space-between;
+    max-width: 1180px;
+    margin: 0 auto;
+  }
+  .footer code { background: var(--bg-soft); border: 1px solid var(--border); border-radius: 6px; padding: 1px 6px; }
+  .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+  ::selection { background: color-mix(in srgb, var(--accent) 30%, transparent); }
+  @media (prefers-reduced-motion: reduce) { * { scroll-behavior: auto !important; transition: none !important; } }
+
+  .qa { border-bottom: 1px solid var(--border); padding: 18px 0; }
+  .qa:last-child { border-bottom: 0; }
+  .qa h3 { margin: 0 0 6px; font-size: 15.5px; }
+  .qa p { margin: 0; color: var(--muted); font-size: 14px; }
+  .qa p + p { margin-top: 8px; }
+  ul.plain { margin: 10px 0 0; padding-left: 20px; color: var(--muted); font-size: 14.5px; }
+  ul.plain li + li { margin-top: 6px; }
+  /* Una rejilla de pasos seguida de una tabla necesita el mismo aire que una
+     rejilla seguida de otra: sin esta regla la tabla queda pegada al último
+     paso, porque ni `.flow` ni `.table-wrap` traen margen propio. */
+  .flow + .table-wrap, .grid + .table-wrap { margin-top: 24px; }
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <a class="brand" href="#top">
+    <span class="brand-mark" aria-hidden="true">
+      <svg viewBox="0 0 32 32" role="presentation">
+        <defs>
+          <linearGradient id="brand-grad" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="#166534"></stop>
+            <stop offset="1" stop-color="#65a30d"></stop>
+          </linearGradient>
+        </defs>
+        <rect width="32" height="32" fill="url(#brand-grad)"></rect>
+        <path d="M9 9h14M9 15h11M9 21h8" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round"></path>
+        <path d="M19 21l2.6 2.6L27 17" fill="none" stroke="#a3e635" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"></path>
+      </svg>
+    </span>
+    <span class="brand-name">gherkin-scenario-review<small>revisión de escenarios Gherkin</small></span>
+  </a>
+  <span class="topbar-spacer"></span>
+  <button class="icon-btn" id="theme-toggle" type="button" aria-label="Cambiar a tema oscuro">
+    <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"></path></svg>
+    <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"></path></svg>
+    <span>Tema</span>
+  </button>
+</header>
+
+<section class="hero" id="top">
+  <div class="hero-inner">
+    <span class="pill"><span class="dot" aria-hidden="true"></span>una skill · ocho pasos · hecho medible frente a estimación</span>
+    <h1>Revisión de escenarios <span class="grad">Gherkin</span> con evidencia</h1>
+    <p class="lead">Esta skill no descubre comportamientos ni escribe escenarios: revisa un archivo <code>.feature</code> ya escrito contra las cuatro reglas de buen Gherkin, lo mide con un script determinista y devuelve un informe con veredicto cerrado —<code>APTO</code>, <code>APTO CON RESERVAS</code> o <code>NO APTO</code>— donde cada hallazgo cita regla, línea y evidencia.</p>
+    <div class="hero-actions">
+      <a class="btn btn-primary" href="#que-es">Qué es esta skill</a>
+      <a class="btn btn-ghost" href="#codigos">Las trece comprobaciones</a>
+      <a class="btn btn-ghost" href="#diagramas">Los diagramas</a>
+    </div>
+    <div class="status-strip" role="status">
+      <span class="status-mark" aria-hidden="true">OK</span>
+      <div><strong>Todo lo que hay aquí sale del paquete y del script ejecutado</strong><span>Las invariantes, los pasos, los códigos, los umbrales y las salidas de comandos de esta página están copiados de <code>SKILL.md</code>, de las referencias y de ejecutar <code>scripts/check-feature.py</code> sobre los dos fixtures del paquete. Si algo no está en el paquete, no se presenta como regla.</span></div>
+    </div>
+  </div>
+</section>
+
+<div class="layout">
+  <nav class="toc" aria-label="Índice de la página">
+    <h2>En esta página</h2>
+    <a href="#que-es">1. Qué es esta skill</a>
+    <a href="#problema">2. El problema que resuelve</a>
+    <a href="#invariantes">3. Las diez invariantes</a>
+    <a href="#procedimiento">4. El procedimiento en ocho pasos</a>
+    <a href="#hecho">5. Hecho medible y estimación</a>
+    <a href="#codigos">6. Las trece comprobaciones</a>
+    <a href="#ejecucion">7. Cómo se ejecuta el script</a>
+    <a href="#informe">8. El informe y el veredicto</a>
+    <a href="#stack">9. Automatizabilidad por stack</a>
+    <a href="#ficheros">10. Los ficheros del paquete</a>
+    <a href="#en-este-repositorio">11. Cómo se usa aquí</a>
+    <a href="#limites">12. Errores y límites</a>
+    <a href="#preguntas">13. Preguntas cortas</a>
+    <a href="#diagramas">14. Los diagramas</a>
+  </nav>
+
+  <main>
+    <section id="que-es" class="section">
+      <div class="section-head"><span class="section-num">1</span><h2 class="title">Qué es esta skill</h2></div>
+      <p class="sub">Un contrato de revisión sobre artefactos de comportamiento que ya existen. Su resultado es un informe con evidencia por línea, no una reescritura del archivo.</p>
+
+      <p>El producto de BDD es el mismo artefacto que sirve de requerimiento, criterio de aceptación y caso de prueba. Cuando ese artefacto está mal —un muro de texto, dos comportamientos enredados, un outline inflado—, los tres usos se degradan a la vez. Esta skill detecta la degradación sobre el <code>.feature</code> escrito, dice qué regla falla, en qué línea y cómo se vería la versión correcta, y se detiene ahí.</p>
+
+      <div class="grid cols-2">
+        <div class="card">
+          <div class="card-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 11l3 3L22 4"></path><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path></svg></div>
+          <h3>Qué decide</h3>
+          <p>Si un escenario ya escrito es una especificación legible: un comportamiento por escenario, un ejemplo por clase de equivalencia, orden estricto de pasos y lenguaje consistente. El veredicto sale de un vocabulario cerrado, no de impresiones.</p>
+          <p>A quién sirve: a quien mantiene <code>.feature</code> de Cucumber, SpecFlow, Reqnroll, behave o pytest-bdd en español o en inglés, y a quien recibe escenarios de una persona o de un agente y necesita juzgarlos sin reescribirlos.</p>
+        </div>
+        <div class="card">
+          <div class="card-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"></circle><path d="M4.9 4.9l14.2 14.2"></path></svg></div>
+          <h3>Qué no hace</h3>
+          <p>No descubre comportamientos desde una historia de usuario, no redacta escenarios guiados, no escribe step definitions ni automatiza pruebas, no audita suites de tests unitarios.</p>
+          <p>No emite requisitos <code>SHALL</code> ni delta specs: eso pertenece al flujo SDD. No opina de estrategia, de cobertura de negocio ni del código de automatización. Se limita al artefacto de comportamiento.</p>
+        </div>
+      </div>
+
+      <div class="table-wrap wrap-cells">
+        <table>
+          <thead><tr><th>Cuándo aplica</th><th>Cuándo no</th></tr></thead>
+          <tbody>
+            <tr><td>Auditar, revisar o validar escenarios Gherkin ya escritos en un archivo <code>.feature</code>.</td><td>Descubrir comportamientos o escribir escenarios desde una historia de usuario.</td></tr>
+            <tr><td>Detectar muros de texto, escenarios con varios comportamientos o <code>Scenario Outline</code> con filas de más.</td><td>Redactar step definitions, hooks o cualquier automatización de pruebas.</td></tr>
+            <tr><td>Juzgar pasos que filtran detalles de automatización (clics, esperas, URLs) y señalar a qué pertenecen.</td><td>Escribir requisitos <code>SHALL</code> ni delta specs del flujo SDD.</td></tr>
+            <tr><td>Dar un veredicto de calidad por escenario y por archivo, con línea citada en cada hallazgo.</td><td>Declarar que un escenario pasa, falla o está automatizado, o auditar suites de tests unitarios.</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>Los disparadores negativos están dentro de la <code>description</code> del frontmatter y son lo que evita que la skill se active para escribir Gherkin nuevo o para implementar la automatización.</p>
+    </section>
+
+    <section id="problema" class="section">
+      <div class="section-head"><span class="section-num">2</span><h2 class="title">El problema que resuelve</h2></div>
+      <p class="sub">Cuatro defectos previsibles del Gherkin que se escribe sin control. La skill los hace difíciles de sostener: tres de los cuatro los mide un script antes de que nadie opine.</p>
+
+      <div class="grid cols-2">
+        <div class="card">
+          <h3>Muro de texto</h3>
+          <p>Doce pasos que narran clics, esperas y navegación. Nadie que no estuvo en la sesión sabe qué se está especificando, y el detalle mecánico ata el escenario a una implementación.</p>
+          <p><strong>Lo mide:</strong> <code>too-many-steps</code> sobre nueve pasos efectivos contando <code>Background</code>, y <code>low-level-vocab</code> sobre el vocabulario de interacción.</p>
+        </div>
+        <div class="card">
+          <h3>Varios comportamientos enredados</h3>
+          <p>Dos pares acción-verificación en el mismo escenario. Un fallo deja dos causas raíz posibles y el triaje se convierte en adivinanza.</p>
+          <p><strong>Lo mide:</strong> <code>multiple-action-outcome</code>; el criterio confirma después qué comportamiento queda en cada parte y con qué <code>Dado</code> se sitúa cada uno.</p>
+        </div>
+      </div>
+
+      <div class="grid cols-2">
+        <div class="card">
+          <h3>Outline inflado</h3>
+          <p>Un <code>Scenario Outline</code> cuyas filas de <code>Examples</code> solo difieren en un campo de la misma clase de equivalencia. Cada fila es una prueba más que se ejecuta sin ampliar la cobertura.</p>
+          <p><strong>Lo mide:</strong> <code>redundant-examples</code> sobre el umbral declarado de cinco filas, y <code>outline-missing-placeholder</code> sobre la tabla mal formada.</p>
+        </div>
+        <div class="card">
+          <h3>Lenguaje inconsistente</h3>
+          <p>Primera persona mezclada con tercera, pasos sin sujeto ni verbo, <code>Dado</code> que declara una intención de negocio en lugar de un estado inicial. El paso no se entiende suelto ni sirve como definición reutilizable.</p>
+          <p><strong>Lo mide:</strong> <code>person-mixed</code>, <code>no-subject-verb</code> y <code>business-intent-given</code>, siempre como candidatos que el criterio confirma o refuta.</p>
+        </div>
+      </div>
+
+      <div class="note">
+        <p><strong>El coste no es el texto: es la colaboración.</strong> Un escenario con dos comportamientos multiplica el tiempo de triaje de cada fallo. Un paso que filtra clics y URLs se rompe cuando cambia la interfaz, no cuando cambia el comportamiento. Por eso la revisión separa el hecho medible de la estimación del criterio: lo primero es reproducible y citable; lo segundo se declara como lo que es.</p>
+      </div>
+    </section>
+
+    <section id="invariantes" class="section">
+      <div class="section-head"><span class="section-num">3</span><h2 class="title">Las diez invariantes</h2></div>
+      <p class="sub">No son recomendaciones de estilo. Cada una existe porque su ausencia produce un defecto concreto en el informe. Reproducen el contrato de <code>SKILL.md</code>.</p>
+
+      <ul class="plain">
+        <li><strong>Solo revisa texto Gherkin que ya existe.</strong> Si el encargo pide descubrir, escribir o automatizar, se declara el fuera de alcance y se revisa únicamente lo que ya esté escrito.</li>
+        <li><strong>El archivo del usuario no se modifica.</strong> Cada hallazgo lleva una reescritura propuesta dentro del informe; aplicar esa reescritura es un encargo aparte.</li>
+        <li><strong>Ninguna revisión de memoria.</strong> Se ejecuta <code>scripts/check-feature.py</code> sobre cada archivo y se leen las referencias aplicables antes de emitir un veredicto; la regla se cita por nombre y por número.</li>
+        <li><strong>Se separa hecho de estimación.</strong> Lo que mide el script es reproducible; lo que juzga el criterio es estimación. Un candidato no se redacta como violación determinista y un <code>APTO</code> nunca se apoya solo en estimaciones.</li>
+        <li><strong>Cada hallazgo cita regla, archivo, línea y evidencia literal del paso.</strong> Sin línea citada no hay hallazgo.</li>
+        <li><strong>Más de un comportamiento por escenario es el hallazgo de mayor prioridad.</strong> No se propone dividirlo sin nombrar qué comportamiento queda en cada parte y qué <code>Dado</code> nuevo lo sitúa.</li>
+        <li><strong>El vocabulario del veredicto es cerrado:</strong> <code>APTO</code>, <code>APTO CON RESERVAS</code>, <code>NO APTO</code>. No existen «se ve bien», «podría mejorarse» ni porcentajes de calidad.</li>
+        <li><strong>No se inventan comandos de runner.</strong> Un comando de automatización sale solo de la referencia del stack correspondiente; sin documento que lo cubra, se omite y se declara el parseo no verificado.</li>
+        <li><strong>Ante un archivo que no es Gherkin, o un bloque sin pasos, no se asigna veredicto:</strong> se informa <code>FUERA DE ALCANCE</code> con el motivo.</li>
+        <li><strong>La revisión no declara que un escenario pasa, falla o está automatizado.</strong> Solo declara su calidad como especificación.</li>
+      </ul>
+
+      <div class="note">
+        <p><strong>Las tres que más se incumplen en una revisión sin skill.</strong> La tercera (opinar de memoria sin ejecutar el script), la cuarta (vender estimación como violación) y la quinta (hallazgos sin línea). Comparten causa: tratar la revisión de Gherkin como lectura de opinión cuando el contrato exige evidencia por hallazgo.</p>
+      </div>
+    </section>
+
+    <section id="procedimiento" class="section">
+      <div class="section-head"><span class="section-num">4</span><h2 class="title">El procedimiento en ocho pasos</h2></div>
+      <p class="sub">Secuencia obligatoria. La profundidad se adapta al encargo; el orden no. Cada paso de regla carga su referencia en el momento en que la necesita, ni antes ni después.</p>
+
+      <div class="flow">
+        <div class="flow-step"><code>paso 1</code><strong>Delimitar el encargo</strong><p>Enumera archivos o bloques <code>.feature</code>, el idioma de las palabras clave y el stack declarado. La puerta de alcance puede cerrar el flujo aquí: descubrir, escribir o automatizar es <code>FUERA DE ALCANCE</code>.</p></div>
+        <div class="flow-step"><code>paso 2</code><strong>Comprobación determinista</strong><p>Ejecuta <code>check-feature.py --path</code> por archivo y conserva stdout, stderr y el código de salida. Exit 2 obliga a corregir la invocación; el script no se sustituye por un parseo improvisado.</p></div>
+        <div class="flow-step"><code>paso 3</code><strong>Regla 2 · un comportamiento</strong><p>Carga <code>four-rules.md</code> y <code>structure-and-order.md</code>. Busca pares duplicados, cambios de actor o de objeto, y escribe las dos reescrituras de cada escenario partido.</p></div>
+        <div class="flow-step"><code>paso 4</code><strong>Regla 1 · sin muro de texto</strong><p>Con las dos referencias ya leídas: mide longitud contando <code>Background</code>, marca los pasos que comunican el cómo y verifica el orden estricto <code>Dado → Cuando → Entonces</code>.</p></div>
+        <div class="flow-step"><code>paso 5</code><strong>Regla 3 · clases de equivalencia</strong><p>Carga <code>equivalence-classes.md</code>. Agrupa las filas de <code>Examples</code> por lo que el escenario verifica de verdad y estima el coste de las redundantes.</p></div>
+        <div class="flow-step"><code>paso 6</code><strong>Regla 4 · lenguaje y punto de vista</strong><p>Carga <code>language-and-voice.md</code>. Decide el punto de vista dominante, marca los pasos que lo rompen y reescribe como frase sujeto-predicado.</p></div>
+        <div class="flow-step"><code>paso 7</code><strong>Automatizabilidad por stack</strong><p>Solo con stack declarado: carga <code>stack-detection.md</code> y después <em>una sola</em> de las cinco referencias de stack. Sirve para juzgar si un paso es definible y qué detalle pertenece a hooks.</p></div>
+        <div class="flow-step"><code>paso 8</code><strong>Informe y cierre</strong><p>Rellena la plantilla de <code>assets/</code>, pasa la checklist de las cuatro preguntas y no entrega nada sin el código de salida del script y sin la cita de línea de cada hallazgo.</p></div>
+      </div>
+
+      <div class="table-wrap wrap-cells">
+        <table>
+          <thead><tr><th>Paso</th><th>Qué lo detiene</th><th>Qué se hace entonces</th></tr></thead>
+          <tbody>
+            <tr><td>1 · Delimitar</td><td>El encargo pide descubrir comportamientos, escribir escenarios o implementar automatización.</td><td>Se declara el fuera de alcance y se revisa únicamente lo que ya esté escrito; prosa suelta cierra el flujo con <code>FUERA DE ALCANCE</code>.</td></tr>
+            <tr><td>2 · Script</td><td>Exit 2: falta <code>--path</code>, la ruta no es un archivo o <code># language:</code> declara un idioma no soportado.</td><td>Se corrige la invocación y se vuelve. No se sustituye el script por un parseo a mano.</td></tr>
+            <tr><td>3 · Regla 2</td><td>Un escenario con dos comportamientos.</td><td>Hallazgo de mayor prioridad, con las dos reescrituras propuestas y el <code>Dado</code> situacional de cada una.</td></tr>
+            <tr><td>4 · Regla 1</td><td>Un <code>Dado</code> que declara intención de negocio en lugar de estado inicial.</td><td>Se descarta como escenario que no es especificación y se señala dónde vive esa intención: en la historia de usuario bajo <code>Feature</code>.</td></tr>
+            <tr><td>5 · Regla 3</td><td><code>Examples</code> mal formada o con columnas que no casan con los placeholders.</td><td>Hallazgo estructural, <code>NO APTO</code> para ese escenario, sin adivinar filas.</td></tr>
+            <tr><td>6 · Regla 4</td><td>Pasos sin sujeto o sin verbo, o que no se entienden fuera de su escenario.</td><td>Se reescriben como frase completa dentro del informe; el archivo no se toca.</td></tr>
+            <tr><td>7 · Stack</td><td>El proyecto no declara stack, o la referencia no documenta un comando de parseo instalado.</td><td>La automatizabilidad se declara no verificada. Nunca se inventa el comando.</td></tr>
+            <tr><td>8 · Informe</td><td>Un candidato del script no resiste la comprobación del criterio.</td><td>Se declara refutado con su motivo concreto, no con un «es aceptable».</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="hecho" class="section">
+      <div class="section-head"><span class="section-num">5</span><h2 class="title">Hecho medible y estimación del criterio</h2></div>
+      <p class="sub">Esta es la distinción central del contrato. El script mide; el revisor juzga; y el informe dice en todo momento qué parte de cada hallazgo viene de dónde.</p>
+
+      <div class="role-grid">
+        <div class="role-block">
+          <span class="role-label">Hecho medible — salida [D] del script</span>
+          <h3>Es un hecho reproducible</h3>
+          <p>Mismo archivo, misma versión del script, misma salida, con la línea citada. Se puede volver a ejecutar como evidencia.</p>
+          <ul>
+            <li>Orden estricto de pasos y presencia de <code>Entonces</code>.</li>
+            <li>Pares <code>Cuando</code>/<code>Entonces</code> duplicados y conteo de pasos efectivos.</li>
+            <li>Placeholders sin columna, columnas sin placeholder y filas mal formadas.</li>
+            <li>Bloques no parseables y escenarios sin título.</li>
+          </ul>
+        </div>
+        <div class="role-block">
+          <span class="role-label">Estimación — candidatos [C], confirmados por el criterio</span>
+          <h3>Es un juicio declarado</h3>
+          <p>El script señala el candidato con un patrón; el revisor lo confirma en los pasos 4 a 6 o lo refuta con motivo. Hasta entonces, no es un hallazgo.</p>
+          <ul>
+            <li>Si un paso comunica el cómo en lugar del qué (candidato a bajo nivel).</li>
+            <li>Si dos filas de <code>Examples</code> son la misma clase de equivalencia.</li>
+            <li>Si la mezcla de punto de vista degrada la lectura, o si un <code>Dado</code> es prosa de negocio.</li>
+            <li>Todo lo que el script no puede saber: si el escenario se entiende sin contexto.</li>
+          </ul>
+        </div>
+      </div>
+
+      <h3>El ciclo de un candidato</h3>
+      <ul class="plain">
+        <li><strong>Nace medido:</strong> el script lo emite con <code>[C]</code>, su regla y su línea — un patrón, no una sentencia.</li>
+        <li><strong>Se confirma:</strong> el revisor lo comprueba con la referencia de la regla y lo escribe en el informe como hallazgo de estimación, citando línea y evidencia como cualquier otro.</li>
+        <li><strong>O se refuta:</strong> si el candidato no resiste, el informe lo declara refutado con un motivo concreto en la sección «Candidatos refutados». Refutar también es evidencia.</li>
+      </ul>
+
+      <div class="note">
+        <p><strong>Por qué importa la separación.</strong> Un informe que trata un patrón como violación pierde autoridad en cuanto alguien demuestra el falso positivo. Un informe que esconde las estimaciones detrás de un «cumple las reglas» no permite discutir el criterio. Las dos mitades del contrato existen para que cada línea del informe se pueda rebatir con datos: o repitiendo el comando del script, o citando la referencia de la regla.</p>
+      </div>
+    </section>
+
+    <section id="codigos" class="section">
+      <div class="section-head"><span class="section-num">6</span><h2 class="title">Las trece comprobaciones del script</h2></div>
+      <p class="sub">Seis códigos deterministas y cinco candidatos heurísticos, más dos umbrales declarados. Todos se listan en el <code>--help</code> del propio script; el detalle de cada regla vive en la referencia que lo explica.</p>
+
+      <div class="table-wrap wrap-cells">
+        <table>
+          <thead><tr><th>Código</th><th>Regla</th><th>Naturaleza</th><th>Qué comprueba</th></tr></thead>
+          <tbody>
+            <tr><td><code>step-order</code></td><td>1</td><td><span class="sev sev-error">Determinista</span></td><td>Orden estricto <code>Dado → Cuando → Entonces</code>; un <code>Dado</code> después de la primera acción es violación.</td></tr>
+            <tr><td><code>missing-then</code></td><td>1</td><td><span class="sev sev-error">Determinista</span></td><td>Todo escenario tiene al menos un <code>Entonces</code>: sin aserción no hay criterio de aceptación.</td></tr>
+            <tr><td><code>multiple-action-outcome</code></td><td>2</td><td><span class="sev sev-error">Determinista</span></td><td>Un escenario no contiene más de un par acción-verificación; si contiene dos, son dos comportamientos.</td></tr>
+            <tr><td><code>too-many-steps</code></td><td>1</td><td><span class="sev sev-error">Determinista</span></td><td>Número de pasos efectivos por debajo del umbral (por defecto 9), contando los de <code>Background</code>: la regla de la longitud de un dígito.</td></tr>
+            <tr><td><code>outline-missing-placeholder</code></td><td>3</td><td><span class="sev sev-error">Determinista</span></td><td>Cada <code>&lt;placeholder&gt;</code> del esquema tiene su columna, cada columna se consume, y cada fila de la tabla tiene el número de columnas de la cabecera.</td></tr>
+            <tr><td><code>unparseable-block</code></td><td>—</td><td><span class="sev sev-error">Determinista</span></td><td>El bloque es Gherkin parseable y el escenario tiene título.</td></tr>
+            <tr><td><code>low-level-vocab</code></td><td>1</td><td><span class="sev sev-warn">Candidato</span></td><td>Presencia de vocabulario de interacción de bajo nivel: <code>clic</code>, <code>botón</code>, <code>teclea</code>, <code>espera</code>, <code>scroll</code>, navegar a una URL. El criterio decide si el paso comunica el cómo.</td></tr>
+            <tr><td><code>business-intent-given</code></td><td>1</td><td><span class="sev sev-warn">Candidato</span></td><td>Un <code>Dado</code> que parece declarar una intención de negocio en lugar de un estado inicial.</td></tr>
+            <tr><td><code>redundant-examples</code></td><td>3</td><td><span class="sev sev-warn">Candidato</span></td><td>Más filas de <code>Examples</code> que el umbral declarado, o filas que solo difieren en un campo de la misma clase de equivalencia.</td></tr>
+            <tr><td><code>person-mixed</code></td><td>4</td><td><span class="sev sev-warn">Candidato</span></td><td>Mezcla de primera y tercera persona en los pasos de un mismo escenario.</td></tr>
+            <tr><td><code>no-subject-verb</code></td><td>4</td><td><span class="sev sev-warn">Candidato</span></td><td>Un paso sin sujeto o sin verbo legibles; fuera de su escenario no se sabría qué verificar con él.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="table-wrap wrap-cells">
+        <table>
+          <thead><tr><th>Umbral</th><th>Por defecto</th><th>Qué regula</th></tr></thead>
+          <tbody>
+            <tr><td><code>--max-steps</code></td><td>9</td><td>Pasos efectivos máximos por escenario, incluidos los de <code>Background</code>; alimenta a <code>too-many-steps</code>.</td></tr>
+            <tr><td><code>--max-outline-rows</code></td><td>5</td><td>Filas de <code>Examples</code> antes de señalar sospecha de redundancia; alimenta a <code>redundant-examples</code>.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p>Los dos umbrales son las dos últimas de las trece comprobaciones: un mismo umbral subido o bajado cambia qué se señala, así que el informe cita el comando exacto con el que se obtuvo la evidencia. Seis líneas por debajo del máximo no es un hecho: es un escenario que puede ser correcto.</p>
+
+      <div class="table-wrap wrap-cells">
+        <table>
+          <thead><tr><th>Regla</th><th>Nombre en la fuente</th><th>La pregunta del escenario</th></tr></thead>
+          <tbody>
+            <tr><td>1</td><td>Regla de oro</td><td>¿Cualquiera que no estuvo en la sesión entiende qué se especifica, en orden correcto y con menos de diez pasos?</td></tr>
+            <tr><td>2</td><td>Regla cardinal</td><td>¿El escenario describe un único comportamiento, con un solo ciclo acción-verificación?</td></tr>
+            <tr><td>3</td><td>Regla del ejemplo único</td><td>¿Cada fila de <code>Examples</code> representa una clase de equivalencia distinta?</td></tr>
+            <tr><td>4</td><td>Regla del cuarto amigo</td><td>¿Cada paso se entiende suelto, con sujeto y verbo, en un único punto de vista?</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="ejecucion" class="section">
+      <div class="section-head"><span class="section-num">7</span><h2 class="title">Cómo se ejecuta el script</h2></div>
+      <p class="sub"><code>scripts/check-feature.py</code> es stdlib-only: sin dependencias, sin red. Python de la máquina basta. Acepta palabras clave en inglés y en español, encabezado <code># language: es</code>, <code>Background</code>, <code>Scenario Outline</code>/<code>Esquema del escenario</code>, <code>Examples</code>/<code>Ejemplos</code>, etiquetas <code>@</code>, comentarios y <code>*</code> como paso alternativo.</p>
+
+      <div class="code"><pre><code># revisión de un archivo, desde la raíz del paquete
+python scripts/check-feature.py --path features/documentation-build.feature
+
+# con umbrales propios y salida volcable al informe
+python scripts/check-feature.py --path features/documentation-build.feature \
+  --max-steps 7 --max-outline-rows 3 --json</code></pre></div>
+
+      <div class="table-wrap wrap-cells">
+        <table>
+          <thead><tr><th>Salida</th><th>Significado</th><th>Qué se hace</th></tr></thead>
+          <tbody>
+            <tr><td><span class="sev sev-ok">0</span></td><td>Archivo sin hallazgos.</td><td>Se continúa con los pasos 3 a 6: el script no juzga legibilidad ni equivalencia, así que un 0 no es un APTO.</td></tr>
+            <tr><td><span class="sev sev-warn">3</span></td><td>Al menos un hallazgo, determinista o candidato.</td><td>Cada <code>[D]</code> entra al informe con su línea; cada <code>[C]</code> espera confirmación o refutación del criterio.</td></tr>
+            <tr><td><span class="sev sev-error">2</span></td><td>Error de uso: falta <code>--path</code>, la ruta no existe, no es un archivo o <code># language:</code> declara un idioma no soportado.</td><td>Se corrige la invocación. El mensaje por stderr dice qué argumento falló; no se sustituye el script por un parseo improvisado.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Formato de una línea de hallazgo</h3>
+      <div class="code"><pre><code>[D] regla 2 multiple-action-outcome  assets/example-feature-bad.feature:35
+    "When the developer saves the config file" → segunda acción con su
+    verificación en `Edit the pipeline config`: son dos comportamientos...</code></pre></div>
+      <p>Naturaleza (<code>[D]</code> o <code>[C]</code>), regla violada, código, posición <code>archivo:línea</code>, evidencia literal del paso y el mensaje para autocorregirse. Con <code>--json</code> los mismos datos salen como array de objetos con las claves <code>rule</code>, <code>deterministic</code>, <code>file</code>, <code>line</code>, <code>evidence</code> y <code>message</code>, listos para volcarlos al informe sin reescribirlos a mano.</p>
+
+      <div class="note">
+        <p><strong>El resumen es la contabilidad del veredicto.</strong> La última línea del script separa el recuento: «N hallazgos (X deterministas, Y candidatos)». El informe reproduce ese par de números, y el veredicto del archivo tiene que ser coherente con ellos: no puede haber un <code>APTO</code> con deterministas de regla 2 abiertos.</p>
+      </div>
+    </section>
+
+    <section id="informe" class="section">
+      <div class="section-head"><span class="section-num">8</span><h2 class="title">El informe y el veredicto</h2></div>
+      <p class="sub">El producto único es un informe sobre <code>assets/review-report-template.md</code>. Su vocabulario está cerrado y sus campos no admiten resúmenes: un campo sin evidencia es en sí mismo un hallazgo que se declara en «Sin verificar».</p>
+
+      <div class="grid cols-2">
+        <div class="card">
+          <h3>Qué lleva cada hallazgo</h3>
+          <ul>
+            <li>Código, regla, naturaleza (determinista o candidato confirmado) y posición <code>archivo:línea</code>.</li>
+            <li>La evidencia literal del paso y por qué importa, en términos de colaboración, triaje o coste de ejecución.</li>
+            <li>Una reescritura propuesta en Gherkin. Proponer dividir un escenario obliga a nombrar qué comportamiento queda en cada parte y con qué <code>Dado</code> se sitúa.</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>Qué lleva el cierre</h3>
+          <ul>
+            <li>Veredicto por escenario y veredicto del archivo.</li>
+            <li>Recuento de deterministas confirmados por el script y de estimaciones confirmadas por el criterio.</li>
+            <li>Los candidatos refutados, con el motivo concreto de cada refutación.</li>
+            <li>Lo que no se pudo verificar y por qué — parseo no confirmado por runner, idioma declarado ausente, columna que no llega a la prueba.</li>
+          </ul>
+        </div>
+      </div>
+
+      <h3>El vocabulario cerrado y sus condiciones</h3>
+      <div class="table-wrap wrap-cells">
+        <table>
+          <thead><tr><th>Veredicto</th><th>Se asigna cuando</th></tr></thead>
+          <tbody>
+            <tr><td><span class="sev sev-error">NO APTO</span></td><td>Al menos una violación determinista de regla 2, un escenario sin <code>Entonces</code>, un orden de pasos imposible o un bloque no parseable.</td></tr>
+            <tr><td><span class="sev sev-warn">APTO CON RESERVAS</span></td><td>Sin esas violaciones deterministas, pero con hallazgos de estimación confirmados o violaciones menores de lenguaje.</td></tr>
+            <tr><td><span class="sev sev-ok">APTO</span></td><td>No queda ningún hallazgo con impacto después de refutar los candidatos. Nunca se apoya solo en estimaciones.</td></tr>
+            <tr><td><span class="sev sev-info">FUERA DE ALCANCE</span></td><td>El texto no es Gherkin o el encargo pide descubrir, escribir o automatizar. No es un veredicto de calidad: es un veredicto de alcance, y no lleva veredicto de archivo.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="note">
+        <p><strong>La plantilla exige la cabecera contable.</strong> El informe abre con las palabras clave detectadas, el stack declarado, el comando exacto del script con su código de salida, y si el parseo quedó verificado por el runner. Esa cabecera es lo que permite que otra persona repita la revisión y obtenga los mismos números.</p>
+      </div>
+    </section>
+
+    <section id="stack" class="section">
+      <div class="section-head"><span class="section-num">9</span><h2 class="title">Automatizabilidad por stack</h2></div>
+      <p class="sub">El paso 7 no automatiza nada: juzga. Sirve para decidir si un detalle de bajo nivel señalado en el paso 4 pertenece a los hooks del runner o al lenguaje Gherkin, y si los pasos son definibles con el estilo de coincidencia de ese stack.</p>
+
+      <div class="grid cols-3">
+        <div class="card"><h3>Detección</h3><p><code>references/stack-detection.md</code> decide el stack desde lo que el proyecto declara y elige qué referencia cargar. Sin stack declarado, el paso se limita a señalar que la automatizabilidad no está verificada.</p></div>
+        <div class="card"><h3>Una sola de cinco</h3><p><code>stack-javascript.md</code>, <code>stack-python.md</code>, <code>stack-java.md</code>, <code>stack-dotnet.md</code> o <code>stack-go.md</code>. Cada una cubre palabras clave reservadas, estilo de coincidencia de pasos, sitio de los hooks, filtrado por etiquetas y un comando de parseo verificado.</p></div>
+        <div class="card"><h3>Comandos: solo documentados</h3><p>Si la referencia documenta un comando de parseo o dry-run y el proyecto lo tiene instalado, se ejecuta como evidencia. Si no, se omite el comando y el informe declara el parseo no verificado. Inventar el comando está prohibido por invariante.</p></div>
+      </div>
+
+      <div class="note">
+        <p><strong>Por qué cinco referencias si la skill no automatiza.</strong> Porque juzgar «este paso pertenece a un hook» exige saber dónde viven los hooks en ese runner, y porque un paso solo es automatizable si su frase casa con el estilo de definiciones del stack. La referencia se carga para responder a eso, no para escribir el código. La automatización sigue siendo un encargo aparte.</p>
+      </div>
+    </section>
+
+    <section id="ficheros" class="section">
+      <div class="section-head"><span class="section-num">10</span><h2 class="title">Los ficheros del paquete</h2></div>
+      <p class="sub">Un contrato, ocho referencias de reglas y stack, cuatro assets y un script. <code>references/</code> vive a un solo nivel de profundidad y el paquete no lleva documentación para personas: esta página vive fuera precisamente por eso.</p>
+
+      <div class="code"><pre><code>gherkin-scenario-review/
+├── SKILL.md                            # el contrato: 10 invariantes, 8 pasos, 121 líneas
+├── references/
+│   ├── four-rules.md                   # las cuatro reglas como comprobaciones, MAL y BIEN
+│   ├── structure-and-order.md          # orden, longitud, cronología, qué va a hooks
+│   ├── equivalence-classes.md          # clases de equivalencia y Scenario Outline
+│   ├── language-and-voice.md           # punto de vista, frase sujeto-predicado
+│   ├── stack-detection.md              # cómo se decide el stack y qué referencia cargar
+│   └── stack-&lt;stack&gt;.md                # javascript, python, java, dotnet, go: se carga una sola
+├── assets/
+│   ├── review-report-template.md       # la forma obligatoria del informe
+│   ├── checklist-four-rules.md         # las cuatro preguntas por escenario, con su código
+│   ├── example-feature-good.feature    # fixture APTO: build de documentación, # language: es
+│   └── example-feature-bad.feature     # fixture con violaciones: pipeline de CI y validador
+└── scripts/
+    └── check-feature.py                # la única pieza ejecutable: 674 líneas, stdlib-only</code></pre></div>
+
+      <div class="table-wrap wrap-cells">
+        <table>
+          <thead><tr><th>Fichero</th><th>Se lee</th><th>Qué aporta</th></tr></thead>
+          <tbody>
+            <tr><td><a href="../../src/gherkin-scenario-review/SKILL.md"><code>SKILL.md</code></a></td><td>Siempre, al disparar la skill.</td><td>Clasificación del encargo, puerta de alcance, diez invariantes, ocho pasos, gestión de errores y cierre del informe.</td></tr>
+            <tr><td><a href="../../src/gherkin-scenario-review/references/four-rules.md"><code>references/four-rules.md</code></a></td><td>Paso 3.</td><td>Las cuatro reglas como comprobaciones, con ejemplos MAL y BIEN.</td></tr>
+            <tr><td><a href="../../src/gherkin-scenario-review/references/structure-and-order.md"><code>references/structure-and-order.md</code></a></td><td>Pasos 3 y 4.</td><td>Orden de pasos, longitud, cronología y qué detalle pertenece a hooks.</td></tr>
+            <tr><td><a href="../../src/gherkin-scenario-review/references/equivalence-classes.md"><code>references/equivalence-classes.md</code></a></td><td>Paso 5.</td><td>Clases de equivalencia y salud de los <code>Scenario Outline</code>.</td></tr>
+            <tr><td><a href="../../src/gherkin-scenario-review/references/language-and-voice.md"><code>references/language-and-voice.md</code></a></td><td>Paso 6.</td><td>Punto de vista, frase sujeto-predicado, paso legible suelto.</td></tr>
+            <tr><td><code>references/stack-detection.md</code> y los cinco <code>references/stack-&lt;stack&gt;.md</code></td><td>Paso 7, solo la del stack detectado.</td><td>Palabras clave, estilo de coincidencia, sitio de los hooks, etiquetas y comando de parseo verificado por stack.</td></tr>
+            <tr><td><a href="../../src/gherkin-scenario-review/assets/review-report-template.md"><code>assets/review-report-template.md</code></a></td><td>Paso 8.</td><td>Cabecera con comando y exit code, veredictos, hallazgos con reescritura, candidatos refutados y «Sin verificar».</td></tr>
+            <tr><td><a href="../../src/gherkin-scenario-review/assets/checklist-four-rules.md"><code>assets/checklist-four-rules.md</code></a></td><td>Paso 8.</td><td>Las cuatro preguntas por escenario con el código del script que respalda cada una.</td></tr>
+            <tr><td><a href="../../src/gherkin-scenario-review/assets/example-feature-good.feature"><code>example-feature-good.feature</code></a> · <a href="../../src/gherkin-scenario-review/assets/example-feature-bad.feature"><code>bad</code></a></td><td>Como referencia del nivel esperado y como fixture del script.</td><td>Uno sin hallazgos; el otro dispara las trece comprobaciones. Ambos modelan desarrollo de software: build de documentación y pipeline de CI.</td></tr>
+            <tr><td><a href="../../src/gherkin-scenario-review/scripts/check-feature.py"><code>scripts/check-feature.py</code></a></td><td>Paso 2, siempre.</td><td>Parser Gherkin bilingüe y trece comprobaciones con evidencia por línea.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="note">
+        <p><strong>Divulgación progresiva.</strong> El cuerpo principal navega y decide; los detalles viven en ficheros que el agente lee solo cuando el paso los pide — y la referencia de stack exacta cuando el stack se detecta. Esa separación es lo que permite que la skill sea estricta sin consumir contexto en cada conversación.</p>
+      </div>
+    </section>
+
+    <section id="en-este-repositorio" class="section">
+      <div class="section-head"><span class="section-num">11</span><h2 class="title">Cómo se usa aquí</h2></div>
+      <p class="sub">La skill se ejercitó contra sus propios fixtures desde la raíz del repositorio. Estos son los comandos que se ejecutaron y lo que devolvieron, sin editar.</p>
+
+      <h3>El fixture bueno — dominio de desarrollo de software</h3>
+      <div class="code"><pre><code>$ python src/gherkin-scenario-review/scripts/check-feature.py \
+    --path src/gherkin-scenario-review/assets/example-feature-good.feature
+src/gherkin-scenario-review/assets/example-feature-good.feature: sin hallazgos
+resumen: ... — 0 hallazgos (0 deterministas, 0 candidatos)
+# código de salida: 0</code></pre></div>
+      <p>Modela el build de documentación en español: enlaces relativos rotos, reconstrucción incremental y severidad de los hallazgos del validador, con <code># language: es</code> y palabras clave <code>Dado/Cuando/Entonces</code>.</p>
+
+      <h3>El fixture malo — las trece comprobaciones disparadas</h3>
+      <div class="code"><pre><code>$ python src/gherkin-scenario-review/scripts/check-feature.py \
+    --path src/gherkin-scenario-review/assets/example-feature-bad.feature
+hallazgos en .../example-feature-bad.feature:
+  [C] regla 4 person-mixed     .../example-feature-bad.feature:19 ...
+  [D] regla 1 too-many-steps   .../example-feature-bad.feature:19 "Scenario: Publish the site"
+                                 → 12 pasos efectivos (10 + 2 de Background), máximo 9 ...
+  [D] regla 2 multiple-action-outcome ... /example-feature-bad.feature:35 ...
+  ...
+resumen: ... — 21 hallazgos (10 deterministas, 11 candidatos)
+# código de salida: 3</code></pre></div>
+      <p>Modela una pipeline de CI y un validador en inglés, y dispara los trece códigos previstos: orden imposible de pasos, escenario sin <code>Entonces</code>, dos pares acción-verificación, outline con tablas mal formadas, vocabulario de bajo nivel y mezcla de punto de vista.</p>
+
+      <h3>Las salidas de error del contrato</h3>
+      <div class="code"><pre><code>$ python src/gherkin-scenario-review/scripts/check-feature.py --path /dev/null
+check-feature.py: la ruta no es un archivo: nul
+# código de salida: 2
+$ python src/gherkin-scenario-review/scripts/check-feature.py --help
+# lista deterministas, candidatos y los dos umbrales por defecto</code></pre></div>
+
+      <div class="status-strip" role="status">
+        <span class="status-mark" aria-hidden="true">OK</span>
+        <div><strong>Los dos diagramas de esta página se generaron con archify y su recibo</strong><span><code>flujo-de-trabajo.html</code> y <code>arquitectura.html</code> salen de <code>deliver --quality showcase</code> sobre los dos JSON del mismo directorio; <code>check --require-provenance</code> devuelve <code>provenance: current</code> con nueve comprobaciones del artefacto en 9/9 para cada uno.</span></div>
+      </div>
+    </section>
+
+    <section id="limites" class="section">
+      <div class="section-head"><span class="section-num">12</span><h2 class="title">Errores y límites</h2></div>
+      <p class="sub">Qué hace la skill cuando el encargo o el archivo no encajan en el camino previsto. Es la sección «Gestión de errores» del contrato, desarrollada.</p>
+
+      <div class="qa"><h3>El script no reconoce las palabras clave del archivo</h3><p>Se revisa con los dos conjuntos (inglés y español), se dice en el informe y se marca el parseo como pendiente de <code># language:</code>. Un archivo en un idioma distinto (el script admite inglés y español; otros, como <code>de</code>, salen con código 2) no se parsea a medias.</p></div>
+      <div class="qa"><h3>La tabla de Examples está mal formada</h3><p>Columnas de más o de menos, o un placeholder sin columna: hallazgo estructural, <code>NO APTO</code> para ese escenario, sin adivinar filas. El criterio no repara tablas: las señala.</p></div>
+      <div class="qa"><h3>El escenario no tiene Entonces</h3><p>No hay verificación, así que no hay criterio de aceptación: <code>NO APTO</code>. Es determinista — <code>missing-then</code> — y no admite discusión de estilo.</p></div>
+      <div class="qa"><h3>El encargo aporta solo prosa o una historia de usuario</h3><p><code>FUERA DE ALCANCE</code>, sin veredicto de calidad, y se dice qué parte del encargo sí es revisable. Descubrir comportamientos y escribir escenarios son otros encargos, con otras skills.</p></div>
+      <div class="qa"><h3>Dos archivos del mismo proyecto definen pasos equivalentes con redacción distinta</h3><p>Se informa como riesgo de reutilización de pasos, citando ambos archivos. La skill no decide cuál gana; lo decide quien mantiene las especificaciones.</p></div>
+      <div class="qa"><h3>El proyecto no declara stack ni runner</h3><p>El paso 7 no se inventa: la automatizabilidad se declara no verificada en el informe. Los pasos siguen siendo juzgables como especificación.</p></div>
+      <div class="qa"><h3>Se pide que se apliquen las reescrituras al archivo</h3><p>Es un encargo aparte y explícito, y su ejecución pertenece al flujo de cambios del repositorio — con <a href="../../src/git-flow-management/SKILL.md">git-flow-management</a> preparando el commit y su confirmación. La revisión deja el archivo intacto.</p></div>
+
+      <h3>La frontera con el SDD</h3>
+      <p>Los requisitos <code>SHALL</code> y las delta specs pertenecen a <code>sdd-spec</code> y <code>sdd-verify</code>. Esta skill no emite <code>### Requirement:</code> ni declara requisitos: su salida única es el informe sobre el <code>.feature</code>. El artefacto de comportamiento se juzga como especificación legible, no como documento de especificación de software.</p>
+    </section>
+
+    <section id="preguntas" class="section">
+      <div class="section-head"><span class="section-num">13</span><h2 class="title">Preguntas cortas</h2></div>
+      <p class="sub">Las dudas que aparecen en la primera conversación con la skill.</p>
+
+      <div class="qa"><h3>¿Revisa o reescribe el .feature?</h3><p>Revisa. El archivo del usuario no se modifica: cada hallazgo lleva su reescritura propuesta dentro del informe, y aplicar esas reescrituras es un encargo aparte.</p></div>
+      <div class="qa"><h3>¿Un exit 0 del script significa APTO?</h3><p>No. El script mide estructura y patrones; no puede saber si un escenario se entiende sin contexto ni si dos filas son la misma clase de equivalencia. Con exit 0 hay que pasar igualmente los pasos 3 a 6.</p></div>
+      <div class="qa"><h3>¿Y qué pasa si el script señala algo y el revisor discrepa?</h3><p>Si el hallazgo es un candidato <code>[C]</code>, la discrepancia es el trabajo: se comprueba con la referencia de la regla y, si no resiste, se declara refutado con su motivo. Si es determinista <code>[D]</code>, el hecho no se discute: se discute el umbral con el que se ejecutó, citando el comando.</p></div>
+      <div class="qa"><h3>¿Funciona con Gherkin en español?</h3><p>Sí: <code>Dado/Cuando/Entonces/Y/Pero</code>, encabezado <code># language: es</code>, <code>Esquema del escenario</code> y <code>Ejemplos</code>. El fixture bueno de la skill está escrito en español.</p></div>
+      <div class="qa"><h3>¿Escribe las step definitions o configura el runner?</h3><p>No, y sus disparadores negativos lo dicen. Las referencias por stack se cargan para juzgar automatizabilidad y decidir si un detalle pertenece a hooks o al escenario.</p></div>
+      <div class="qa"><h3>¿Puede decir si el escenario cubre el negocio?</h3><p>No. No opina de estrategia ni de cobertura de negocio: un escenario impecable puede especificar algo inútil, y eso está fuera de su contrato. Juzga el artefacto, no su valor.</p></div>
+      <div class="qa"><h3>¿Cuántos comportamientos puede tener un escenario?</h3><p>Uno. Es la regla cardinal: dos pares acción-verificación son dos comportamientos, y el informe los propone divididos, nombrando el <code>Dado</code> que sitúa cada parte — un escenario puede empezar en mitad de la acción, no hace falta volver al login.</p></div>
+      <div class="qa"><h3>¿Sirve para un bloque de escenarios pegado en el encargo?</h3><p>Sí: la puerta de alcance acepta un archivo <code>.feature</code> o un bloque aportado. Sin bloque parseable no hay hallazgo que citar, y sin línea citada no hay hallazgo.</p></div>
+      <div class="qa"><h3>¿Y por qué los ejemplos son de builds y pipelines?</h3><p>Porque el dominio de los ejemplos de esta skill es el desarrollo de software — compilación de documentación, códigos de salida de una CLI, pasos de CI, severidades de un validador. Los escenarios de compra de zapatos no modelan el trabajo de quien mantiene estas especificaciones.</p></div>
+    </section>
+
+    <section id="diagramas" class="section">
+      <div class="section-head"><span class="section-num">14</span><h2 class="title">Los diagramas</h2></div>
+      <p class="sub">Las dos vistas del mismo paquete: el recorrido del encargo al veredicto, y las piezas con sus fronteras.</p>
+
+      <div class="grid cols-2">
+        <a class="card card-link" href="flujo-de-trabajo.html">
+          <div class="card-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h6v5H4zM14 13h6v5h-6z"></path><path d="M10 8.5h2a2 2 0 0 1 2 2v5"></path></svg></div>
+          <h3>Flujo de trabajo</h3>
+          <p>Del encargo al informe: la puerta de alcance que puede cerrar el flujo sin veredicto, lo que mide el script con sus códigos de salida, los cuatro pasos por regla con su carga just-in-time y el punto donde un candidato se confirma o se refuta.</p>
+          <span class="go">Abrir el diagrama →</span>
+        </a>
+        <a class="card card-link" href="arquitectura.html">
+          <div class="card-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1.5"></rect><rect x="14" y="3" width="7" height="7" rx="1.5"></rect><rect x="3" y="14" width="7" height="7" rx="1.5"></rect><rect x="14" y="14" width="7" height="7" rx="1.5"></rect></svg></div>
+          <h3>Arquitectura</h3>
+          <p>El paquete con sus fronteras: <code>SKILL.md</code> como enrutador, las referencias de reglas y de stack que se cargan una por paso, <code>assets/</code>, la única pieza ejecutable, y las líneas que separan esta skill de <code>git-flow-management</code> y del flujo SDD.</p>
+          <span class="go">Abrir el diagrama →</span>
+        </a>
+      </div>
+
+      <p>Los dos son navegables: se puede cambiar el tema, alternar el estilo visual, trazar una ruta entre dos nodos, buscar por etiqueta y exportar a SVG, PNG, WebM o tarjeta para compartir.</p>
+
+      <div class="code"><pre><code># requiere archify 3.2.0 (github.com/tt-a1i/archify, tag v3.2.0)
+node &lt;ruta-a-archify&gt;/archify/bin/archify.mjs deliver workflow \
+  docs/gherkin-scenario-review/flujo-de-trabajo.json \
+  docs/gherkin-scenario-review/flujo-de-trabajo.html --quality showcase
+
+node &lt;ruta-a-archify&gt;/archify/bin/archify.mjs deliver architecture \
+  docs/gherkin-scenario-review/arquitectura.json \
+  docs/gherkin-scenario-review/arquitectura.html --quality showcase</code></pre></div>
+
+      <div class="note">
+        <p><strong>Cómo se generan.</strong> Los dos son artefactos de <em>archify</em> 3.2.0: un candidato JSON describe el diagrama y el renderizador produce un HTML autónomo con temas, movimiento y exportación. Los candidatos están al lado de cada página — <a href="flujo-de-trabajo.json"><code>flujo-de-trabajo.json</code></a> y <a href="arquitectura.json"><code>arquitectura.json</code></a> — y la CLI escribe su recibo <code>.delivery.json</code> con los <code>sha256</code> del spec y del artefacto. La entrega es reproducible: el mismo spec devuelve el mismo HTML.</p>
+      </div>
+    </section>
+  </main>
+</div>
+
+<footer class="footer">
+  <span><code>docs/gherkin-scenario-review/</code> · skill <code>gherkin-scenario-review</code> · documento en español</span>
+  <span><a href="#top">Volver arriba</a> · <a href="../../src/gherkin-scenario-review/SKILL.md">SKILL.md</a> · <a href="flujo-de-trabajo.html">Flujo</a> · <a href="arquitectura.html">Arquitectura</a></span>
+  <span>Página estática: no envía datos ni carga recursos externos · <code>docs/gherkin-scenario-review/index.html</code></span>
+</footer>
+
+<script>
+(function () {
+  "use strict";
+
+  var STORAGE_KEY = "gherkin-scenario-review:prefs";
+  var root = document.documentElement;
+
+  var COPY_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>';
+  var CHECK_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>';
+
+  function updateThemeLabel() {
+    var btn = document.getElementById("theme-toggle");
+    if (!btn) { return; }
+    var dark = root.getAttribute("data-theme") === "dark";
+    btn.setAttribute("aria-label", dark ? "Cambiar a tema claro" : "Cambiar a tema oscuro");
+  }
+
+  function applyTheme(theme) {
+    if (theme !== "dark" && theme !== "light") { theme = "light"; }
+    root.setAttribute("data-theme", theme);
+    updateThemeLabel();
+  }
+
+  var prefs = {};
+  try { prefs = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}"); } catch (e) { prefs = {}; }
+
+  var initialTheme = prefs.theme;
+  if (initialTheme !== "dark" && initialTheme !== "light") {
+    initialTheme = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+  }
+  applyTheme(initialTheme);
+
+  function savePrefs() {
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(prefs)); } catch (e) {}
+  }
+
+  var themeBtn = document.getElementById("theme-toggle");
+  if (themeBtn) {
+    themeBtn.addEventListener("click", function () {
+      prefs.theme = root.getAttribute("data-theme") === "dark" ? "light" : "dark";
+      applyTheme(prefs.theme);
+      savePrefs();
+    });
+  }
+
+  // El botón de copiar no se escribe en el marcado: se crea aquí para que
+  // añadir un bloque de código no obligue a recordar su botón.
+  document.querySelectorAll(".code").forEach(function (block) {
+    if (block.querySelector(".copy")) { return; }
+    var btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "copy";
+    btn.innerHTML = COPY_ICON + "<span>Copiar</span>";
+    btn.setAttribute("aria-label", "Copiar");
+    block.appendChild(btn);
+
+    btn.addEventListener("click", function () {
+      var pre = block.querySelector("pre");
+      var code = (pre && (pre.querySelector("code") || pre)) || null;
+      if (!code) { return; }
+      var done = function () {
+        btn.classList.add("copied");
+        btn.innerHTML = CHECK_ICON + "<span>Copiado</span>";
+        btn.setAttribute("aria-label", "Copiado");
+        setTimeout(function () {
+          btn.classList.remove("copied");
+          btn.innerHTML = COPY_ICON + "<span>Copiar</span>";
+          btn.setAttribute("aria-label", "Copiar");
+        }, 1600);
+      };
+      var text = code.textContent;
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(done, done);
+      } else {
+        var ta = document.createElement("textarea");
+        ta.value = text;
+        ta.style.position = "fixed";
+        ta.style.opacity = "0";
+        document.body.appendChild(ta);
+        ta.select();
+        try { document.execCommand("copy"); } catch (e) {}
+        document.body.removeChild(ta);
+        done();
+      }
+    });
+  });
+
+  if ("IntersectionObserver" in window) {
+    var links = {};
+    document.querySelectorAll(".toc a").forEach(function (a) { links[a.getAttribute("href").slice(1)] = a; });
+    var observer = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) {
+          Object.keys(links).forEach(function (id) { links[id].classList.remove("active"); });
+          if (links[entry.target.id]) { links[entry.target.id].classList.add("active"); }
+        }
+      });
+    }, { rootMargin: "-20% 0px -70% 0px", threshold: 0 });
+    document.querySelectorAll("main section").forEach(function (s) { observer.observe(s); });
+  }
+})();
+</script>
+</body>
+</html>
