@@ -1,12 +1,12 @@
 # Commits y ramas
 
-Usa esta referencia al crear una rama o preparar un commit en un proyecto nuevo que aplica la política Git Flow por defecto.
+Usa esta referencia al crear una rama o preparar un commit, tanto en el modelo por defecto como en un repositorio con política Git Flow declarada.
 
 ## Ramas
 
 - Usa minúsculas y palabras separadas por guiones.
-- Para trabajo asociado a una incidencia conocida: feature/<id>-<slug>, fix/<id>-<slug> o hotfix/<id>-<slug>.
-- Para una release: release/<version>.
+- En el modelo por defecto, la base es `main`: `feature/<slug>`, `fix/<slug>`, `docs/<slug>`, `refactor/<slug>` o `chore/<slug>`.
+- En un repositorio con Git Flow declarado, respeta la base obligatoria de su tabla: `feature/<id>-<slug>`, `fix/<id>-<slug>`, `hotfix/<id>-<slug>` y `release/<version>`.
 - Verifica la base antes de crear la rama:
 
 ~~~bash
@@ -14,27 +14,46 @@ git merge-base --is-ancestor <base> HEAD
 git log -1 --oneline <base>
 ~~~
 
-No crees una rama desde main cuando la tabla de Git Flow exige develop. Si la base está desactualizada frente a su upstream, informa del estado y propón una actualización de la base como operación separada y confirmada.
+Si la base está desactualizada frente a su upstream, informa del estado y propón una actualización de la base como operación separada y confirmada.
 
-## Commits convencionales
+## Mensaje de commit
 
-Usa el formato:
+Formato de [Conventional Commits](https://www.conventionalcommits.org/es/v1.0.0-beta.2/), con nombre y descripción en inglés:
 
 ~~~text
-<type>(<scope opcional>): <descripción en imperativo>
+<type>(<scope opcional>): <descripción en imperativo, en inglés>
 ~~~
 
-Tipos permitidos: feat, fix, docs, chore, refactor, test, style, perf, ci, build y revert.
+Tipos habituales: feat, fix, docs, chore, refactor, test, style, perf, ci, build y revert.
 
-- Un commit representa un cambio lógico.
-- No añadas firmas de IA ni líneas Co-Authored-By salvo solicitud expresa.
-- Usa descripción breve, en imperativo y sin punto final.
-- Una ruptura compatible se marca con ! o con un pie BREAKING CHANGE.
+- Un commit representa un cambio lógico coherente, no un archivo ni un paso intermedio.
+- Por defecto, una tarea completa cabe en un commit aunque afecte a varios archivos.
+- Varios commits solo con una razón clara: separar cambios independientes, facilitar una revisión concreta o conservar una recuperación útil.
+- Descripción breve, en imperativo, en inglés y sin punto final.
+- Sin firmas de IA ni líneas Co-Authored-By salvo petición expresa.
+- Una ruptura se marca con `!` o con un pie `BREAKING CHANGE`.
+- El cuerpo del commit puede nombrar la tarea que lo sostiene, por ejemplo `Refs: tk-141`, cuando el proyecto usa un tablero.
 
 ## Preparación segura
 
 1. Inspecciona cambios rastreados, no rastreados y ya preparados.
 2. Separa explícitamente lo que queda fuera del commit.
 3. Prepara únicamente rutas enumeradas.
-4. Revisa el diff preparado antes de pedir confirmación.
-5. Ejecuta la validación acordada antes y después si procede.
+4. Revisa el diff preparado y muéstralo.
+5. Presenta el mensaje exacto y pide confirmación antes de commitear.
+6. Ejecuta el commit confirmado y verifica SHA, mensaje y archivos.
+
+## Confirmación
+
+Sin confirmación no hay commit, ni siquiera en una tarea pequeña ni en una tarea con varios commits previstos.
+
+- Puedes presentar las etapas juntas —rama, stage, commit, integración, borrado de rama, push— y recibir una confirmación que las cubra.
+- Esa confirmación no se reaprovecha: otro conjunto de archivos, otra rama, un estado distinto o un push nuevo requieren confirmación nueva.
+- Si el usuario autoriza los commits coherentes de la tarea actual, no repitas la pregunta por cada uno de los previstos, siempre que el alcance no cambie.
+
+## Integración y limpieza
+
+1. Integra solo si el usuario lo ha pedido o autorizado.
+2. Verifica que el resultado está contenido en el destino.
+3. Si la rama ya no se necesita, informa y pide confirmación antes de `git branch -d <rama>`.
+4. No borres una rama con trabajo no integrado ni una rama remota sin autorización específica.

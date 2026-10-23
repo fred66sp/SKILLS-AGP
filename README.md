@@ -20,7 +20,7 @@ Queda fuera de git por ser estado local de cada máquina: `.atl/`, `.codegraph/`
 
 ### `git-flow-management`
 
-Convierte cualquier operación Git en un procedimiento verificable: inspecciona en solo lectura, detecta la política del repositorio, presenta un plan exacto, espera una confirmación única y demuestra el resultado con comandos de solo lectura. Cubre ramas, commits, PR, merges, releases, hotfixes, conflictos y recuperación.
+Convierte cualquier operación Git en un procedimiento proporcionado al tamaño y al riesgo: clasifica la tarea, trabaja directo en `main` cuando es pequeña y propone una rama corta cuando no lo es. Deja los cambios preparados en el stage con su mensaje Conventional Commits en inglés y no ejecuta el commit, el borrado de una rama ya integrada ni ningún `push` sin confirmación explícita. Cubre ramas, commits, PR, merges, releases, hotfixes, conflictos y recuperación.
 
 Contrato completo: [`src/git-flow-management/SKILL.md`](src/git-flow-management/SKILL.md).
 

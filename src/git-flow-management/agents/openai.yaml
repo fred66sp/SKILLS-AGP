@@ -1,8 +1,8 @@
 interface:
   display_name: Git Flow seguro
-  short_description: Gestiona Git con flujo verificable
-  default_prompt: Usa $git-flow-management para planificar y ejecutar una operación
-    Git segura.
+  short_description: Gestiona Git con ceremonia proporcional y verificable
+  default_prompt: Usa $git-flow-management para preparar un commit con su mensaje,
+    pedir confirmación y verificar el resultado antes de darlo por hecho.
   icon_small: assets/icon.svg
   icon_large: assets/icon.svg
 policy:
