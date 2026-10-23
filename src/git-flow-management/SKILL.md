@@ -15,13 +15,14 @@ La seguridad no debe convertir cada cambio en un trámite pesado. Una correcció
 2. No declares que se ha aplicado Git Flow, se ha integrado una rama, se ha publicado un cambio o se ha terminado una release sin verificarlo con comandos de solo lectura y mostrar el resultado.
 3. La política Git documentada del repositorio prevalece sobre cualquier modelo genérico. Si el repositorio no declara política, aplica el modelo por defecto de esta skill: `main` como línea estable y ramas cortas de trabajo cuando la tarea lo justifique.
 4. Ningún commit se ejecuta sin confirmación explícita. Deja los cambios preparados en el stage, propón el mensaje exacto y pide confirmación antes de crear nada.
-5. La confirmación no es global ni reutilizable. Cubre únicamente las etapas que enumera y el estado concreto que has mostrado. Una rama distinta, un conjunto de archivos distinto, un conflicto, un push nuevo o una discrepancia invalidan la confirmación.
-6. Puedes presentar varias etapas en un mismo plan y recibir una sola confirmación conjunta, pero nunca aprovechar una confirmación previa para una etapa que no estaba en ella.
-7. No amplíes el alcance. No uses add global, no incluyas cambios ajenos, no incluyas no rastreados ni hagas amend salvo que el plan aprobado lo nombre expresamente.
-8. No uses reset destructivo, clean, restauración desde otra revisión, borrado forzado de ramas, push forzado, borrado de etiquetas o ramas remotas, ni reescritura de historia salvo autorización específica para ese comando. Lee [recuperación y operaciones peligrosas](references/recovery-and-dangerous-operations.md).
-9. `develop`, cuando existe, es una rama protegida: nunca prepares trabajo normal sobre ella. `main` admite trabajo directo solo en tareas pequeñas y de riesgo contenido, siempre con stage revisado y confirmación posterior. En una tarea normal o compleja desde `main`, propón una rama corta de trabajo antes de modificar archivos.
-10. Cualquier operación remota —push, fetch para integrar, pull o creación de referencias remotas— requiere confirmación propia, aunque el commit ya esté hecho y confirmado.
-11. Ante conflicto, estado inesperado, error o resultado distinto del plan, detente. No improvises una resolución; inspecciona y prepara un nuevo plan.
+5. No pidas confirmación con decisiones abiertas. Antes de commitear, comprueba que nada de lo que has encontrado va a obligar a tocar esos mismos ficheros después: hallazgos, huecos de alcance, documentación desincronizada, plantillas o políticas del repositorio incoherentes con el cambio. Lo que necesite una decisión del usuario se pregunta **antes** del commit; lo que puedas resolver con evidencia se resuelve **antes** del commit. Un commit que obliga a un commit de corrección inmediata es un fallo de preparación, no un paso más del trabajo.
+6. La confirmación no es global ni reutilizable. Cubre únicamente las etapas que enumera y el estado concreto que has mostrado. Una rama distinta, un conjunto de archivos distinto, un conflicto, un push nuevo o una discrepancia invalidan la confirmación.
+7. Puedes presentar varias etapas en un mismo plan y recibir una sola confirmación conjunta, pero nunca aprovechar una confirmación previa para una etapa que no estaba en ella.
+8. No amplíes el alcance. No uses add global, no incluyas cambios ajenos, no incluyas no rastreados ni hagas amend salvo que el plan aprobado lo nombre expresamente.
+9. No uses reset destructivo, clean, restauración desde otra revisión, borrado forzado de ramas, push forzado, borrado de etiquetas o ramas remotas, ni reescritura de historia salvo autorización específica para ese comando. Lee [recuperación y operaciones peligrosas](references/recovery-and-dangerous-operations.md).
+10. `develop`, cuando existe, es una rama protegida: nunca prepares trabajo normal sobre ella. `main` admite trabajo directo solo en tareas pequeñas y de riesgo contenido, siempre con stage revisado y confirmación posterior. En una tarea normal o compleja desde `main`, propón una rama corta de trabajo antes de modificar archivos.
+11. Cualquier operación remota —push, fetch para integrar, pull o creación de referencias remotas— requiere confirmación propia, aunque el commit ya esté hecho y confirmado.
+12. Ante conflicto, estado inesperado, error o resultado distinto del plan, detente. No improvises una resolución; inspecciona y prepara un nuevo plan.
 
 ## Clasificación proporcional
 
@@ -91,27 +92,40 @@ Lee [operaciones Git Flow verificables](references/git-flow-operations.md) para 
 
 ## Protocolo de commit
 
-Ningún commit se ejecuta sin confirmación previa. El orden es siempre este:
+Ningún commit se ejecuta sin confirmación previa, y ninguna confirmación se pide con cabos sueltos. El orden es siempre este:
 
-1. Prepara únicamente las rutas que el plan enumera:
+1. Barrido previo. Antes de preparar nada, revisa si este cambio deja algo incoherente a su alrededor: documentación que describe el comportamiento anterior, `CHANGELOG`, plantillas, referencias cruzadas, diagramas o políticas del repositorio que contradicen lo nuevo. Lo que puedas corregir con evidencia, corrígelo ahora; lo que necesite una decisión del usuario, pregúntalo ahora.
+
+2. Prepara únicamente las rutas que el plan enumera:
 
 ~~~bash
-git add -- src/module.ts tests/module.test.ts
-git diff --cached
+ git add -- src/module.ts tests/module.test.ts
+ git diff --cached
 ~~~
 
-2. Redacta el mensaje según [Conventional Commits](https://www.conventionalcommits.org/es/v1.0.0-beta.2/), con nombre y descripción en inglés:
+3. Redacta el mensaje según [Conventional Commits](https://www.conventionalcommits.org/es/v1.0.0-beta.2/), con nombre y descripción en inglés:
 
 ~~~text
 <tipo>(<ámbito opcional>): <descripción breve en imperativo, en inglés>
 ~~~
 
-3. Presenta antes de commitear: archivos preparados, mensaje exacto, validación realizada, cuántos commits propones y cualquier hallazgo que requiera una decisión del usuario. Los hallazgos se dicen antes del commit, no después.
-4. Pide confirmación explícita para ese commit o para los commits coherentes de la tarea actual.
-5. Ejecuta exactamente el mensaje confirmado con `git commit -m`.
-6. Verifica y muestra SHA, mensaje y archivos del commit.
+4. Presenta antes de commitear: archivos preparados, mensaje exacto, validación realizada, cuántos commits propones, y **las decisiones abiertas**. Si esa lista no está vacía, no es una nota al pie: es una pregunta que se responde antes de commitear, y su respuesta entra en este mismo commit cuando cambie estos ficheros.
+5. Pide confirmación explícita para ese commit o para los commits coherentes de la tarea actual.
+6. Ejecuta exactamente el mensaje confirmado con `git commit -m`.
+7. Verifica y muestra SHA, mensaje y archivos del commit.
 
-Si tras revisar el diff preparado descubres que el alcance debe cambiar, vuelve al paso 1 y pide una confirmación nueva. Un mensaje confirmado no se reescribe por conveniencia.
+Si tras revisar el diff preparado descubres que el alcance debe cambiar, vuelve al paso 2 y pide una confirmación nueva. Un mensaje confirmado no se reescribe por conveniencia.
+
+### Cierre sin cabos sueltos
+
+Un cambio está listo para commitear cuando no queda nada que puedas resolver con la información disponible y nada que el usuario tenga que decidir para que el resultado sea coherente. En concreto:
+
+- no dejes para después la sincronización de la documentación que describe lo que acabas de cambiar;
+- no dejes para después una política del repositorio que contradice la regla nueva;
+- no presentes como «pendiente de tu decisión» algo que podías haber preguntado antes de escribir;
+- si el commit ya está hecho y aparece un cabo suelto, nómbralo como fallo de preparación y propón la reparación; no lo presentes como una decisión pendiente del usuario.
+
+Un bloqueo externo real —una persona, un permiso, un dato que solo el usuario tiene— se declara **antes** del commit, con el estado del árbol preparado y sin commitear, para que no haya que completarlo después.
 
 Detalle de convenciones, preparación segura y cierre en [commits y ramas](references/commits-and-branches.md).
 

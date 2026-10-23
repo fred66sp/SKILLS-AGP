@@ -505,12 +505,12 @@
 
 <section class="hero" id="top">
   <div class="hero-inner">
-    <span class="pill"><span class="dot" aria-hidden="true"></span>una skill · once invariantes · ceremonia proporcional al riesgo</span>
+    <span class="pill"><span class="dot" aria-hidden="true"></span>una skill · doce invariantes · ceremonia proporcional al riesgo</span>
     <h1>Git con ceremonia <span class="grad">proporcional</span></h1>
     <p class="lead">Esta skill no impone Git Flow a todo: clasifica la tarea, aplica la ceremonia mínima que mantiene el resultado fiable y deja siempre el commit a la espera de una confirmación explícita. En una tarea pequeña se permite el commit directo en <code>main</code>; en una normal o compleja se propone rama corta. Si no se puede probar el resultado, no está terminado.</p>
     <div class="hero-actions">
       <a class="btn btn-primary" href="#que-es">Qué es esta skill</a>
-      <a class="btn btn-ghost" href="#invariantes">Las once invariantes</a>
+      <a class="btn btn-ghost" href="#invariantes">Las doce invariantes</a>
       <a class="btn btn-ghost" href="#diagramas">Los diagramas</a>
     </div>
     <div class="status-strip" role="status">
@@ -524,7 +524,7 @@
   <nav class="toc" aria-label="Índice de la página">
     <h2>En esta página</h2>
     <a href="#que-es">1. Qué es esta skill</a>
-    <a href="#invariantes">2. Las once invariantes</a>
+    <a href="#invariantes">2. Las doce invariantes</a>
     <a href="#inspeccion">3. Inspección proporcional</a>
     <a href="#clasificar">4. Clasificar el repositorio</a>
     <a href="#politica">5. Modelo de ramas</a>
@@ -577,7 +577,7 @@
     </section>
 
     <section id="invariantes" class="section">
-      <div class="section-head"><span class="section-num">2</span><h2 class="title">Las once invariantes</h2></div>
+      <div class="section-head"><span class="section-num">2</span><h2 class="title">Las doce invariantes</h2></div>
       <p class="sub">Son obligatorias y no admiten interpretación. Cada una existe porque su ausencia produce un daño concreto y difícil de deshacer.</p>
 
       <div class="table-wrap wrap-cells">
@@ -588,19 +588,20 @@
             <tr><td><span class="sev sev-info">2</span></td><td>No se declara aplicado, integrado, publicado ni terminado nada sin verificarlo con comandos de solo lectura y mostrar el resultado.</td><td>Los «hecho» sin evidencia.</td></tr>
             <tr><td><span class="sev sev-info">3</span></td><td>La política documentada del repositorio prevalece sobre cualquier modelo genérico. Si no declara política, se aplica el modelo por defecto: <code>main</code> como línea estable y ramas cortas cuando la tarea lo justifica.</td><td>Imponer un modelo a un repositorio que ya tiene el suyo.</td></tr>
             <tr><td><span class="sev sev-error">4</span></td><td>Ningún commit se ejecuta sin confirmación explícita: los cambios se dejan preparados en el stage, se propone el mensaje exacto y se espera la respuesta.</td><td>Que el commit se adelante a la aprobación.</td></tr>
-            <tr><td><span class="sev sev-info">5</span></td><td>La confirmación no es global ni reutilizable: cubre solo las etapas que enumera y el estado mostrado. Otra rama, otro conjunto de archivos, un conflicto, un push nuevo o una discrepancia la invalidan.</td><td>Reutilizar un «sí» para algo que el usuario no aprobó.</td></tr>
-            <tr><td><span class="sev sev-info">6</span></td><td>Varias etapas pueden presentarse juntas y confirmarse de una vez, pero nunca se aprovecha una confirmación previa para una etapa que no estaba en ella.</td><td>Encadenar trabajo nuevo bajo un permiso viejo.</td></tr>
-            <tr><td><span class="sev sev-info">7</span></td><td>No se amplía el alcance: nada de add global, cambios ajenos, no rastreados ni <code>amend</code>, salvo que el plan aprobado lo nombre expresamente.</td><td>Commits que arrastran trabajo de otro.</td></tr>
-            <tr><td><span class="sev sev-warn">8</span></td><td>Nada de reset destructivo, <code>clean</code>, restauración desde otra revisión, borrado forzado de ramas, push forzado, borrado de etiquetas o ramas remotas, ni reescritura de historia, salvo autorización específica para ese comando.</td><td>Pérdida irreversible de trabajo.</td></tr>
-            <tr><td><span class="sev sev-warn">9</span></td><td><code>develop</code>, cuando existe, es rama protegida: nunca se prepara trabajo normal sobre ella. <code>main</code> admite trabajo directo solo en tareas pequeñas y de riesgo contenido, siempre con stage revisado y confirmación posterior.</td><td>Ceremonia inútil en un lado y trabajo normal colado en producción en el otro.</td></tr>
-            <tr><td><span class="sev sev-error">10</span></td><td>Cualquier operación remota —push, fetch para integrar, pull o creación de referencias remotas— requiere confirmación propia, aunque el commit ya esté hecho y confirmado.</td><td>Publicar sin que nadie lo haya pedido.</td></tr>
-            <tr><td><span class="sev sev-ok">11</span></td><td>Ante conflicto, estado inesperado, error o resultado distinto al plan: detente, no improvises una resolución, inspecciona y prepara un plan nuevo.</td><td>Resoluciones inventadas bajo presión.</td></tr>
+            <tr><td><span class="sev sev-error">5</span></td><td>No se pide confirmación con decisiones abiertas. Antes de commitear se comprueba que nada de lo encontrado va a obligar a tocar esos mismos ficheros después: hallazgos, huecos de alcance, documentación desincronizada, plantillas o políticas del repositorio incoherentes. Lo que necesite una decisión del usuario se pregunta antes; lo que se resuelve con evidencia, se resuelve antes.</td><td>El commit de corrección inmediata detrás del commit que ya estaba «terminado».</td></tr>
+            <tr><td><span class="sev sev-info">6</span></td><td>La confirmación no es global ni reutilizable: cubre solo las etapas que enumera y el estado mostrado. Otra rama, otro conjunto de archivos, un conflicto, un push nuevo o una discrepancia la invalidan.</td><td>Reutilizar un «sí» para algo que el usuario no aprobó.</td></tr>
+            <tr><td><span class="sev sev-info">7</span></td><td>Varias etapas pueden presentarse juntas y confirmarse de una vez, pero nunca se aprovecha una confirmación previa para una etapa que no estaba en ella.</td><td>Encadenar trabajo nuevo bajo un permiso viejo.</td></tr>
+            <tr><td><span class="sev sev-info">8</span></td><td>No se amplía el alcance: nada de add global, cambios ajenos, no rastreados ni <code>amend</code>, salvo que el plan aprobado lo nombre expresamente.</td><td>Commits que arrastran trabajo de otro.</td></tr>
+            <tr><td><span class="sev sev-warn">9</span></td><td>Nada de reset destructivo, <code>clean</code>, restauración desde otra revisión, borrado forzado de ramas, push forzado, borrado de etiquetas o ramas remotas, ni reescritura de historia, salvo autorización específica para ese comando.</td><td>Pérdida irreversible de trabajo.</td></tr>
+            <tr><td><span class="sev sev-warn">10</span></td><td><code>develop</code>, cuando existe, es rama protegida: nunca se prepara trabajo normal sobre ella. <code>main</code> admite trabajo directo solo en tareas pequeñas y de riesgo contenido, siempre con stage revisado y confirmación posterior.</td><td>Ceremonia inútil en un lado y trabajo normal colado en producción en el otro.</td></tr>
+            <tr><td><span class="sev sev-error">11</span></td><td>Cualquier operación remota —push, fetch para integrar, pull o creación de referencias remotas— requiere confirmación propia, aunque el commit ya esté hecho y confirmado.</td><td>Publicar sin que nadie lo haya pedido.</td></tr>
+            <tr><td><span class="sev sev-ok">12</span></td><td>Ante conflicto, estado inesperado, error o resultado distinto al plan: detente, no improvises una resolución, inspecciona y prepara un plan nuevo.</td><td>Resoluciones inventadas bajo presión.</td></tr>
           </tbody>
         </table>
       </div>
 
       <div class="note">
-        <p><strong>El error que estas reglas evitan.</strong> Casi todos los desastres de Git no vienen de un comando difícil, sino de una cadena de decisiones razonables tomadas sin mirar el estado. La invariante 11 existe porque el momento de parar es justo cuando el resultado no coincide con el plan.</p>
+        <p><strong>El error que estas reglas evitan.</strong> Casi todos los desastres de Git no vienen de un comando difícil, sino de una cadena de decisiones razonables tomadas sin mirar el estado. La invariante 12 existe porque el momento de parar es justo cuando el resultado no coincide con el plan; la 5, porque el momento de preguntar es antes de que el commit esté hecho.</p>
       </div>
     </section>
 
@@ -743,12 +744,13 @@ git log --oneline --decorate -n 12</code></pre></div>
       <div class="section-head"><span class="section-num">6</span><h2 class="title">Commit, plan y confirmación</h2></div>
       <p class="sub">Ningún commit se ejecuta sin confirmación previa. Los cambios se dejan preparados en el stage, con su mensaje ya redactado, y la respuesta del usuario decide si se ejecuta.</p>
 
-      <h3>Protocolo de commit, en seis pasos</h3>
+      <h3>Protocolo de commit, en siete pasos</h3>
       <ol class="plain">
+        <li><strong>Barrido previo:</strong> revisar si el cambio deja algo incoherente a su alrededor —documentación desfasada, <code>CHANGELOG</code>, plantillas, referencias cruzadas, diagramas, políticas del repositorio en contra—. Lo que se resuelve con evidencia se resuelve ahora; lo que necesita una decisión del usuario se pregunta ahora.</li>
         <li>Preparar únicamente las rutas que el plan enumera.</li>
         <li>Revisar y mostrar el diff preparado.</li>
         <li>Redactar el mensaje con Conventional Commits, nombre y descripción en inglés.</li>
-        <li>Presentar archivos, mensaje exacto, validación realizada, cuántos commits se proponen y cualquier hallazgo que requiera decidir algo. Los hallazgos se dicen antes del commit, no después.</li>
+        <li>Presentar archivos, mensaje exacto, validación realizada, cuántos commits se proponen y las decisiones abiertas. Si esa lista no está vacía, es una pregunta que se responde antes de commitear y cuya respuesta entra en ese mismo commit.</li>
         <li>Pedir confirmación explícita para ese commit o para los commits coherentes de la tarea.</li>
         <li>Ejecutar exactamente el mensaje confirmado y verificar SHA, mensaje y archivos.</li>
       </ol>
@@ -759,7 +761,17 @@ git diff --cached
 git commit -m "feat(cli): add staged commit confirmation"
 git show --stat --oneline HEAD</code></pre></div>
 
-      <p>Si tras revisar el diff preparado el alcance debe cambiar, se vuelve al primer paso y se pide una confirmación nueva. Un mensaje confirmado no se reescribe por conveniencia.</p>
+      <p>Si tras revisar el diff preparado el alcance debe cambiar, se vuelve al paso 2 y se pide una confirmación nueva. Un mensaje confirmado no se reescribe por conveniencia.</p>
+
+      <h3>Cierre sin cabos sueltos</h3>
+      <p>Un cambio está listo para commitear cuando no queda nada que puedas resolver con la información disponible y nada que el usuario tenga que decidir para que el resultado sea coherente. En concreto:</p>
+      <ul class="plain">
+        <li>No se deja para después la sincronización de la documentación que describe lo que acabas de cambiar.</li>
+        <li>No se deja para después una política del repositorio que contradice la regla nueva.</li>
+        <li>No se presenta como «pendiente de tu decisión» algo que se podía haber preguntado antes de escribir.</li>
+        <li>Si el commit ya está hecho y aparece un cabo suelto, se nombra como fallo de preparación y se propone la reparación; no se presenta como una decisión pendiente del usuario.</li>
+      </ul>
+      <p>Un bloqueo externo real —una persona, un permiso, un dato que solo el usuario tiene— se declara <strong>antes</strong> del commit, con el árbol preparado y sin commitear, para que no haya que completarlo después.</p>
 
       <h3>La plantilla del plan</h3>
       <p>Para todo lo que exceda un commit pequeño se presenta este formato antes de cualquier cambio persistente. No es decorativa: son los datos que el usuario necesita para decidir.</p>
@@ -776,6 +788,7 @@ git show --stat --oneline HEAD</code></pre></div>
 - Archivos, commits o ramas afectados:
 - Origen → destino:
 - Mensaje de commit propuesto (Conventional Commits, inglés):
+- Decisiones abiertas: ninguna / [cuáles, y se responden antes de commitear]
 - Validación previa:
 - Resultado verificable esperado:
 - Riesgos y reversibilidad:
@@ -1190,6 +1203,7 @@ policy:
       <div class="qa"><h3>¿Por qué no puedo usar <code>git add .</code>?</h3><p>Porque prepara todo lo que haya, incluido lo que no forma parte del encargo: archivos temporales, logs, cambios de otro. Se preparan rutas enumeradas, y si de verdad todo pertenece junto, el plan debe explicar por qué.</p></div>
       <div class="qa"><h3>He integrado la feature. ¿Borro la rama?</h3><p>Se propone, se informa del nombre y del comando <code>git branch -d</code>, y se pide confirmación. Si no la hay, la rama se queda. Una rama con trabajo no integrado, o una remota, no se borra sin autorización específica.</p></div>
       <div class="qa"><h3>¿Y el <code>push</code>?</h3><p>Requiere confirmación propia, aunque el commit ya esté confirmado y hecho. Un commit aprobado no autoriza a publicarlo, y una rama nueva tampoco se sube sola.</p></div>
+      <div class="qa"><h3>Termino el commit y aparece algo que faltaba. ¿Otro commit?</h3><p>No debería. Antes de commitear hay un barrido: documentación que describa el cambio, <code>CHANGELOG</code>, plantillas, referencias y políticas del repositorio. Lo que necesite una decisión se pregunta antes y entra en ese mismo commit. Si aparece después, se declara como fallo de preparación, no como una decisión pendiente del usuario.</p></div>
       <div class="qa"><h3>Hay un conflicto. ¿Lo resuelvo y sigo?</h3><p>No sin un plan nuevo. Primero se informa de los archivos afectados y se ofrecen tres salidas: resolver archivos concretos, abortar o pausar. Resolver exige una decisión semántica por archivo y su propia confirmación.</p></div>
       <div class="qa"><h3>¿Puedo hacer rebase de mi rama?</h3><p>Solo si es privada y no está publicada. Una rama compartida o ya publicada no se rebasa ni se aplasta sin una regla documentada y aprobación explícita.</p></div>
       <div class="qa"><h3>El repositorio solo tiene <code>main</code>. ¿Creo <code>develop</code>?</h3><p>No. El modelo por defecto no usa <code>develop</code>: se trabaja en <code>main</code> para tareas pequeñas y en ramas cortas desde <code>main</code> para el resto. Crear <code>develop</code> requiere que el repositorio lo declare.</p></div>
@@ -1210,6 +1224,7 @@ policy:
 - Evidencia Git:
 - Commit: creado / no creado / pendiente de autorización
 - Rama de trabajo: borrada / conservada / no aplicaba
+- Cabos sueltos: ninguno / [lo que falta y por qué no se cerró antes del commit]
 - Push: realizado / no realizado / pendiente de autorización
 - Validaciones:
 - Tipo de resultado: EJECUCIÓN | AUDITORÍA
@@ -1225,6 +1240,7 @@ policy:
             <tr><td>Tamaño de la tarea</td><td>Pequeña, normal o compleja, con el motivo que la clasificó.</td></tr>
             <tr><td>Commit</td><td><code>creado</code>, <code>no creado</code> o <code>pendiente de autorización</code>. Los cambios preparados y sin commitear son un resultado válido.</td></tr>
             <tr><td>Rama de trabajo</td><td><code>borrada</code>, <code>conservada</code> o <code>no aplicaba</code>. Si se conserva, se dice por qué.</td></tr>
+            <tr><td>Cabos sueltos</td><td><code>ninguno</code> o lo que falte, con la razón de por qué no se cerró antes del commit.</td></tr>
             <tr><td>Push</td><td><code>realizado</code>, <code>no realizado</code> o <code>pendiente de autorización</code>.</td></tr>
             <tr><td>Tipo de resultado</td><td><code>EJECUCIÓN</code> si se hizo algo; <code>AUDITORÍA</code> si solo se inspeccionó.</td></tr>
             <tr><td>Flujo ejecutado</td><td><code>COMPLETO</code>, <code>INCOMPLETO</code>, <code>NO VERIFICADO</code> o <code>NO APLICA</code>.</td></tr>

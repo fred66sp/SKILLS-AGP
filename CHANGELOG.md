@@ -22,6 +22,8 @@ El formato sigue [Keep a Changelog 1.1.0](https://keepachangelog.com/es-ES/1.1.0
 ### Modificado
 
 - Skill `git-flow-management`: el flujo pasa a ser proporcional al tamaño y al riesgo de la tarea. Las tareas pequeñas admiten commit directo en `main`; las normales y complejas proponen rama corta. Todo commit se deja preparado en el stage con su mensaje Conventional Commits en inglés y se ejecuta solo tras confirmación explícita. El borrado de una rama ya integrada y cualquier `push` requieren su propia confirmación, y una confirmación no se reaprovecha para trabajo posterior. Git Flow deja de ser el modelo por defecto: se aplica solo si el repositorio lo declara.
+- Skill `git-flow-management`: prohibido commitear con cabos sueltos. Antes de pedir la confirmación se hace un barrido de documentación, `CHANGELOG`, plantillas, referencias y políticas del repositorio; lo que requiera una decisión del usuario se pregunta antes del commit y entra en ese mismo commit. Un commit que obliga a un commit de corrección inmediata se informa como fallo de preparación, no como decisión pendiente.
+- `CONTRIBUTING.md`: la excepción directa a `main` se sustituye por la regla de tamaño de la skill, con el barrido previo y la confirmación del commit como condiciones en todos los casos.
 
 ### Corregido
 
