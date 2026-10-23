@@ -47,6 +47,8 @@ S12. Git: cada rama corta desde `main`, commits por unidad revisable con mensaje
 
 T1 es un movimiento de archivo más un barrido de rutas: el diff es pequeño en líneas de autoría pero toca un contrato ya consumido por la documentación integrada en `main`, así que viaja solo en su commit y en su rama, y se evalúa con el script ejecutándose desde la ruta nueva antes de proponer el stage. T3 a T5 son autoría pura por debajo de 400 líneas cada una. T6 incluye HTML generados, que no cuentan como autoría.
 
+Medida por commit, no acumulada: `e78d131` contrato 88 líneas, `27d725d` plantillas 140, `11559ff` barrido de `README.md` y `CHANGELOG.md` 12, `2b200b6` tres referencias 300. Cada unidad queda por debajo de las ~400 líneas del repositorio; el contador del harness avisa a los 543 porque suma la rama completa desde `main`, que es el acumulado esperado de una entrega de cuatro unidades. T6 incluye HTML generados por archify, que no cuentan como autoría: lo revisable son los dos `*.json` y sus recibos.
+
 ## Log
 
 L1 (petición original, literal): «antes de la integración, quiero saber, esta skill verifica un archivo .feature por lo que he leido. Quién escribe ese archivo??»
