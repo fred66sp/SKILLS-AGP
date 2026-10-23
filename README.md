@@ -10,6 +10,7 @@ La especificación de [agentskills.io](https://agentskills.io/) es la guía y la
 |---|---|
 | `src/<skill>/` | Una skill por carpeta: `SKILL.md`, `references/`, `assets/`, `scripts/` |
 | `docs/` | Guías y diagramas del repositorio |
+| `tools/` | CLIs compartidas por más de una skill, ejecutadas desde la raíz del repositorio |
 | `README.md` | Este fichero |
 | `CONTRIBUTING.md` | Política de ramas, commits e integración |
 | `CHANGELOG.md` | Historial de cambios |
@@ -32,7 +33,7 @@ Contrato completo: [`src/document-management-software/SKILL.md`](src/document-ma
 
 ### `gherkin-scenario-review`
 
-Revisa archivos `.feature` ya escritos contra las cuatro reglas de buen Gherkin: legibilidad sin contexto, un comportamiento por escenario, un ejemplo por clase de equivalencia y lenguaje consistente en tercera persona. Es una skill de revisión: no descubre comportamientos, no escribe escenarios ni automatiza, y no devuelve un veredicto de calidad sin la línea que lo sustenta. Separa el hecho medible de la estimación del criterio: seis comprobaciones son deterministas y cinco son candidatos que el revisor confirma o refuta. Incluye el script `scripts/check-feature.py` (solo stdlib, Gherkin en inglés y en español, `# language: es`), con once códigos, umbrales `--max-steps` y `--max-outline-rows`, y salidas `0`, `3` y `2`; una referencia por stack (JS/TS, Python, Java, .NET y Go) para juzgar si un paso es automatizable y a qué capa pertenece; y dos fixtures propios como ejemplo de nivel y evidencia del script.
+Revisa archivos `.feature` ya escritos contra las cuatro reglas de buen Gherkin: legibilidad sin contexto, un comportamiento por escenario, un ejemplo por clase de equivalencia y lenguaje consistente en tercera persona. Es una skill de revisión: no descubre comportamientos, no escribe escenarios ni automatiza, y no devuelve un veredicto de calidad sin la línea que lo sustenta. Separa el hecho medible de la estimación del criterio: seis comprobaciones son deterministas y cinco son candidatos que el revisor confirma o refuta. Usa la CLI compartida `tools/check-feature.py` (solo stdlib, Gherkin en inglés y en español, `# language: es`), con once códigos, umbrales `--max-steps` y `--max-outline-rows`, y salidas `0`, `3` y `2`; una referencia por stack (JS/TS, Python, Java, .NET y Go) para juzgar si un paso es automatizable y a qué capa pertenece; y dos fixtures propios como ejemplo de nivel y evidencia del script.
 
 Contrato completo: [`src/gherkin-scenario-review/SKILL.md`](src/gherkin-scenario-review/SKILL.md).
 

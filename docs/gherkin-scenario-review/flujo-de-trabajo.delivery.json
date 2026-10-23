@@ -1,17 +1,17 @@
 {
   "schemaVersion": 1,
-  "receiptId": "efb85b9d-1f81-4f5c-a712-2b6c40c8d15d",
+  "receiptId": "f760251a-9989-4fbb-beac-af31557d555a",
   "status": "current",
   "command": "deliver",
   "type": "workflow",
   "input": "C:\\SKILLS-AGP\\docs\\gherkin-scenario-review\\flujo-de-trabajo.json",
   "output": "C:\\SKILLS-AGP\\docs\\gherkin-scenario-review\\flujo-de-trabajo.html",
   "specification": {
-    "sha256": "79e21e75787f2a36139450741ec02e9a8db3fadace1be34f46ee7ff3fb4ea99c",
-    "bytes": 7592
+    "sha256": "b501ccdc987f5d25620da497ab4b44365e27977cd9f9020b2132e0eaff43df1d",
+    "bytes": 7598
   },
   "artifact": {
-    "sha256": "a4d34dcac6dee577d646a5542979b73351ad8418f6866b26a2a444029d1e563c",
-    "bytes": 836144
+    "sha256": "c666b3b6df29d44d5dade7c1031dfc6a4f97f37f969cd6869ec9d1c2dd9bb5a5",
+    "bytes": 836053
   }
 }

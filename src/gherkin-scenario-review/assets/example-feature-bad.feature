@@ -1,5 +1,5 @@
 # Fixture de referencia del nivel NO APTO: lleva al menos una violación de cada código que
-# comprueba scripts/check-feature.py. El dominio es el desarrollo de software (build de
+# comprueba tools/check-feature.py. El dominio es el desarrollo de software (build de
 # documentación, CLI, pipeline de CI y validador), no la compra de un producto.
 #   business-intent-given, low-level-vocab, person-mixed, too-many-steps -> "Publish the site"
 #   step-order, multiple-action-outcome                                  -> "Edit the pipeline config"

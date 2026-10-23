@@ -120,7 +120,7 @@
       "col": 2,
       "type": "backend",
       "label": "Paso 2 · script",
-      "sublabel": "check-feature.py",
+      "sublabel": "tools/check-feature.py",
       "tag": "exit 0 · 3 · 2"
     },
     {

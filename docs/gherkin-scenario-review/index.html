@@ -512,7 +512,7 @@
     </div>
     <div class="status-strip" role="status">
       <span class="status-mark" aria-hidden="true">OK</span>
-      <div><strong>Todo lo que hay aquí sale del paquete y del script ejecutado</strong><span>Las invariantes, los pasos, los códigos, los umbrales y las salidas de comandos de esta página están copiados de <code>SKILL.md</code>, de las referencias y de ejecutar <code>scripts/check-feature.py</code> sobre los dos fixtures del paquete. Si algo no está en el paquete, no se presenta como regla.</span></div>
+      <div><strong>Todo lo que hay aquí sale del paquete y del script ejecutado</strong><span>Las invariantes, los pasos, los códigos, los umbrales y las salidas de comandos de esta página están copiados de <code>SKILL.md</code>, de las referencias y de ejecutar <code>tools/check-feature.py</code> sobre los dos fixtures del paquete. Si algo no está en el paquete, no se presenta como regla.</span></div>
     </div>
   </div>
 </section>
@@ -614,7 +614,7 @@
       <ul class="plain">
         <li><strong>Solo revisa texto Gherkin que ya existe.</strong> Si el encargo pide descubrir, escribir o automatizar, se declara el fuera de alcance y se revisa únicamente lo que ya esté escrito.</li>
         <li><strong>El archivo del usuario no se modifica.</strong> Cada hallazgo lleva una reescritura propuesta dentro del informe; aplicar esa reescritura es un encargo aparte.</li>
-        <li><strong>Ninguna revisión de memoria.</strong> Se ejecuta <code>scripts/check-feature.py</code> sobre cada archivo y se leen las referencias aplicables antes de emitir un veredicto; la regla se cita por nombre y por número.</li>
+        <li><strong>Ninguna revisión de memoria.</strong> Se ejecuta <code>tools/check-feature.py</code> sobre cada archivo y se leen las referencias aplicables antes de emitir un veredicto; la regla se cita por nombre y por número.</li>
         <li><strong>Se separa hecho de estimación.</strong> Lo que mide el script es reproducible; lo que juzga el criterio es estimación. Un candidato no se redacta como violación determinista y un <code>APTO</code> nunca se apoya solo en estimaciones.</li>
         <li><strong>Cada hallazgo cita regla, archivo, línea y evidencia literal del paso.</strong> Sin línea citada no hay hallazgo.</li>
         <li><strong>Más de un comportamiento por escenario es el hallazgo de mayor prioridad.</strong> No se propone dividirlo sin nombrar qué comportamiento queda en cada parte y qué <code>Dado</code> nuevo lo sitúa.</li>
@@ -635,7 +635,7 @@
 
       <div class="flow">
         <div class="flow-step"><code>paso 1</code><strong>Delimitar el encargo</strong><p>Enumera archivos o bloques <code>.feature</code>, el idioma de las palabras clave y el stack declarado. La puerta de alcance puede cerrar el flujo aquí: descubrir, escribir o automatizar es <code>FUERA DE ALCANCE</code>.</p></div>
-        <div class="flow-step"><code>paso 2</code><strong>Comprobación determinista</strong><p>Ejecuta <code>check-feature.py --path</code> por archivo y conserva stdout, stderr y el código de salida. Exit 2 obliga a corregir la invocación; el script no se sustituye por un parseo improvisado.</p></div>
+        <div class="flow-step"><code>paso 2</code><strong>Comprobación determinista</strong><p>Ejecuta <code>tools/check-feature.py --path</code> por archivo y conserva stdout, stderr y el código de salida. Exit 2 obliga a corregir la invocación; el script no se sustituye por un parseo improvisado, y si <code>tools/</code> no está en la máquina se informa en lugar de parsear por cuenta propia.</p></div>
         <div class="flow-step"><code>paso 3</code><strong>Regla 2 · un comportamiento</strong><p>Carga <code>four-rules.md</code> y <code>structure-and-order.md</code>. Busca pares duplicados, cambios de actor o de objeto, y escribe las dos reescrituras de cada escenario partido.</p></div>
         <div class="flow-step"><code>paso 4</code><strong>Regla 1 · sin muro de texto</strong><p>Con las dos referencias ya leídas: mide longitud contando <code>Background</code>, marca los pasos que comunican el cómo y verifica el orden estricto <code>Dado → Cuando → Entonces</code>.</p></div>
         <div class="flow-step"><code>paso 5</code><strong>Regla 3 · clases de equivalencia</strong><p>Carga <code>equivalence-classes.md</code>. Agrupa las filas de <code>Examples</code> por lo que el escenario verifica de verdad y estima el coste de las redundantes.</p></div>
@@ -752,13 +752,13 @@
 
     <section id="ejecucion" class="section">
       <div class="section-head"><span class="section-num">7</span><h2 class="title">Cómo se ejecuta el script</h2></div>
-      <p class="sub"><code>scripts/check-feature.py</code> es stdlib-only: sin dependencias, sin red. Python de la máquina basta. Acepta palabras clave en inglés y en español, encabezado <code># language: es</code>, <code>Background</code>, <code>Scenario Outline</code>/<code>Esquema del escenario</code>, <code>Examples</code>/<code>Ejemplos</code>, etiquetas <code>@</code>, comentarios y <code>*</code> como paso alternativo.</p>
+      <p class="sub"><code>tools/check-feature.py</code> es stdlib-only: sin dependencias, sin red. Python de la máquina basta. Acepta palabras clave en inglés y en español, encabezado <code># language: es</code>, <code>Background</code>, <code>Scenario Outline</code>/<code>Esquema del escenario</code>, <code>Examples</code>/<code>Ejemplos</code>, etiquetas <code>@</code>, comentarios y <code>*</code> como paso alternativo.</p>
 
-      <div class="code"><pre><code># revisión de un archivo, desde la raíz del paquete
-python scripts/check-feature.py --path features/documentation-build.feature
+      <div class="code"><pre><code># revisión de un archivo, desde la raíz del repositorio
+python tools/check-feature.py --path features/documentation-build.feature
 
 # con umbrales propios y salida volcable al informe
-python scripts/check-feature.py --path features/documentation-build.feature \
+python tools/check-feature.py --path features/documentation-build.feature \
   --max-steps 7 --max-outline-rows 3 --json</code></pre></div>
 
       <div class="table-wrap wrap-cells">
@@ -842,10 +842,10 @@ python scripts/check-feature.py --path features/documentation-build.feature \
 
     <section id="ficheros" class="section">
       <div class="section-head"><span class="section-num">10</span><h2 class="title">Los ficheros del paquete</h2></div>
-      <p class="sub">Un contrato, ocho referencias de reglas y stack, cuatro assets y un script. <code>references/</code> vive a un solo nivel de profundidad y el paquete no lleva documentación para personas: esta página vive fuera precisamente por eso.</p>
+      <p class="sub">Un contrato, ocho referencias de reglas y stack, cuatro assets y ninguna pieza ejecutable: el único script vive en <code>tools/check-feature.py</code>, compartido con la skill de autoría. <code>references/</code> vive a un solo nivel de profundidad y el paquete no lleva documentación para personas: esta página vive fuera precisamente por eso.</p>
 
       <div class="code"><pre><code>gherkin-scenario-review/
-├── SKILL.md                            # el contrato: 10 invariantes, 8 pasos, 121 líneas
+├── SKILL.md                            # el contrato: 10 invariantes, 8 pasos, 123 líneas
 ├── references/
 │   ├── four-rules.md                   # las cuatro reglas como comprobaciones, MAL y BIEN
 │   ├── structure-and-order.md          # orden, longitud, cronología, qué va a hooks
@@ -853,13 +853,14 @@ python scripts/check-feature.py --path features/documentation-build.feature \
 │   ├── language-and-voice.md           # punto de vista, frase sujeto-predicado
 │   ├── stack-detection.md              # cómo se decide el stack y qué referencia cargar
 │   └── stack-&lt;stack&gt;.md                # javascript, python, java, dotnet, go: se carga una sola
-├── assets/
-│   ├── review-report-template.md       # la forma obligatoria del informe
-│   ├── checklist-four-rules.md         # las cuatro preguntas por escenario, con su código
-│   ├── example-feature-good.feature    # fixture APTO: build de documentación, # language: es
-│   └── example-feature-bad.feature     # fixture con violaciones: pipeline de CI y validador
-└── scripts/
-    └── check-feature.py                # la única pieza ejecutable: 674 líneas, stdlib-only</code></pre></div>
+└── assets/
+    ├── review-report-template.md       # la forma obligatoria del informe
+    ├── checklist-four-rules.md         # las cuatro preguntas por escenario, con su código
+    ├── example-feature-good.feature    # fixture APTO: build de documentación, # language: es
+    └── example-feature-bad.feature     # fixture con violaciones: pipeline de CI y validador
+
+tools/                                  # raíz del repositorio: CLI compartida por las dos skills
+└── check-feature.py                    # la única pieza ejecutable: 674 líneas, stdlib-only</code></pre></div>
 
       <div class="table-wrap wrap-cells">
         <table>
@@ -874,7 +875,7 @@ python scripts/check-feature.py --path features/documentation-build.feature \
             <tr><td><a href="../../src/gherkin-scenario-review/assets/review-report-template.md"><code>assets/review-report-template.md</code></a></td><td>Paso 8.</td><td>Cabecera con comando y exit code, veredictos, hallazgos con reescritura, candidatos refutados y «Sin verificar».</td></tr>
             <tr><td><a href="../../src/gherkin-scenario-review/assets/checklist-four-rules.md"><code>assets/checklist-four-rules.md</code></a></td><td>Paso 8.</td><td>Las cuatro preguntas por escenario con el código del script que respalda cada una.</td></tr>
             <tr><td><a href="../../src/gherkin-scenario-review/assets/example-feature-good.feature"><code>example-feature-good.feature</code></a> · <a href="../../src/gherkin-scenario-review/assets/example-feature-bad.feature"><code>bad</code></a></td><td>Como referencia del nivel esperado y como fixture del script.</td><td>Uno sin hallazgos; el otro dispara las trece comprobaciones. Ambos modelan desarrollo de software: build de documentación y pipeline de CI.</td></tr>
-            <tr><td><a href="../../src/gherkin-scenario-review/scripts/check-feature.py"><code>scripts/check-feature.py</code></a></td><td>Paso 2, siempre.</td><td>Parser Gherkin bilingüe y trece comprobaciones con evidencia por línea.</td></tr>
+            <tr><td><a href="../../tools/check-feature.py"><code>tools/check-feature.py</code></a></td><td>Paso 2, siempre.</td><td>Parser Gherkin bilingüe y trece comprobaciones con evidencia por línea. CLI compartida: vive en <code>tools/</code>, fuera del paquete, y se invoca desde la raíz del repositorio.</td></tr>
           </tbody>
         </table>
       </div>
@@ -886,10 +887,10 @@ python scripts/check-feature.py --path features/documentation-build.feature \
 
     <section id="en-este-repositorio" class="section">
       <div class="section-head"><span class="section-num">11</span><h2 class="title">Cómo se usa aquí</h2></div>
-      <p class="sub">La skill se ejercitó contra sus propios fixtures desde la raíz del repositorio. Estos son los comandos que se ejecutaron y lo que devolvieron, sin editar.</p>
+      <p class="sub">La skill se ejercitó contra sus propios fixtures desde la raíz del repositorio con la CLI compartida. Estos son los comandos que se ejecutaron y lo que devolvieron, sin editar.</p>
 
       <h3>El fixture bueno — dominio de desarrollo de software</h3>
-      <div class="code"><pre><code>$ python src/gherkin-scenario-review/scripts/check-feature.py \
+      <div class="code"><pre><code>$ python tools/check-feature.py \
     --path src/gherkin-scenario-review/assets/example-feature-good.feature
 src/gherkin-scenario-review/assets/example-feature-good.feature: sin hallazgos
 resumen: ... — 0 hallazgos (0 deterministas, 0 candidatos)
@@ -897,7 +898,7 @@ resumen: ... — 0 hallazgos (0 deterministas, 0 candidatos)
       <p>Modela el build de documentación en español: enlaces relativos rotos, reconstrucción incremental y severidad de los hallazgos del validador, con <code># language: es</code> y palabras clave <code>Dado/Cuando/Entonces</code>.</p>
 
       <h3>El fixture malo — las trece comprobaciones disparadas</h3>
-      <div class="code"><pre><code>$ python src/gherkin-scenario-review/scripts/check-feature.py \
+      <div class="code"><pre><code>$ python tools/check-feature.py \
     --path src/gherkin-scenario-review/assets/example-feature-bad.feature
 hallazgos en .../example-feature-bad.feature:
   [C] regla 4 person-mixed     .../example-feature-bad.feature:19 ...
@@ -910,10 +911,10 @@ resumen: ... — 21 hallazgos (10 deterministas, 11 candidatos)
       <p>Modela una pipeline de CI y un validador en inglés, y dispara los trece códigos previstos: orden imposible de pasos, escenario sin <code>Entonces</code>, dos pares acción-verificación, outline con tablas mal formadas, vocabulario de bajo nivel y mezcla de punto de vista.</p>
 
       <h3>Las salidas de error del contrato</h3>
-      <div class="code"><pre><code>$ python src/gherkin-scenario-review/scripts/check-feature.py --path /dev/null
+      <div class="code"><pre><code>$ python tools/check-feature.py --path /dev/null
 check-feature.py: la ruta no es un archivo: nul
 # código de salida: 2
-$ python src/gherkin-scenario-review/scripts/check-feature.py --help
+$ python tools/check-feature.py --help
 # lista deterministas, candidatos y los dos umbrales por defecto</code></pre></div>
 
       <div class="status-strip" role="status">
