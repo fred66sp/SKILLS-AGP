@@ -115,7 +115,7 @@ El informe cierra con:
 - [references/equivalence-classes.md](references/equivalence-classes.md) — clases de equivalencia y `Scenario Outline`. Léela en el paso 5.
 - [references/language-and-voice.md](references/language-and-voice.md) — punto de vista, frase sujeto-predicado, paso legible suelto. Léela en el paso 6.
 - [references/stack-detection.md](references/stack-detection.md) — cómo se decide el stack y qué referencia cargar. Léela en el paso 7.
-- `references/stack-<stack>.md` — palabras clave, estilo de coincidencia de pasos, sitio de los hooks, filtrado por etiquetas, comando de parseo verificado. Solo la del stack detectado.
+- `references/stack-<stack>.md` — palabras clave, estilo de coincidencia de pasos, sitio de los hooks, filtrado por etiquetas y el comando de parseo o dry-run verificado con su fuente; cuando la documentación del runner no documenta ninguno, la referencia lo declara con la línea de fallback y la automatizabilidad se reporta como no verificada. Solo la del stack detectado.
 - [assets/review-report-template.md](assets/review-report-template.md) — forma obligatoria del informe.
 - [assets/checklist-four-rules.md](assets/checklist-four-rules.md) — lista de las cuatro preguntas por escenario.
 - `assets/example-feature-good.feature` y `assets/example-feature-bad.feature` — referencia del nivel esperado y fixture del script.
