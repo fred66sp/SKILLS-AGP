@@ -12,6 +12,7 @@
 - Archivos, commits o ramas afectados:
 - Origen → destino:
 - Mensaje de commit propuesto (Conventional Commits, inglés):
+- Decisiones abiertas: ninguna / [cuáles, y se responden antes de commitear]
 - Validación previa:
 - Resultado verificable esperado:
 - Riesgos y reversibilidad:

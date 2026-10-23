@@ -6,6 +6,7 @@
 - Evidencia Git:
 - Commit: creado / no creado / pendiente de autorización
 - Rama de trabajo: borrada / conservada / no aplicaba
+- Cabos sueltos: ninguno / [lo que falta y por qué no se cerró antes del commit]
 - Push: realizado / no realizado / pendiente de autorización
 - Validaciones:
 - Tipo de resultado: EJECUCIÓN | AUDITORÍA

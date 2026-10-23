@@ -299,7 +299,7 @@
       "items": [
         "La clasificación decide la ceremonia: una tarea pequeña admite commit directo en main; una normal o compleja propone rama corta desde main",
         "La inspección es de solo lectura y crece con el tamaño: un status en una tarea pequeña, ramas, remoto e historial en las demás",
-        "Antes de preguntar nada, los cambios ya están en el stage con su mensaje Conventional Commits en inglés"
+        "Antes de preguntar nada, los cambios están en el stage con su mensaje Conventional Commits en inglés y el barrido de documentación y políticas ya hecho"
       ]
     },
     {

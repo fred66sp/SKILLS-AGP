@@ -1,17 +1,17 @@
 {
   "schemaVersion": 1,
-  "receiptId": "d0be8b41-e277-4d4a-b697-32c91190fb09",
+  "receiptId": "4bc9f47c-e7c7-4c5c-87b1-3226fb293475",
   "status": "current",
   "command": "deliver",
   "type": "workflow",
   "input": "C:\\SKILLS-AGP\\docs\\git-flow-management\\flujo-de-trabajo.json",
   "output": "C:\\SKILLS-AGP\\docs\\git-flow-management\\flujo-de-trabajo.html",
   "specification": {
-    "sha256": "f788de99859b1873fa78a7c1aa46e893446ab0720be4a07ee74102962d37de4d",
-    "bytes": 8017
+    "sha256": "2ff5c79bbfd939463f4d94ec94255009813cce8f3f1abd4b435ad5163bd45641",
+    "bytes": 8067
   },
   "artifact": {
-    "sha256": "095a7c18d86dd87928d6eb3e1d5f4ea1d5c86056d28a71811dd5cc4019e83d7e",
-    "bytes": 838628
+    "sha256": "0e600389c67f3063c70478c4b3b3e4ccb821d6c509cad4eb6638609cdba213cb",
+    "bytes": 838678
   }
 }

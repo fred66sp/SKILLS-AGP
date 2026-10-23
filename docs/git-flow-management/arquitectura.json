@@ -42,7 +42,7 @@
       "id": "skill",
       "type": "frontend",
       "label": "SKILL.md",
-      "sublabel": "once invariantes · quince secciones",
+      "sublabel": "doce invariantes · quince secciones",
       "pos": [
         480,
         80
@@ -243,7 +243,7 @@
       "title": "Las puertas del flujo",
       "items": [
         "La guardia decide entre commit directo en main, rama corta desde main o bloqueo: depende del tamaño de la tarea y de la rama actual",
-        "El commit se deja preparado en el stage con su mensaje en inglés y no se ejecuta sin confirmación explícita",
+        "El commit se deja preparado en el stage con su mensaje en inglés, tras un barrido de documentación y políticas, y no se ejecuta sin confirmación explícita",
         "El push y el borrado de una rama ya integrada piden su propia confirmación; ninguna se reaprovecha para otra etapa"
       ]
     },

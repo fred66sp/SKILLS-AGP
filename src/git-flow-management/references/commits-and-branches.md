@@ -36,16 +36,17 @@ Tipos habituales: feat, fix, docs, chore, refactor, test, style, perf, ci, build
 
 ## Preparación segura
 
-1. Inspecciona cambios rastreados, no rastreados y ya preparados.
-2. Separa explícitamente lo que queda fuera del commit.
-3. Prepara únicamente rutas enumeradas.
-4. Revisa el diff preparado y muéstralo.
-5. Presenta el mensaje exacto y pide confirmación antes de commitear.
-6. Ejecuta el commit confirmado y verifica SHA, mensaje y archivos.
+1. Barrido previo: documentación, `CHANGELOG`, plantillas, referencias cruzadas, diagramas y políticas del repositorio que describan el comportamiento anterior. Se corrige antes, no después.
+2. Inspecciona cambios rastreados, no rastreados y ya preparados.
+3. Separa explícitamente lo que queda fuera del commit.
+4. Prepara únicamente rutas enumeradas.
+5. Revisa el diff preparado y muéstralo.
+6. Presenta el mensaje exacto y las decisiones abiertas; si hay alguna, se pregunta antes de commitear.
+7. Ejecuta el commit confirmado y verifica SHA, mensaje y archivos.
 
 ## Confirmación
 
-Sin confirmación no hay commit, ni siquiera en una tarea pequeña ni en una tarea con varios commits previstos.
+Sin confirmación no hay commit, ni siquiera en una tarea pequeña ni en una tarea con varios commits previstos. Y sin barrido previo no hay confirmación: si el cambio deja algo incoherente —documentación desfasada, política del repositorio en contra, una plantilla que ya no describe el flujo— eso se arregla o se pregunta antes, nunca con un commit de corrección inmediata detrás.
 
 - Puedes presentar las etapas juntas —rama, stage, commit, integración, borrado de rama, push— y recibir una confirmación que las cubra.
 - Esa confirmación no se reaprovecha: otro conjunto de archivos, otra rama, un estado distinto o un push nuevo requieren confirmación nueva.
