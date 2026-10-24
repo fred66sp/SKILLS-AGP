@@ -1,0 +1,12 @@
+interface:
+  display_name: Verificación TypeScript
+  short_description: Fronteras validadas y evidencia ejecutada
+  default_prompt: Usa $typescript-testing-and-verification para validar entradas
+    con Zod 4, escribir pruebas y ejecutar la puerta de typecheck, lint, test y build.
+policy:
+  products:
+  - chatgpt
+  - codex
+  - api
+  - atlas
+  allow_implicit_invocation: true

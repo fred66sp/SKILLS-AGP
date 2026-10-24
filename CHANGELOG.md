@@ -34,6 +34,12 @@ El formato sigue [Keep a Changelog 1.1.0](https://keepachangelog.com/es-ES/1.1.0
 - Política de flujo del repositorio en `CONTRIBUTING.md`.
 - `README.md` con la descripción del repositorio y su estructura.
 - Registro de procedencia del repositorio en `README.md`: la sección «De dónde viene» nombra las fuentes externas en las que se inspira y se basa, y la de `skill-creator` declara origen, ruta y commit fijado para que la fijación de terceros se pueda comprobar.
+- Skill `typescript-idiomatic-style`: diseño type-first de TypeScript con `tsconfig` estricto, uniones discriminadas, tipos branded, type guards, genéricos y tipos calculados justificados, `satisfies`, const objects, módulos y `exports`, dependencias y project references medidas, y el contrato de una CLI con citty, `@clack/prompts`, completion perezosa y salida separada.
+- Skill `typescript-testing-and-verification`: validación de fronteras con Zod 4 y tipos inferidos, `parse`/`safeParse`, transformaciones y refinamientos, errores legibles, entorno al arranque, pruebas de esquema, unitarias, de integración y de extremo a extremo de la CLI, determinismo y cierre con evidencia.
+- Puerta `verify-ts.py`: detecta el gestor por `packageManager` o lockfile, ejecuta el script `typecheck` o la copia local de TypeScript con `--noEmit`, y añade `lint`, `test` y `build` cuando se piden; salida de texto o JSON, timeout y errores accionables sin traza.
+- Pruebas de `verify-ts.py` en `scripts/test-verify-ts.py`: detección de gestor, precedencia del campo declarado, lockfiles múltiples, script ausente, fallback local, timeout y consistencia texto/JSON.
+- Enrutadores de las skills `typescript-idiomatic-style` y `typescript-testing-and-verification` en `.skills/`: metadatos de disparo y lectura del contrato completo en `../../src/<skill>/SKILL.md`.
+- Registro de procedencia de las skills de TypeScript en `README.md`: las cuatro fuentes, su licencia declarada, el commit fijado de `cli-building` y la separación entre tipos, validación, pruebas y CLI.
 
 ### Corregido
 

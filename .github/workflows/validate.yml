@@ -32,3 +32,6 @@ jobs:
 
       - name: Test the Go verification gate
         run: python3 src/go-testing-and-verification/scripts/test-verify-go.py
+
+      - name: Test the TypeScript verification gate
+        run: python3 src/typescript-testing-and-verification/scripts/test-verify-ts.py

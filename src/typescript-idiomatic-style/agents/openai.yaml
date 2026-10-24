@@ -1,0 +1,12 @@
+interface:
+  display_name: Estilo TypeScript idiomático
+  short_description: Tipos estrictos y código TypeScript mantenible
+  default_prompt: Usa $typescript-idiomatic-style para escribir o revisar TypeScript
+    con tipos estrictos, uniones discriminadas y una CLI clara.
+policy:
+  products:
+  - chatgpt
+  - codex
+  - api
+  - atlas
+  allow_implicit_invocation: true
