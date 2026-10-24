@@ -1,0 +1,310 @@
+{
+  "schema_version": 2,
+  "diagram_type": "workflow",
+  "meta": {
+    "title": "Flujo de trabajo de la skill go-cli-ai-first",
+    "subtitle": "Del encargo a la ficha, la superficie, el plan de --dry-run y la prueba del contrato: dónde se detiene el flujo y qué evidencia cierra la CLI.",
+    "locale": "es",
+    "output": "docs/go-cli-ai-first/flujo-de-trabajo.html",
+    "visual_preset": "signal-flow",
+    "quality_profile": "showcase"
+  },
+  "lanes": [
+    {
+      "id": "consumidor",
+      "label": "Consumidor y permiso"
+    },
+    {
+      "id": "contrato",
+      "label": "La skill: contrato y estructura"
+    },
+    {
+      "id": "cli",
+      "label": "Superficie de la CLI"
+    },
+    {
+      "id": "control",
+      "label": "Parada y evidencia",
+      "variant": "exception"
+    }
+  ],
+  "phases": [
+    {
+      "id": "contrato-fase",
+      "label": "Contrato",
+      "fromCol": 0,
+      "toCol": 0
+    },
+    {
+      "id": "construccion",
+      "label": "Construcción",
+      "fromCol": 1,
+      "toCol": 2,
+      "variant": "emphasis"
+    },
+    {
+      "id": "seguridad",
+      "label": "Seguridad y ciclo",
+      "fromCol": 3,
+      "toCol": 4
+    },
+    {
+      "id": "cierre",
+      "label": "Cierre probado",
+      "fromCol": 5,
+      "toCol": 5,
+      "variant": "security"
+    }
+  ],
+  "groups": [
+    {
+      "id": "antes-del-codigo",
+      "label": "Antes del código",
+      "lane": "contrato",
+      "fromCol": 0,
+      "toCol": 1,
+      "variant": "emphasis"
+    },
+    {
+      "id": "prueba-contrato",
+      "label": "Prueba del contrato",
+      "lane": "control",
+      "fromCol": 4,
+      "toCol": 5,
+      "variant": "security"
+    }
+  ],
+  "mainPath": [
+    "encargo",
+    "ficha",
+    "estructura",
+    "superficie",
+    "seguridad",
+    "autoriza",
+    "ciclo",
+    "verifica",
+    "resultado"
+  ],
+  "nodes": [
+    {
+      "id": "encargo",
+      "lane": "consumidor",
+      "col": 0,
+      "type": "external",
+      "label": "Encargo de CLI",
+      "sublabel": "agente · script · persona",
+      "tag": "contrato antes que código",
+      "icon": "start"
+    },
+    {
+      "id": "autoriza",
+      "lane": "consumidor",
+      "col": 3,
+      "type": "external",
+      "label": "Autorización",
+      "sublabel": "--yes explícito",
+      "tag": "solo lo enumerado",
+      "icon": "person"
+    },
+    {
+      "id": "ficha",
+      "lane": "contrato",
+      "col": 0,
+      "type": "backend",
+      "label": "Ficha de comando",
+      "sublabel": "entrada · salida · códigos",
+      "tag": "una por comando"
+    },
+    {
+      "id": "estructura",
+      "lane": "contrato",
+      "col": 1,
+      "type": "backend",
+      "label": "Estructura mínima",
+      "sublabel": "run · deps inyectadas",
+      "tag": "sin capas anticipadas"
+    },
+    {
+      "id": "superficie",
+      "lane": "cli",
+      "col": 2,
+      "type": "backend",
+      "label": "Superficie",
+      "sublabel": "ayuda · flags · JSON",
+      "tag": "stdout contra stderr"
+    },
+    {
+      "id": "seguridad",
+      "lane": "cli",
+      "col": 3,
+      "type": "security",
+      "label": "Plan y confirmación",
+      "sublabel": "--dry-run · --yes",
+      "tag": "nada muta sin plan"
+    },
+    {
+      "id": "ciclo",
+      "lane": "cli",
+      "col": 4,
+      "type": "security",
+      "label": "Ciclo de vida",
+      "sublabel": "ctx · señal · cierre",
+      "tag": "cancela con 3"
+    },
+    {
+      "id": "parada",
+      "lane": "control",
+      "col": 2,
+      "type": "security",
+      "label": "Parada",
+      "sublabel": "sin TTY o conflicto",
+      "tag": "no improvisa",
+      "icon": "stop"
+    },
+    {
+      "id": "verifica",
+      "lane": "control",
+      "col": 4,
+      "type": "security",
+      "label": "Contrato probado",
+      "sublabel": "stdout · stderr · exit",
+      "tag": "e2e del binario"
+    },
+    {
+      "id": "resultado",
+      "lane": "control",
+      "col": 5,
+      "type": "frontend",
+      "label": "Resultado",
+      "sublabel": "completo o parcial",
+      "icon": "success"
+    }
+  ],
+  "edges": [
+    {
+      "id": "delimita",
+      "from": "encargo",
+      "to": "ficha",
+      "label": "delimita",
+      "variant": "emphasis",
+      "role": "main"
+    },
+    {
+      "id": "fija",
+      "from": "ficha",
+      "to": "estructura",
+      "label": "fija",
+      "role": "main"
+    },
+    {
+      "id": "implementa",
+      "from": "estructura",
+      "to": "superficie",
+      "label": "implementa",
+      "role": "main"
+    },
+    {
+      "id": "prepara",
+      "from": "superficie",
+      "to": "seguridad",
+      "label": "plan",
+      "role": "main"
+    },
+    {
+      "id": "pide-permiso",
+      "from": "seguridad",
+      "to": "autoriza",
+      "label": "pide --yes",
+      "variant": "dashed",
+      "role": "main"
+    },
+    {
+      "id": "ejecuta",
+      "from": "autoriza",
+      "to": "ciclo",
+      "label": "ejecuta",
+      "variant": "emphasis",
+      "role": "main"
+    },
+    {
+      "id": "sin-yes",
+      "from": "seguridad",
+      "to": "parada",
+      "label": "sin --yes: 4",
+      "variant": "security",
+      "role": "return"
+    },
+    {
+      "id": "sin-tty",
+      "from": "superficie",
+      "to": "parada",
+      "label": "sin TTY: 2",
+      "variant": "security",
+      "role": "return",
+      "fromSide": "left",
+      "toSide": "right"
+    },
+    {
+      "id": "redisenya",
+      "from": "parada",
+      "to": "ficha",
+      "label": "redisenya",
+      "variant": "dashed",
+      "role": "return"
+    },
+    {
+      "id": "prueba",
+      "from": "ciclo",
+      "to": "verifica",
+      "label": "prueba",
+      "role": "main"
+    },
+    {
+      "id": "cierra",
+      "from": "verifica",
+      "to": "resultado",
+      "label": "evidencia",
+      "variant": "emphasis",
+      "role": "main"
+    },
+    {
+      "id": "fallo",
+      "from": "verifica",
+      "to": "parada",
+      "label": "falla",
+      "variant": "security",
+      "role": "return",
+      "fromSide": "left",
+      "toSide": "right"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "El contrato antes del código",
+      "items": [
+        "Cada comando se describe en una ficha: entrada, salida de éxito, error posible, efecto, idempotencia, --dry-run y --yes",
+        "stdout lleva solo el resultado; stderr lleva diagnóstico, progreso y errores; ningún banner contamina el JSON",
+        "Los códigos 0, 1, 2, 3 y 4 son parte del contrato y no se inventan por comando"
+      ]
+    },
+    {
+      "dot": "rose",
+      "title": "Dónde se detiene",
+      "items": [
+        "Un comando destructivo sin --yes muestra el plan y sale con 4; un prompt interactivo no sustituye la autorización",
+        "Sin TTY y con una decisión pendiente, falla con 2 y nombra la flag exacta; no lee stdin a ciegas",
+        "Renombrar o eliminar un comando, flag, campo JSON o código exige versión mayor y migración"
+      ]
+    },
+    {
+      "dot": "emerald",
+      "title": "Cómo se prueba el cierre",
+      "items": [
+        "Unitarias para la lógica, golden para el formato y extremo a extremo para el contrato del binario",
+        "El extremo a extremo comprueba por separado stdout, stderr y código, incluidos ayuda, versión, JSON, --dry-run, falta de --yes, cancelación y EPIPE",
+        "La puerta es gofmt, build, test, vet y -race cuando hay concurrencia; el resultado declara lo no verificado"
+      ]
+    }
+  ]
+}

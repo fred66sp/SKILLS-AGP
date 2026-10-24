@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "b82d9d22-8208-4dc7-8869-2e6c63fc77c6",
+  "status": "current",
+  "command": "deliver",
+  "type": "architecture",
+  "input": "C:\\SKILLS-AGP\\docs\\go-idiomatic-style\\arquitectura.json",
+  "output": "C:\\SKILLS-AGP\\docs\\go-idiomatic-style\\arquitectura.html",
+  "specification": {
+    "sha256": "1762bff04899cecf571fe6e3602e5c0a8b0458dd55c630aa4a1a6bf3131cdf57",
+    "bytes": 4592
+  },
+  "artifact": {
+    "sha256": "9d7ea0f219a3c2e696b7c8e156509dbfd12c6a93783d2e731461f5f678a93633",
+    "bytes": 828197
+  }
+}

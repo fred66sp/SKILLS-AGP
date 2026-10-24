@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "a2d7e644-9aab-4820-91db-9724567834af",
+  "status": "current",
+  "command": "deliver",
+  "type": "architecture",
+  "input": "C:\\SKILLS-AGP\\docs\\go-testing-and-verification\\arquitectura.json",
+  "output": "C:\\SKILLS-AGP\\docs\\go-testing-and-verification\\arquitectura.html",
+  "specification": {
+    "sha256": "28274e1b0f91bb341368ce3b44c0664bca2f6f144b0d76f92c557d287ef541eb",
+    "bytes": 4951
+  },
+  "artifact": {
+    "sha256": "8e4f428d0be70f93585ed276057c305c4f108b9bb32c98672fc06912f1cc93ac",
+    "bytes": 831119
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "e906aadc-19a9-4b10-8c80-5bc15869a530",
+  "status": "current",
+  "command": "deliver",
+  "type": "workflow",
+  "input": "C:\\SKILLS-AGP\\docs\\go-errors-and-lifecycle\\flujo-de-trabajo.json",
+  "output": "C:\\SKILLS-AGP\\docs\\go-errors-and-lifecycle\\flujo-de-trabajo.html",
+  "specification": {
+    "sha256": "eb0f96cf61efb1e9c8387e64c1984aefc5c13b2c3e200e8a929aca8c3dd7f255",
+    "bytes": 7236
+  },
+  "artifact": {
+    "sha256": "a84d331ec015874e403d28439bae2eee7a81b0e2c21903eb82d95dd7ef8949e8",
+    "bytes": 835053
+  }
+}

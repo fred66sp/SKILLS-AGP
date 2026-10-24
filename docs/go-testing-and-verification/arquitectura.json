@@ -1,0 +1,193 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "Arquitectura de la skill go-testing-and-verification",
+    "subtitle": "El paquete, las capas de prueba y la puerta: qué demuestra cada nivel, qué ejecuta el script y qué queda escrito en el informe.",
+    "locale": "es",
+    "output": "docs/go-testing-and-verification/arquitectura.html",
+    "quality_profile": "showcase"
+  },
+  "components": [
+    {
+      "id": "persona",
+      "type": "external",
+      "label": "Persona o agente",
+      "sublabel": "pide el cierre",
+      "icon": "person",
+      "pos": [40, 80],
+      "size": [140, 64]
+    },
+    {
+      "id": "skill",
+      "type": "frontend",
+      "label": "SKILL.md",
+      "sublabel": "invariantes y pasos",
+      "pos": [260, 80],
+      "size": [150, 64]
+    },
+    {
+      "id": "capas",
+      "type": "database",
+      "label": "test-layers.md",
+      "sublabel": "tabla · golden · e2e",
+      "tag": "se abre para elegir y escribir",
+      "pos": [500, 80],
+      "size": [150, 64]
+    },
+    {
+      "id": "reporte",
+      "type": "database",
+      "label": "verification-report.md",
+      "sublabel": "formato del cierre",
+      "tag": "se copia al cerrar",
+      "pos": [740, 80],
+      "size": [150, 64]
+    },
+    {
+      "id": "pruebas",
+      "type": "backend",
+      "label": "Pruebas",
+      "sublabel": "unitarias · golden · e2e",
+      "pos": [260, 300],
+      "size": [150, 64]
+    },
+    {
+      "id": "binario",
+      "type": "backend",
+      "label": "Binario",
+      "sublabel": "exec.CommandContext",
+      "pos": [500, 300],
+      "size": [150, 64]
+    },
+    {
+      "id": "script",
+      "type": "security",
+      "label": "verify-go.py",
+      "sublabel": "gofmt · build · test · vet",
+      "tag": "la puerta",
+      "pos": [740, 300],
+      "size": [150, 64]
+    },
+    {
+      "id": "salida",
+      "type": "frontend",
+      "label": "stdout · stderr · exit",
+      "sublabel": "lo que se comprueba",
+      "pos": [980, 300],
+      "size": [150, 64]
+    },
+    {
+      "id": "informe",
+      "type": "frontend",
+      "label": "Informe de cierre",
+      "sublabel": "evidencia o bloqueo",
+      "pos": [740, 500],
+      "size": [150, 64]
+    }
+  ],
+  "boundaries": [
+    {
+      "kind": "region",
+      "label": "Paquete instalado",
+      "wraps": ["skill", "capas", "reporte"]
+    },
+    {
+      "kind": "security-group",
+      "label": "Ejecución y evidencia",
+      "wraps": ["pruebas", "binario", "script", "salida"]
+    }
+  ],
+  "connections": [
+    {
+      "id": "encarga",
+      "from": "persona",
+      "to": "skill",
+      "label": "encarga",
+      "variant": "emphasis"
+    },
+    {
+      "id": "consulta-capas",
+      "from": "skill",
+      "to": "capas",
+      "label": "consulta",
+      "variant": "dashed"
+    },
+    {
+      "id": "copia",
+      "from": "skill",
+      "to": "reporte",
+      "label": "copia",
+      "variant": "dashed"
+    },
+    {
+      "id": "escribe",
+      "from": "skill",
+      "to": "pruebas",
+      "label": "escribe",
+      "variant": "emphasis"
+    },
+    {
+      "id": "ejecuta",
+      "from": "pruebas",
+      "to": "binario",
+      "label": "ejecuta",
+      "variant": "emphasis"
+    },
+    {
+      "id": "mide",
+      "from": "binario",
+      "to": "salida",
+      "label": "captura",
+      "variant": "emphasis"
+    },
+    {
+      "id": "puerta",
+      "from": "script",
+      "to": "pruebas",
+      "label": "ejecuta la puerta",
+      "variant": "emphasis"
+    },
+    {
+      "id": "informa",
+      "from": "script",
+      "to": "informe",
+      "label": "salida real"
+    },
+    {
+      "id": "declara",
+      "from": "salida",
+      "to": "informe",
+      "label": "declara"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "El paquete instalado",
+      "items": [
+        "SKILL.md fija la elección de capa, el procedimiento y el bloque de resultado",
+        "test-layers.md reúne los patrones de tabla, golden, extremo a extremo, cancelación y determinismo",
+        "verification-report.md es el formato del informe; verify-go.py ejecuta la puerta y devuelve texto o JSON"
+      ]
+    },
+    {
+      "dot": "rose",
+      "title": "La puerta no es un adorno",
+      "items": [
+        "gofmt sin salida, build, test y vet son obligatorios; -race se añade con concurrencia y lint solo si el proyecto lo configura",
+        "Cada fallo se corrige por categoría; no se silencia con //nolint sin justificación",
+        "Una comprobación no disponible se declara como tal y no se sustituye por una ejecución equivalente presentada como prueba"
+      ]
+    },
+    {
+      "dot": "emerald",
+      "title": "Lo que la skill no hace",
+      "items": [
+        "No diseña la CLI ni sus códigos de salida: los prueba",
+        "No define la taxonomía de errores ni el estilo del código",
+        "No persigue cobertura, benchmarks ni rendimiento sin un problema medido"
+      ]
+    }
+  ]
+}

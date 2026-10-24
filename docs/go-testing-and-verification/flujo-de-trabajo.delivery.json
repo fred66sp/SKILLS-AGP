@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "4fd0f78b-2795-4a53-8260-bc6e711037b3",
+  "status": "current",
+  "command": "deliver",
+  "type": "workflow",
+  "input": "C:\\SKILLS-AGP\\docs\\go-testing-and-verification\\flujo-de-trabajo.json",
+  "output": "C:\\SKILLS-AGP\\docs\\go-testing-and-verification\\flujo-de-trabajo.html",
+  "specification": {
+    "sha256": "2d3169afec06d9cd26480465fbe03b2e50b39076f2d0f554459a405f635b9011",
+    "bytes": 7087
+  },
+  "artifact": {
+    "sha256": "2076d4c11b75a486293f9d9cea4b16625e4b33d49c63e95836cd517cbb6242ee",
+    "bytes": 834837
+  }
+}

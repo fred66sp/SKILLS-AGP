@@ -128,6 +128,18 @@ La carpeta se registra como origen de skills en `.pi/settings.json` con `"skills
 - `docs/prd-cartographer/index.html` — página principal de la skill `prd-cartographer`.
 - `docs/prd-cartographer/flujo-de-trabajo.html` — diagrama del flujo, del encargo al PRD revisado.
 - `docs/prd-cartographer/arquitectura.html` — diagrama del paquete, la evidencia y la puerta de calidad.
+- `docs/go-cli-ai-first/index.html` — página principal de la skill `go-cli-ai-first`.
+- `docs/go-cli-ai-first/flujo-de-trabajo.html` — diagrama del flujo, del encargo a la CLI verificada.
+- `docs/go-cli-ai-first/arquitectura.html` — diagrama del paquete, la frontera de la CLI y el programa.
+- `docs/go-idiomatic-style/index.html` — página principal de la skill `go-idiomatic-style`.
+- `docs/go-idiomatic-style/flujo-de-trabajo.html` — diagrama del flujo, de la inspección al diff revisado.
+- `docs/go-idiomatic-style/arquitectura.html` — diagrama del paquete, las reglas de estilo y el proyecto.
+- `docs/go-errors-and-lifecycle/index.html` — página principal de la skill `go-errors-and-lifecycle`.
+- `docs/go-errors-and-lifecycle/flujo-de-trabajo.html` — diagrama del flujo, del fallo al cierre verificado.
+- `docs/go-errors-and-lifecycle/arquitectura.html` — diagrama del paquete, la frontera del error y los recursos.
+- `docs/go-testing-and-verification/index.html` — página principal de la skill `go-testing-and-verification`.
+- `docs/go-testing-and-verification/flujo-de-trabajo.html` — diagrama del flujo, del cambio a la evidencia ejecutada.
+- `docs/go-testing-and-verification/arquitectura.html` — diagrama del paquete, las capas de prueba y la puerta.
 - `docs/skill-creator/index.html` — página principal de la skill `skill-creator`.
 - `docs/skill-creator/flujo-de-trabajo.html` — diagrama del flujo, del encargo al directorio validado.
 - `docs/skill-creator/arquitectura.html` — diagrama del paquete, las puertas de validación y el directorio producido.

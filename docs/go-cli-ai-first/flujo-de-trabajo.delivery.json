@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "c157a23c-de06-431e-a9b2-f3431f3b89e6",
+  "status": "current",
+  "command": "deliver",
+  "type": "workflow",
+  "input": "C:\\SKILLS-AGP\\docs\\go-cli-ai-first\\flujo-de-trabajo.json",
+  "output": "C:\\SKILLS-AGP\\docs\\go-cli-ai-first\\flujo-de-trabajo.html",
+  "specification": {
+    "sha256": "1912e9a380bd5cf16a0f9e3457e05f9f990b61dceba99b7a9c41d00b5615a496",
+    "bytes": 7393
+  },
+  "artifact": {
+    "sha256": "215dfc40f2706ea9d03702b03fd2eb9793bf39a23e41a245099be1a19b4aa311",
+    "bytes": 835287
+  }
+}

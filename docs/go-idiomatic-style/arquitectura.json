@@ -1,0 +1,177 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "Arquitectura de la skill go-idiomatic-style",
+    "subtitle": "El paquete, las reglas de estilo y el código que revisa: convención del proyecto, decisiones de diseño y herramientas del lenguaje.",
+    "locale": "es",
+    "output": "docs/go-idiomatic-style/arquitectura.html",
+    "quality_profile": "showcase"
+  },
+  "components": [
+    {
+      "id": "persona",
+      "type": "external",
+      "label": "Persona",
+      "sublabel": "encarga y revisa",
+      "icon": "person",
+      "pos": [40, 80],
+      "size": [140, 64]
+    },
+    {
+      "id": "agente",
+      "type": "external",
+      "label": "Agente anfitrión",
+      "sublabel": "carga la skill",
+      "pos": [260, 80],
+      "size": [150, 64]
+    },
+    {
+      "id": "skill",
+      "type": "frontend",
+      "label": "SKILL.md",
+      "sublabel": "invariantes y pasos",
+      "pos": [500, 80],
+      "size": [150, 64]
+    },
+    {
+      "id": "reglas",
+      "type": "database",
+      "label": "style-rules.md",
+      "sublabel": "tablas de decisión",
+      "tag": "se abre si no es evidente",
+      "pos": [740, 80],
+      "size": [150, 64]
+    },
+    {
+      "id": "proyecto",
+      "type": "database",
+      "label": "Proyecto Go",
+      "sublabel": "go.mod · paquetes · tests",
+      "pos": [260, 300],
+      "size": [150, 64]
+    },
+    {
+      "id": "decisiones",
+      "type": "backend",
+      "label": "Decisiones",
+      "sublabel": "paquetes · nombres · firmas",
+      "pos": [500, 300],
+      "size": [150, 64]
+    },
+    {
+      "id": "codigo",
+      "type": "backend",
+      "label": "Código producido",
+      "sublabel": "funciones · datos · errores",
+      "pos": [740, 300],
+      "size": [150, 64]
+    },
+    {
+      "id": "herramientas",
+      "type": "security",
+      "label": "gofmt · vet · build",
+      "sublabel": "verdad del lenguaje",
+      "tag": "sin discusión",
+      "pos": [980, 300],
+      "size": [150, 64]
+    }
+  ],
+  "boundaries": [
+    {
+      "kind": "region",
+      "label": "Paquete instalado",
+      "wraps": ["skill", "reglas"]
+    },
+    {
+      "kind": "region",
+      "label": "Trabajo sobre el proyecto",
+      "wraps": ["proyecto", "decisiones", "codigo", "herramientas"]
+    }
+  ],
+  "connections": [
+    {
+      "id": "encarga",
+      "from": "persona",
+      "to": "agente",
+      "label": "encarga",
+      "variant": "emphasis"
+    },
+    {
+      "id": "carga",
+      "from": "agente",
+      "to": "skill",
+      "label": "carga",
+      "variant": "emphasis"
+    },
+    {
+      "id": "consulta",
+      "from": "skill",
+      "to": "reglas",
+      "label": "consulta",
+      "variant": "dashed"
+    },
+    {
+      "id": "lee",
+      "from": "skill",
+      "to": "proyecto",
+      "label": "lee",
+      "variant": "emphasis"
+    },
+    {
+      "id": "decide",
+      "from": "proyecto",
+      "to": "decisiones",
+      "label": "convención",
+      "variant": "emphasis"
+    },
+    {
+      "id": "escribe",
+      "from": "decisiones",
+      "to": "codigo",
+      "label": "escribe"
+    },
+    {
+      "id": "comprueba",
+      "from": "codigo",
+      "to": "herramientas",
+      "label": "comprueba",
+      "variant": "emphasis"
+    },
+    {
+      "id": "informa",
+      "from": "herramientas",
+      "to": "agente",
+      "label": "diff y evidencia"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "El paquete instalado",
+      "items": [
+        "SKILL.md fija los invariantes, el procedimiento y el bloque de resultado",
+        "style-rules.md reúne las tablas de formato, nombres, paquetes, estructura, funciones, datos, interfaces y dependencias",
+        "agents/openai.yaml declara el nombre visible y la invocación implícita"
+      ]
+    },
+    {
+      "dot": "rose",
+      "title": "Las decisiones que se ven en el diff",
+      "items": [
+        "La estructura mínima separa dominio, parseo y presentación; las capas se añaden cuando hay una necesidad concreta",
+        "Las interfaces pequeñas viven en el consumidor y los constructores devuelven tipos concretos",
+        "No se añaden dependencias, genéricos, opciones funcionales ni paquetes comodín sin dos usos reales o una frontera que probar"
+      ]
+    },
+    {
+      "dot": "emerald",
+      "title": "Lo que la skill no hace",
+      "items": [
+        "No introduce concurrencia: remite a la skill de errores y ciclo de vida",
+        "No diseña pruebas ni la puerta de verificación",
+        "No migra la estructura del proyecto dentro de un cambio funcional"
+      ]
+    }
+  ]
+}
