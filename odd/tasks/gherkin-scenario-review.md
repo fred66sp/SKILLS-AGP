@@ -23,7 +23,7 @@ S5. Entrega. Verbatim: «SKILL.md + references + script + docs/diagramas … doc
 
 S6. Reglas de empaquetado del repositorio: `name` coincide exactamente con el directorio padre; dentro de `src/<skill>/` no hay `README.md`, `CHANGELOG.md` ni guía de instalación; `references/` a un solo nivel de profundidad; rutas relativas con barras inclinadas; `SKILL.md` por debajo de 500 líneas; `description` en español, tercera persona, con disparadores negativos y de 1.024 caracteres o menos, validada con `.skills/skill-creator/scripts/validate-metadata.py`.
 
-S7. El script determinista vive en `scripts/check-feature.py`, es stdlib-only (sin dependencias ni red), con el formato de casa: docstring con `Uso:`, salida por stdout legible, mensajes de error autoexplicativos por stderr y códigos de salida `0` sin hallazgos, `3` con hallazgos y `2` error de uso o idioma no soportado (L10 fija estos códigos; el enunciado anterior hablaba de `1 o 3` por error de transcripción y queda corregido aquí, no hay código `1`).
+S7. El script determinista vive hoy en `tools/check-feature.py` (nació dentro del paquete como `scripts/check-feature.py` y pasó a la ruta compartida del repositorio con la rama `refactor/shared-gherkin-checker`; las entradas del Log que citan la ruta antigua son evidencia histórica y no se reescriben), es stdlib-only (sin dependencias ni red), con el formato de casa: docstring con `Uso:`, salida por stdout legible, mensajes de error autoexplicativos por stderr y códigos de salida `0` sin hallazgos, `3` con hallazgos y `2` error de uso o idioma no soportado (L10 fija estos códigos; el enunciado anterior hablaba de `1 o 3` por error de transcripción y queda corregido aquí, no hay código `1`).
 
 S8. El script acepta palabras clave en inglés (`Given/When/Then/And/But`) y en español (`Dado/Cuando/Entonces/Y/Pero`), encabezado `# language: es`, `Feature`, `Background`, `Scenario`, `Scenario Outline`/`Esquema del escenario`, `Examples`/`Ejemplos`, etiquetas `@`, comentarios `#` y `*` como paso alternativo.
 
@@ -43,7 +43,7 @@ S13. Dominio de los ejemplos: todo ejemplo de Gherkin que aparezca en la skill (
 |---|---|---|---|
 | T1 | Contrato: `SKILL.md` con clasificación del encargo, flujo con puertas e invariantes | S1, S2, S3, S6 | `feat(gherkin-review): añadir el contrato de revisión de escenarios` |
 | T2 | Referencias de las cuatro reglas: calidad, estructura y orden, clases de equivalencia, lenguaje y punto de vista | S1, S9, S10 | `docs(gherkin-review): añadir las referencias de las cuatro reglas` |
-| T3 | `scripts/check-feature.py` con sus fixtures y su prueba RED → GREEN | S7, S8, S9, S11 | `feat(gherkin-review): añadir el script determinista de comprobación` |
+| T3 | `tools/check-feature.py` (nació como `scripts/check-feature.py`) con sus fixtures y su prueba RED → GREEN | S7, S8, S9, S11 | `feat(gherkin-review): añadir el script determinista de comprobación` |
 | T4 | Referencias por stack (JS/TS, Python, Java, .NET, Go) con detección de stack y verificación de comandos | S4, S11 | `feat(gherkin-review): añadir las referencias por stack` |
 | T5 | Plantillas `assets/`: informe de revisión y checklist de las cuatro reglas | S10 | `feat(gherkin-review): añadir plantilla de informe y checklist` |
 | T6 | `docs/gherkin-scenario-review/`: especificaciones archify, dos diagramas entregados y página principal | S5, S11 | `docs(gherkin-review): añadir página y diagramas de la skill` |
@@ -56,7 +56,7 @@ S13. Dominio de los ejemplos: todo ejemplo de Gherkin que aparezca en la skill (
 |---|---|---|
 | T1 | `0b57657` | `SKILL.md` con el contrato y el documento de tareas |
 | T2 | `bdc5c87` | las cuatro referencias de reglas (389 líneas) |
-| T3 | `68221ef` | `scripts/check-feature.py` y los dos fixtures |
+| T3 | `68221ef` | `tools/check-feature.py`, movido desde `scripts/check-feature.py`, y los dos fixtures |
 | T4 | `06df02f` | seis referencias de stack (355 líneas) y el matiz del paso 7 en el contrato |
 | T5 | `08c2ec1`, `225c99b` | plantilla de informe y checklist; headings del checklist en forma de pregunta |
 | T6 | `d3208c0` | página, dos especificaciones archify, dos HTML entregados y sus recibos |
@@ -66,7 +66,7 @@ S13. Dominio de los ejemplos: todo ejemplo de Gherkin que aparezca en la skill (
 
 ### Límites de rebanada
 
-T1 a T5 son autoría pura y cada uno se mantiene por debajo de las ~400 líneas del repositorio. Excepción declarada: `scripts/check-feature.py` son 674 líneas de una sola responsabilidad determinista (un parser Gherkin bilingüe y once comprobaciones); partirlo rompería el contrato único de `--path`, así que viaja como unidad única, revisable por función (`classify`, `parse`, un `check_*` por código) y con los dos fixtures como evidencia en el mismo commit. T4 puede pasarlas si los cinco `references/` por stack crecen: en ese caso se parte en `T4a` JS/TS + Python + detección y `T4b` Java + .NET + Go, con un commit por mitad. T6 incluye HTML generados por archify, que no cuentan como autoría: lo revisable son los `*.json` y sus recibos.
+T1 a T5 son autoría pura y cada uno se mantiene por debajo de las ~400 líneas del repositorio. Excepción declarada: `tools/check-feature.py`, movido desde `scripts/check-feature.py`, son 674 líneas de una sola responsabilidad determinista (un parser Gherkin bilingüe y once comprobaciones); partirlo rompería el contrato único de `--path`, así que viaja como unidad única, revisable por función (`classify`, `parse`, un `check_*` por código) y con los dos fixtures como evidencia en el mismo commit. T4 puede pasarlas si los cinco `references/` por stack crecen: en ese caso se parte en `T4a` JS/TS + Python + detección y `T4b` Java + .NET + Go, con un commit por mitad. T6 incluye HTML generados por archify, que no cuentan como autoría: lo revisable son los `*.json` y sus recibos.
 
 ## Log
 
@@ -139,3 +139,5 @@ L33 Riesgo declarado de la entrega: `Risk: none` según la lista de Task Size. N
 L34 Cierre de la rama. Diez commits desde `main`: `0b57657` contrato, `68221ef` script y fixtures, `08c2ec1` plantillas, `bdc5c87` referencias de reglas, `d3208c0` página y diagramas, `51639d1` voz del script, `225c99b` checklist en pregunta, `30fe795` `README` y `CHANGELOG`, `06df02f` referencias de stack, `7005688` tabla de evidencia y resultado del assessment. Estado de la verificación: todas las comprobaciones de S11 ejecutadas y con salida registrada; ninguna falló y ninguna se omitió. Riesgo declarado: `Risk: none` (L33). Decisiones pendientes del usuario: integrar la rama en `main` con `--no-ff`, con el `scripts/verify-branch.sh main feature/gherkin-scenario-review` que exige `CONTRIBUTING.md`; borrar o conservar la rama después; y el remoto, que todavía no existe en este repositorio.
 
 L35 Defecto del propio documento de tareas, corregido: al insertar la tabla de evidencia y la entrada L34 usé encabezados de sección como ancla de sustitución y el resultado fueron dos párrafos mal colocados y un fragmento de L24 duplicado al final de L34. Reconstruido el orden (`## Evidencia por tarea` antes de su tabla, L34 al final del Log) y eliminado el duplicado. La comprobación que lo detecta es `grep -n "^## \|^L3[345]\|Calibre de rebanada"` sobre el documento: sin ella el texto habría quedado legible pero incorrecto. Lección para la casa: al editar un documento con anclas cortas, el ancla debe ser el principio de la línea que se va a conservar, no un encabezado que otra edición va a reescribir.
+
+L36 Corrección de una ruta viva detectada al revisar la skill de autoría: S7, la tabla de tareas, la tabla de evidencia y el párrafo de límites de rebanada decían `scripts/check-feature.py` después de que la rama `refactor/shared-gherkin-checker` hubiera movido el fichero a `tools/check-feature.py`. No era histórico: eran las partes del documento que describen el estado actual, así que apuntaban a una ruta que ya no existe en el repositorio. Actualizadas a la ruta vigente con nota de origen, y las entradas del Log (L10, L11, L32) se dejan con la ruta antigua porque registran lo que estaba escrito cuando corrieron esas comprobaciones. La regla que faltaba aplicar: al mover una ruta, el barrido incluye las especificaciones y las tablas de evidencia, no solo el código y la documentación de la skill.

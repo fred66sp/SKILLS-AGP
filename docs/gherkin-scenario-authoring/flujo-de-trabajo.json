@@ -1,0 +1,317 @@
+{
+  "schema_version": 2,
+  "diagram_type": "workflow",
+  "meta": {
+    "title": "Flujo de trabajo de la skill gherkin-scenario-authoring",
+    "subtitle": "Del encargo al archivo escrito: el mapa decide antes de redactar, la CLI compartida mide estructura, orden y longitud, y el veredicto de calidad lo emite otra skill.",
+    "locale": "es",
+    "output": "docs/gherkin-scenario-authoring/flujo-de-trabajo.html",
+    "visual_preset": "signal-flow",
+    "quality_profile": "showcase"
+  },
+  "lanes": [
+    {
+      "id": "encargo",
+      "label": "Encargo y clasificación"
+    },
+    {
+      "id": "mapa",
+      "label": "Descubrir: el mapa decide"
+    },
+    {
+      "id": "paradas",
+      "label": "Paradas y frontera de papeles",
+      "variant": "exception"
+    },
+    {
+      "id": "trazo",
+      "label": "Redactar, comprobar y entregar"
+    }
+  ],
+  "phases": [
+    {
+      "id": "clasificar",
+      "label": "Clasificar",
+      "fromCol": 0,
+      "toCol": 1
+    },
+    {
+      "id": "descubrir",
+      "label": "Descubrir",
+      "fromCol": 2,
+      "toCol": 3,
+      "variant": "emphasis"
+    },
+    {
+      "id": "medir",
+      "label": "Medir con la CLI",
+      "fromCol": 4,
+      "toCol": 4
+    },
+    {
+      "id": "cerrar",
+      "label": "Entregar",
+      "fromCol": 5,
+      "toCol": 5,
+      "variant": "security"
+    }
+  ],
+  "groups": [
+    {
+      "id": "bucle",
+      "label": "Bucle del paso 4",
+      "lane": "trazo",
+      "fromCol": 3,
+      "toCol": 4
+    },
+    {
+      "id": "antes",
+      "label": "Ni borrador ni archivo",
+      "lane": "paradas",
+      "fromCol": 1,
+      "toCol": 2,
+      "variant": "security"
+    }
+  ],
+  "mainPath": [
+    "encargo",
+    "paso1",
+    "paso2",
+    "paso3",
+    "paso4",
+    "paso5"
+  ],
+  "nodes": [
+    {
+      "id": "encargo",
+      "lane": "encargo",
+      "col": 0,
+      "type": "external",
+      "label": "Encargo",
+      "sublabel": "historia, prosa o defecto",
+      "tag": "aún no hay .feature",
+      "icon": "start"
+    },
+    {
+      "id": "paso1",
+      "lane": "encargo",
+      "col": 1,
+      "type": "security",
+      "label": "Paso 1 · clasificar",
+      "sublabel": "descubrir, escribir o ambas",
+      "tag": "invariantes 3 y 10",
+      "icon": "decision"
+    },
+    {
+      "id": "fuera",
+      "lane": "paradas",
+      "col": 1,
+      "type": "external",
+      "label": "FUERA DE ALCANCE",
+      "sublabel": "automatizar, requisitos SHALL",
+      "tag": "se declara, no se escribe",
+      "icon": "stop"
+    },
+    {
+      "id": "paso2",
+      "lane": "mapa",
+      "col": 2,
+      "type": "backend",
+      "label": "Paso 2 · mapa",
+      "sublabel": "regla, ejemplo, pregunta",
+      "tag": "behavior-map-template.md"
+    },
+    {
+      "id": "incompleto",
+      "lane": "paradas",
+      "col": 2,
+      "type": "security",
+      "label": "MAPA INCOMPLETO",
+      "sublabel": "pregunta que cambia el Entonces",
+      "tag": "se entrega el mapa",
+      "icon": "stop"
+    },
+    {
+      "id": "paso3",
+      "lane": "trazo",
+      "col": 3,
+      "type": "backend",
+      "label": "Paso 3 · redactar",
+      "sublabel": "estado MAPA LISTO",
+      "tag": "un dígito, tercera persona"
+    },
+    {
+      "id": "paso4",
+      "lane": "trazo",
+      "col": 4,
+      "type": "frontend",
+      "label": "Paso 4 · comprobar",
+      "sublabel": "tools/check-feature.py",
+      "tag": "exit 0 · 3 · 2"
+    },
+    {
+      "id": "exit2",
+      "lane": "paradas",
+      "col": 4,
+      "type": "security",
+      "label": "Exit 2",
+      "sublabel": "uso o idioma no soportado",
+      "tag": "no se improvisa un parseo",
+      "icon": "stop"
+    },
+    {
+      "id": "paso5",
+      "lane": "trazo",
+      "col": 5,
+      "type": "database",
+      "label": "Paso 5 · entrega",
+      "sublabel": "ruta, mapa, salida, fuera",
+      "tag": "cuatro bloques",
+      "icon": "success"
+    },
+    {
+      "id": "veredicto",
+      "lane": "paradas",
+      "col": 5,
+      "type": "security",
+      "label": "gherkin-scenario-review",
+      "sublabel": "APTO · CON RESERVAS · NO APTO",
+      "tag": "el veredicto no es de aquí",
+      "icon": "decision"
+    }
+  ],
+  "edges": [
+    {
+      "id": "llega",
+      "from": "encargo",
+      "to": "paso1",
+      "label": "qué se pide",
+      "variant": "emphasis",
+      "role": "main"
+    },
+    {
+      "id": "no-escribible",
+      "from": "paso1",
+      "to": "fuera",
+      "label": "pide automatizar o SHALL",
+      "variant": "security",
+      "role": "error"
+    },
+    {
+      "id": "a-mapa",
+      "from": "paso1",
+      "to": "paso2",
+      "label": "es escribible",
+      "variant": "emphasis",
+      "role": "main"
+    },
+    {
+      "id": "bloquea",
+      "from": "paso2",
+      "to": "incompleto",
+      "label": "pregunta bloqueante",
+      "variant": "security",
+      "role": "error"
+    },
+    {
+      "id": "cierra-mapa",
+      "from": "incompleto",
+      "to": "paso2",
+      "label": "la respuesta vuelve al mapa",
+      "variant": "dashed",
+      "role": "return"
+    },
+    {
+      "id": "listo",
+      "from": "paso2",
+      "to": "paso3",
+      "label": "MAPA LISTO",
+      "variant": "emphasis",
+      "role": "main"
+    },
+    {
+      "id": "a-script",
+      "from": "paso3",
+      "to": "paso4",
+      "label": "borrador escrito",
+      "role": "main"
+    },
+    {
+      "id": "mal-uso",
+      "from": "paso4",
+      "to": "exit2",
+      "label": "exit 2",
+      "variant": "security",
+      "role": "error"
+    },
+    {
+      "id": "reinvocar",
+      "from": "exit2",
+      "to": "paso4",
+      "label": "corregir invocación o idioma",
+      "variant": "dashed",
+      "role": "return"
+    },
+    {
+      "id": "retoque",
+      "from": "paso4",
+      "to": "paso3",
+      "label": "exit 3: retocar redacción",
+      "variant": "dashed",
+      "role": "return"
+    },
+    {
+      "id": "vuelve-al-mapa",
+      "from": "paso4",
+      "to": "paso2",
+      "label": "dos iteraciones sin progreso",
+      "variant": "security",
+      "role": "return"
+    },
+    {
+      "id": "puerta",
+      "from": "paso4",
+      "to": "paso5",
+      "label": "exit 0: estructura, orden y longitud",
+      "variant": "emphasis",
+      "role": "main"
+    },
+    {
+      "id": "califica-otra",
+      "from": "paso5",
+      "to": "veredicto",
+      "label": "sin veredicto propio",
+      "variant": "dashed",
+      "role": "branch"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "Lo que acredita el exit 0",
+      "items": [
+        "Tres cosas y solo tres: estructura, orden y longitud, con los umbrales por defecto del comprobador, --max-steps 9 contando Antecedentes y --max-outline-rows 5",
+        "Con exit 0 se entrega el archivo; con exit 3 se entrega el fallo con sus líneas y con el resumen literal del script, reescrito a mano es donde se cuela un cero que no existía",
+        "No acredita legibilidad real, independencia del comportamiento, que el ejemplo sea el que el dominio necesita, ni que el escenario sea automatizable"
+      ]
+    },
+    {
+      "dot": "rose",
+      "title": "Los cinco candidatos",
+      "items": [
+        "low-level-vocab, person-mixed, no-subject-verb, redundant-examples y business-intent-given llegan marcados [C]: son heurística, no violación",
+        "El exit 0 no los exige, pero el paso 4 los resuelve antes de entregar: el juicio es de quien escribe y la revisión lo confirma o lo refuta",
+        "Cuatro códigos deterministas no deberían aparecer nunca porque se evitan al escribir; los otros dos son mecánica del archivo y se corrigen en la línea que señala el script"
+      ]
+    },
+    {
+      "dot": "emerald",
+      "title": "Dónde se detiene el flujo",
+      "items": [
+        "La puerta del paso 1 convierte un encargo de automatización o de requisitos SHALL en FUERA DE ALCANCE: es una decisión de alcance, no un veredicto de calidad",
+        "Mientras quede una pregunta que cambia el Entonces, el estado es MAPA INCOMPLETO y no se redacta ningún escenario: la pregunta se entrega abierta, no se cierra por suposición",
+        "Dos iteraciones sin progreso en el paso 4 vuelven al paso 2 en lugar de retocar palabras, y el veredicto APTO, APTO CON RESERVAS o NO APTO lo emite gherkin-scenario-review"
+      ]
+    }
+  ]
+}

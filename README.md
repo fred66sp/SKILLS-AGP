@@ -37,6 +37,12 @@ Revisa archivos `.feature` ya escritos contra las cuatro reglas de buen Gherkin:
 
 Contrato completo: [`src/gherkin-scenario-review/SKILL.md`](src/gherkin-scenario-review/SKILL.md).
 
+### `gherkin-scenario-authoring`
+
+Descubre comportamientos y escribe archivos `.feature` bajo esas mismas cuatro reglas. Antes del primer escenario produce el mapa de reglas, ejemplos y preguntas abiertas, y no redacta mientras una pregunta pueda cambiar el comportamiento; al terminar no entrega el archivo si `python tools/check-feature.py --path <archivo>` no sale con código 0. Declara el idioma con `# language:` explícito, escribe en tercera persona con frases sujeto-predicado y mantiene los ejemplos en dominio de desarrollo de software. Incluye plantilla de `.feature` —que cumple su propia puerta, sale con 0 hallazgos—, plantilla del mapa con el vocabulario cerrado `MAPA LISTO | MAPA INCOMPLETO`, y tres referencias de descubrimiento, redacción y traspaso. No califica su propio trabajo: el veredicto `APTO`, `APTO CON RESERVAS` o `NO APTO` lo emite `gherkin-scenario-review`, que sigue siendo independiente.
+
+Contrato completo: [`src/gherkin-scenario-authoring/SKILL.md`](src/gherkin-scenario-authoring/SKILL.md).
+
 ## Skills en uso
 
 Skills de terceros fijadas a una versión concreta, para que todas las máquinas trabajen con lo mismo. No son de autoría propia: no se editan aquí, se actualizan sustituyéndolas.
@@ -71,6 +77,9 @@ Documentación: [`docs/skill-creator/index.html`](docs/skill-creator/index.html)
 - `docs/gherkin-scenario-review/index.html` — página principal de la skill `gherkin-scenario-review`.
 - `docs/gherkin-scenario-review/flujo-de-trabajo.html` — diagrama del flujo, del encargo al informe con veredicto cerrado.
 - `docs/gherkin-scenario-review/arquitectura.html` — diagrama del paquete, la frontera con Git y con SDD, y las referencias por stack.
+- `docs/gherkin-scenario-authoring/index.html` — página principal de la skill `gherkin-scenario-authoring`.
+- `docs/gherkin-scenario-authoring/flujo-de-trabajo.html` — diagrama del flujo, del encargo al mapa, a la redacción y a la puerta del comprobador.
+- `docs/gherkin-scenario-authoring/arquitectura.html` — diagrama del paquete con sus cuatro fronteras: la CLI compartida, la revisora, el SDD y el archivo producido.
 
 Los diagramas son artefactos de [archify](https://github.com/tt-a1i/archify) 3.2.0. Cada uno tiene su especificación (`*.json`) y su recibo de entrega (`*.delivery.json`) con el `sha256` del HTML y del spec. Para regenerarlos hace falta archify 3.2.0; el comando es el mismo en las cuatro carpetas, cambiando `<skill>` por `git-flow-management`, `skill-creator`, `document-management-software` o `gherkin-scenario-review`:
 
