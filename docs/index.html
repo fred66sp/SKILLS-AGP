@@ -1,0 +1,1131 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Punto de entrada al catálogo de skills de SKILLS-AGP: qué hace cada skill, cuándo se activa, dónde está su contrato, cómo se usa y cómo se verifica el repositorio. Documentación estática, sin dependencias externas.">
+<meta name="color-scheme" content="light dark">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%230f766e'/%3E%3Crect x='7' y='8' width='18' height='4' rx='2' fill='%23ffffff'/%3E%3Crect x='7' y='14' width='14' height='4' rx='2' fill='%23ffffff' opacity='.85'/%3E%3Crect x='7' y='20' width='10' height='4' rx='2' fill='%23ffffff' opacity='.7'/%3E%3C/svg%3E">
+<title>SKILLS-AGP — catálogo de skills para agentes</title>
+<script>
+(function () {
+  try {
+    var p = JSON.parse(localStorage.getItem("skills-agp:prefs") || "{}");
+    var t = p.theme || (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+    document.documentElement.setAttribute("data-theme", t);
+  } catch (e) { document.documentElement.setAttribute("data-theme", "light"); }
+})();
+</script>
+<style>/* Misma identidad que las páginas de cada skill: verde de verificación
+     (teal) con azul como segundo acento. Donde el color lleva texto se usa la
+     variante oscurecida, que mantiene el contraste AA sobre fondo claro. */
+  :root {--bg: #f8fafc;
+    --bg-elev: #ffffff;
+    --bg-soft: #f1f5f9;
+    --text: #0f172a;
+    --muted: #5f6b80;
+    --border: #e2e8f0;
+    --border-strong: #cbd5e1;
+    --accent: #0f766e;
+    --accent-2: #2563eb;
+    --accent-3: #0891b2;
+    --accent-4: #7c3aed;
+    --accent-soft: rgba(15, 118, 110, .10);
+    --ok: #10b981;
+    --ok-text: #047857;
+    --error-text: #b91c1c;
+    --code-bg: #0a0f1c;
+    --code-text: #e5e7eb;
+    --code-border: #1f2937;
+    --shadow: 0 1px 2px rgba(15, 23, 42, .05), 0 8px 24px -12px rgba(15, 23, 42, .18);
+    --shadow-lg: 0 20px 60px -30px rgba(15, 23, 42, .35);
+    --radius: 16px;
+    --radius-sm: 10px;
+    /* No se descargan tipografías: si Inter o JetBrains Mono no están
+       instaladas, el navegador cae en la pila del sistema. */
+    --font: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    --mono: "JetBrains Mono", ui-monospace, "SF Mono", "Fira Code", Menlo, Consolas, monospace;
+}:root[data-theme="dark"] {--bg: #0a0f1c;
+    --bg-elev: #111827;
+    --bg-soft: #1f2937;
+    --text: #e5e7eb;
+    --muted: #94a3b8;
+    --border: #334155;
+    --border-strong: #475569;
+    --accent: #2dd4bf;
+    --accent-2: #60a5fa;
+    --accent-3: #22d3ee;
+    --accent-4: #a78bfa;
+    --accent-soft: rgba(45, 212, 191, .14);
+    --ok: #34d399;
+    --ok-text: #34d399;
+    --error-text: #f87171;
+    --code-bg: #070b16;
+    --code-text: #e5e7eb;
+    --code-border: #1f2937;
+    --shadow: 0 1px 2px rgba(0, 0, 0, .4), 0 12px 32px -18px rgba(0, 0, 0, .8);
+    --shadow-lg: 0 24px 70px -34px rgba(0, 0, 0, .9);
+}* {box-sizing: border-box;
+}html {scroll-behavior: smooth; scroll-padding-top: 88px;
+}body {margin: 0;
+    font-family: var(--font);
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+}a {color: var(--accent); text-decoration: none;
+}a:hover {text-decoration: underline; text-underline-offset: 3px;
+}a:focus-visible,button:focus-visible {outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 6px;
+}code,pre,kbd {font-family: var(--mono);
+}.skip-link {position: absolute;
+    left: 16px; top: -60px;
+    z-index: 100;
+    padding: 10px 16px;
+    border-radius: var(--radius-sm);
+    background: var(--bg-elev);
+    border: 1px solid var(--accent);
+    color: var(--text);
+    font-weight: 650;
+    font-size: 14px;
+}.skip-link:focus {top: 12px;
+}.topbar {position: sticky;
+    top: 0;
+    z-index: 50;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 12px clamp(16px, 4vw, 40px);
+    background: color-mix(in srgb, var(--bg) 82%, transparent);
+    -webkit-backdrop-filter: saturate(180%) blur(14px);
+    backdrop-filter: saturate(180%) blur(14px);
+    border-bottom: 0;
+}.topbar::after {content: "";
+    position: absolute;
+    left: 0; right: 0; bottom: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #0f766e 0%, #1e40af 20%, #7c3aed 38%, #0284c7 55%, #15803d 70%, #c2410c 85%, #6d28d9 100%);
+    pointer-events: none;
+}.brand {display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--text);
+}.brand:hover {text-decoration: none;
+}.brand-mark {display: block;
+    width: 34px; height: 34px;
+    border-radius: 10px;
+    box-shadow: var(--shadow);
+    overflow: hidden;
+    flex: none;
+}.brand-mark svg {width: 100%; height: 100%; display: block;
+}.brand-name {font-weight: 750; letter-spacing: -.02em; font-size: 15px;
+}.brand-name small {display: block; font-weight: 500; color: var(--muted); font-size: 11px; letter-spacing: .04em; text-transform: uppercase;
+}.topbar-spacer {flex: 1;
+}.topnav {display: none;
+}@media (min-width: 860px){.topnav {display: flex; align-items: center; gap: 2px;
+}.topnav a {padding: 7px 11px;
+      border-radius: 8px;
+      color: var(--muted);
+      font-size: 13.5px;
+      font-weight: 600;
+      white-space: nowrap;
+}.topnav a:hover {color: var(--text); text-decoration: none; background: var(--bg-soft);
+}.topnav a.active {color: var(--accent); background: var(--accent-soft);
+}
+  }.icon-btn {display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    height: 36px;
+    padding: 0 12px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: var(--bg-elev);
+    color: var(--text);
+    font: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: border-color .15s, background .15s, transform .1s;
+}.icon-btn:hover {border-color: var(--border-strong);
+}.icon-btn:active {transform: translateY(1px);
+}.icon-btn svg {width: 16px; height: 16px;
+}.icon-btn.only-icon {width: 36px; padding: 0;
+}:root[data-theme="light"] .icon-sun {display: none;
+}:root[data-theme="dark"] .icon-moon {display: none;
+}.hero {position: relative;
+    overflow: hidden;
+    padding: clamp(44px, 7vw, 86px) clamp(16px, 4vw, 40px) clamp(44px, 6vw, 76px);
+    border-bottom: 1px solid var(--border);
+}.hero::before {content: "";
+    position: absolute;
+    inset: -30% -10% auto -10%;
+    height: 480px;
+    background:
+      radial-gradient(60% 60% at 20% 28%, color-mix(in srgb, var(--accent) 26%, transparent), transparent 70%),
+      radial-gradient(50% 50% at 68% 4%, color-mix(in srgb, var(--accent-2) 22%, transparent), transparent 70%),
+      radial-gradient(42% 42% at 94% 30%, color-mix(in srgb, var(--accent-3) 20%, transparent), transparent 70%),
+      radial-gradient(36% 36% at 58% 74%, color-mix(in srgb, var(--accent-4) 15%, transparent), transparent 70%),
+      radial-gradient(30% 30% at 4% 82%, color-mix(in srgb, #c2410c 12%, transparent), transparent 70%);
+    filter: blur(6px);
+    pointer-events: none;
+}.hero::after {content: "";
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(to right, color-mix(in srgb, var(--border-strong) 45%, transparent) 1px, transparent 1px),
+      linear-gradient(to bottom, color-mix(in srgb, var(--border-strong) 45%, transparent) 1px, transparent 1px);
+    background-size: 56px 56px;
+    -webkit-mask-image: radial-gradient(70% 65% at 50% 20%, #000 0%, transparent 78%);
+    mask-image: radial-gradient(70% 65% at 50% 20%, #000 0%, transparent 78%);
+    opacity: .5;
+    pointer-events: none;
+}.hero-inner {position: relative;
+    z-index: 1;
+    max-width: 1180px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 40px;
+    align-items: center;
+}@media (min-width: 960px){.hero-inner {grid-template-columns: minmax(0, 1.08fr) minmax(0, .92fr); gap: 56px;
+}
+  }.pill {display: inline-flex;
+    align-items: center;
+    flex-wrap: wrap;
+    max-width: 100%;
+    gap: 8px;
+    padding: 5px 12px;
+    border: 1px solid var(--border-strong);
+    border-radius: 999px;
+    background: var(--bg-elev);
+    color: var(--muted);
+    font-size: 12.5px;
+    font-weight: 600;
+    letter-spacing: .01em;
+}.pill .dot {width: 7px; height: 7px; border-radius: 50%; background: var(--ok); box-shadow: 0 0 0 3px color-mix(in srgb, var(--ok) 22%, transparent);
+}.hero h1 {margin: 22px 0 0;
+    font-size: clamp(36px, 5.6vw, 64px);
+    line-height: 1.03;
+    letter-spacing: -.035em;
+    font-weight: 800;
+}.hero h1 .grad {background: linear-gradient(112deg, var(--accent) 0%, var(--accent-2) 52%, var(--accent-4) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}.hero p.lead {margin: 20px 0 0;
+    max-width: 620px;
+    font-size: clamp(15.5px, 2vw, 18.5px);
+    color: var(--muted);
+}.hero-actions {display: flex; flex-wrap: wrap; gap: 12px; margin-top: 28px;
+}.btn {display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 11px 18px;
+    border-radius: var(--radius-sm);
+    font-weight: 650;
+    font-size: 14.5px;
+    border: 1px solid transparent;
+    cursor: pointer;
+    transition: transform .12s, box-shadow .2s, border-color .15s;
+}.btn:hover {text-decoration: none; transform: translateY(-1px);
+}.btn svg {width: 16px; height: 16px;
+}.btn-primary {background: linear-gradient(135deg, var(--accent), var(--accent-2) 55%, var(--accent-4)); color: #fff; box-shadow: var(--shadow);
+}.btn-primary:hover {box-shadow: var(--shadow-lg);
+}.btn-ghost {background: var(--bg-elev); border-color: var(--border-strong); color: var(--text);
+}.hero-feats {display: flex;
+    flex-wrap: wrap;
+    gap: 8px 18px;
+    margin: 26px 0 0;
+    padding: 0;
+    list-style: none;
+    color: var(--muted);
+    font-size: 13px;
+    font-weight: 600;
+}.hero-feats li {display: inline-flex; align-items: center; gap: 7px;
+}.hero-feats svg {width: 14px; height: 14px; color: var(--ok); flex: none;
+}.hero-art {position: relative;
+    display: none;
+    min-height: 372px;
+}@media (min-width: 960px){.hero-art {display: block;
+}
+  }.art-blob {position: absolute;
+    width: 330px; height: 330px;
+    top: 20px; left: 50%;
+    transform: translateX(-46%);
+    border-radius: 50%;
+    background:
+      radial-gradient(circle at 28% 30%, color-mix(in srgb, var(--accent) 46%, transparent), transparent 62%),
+      radial-gradient(circle at 74% 62%, color-mix(in srgb, var(--accent-2) 42%, transparent), transparent 64%),
+      radial-gradient(circle at 58% 84%, color-mix(in srgb, var(--accent-4) 34%, transparent), transparent 60%);
+    filter: blur(26px);
+    opacity: .55;
+}.art-card {position: absolute;
+    width: 214px;
+    padding: 15px 16px 13px;
+    background: linear-gradient(158deg, color-mix(in srgb, var(--skill, var(--accent)) 10%, var(--bg-elev)), var(--bg-elev) 62%);
+    border: 1px solid color-mix(in srgb, var(--skill, var(--accent)) 30%, var(--border));
+    border-radius: 14px;
+    box-shadow: var(--shadow-lg);
+    animation: float 8s ease-in-out infinite alternate;
+}.art-head {display: flex; align-items: center; justify-content: space-between; gap: 8px;
+}.art-ico {display: block;
+    width: 32px; height: 32px;
+    border-radius: 9px;
+    overflow: hidden;
+    box-shadow: 0 5px 14px -6px color-mix(in srgb, var(--skill, var(--accent)) 80%, transparent);
+}.art-ico svg {width: 100%; height: 100%; display: block;
+}.art-kind {font-size: 10px;
+    font-weight: 750;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--muted);
+}.art-card strong {display: block;
+    margin-top: 11px;
+    font-family: var(--mono);
+    font-size: 12.4px;
+    font-weight: 650;
+    letter-spacing: -.01em;
+    overflow-wrap: anywhere;
+}.art-card .art-sub {display: block;
+    margin-top: 4px;
+    color: var(--muted);
+    font-size: 11.5px;
+    line-height: 1.45;
+}.art-foot {display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 11px;
+    padding-top: 9px;
+    border-top: 1px solid var(--border);
+    color: color-mix(in srgb, var(--skill, var(--accent)) 58%, var(--text));
+    font-size: 10.6px;
+    font-weight: 700;
+    letter-spacing: .02em;
+}.art-foot svg {width: 12px; height: 12px;
+}.art-a {top: 6px; left: 2px; transform: rotate(-7deg); z-index: 1;
+}.art-b {top: 46px; right: 0; transform: rotate(6deg); z-index: 2; animation-delay: -2.6s;
+}.art-c {bottom: 4px; left: 56px; width: 234px; transform: rotate(-1.5deg); z-index: 3; animation-delay: -5.2s;
+}@keyframes float {from {translate: 0 0; } to {translate: 0 -10px; }
+}@keyframes rise {from {opacity: 0; transform: translateY(14px); } to {opacity: 1; transform: none; }
+}.hero-copy {animation: rise .6s ease-out both;
+}.hero-art {animation: rise .8s .1s ease-out both;
+}.section-wrap {max-width: 1180px;
+    margin: 0 auto;
+    padding: clamp(36px, 5vw, 64px) clamp(16px, 4vw, 40px) 0;
+}.section {scroll-margin-top: 88px;
+}.section + .section {margin-top: clamp(48px, 6vw, 72px);
+}.section-head {display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; margin-bottom: 8px;
+}.section-num {display: grid; place-items: center;
+    width: 30px; height: 30px;
+    border-radius: 9px;
+    background: color-mix(in srgb, var(--num, var(--accent)) 13%, transparent);
+    color: color-mix(in srgb, var(--num, var(--accent)) 58%, var(--text));
+    font-size: 13px;
+    font-weight: 800;
+    font-variant-numeric: tabular-nums;
+    flex: none;
+}h2.title {margin: 0; font-size: clamp(22px, 3vw, 29px); letter-spacing: -.02em;
+}.section > p.sub {margin: 6px 0 26px; color: var(--muted); max-width: 74ch;
+}.chip-repo {margin-left: auto;
+    flex: none;
+    font-size: 11.5px;
+    font-weight: 700;
+    letter-spacing: .03em;
+    color: var(--muted);
+    border: 1px dashed color-mix(in srgb, var(--muted) 45%, transparent);
+    border-radius: 999px;
+    padding: 3px 10px;
+    white-space: nowrap;
+}.grid {display: grid; gap: 16px;
+}.skills {display: grid;
+    grid-template-columns: 1fr;
+    gap: 16px;
+}@media (min-width: 620px){.skills {grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+  }@media (min-width: 1080px){.skills {grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+  }.skill-card {position: relative;
+    --skill: var(--accent);
+    --skill-ink: color-mix(in srgb, var(--skill) 58%, var(--text));
+    display: flex;
+    flex-direction: column;
+    padding: 18px 18px 15px;
+    background: linear-gradient(166deg, color-mix(in srgb, var(--skill) 8%, var(--bg-elev)) 0%, var(--bg-elev) 46%);
+    border: 1px solid var(--border);
+    border-top: 3px solid color-mix(in srgb, var(--skill) 80%, var(--border));
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    transition: border-color .15s, transform .15s, box-shadow .2s;
+    min-height: 100%;
+}.skill-card:hover {border-color: color-mix(in srgb, var(--skill) 55%, var(--border));
+    border-top-color: var(--skill);
+    transform: translateY(-3px);
+    box-shadow: 0 18px 44px -26px color-mix(in srgb, var(--skill) 60%, transparent), var(--shadow);
+}.skill-card:focus-within {border-color: var(--skill);
+}.skill-top {display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 13px;
+}.card-ico {display: block;
+    width: 38px; height: 38px;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 6px 16px -8px color-mix(in srgb, var(--skill) 85%, transparent);
+    transition: transform .15s;
+    flex: none;
+}.skill-card:hover .card-ico {transform: translateY(-1px);
+}.card-ico svg {width: 100%; height: 100%; display: block;
+}.tag {font-size: 10px;
+    font-weight: 750;
+    letter-spacing: .07em;
+    text-transform: uppercase;
+    color: var(--skill-ink);
+    background: color-mix(in srgb, var(--skill) 8%, transparent);
+    border: 1px solid color-mix(in srgb, var(--skill) 32%, var(--border));
+    border-radius: 999px;
+    padding: 2px 8px;
+    white-space: nowrap;
+}.skill-card h3 {margin: 0;
+    font-family: var(--mono);
+    font-size: 14.2px;
+    font-weight: 750;
+    letter-spacing: -.02em;
+    overflow-wrap: anywhere;
+}.skill-card h3 a {color: var(--text);
+}.skill-card h3 a::after {content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: var(--radius);
+    z-index: 1;
+}.skill-card:hover h3 a {color: var(--skill-ink); text-decoration: none;
+}.tagline {margin: 5px 0 0;
+    color: var(--muted);
+    font-size: 12.2px;
+    font-weight: 650;
+    line-height: 1.45;
+}.skill-card .desc {margin: 8px 0 0;
+    color: var(--muted);
+    font-size: 12.9px;
+    line-height: 1.55;
+    flex: 1;
+}.card-foot {display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    margin-top: 14px;
+    padding-top: 11px;
+    border-top: 1px solid var(--border);
+}.card-foot .meta {color: var(--muted); font-size: 11px; font-weight: 650; letter-spacing: .03em;
+}.card-foot a {position: relative; z-index: 2;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    color: var(--skill-ink);
+    font-size: 12px;
+    font-weight: 700;
+}.card-foot a svg {width: 12px; height: 12px;
+}.card-foot a:hover {text-decoration: none;
+}.guide-feature {position: relative;
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    gap: 20px;
+    align-items: center;
+    margin-top: 20px;
+    padding: 22px 24px;
+    overflow: hidden;
+    border: 1px solid color-mix(in srgb, #b45309 26%, var(--border));
+    border-radius: 18px;
+    background: linear-gradient(120deg, color-mix(in srgb, #b45309 10%, var(--bg-elev)), var(--bg-elev) 52%, color-mix(in srgb, #ea580c 7%, var(--bg-elev)));
+    box-shadow: var(--shadow);
+    color: inherit;
+    text-decoration: none;
+    transition: border-color .15s, transform .15s, box-shadow .2s;
+}.guide-feature::after {content: "";
+    position: absolute;
+    width: 300px; height: 300px;
+    right: -70px; top: -150px;
+    border-radius: 50%;
+    background: radial-gradient(circle, color-mix(in srgb, #f59e0b 24%, transparent), transparent 65%);
+    pointer-events: none;
+}.guide-feature:hover {text-decoration: none; border-color: #b45309; transform: translateY(-2px); box-shadow: var(--shadow-lg);
+}.guide-mark {display: grid; place-items: center;
+    width: 52px; height: 52px;
+    border-radius: 14px;
+    background: linear-gradient(135deg, #b45309, #c2410c);
+    color: #ffffff;
+    box-shadow: 0 8px 22px -12px rgba(180, 83, 9, .9);
+    flex: none;
+    position: relative;
+    z-index: 1;
+}.guide-mark svg {width: 26px; height: 26px;
+}.guide-body {position: relative; z-index: 1; min-width: 0;
+}.guide-eyebrow {display: block;
+    font-size: 10.5px;
+    font-weight: 750;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: color-mix(in srgb, #b45309 58%, var(--text));
+}.guide-body h3 {margin: 5px 0 0; font-size: clamp(17px, 2.2vw, 21px); letter-spacing: -.02em;
+}.guide-body p {margin: 5px 0 0; color: var(--muted); font-size: 13.6px; max-width: 72ch;
+}.guide-tags {display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px;
+}.guide-tags span {font-size: 10.5px;
+    font-weight: 700;
+    letter-spacing: .03em;
+    color: color-mix(in srgb, #b45309 58%, var(--text));
+    border: 1px solid color-mix(in srgb, #b45309 24%, var(--border));
+    background: color-mix(in srgb, #b45309 7%, transparent);
+    border-radius: 999px;
+    padding: 2px 8px;
+}.guide-cta {position: relative; z-index: 1;
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    color: color-mix(in srgb, #b45309 58%, var(--text));
+    font-size: 13.5px;
+    font-weight: 700;
+    white-space: nowrap;
+}.guide-cta svg {width: 14px; height: 14px; transition: transform .15s;
+}.guide-feature:hover .guide-cta svg {transform: translateX(3px);
+}@media (max-width: 760px){.guide-feature {grid-template-columns: auto minmax(0, 1fr); align-items: start;
+}.guide-cta {grid-column: 1 / -1; justify-self: start; margin-left: 72px;
+}
+  }@media (max-width: 480px){.guide-mark {width: 44px; height: 44px;
+}.guide-cta {margin-left: 0;
+}
+  }.steps {display: grid;
+    grid-template-columns: 1fr;
+    gap: 14px;
+}@media (min-width: 720px){.steps {grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+  }@media (min-width: 1080px){.steps {grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+  }.step {position: relative;
+    --step: var(--accent);
+    padding: 18px;
+    border: 1px solid var(--border);
+    border-top: 2px solid color-mix(in srgb, var(--step) 60%, var(--border));
+    border-radius: var(--radius-sm);
+    background: linear-gradient(168deg, color-mix(in srgb, var(--step) 6%, var(--bg-elev)), var(--bg-elev) 55%);
+}.step:nth-child(2) {--step: #2563eb;
+}.step:nth-child(3) {--step: #7c3aed;
+}.step:nth-child(4) {--step: #c2410c;
+}.step .step-num {font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 750;
+    letter-spacing: .1em;
+    color: color-mix(in srgb, var(--step) 58%, var(--text));
+}.step strong {display: block;
+    margin-top: 8px;
+    font-size: 14.5px;
+    letter-spacing: -.01em;
+}.step p {margin: 5px 0 0; color: var(--muted); font-size: 13px; line-height: 1.55;
+}.note {display: flex;
+    gap: 12px;
+    padding: 14px 16px;
+    border-left: 2px solid var(--accent);
+    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+    background: var(--accent-soft);
+    font-size: 13.6px;
+    margin: 20px 0 0;
+}.note strong {color: var(--text);
+}.note p {margin: 0;
+}.struct {display: grid;
+    grid-template-columns: 1fr;
+    gap: 12px;
+}@media (min-width: 620px){.struct {grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+  }@media (min-width: 1080px){.struct {grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+  }.struct-item {--path: var(--accent);
+    padding: 15px 16px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    background: var(--bg-elev);
+}.struct-item:nth-child(2) {--path: #1e40af;
+}.struct-item:nth-child(3) {--path: #7c3aed;
+}.struct-item:nth-child(4) {--path: #0284c7;
+}.struct-item:nth-child(5) {--path: #15803d;
+}.struct-item:nth-child(6) {--path: #c2410c;
+}.struct-item .path {display: inline-block;
+    font-family: var(--mono);
+    font-size: 12.4px;
+    font-weight: 700;
+    color: color-mix(in srgb, var(--path) 58%, var(--text));
+    background: color-mix(in srgb, var(--path) 8%, var(--bg-soft));
+    border: 1px solid color-mix(in srgb, var(--path) 28%, var(--border));
+    border-radius: 6px;
+    padding: 2px 7px;
+    overflow-wrap: anywhere;
+}.struct-item p {margin: 9px 0 0; color: var(--muted); font-size: 13px; line-height: 1.5;
+}.verify {margin-top: clamp(52px, 7vw, 84px);
+    border-radius: 20px;
+    background:
+      radial-gradient(70% 90% at 8% 0%, rgba(20, 184, 166, .16), transparent 60%),
+      radial-gradient(60% 80% at 96% 100%, rgba(37, 99, 235, .18), transparent 62%),
+      radial-gradient(50% 70% at 88% 4%, rgba(124, 58, 237, .18), transparent 60%),
+      var(--code-bg);
+    color: #e5e7eb;
+    border: 1px solid #1f2937;
+    box-shadow: var(--shadow-lg);
+    padding: clamp(24px, 3.6vw, 38px);
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 26px;
+    scroll-margin-top: 88px;
+}@media (min-width: 900px){.verify {grid-template-columns: minmax(0, .92fr) minmax(0, 1.08fr); gap: 40px; align-items: center;
+}
+  }.verify .eyebrow {display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 11px;
+    font-weight: 750;
+    letter-spacing: .11em;
+    text-transform: uppercase;
+    color: #5eead4;
+}.verify .eyebrow .dot {width: 6px; height: 6px; border-radius: 50%; background: #34d399; box-shadow: 0 0 0 3px rgba(52, 211, 153, .18);
+}.verify h2 {margin: 12px 0 0;
+    font-size: clamp(22px, 3vw, 28px);
+    letter-spacing: -.02em;
+    line-height: 1.2;
+    color: #f8fafc;
+}.verify p {margin: 10px 0 0; color: #94a3b8; font-size: 14px;
+}.verify ul {margin: 16px 0 0; padding: 0; list-style: none; display: grid; gap: 7px;
+}.verify li {display: flex; align-items: flex-start; gap: 8px; color: #cbd5e1; font-size: 13.3px;
+}.verify li svg {width: 13px; height: 13px; color: #34d399; flex: none; margin-top: 3px;
+}.verify-links {display: flex; flex-wrap: wrap; gap: 10px; margin-top: 20px;
+}.verify .btn-ghost {background: rgba(255, 255, 255, .04); border-color: #334155; color: #f1f5f9;
+}.verify .btn-ghost:hover {border-color: #64748b;
+}.code {position: relative; margin: 0; min-width: 0;
+}.code pre {margin: 0;
+    padding: 18px 52px 18px 18px;
+    background: color-mix(in srgb, var(--code-bg) 55%, #ffffff 5%);
+    color: var(--code-text);
+    border: 1px solid #1f2937;
+    border-radius: var(--radius);
+    overflow-x: auto;
+    font-size: 12.9px;
+    line-height: 1.72;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, .03);
+}.code pre code {background: none; padding: 0; color: inherit; font-size: inherit;
+}.code .cmd {color: #5eead4;
+}.code .comment {color: #64748b;
+}.code .copy {position: absolute;
+    top: 9px; right: 9px;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    height: 30px;
+    padding: 0 9px;
+    border: 1px solid #1f2937;
+    border-radius: 8px;
+    background: #111827;
+    color: #c8d2e8;
+    font: inherit;
+    font-size: 11.5px;
+    font-weight: 600;
+    cursor: pointer;
+    opacity: 0;
+    transition: opacity .15s, border-color .15s;
+}.code:hover .copy,.code .copy:focus-visible {opacity: 1;
+}.code .copy:hover {border-color: #3b4c72;
+}@media (hover: none){.code .copy {opacity: 1;
+} }.code .copy.copied {color: #34d399; border-color: #34d399;
+}.code .copy svg {width: 13px; height: 13px;
+}.footer {border-top: 1px solid var(--border);
+    margin-top: clamp(56px, 8vw, 96px);
+}.footer-inner {max-width: 1180px;
+    margin: 0 auto;
+    padding: 30px clamp(16px, 4vw, 40px) 34px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 18px 28px;
+    align-items: center;
+    justify-content: space-between;
+}.footer .brand-name small {text-transform: none; letter-spacing: .02em;
+}.footer-nav {display: flex; flex-wrap: wrap; gap: 8px 18px; font-size: 13px; font-weight: 650;
+}.footer-nav a {color: var(--muted);
+}.footer-nav a:hover {color: var(--accent);
+}.footer-note {width: 100%;
+    color: var(--muted);
+    font-size: 12.5px;
+    border-top: 1px solid var(--border);
+    padding-top: 16px;
+}.footer-note code {background: var(--bg-soft); border: 1px solid var(--border); border-radius: 6px; padding: 1px 6px;
+}::selection {background: color-mix(in srgb, var(--accent) 30%, transparent);
+}@media (prefers-reduced-motion: reduce){* {scroll-behavior: auto !important; transition: none !important; animation: none !important;
+}
+  }</style>
+</head>
+<body>
+
+<a class="skip-link" href="#catalogo">Saltar al catálogo</a>
+
+<header class="topbar">
+  <a class="brand" href="#top">
+    <span class="brand-mark" aria-hidden="true">
+      <svg viewBox="0 0 32 32" role="presentation">
+        <defs>
+          <linearGradient id="brand-grad" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="#14b8a6"></stop>
+            <stop offset="1" stop-color="#2563eb"></stop>
+          </linearGradient>
+        </defs>
+        <rect width="32" height="32" fill="url(#brand-grad)"></rect>
+        <rect x="7" y="8" width="18" height="4" rx="2" fill="#ffffff"></rect>
+        <rect x="7" y="14" width="14" height="4" rx="2" fill="#ffffff" opacity=".85"></rect>
+        <rect x="7" y="20" width="10" height="4" rx="2" fill="#ffffff" opacity=".7"></rect>
+      </svg>
+    </span>
+    <span class="brand-name">SKILLS-AGP<small>catálogo de skills</small></span>
+  </a>
+  <span class="topbar-spacer"></span>
+  <nav class="topnav" aria-label="Secciones de la página">
+    <a href="#catalogo">Catálogo</a>
+    <a href="#uso">Uso</a>
+    <a href="#estructura">Estructura</a>
+    <a href="#verificacion">Verificación</a>
+  </nav>
+  <a class="icon-btn only-icon" href="https://github.com/fred66sp/SKILLS-AGP" aria-label="Repositorio en GitHub" title="Repositorio en GitHub">
+    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 .5C5.7.5.5 5.7.5 12c0 5.1 3.3 9.4 7.9 10.9.6.1.8-.3.8-.6v-2c-3.2.7-3.9-1.4-3.9-1.4-.5-1.3-1.3-1.7-1.3-1.7-1.1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.7 1.3 3.4 1 .1-.8.4-1.3.8-1.6-2.6-.3-5.3-1.3-5.3-5.8 0-1.3.5-2.3 1.2-3.1-.1-.3-.5-1.5.1-3.1 0 0 1-.3 3.2 1.2a11 11 0 0 1 5.8 0c2.2-1.5 3.2-1.2 3.2-1.2.6 1.6.2 2.8.1 3.1.8.8 1.2 1.8 1.2 3.1 0 4.5-2.7 5.5-5.3 5.8.4.4.8 1.1.8 2.2v3.2c0 .3.2.7.8.6 4.6-1.5 7.9-5.8 7.9-10.9C23.5 5.7 18.3.5 12 .5z"></path></svg>
+  </a>
+  <button class="icon-btn" id="theme-toggle" type="button" aria-label="Cambiar a tema oscuro">
+    <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"></path></svg>
+    <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"></path></svg>
+    <span>Tema</span>
+  </button>
+</header>
+
+<section class="hero" id="top">
+  <div class="hero-inner">
+    <div class="hero-copy">
+      <span class="pill"><span class="dot" aria-hidden="true"></span>punto de entrada · skills que se leen como contratos</span>
+      <h1>El catálogo de skills, <span class="grad">de un vistazo</span></h1>
+      <p class="lead">Cada skill de este repositorio es un contrato: instrucciones verificables, referencias que se cargan solo cuando hacen falta y evidencia obligatoria antes de declarar algo terminado. Aquí están todas, con su página, su contrato y su procedencia.</p>
+      <div class="hero-actions">
+        <a class="btn btn-primary" href="#catalogo">Explorar el catálogo
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 5l7 7-7 7"></path></svg>
+        </a>
+        <a class="btn btn-ghost" href="#uso">Cómo se usa una skill</a>
+      </div>
+      <ul class="hero-feats">
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"></path></svg>Contratos verificables</li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"></path></svg>Referencias justo a tiempo</li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"></path></svg>Evidencia antes de cerrar</li>
+      </ul>
+    </div>
+
+    <div class="hero-art" aria-hidden="true">
+      <div class="art-blob"></div>
+      <div class="art-card art-a" style="--skill: #0f766e">
+        <div class="art-head">
+          <span class="art-ico"><svg viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="8" fill="#0f766e"/><path d="M12 9a3 3 0 1 0 0 .01M12 12v11" fill="none" stroke="#ffffff" stroke-width="2.4" stroke-linecap="round"/><circle cx="21" cy="9" r="3" fill="none" stroke="#ffffff" stroke-width="2.4"/><path d="M21 12v3a4 4 0 0 1-4 4h-5" fill="none" stroke="#ffffff" stroke-width="2.4" stroke-linecap="round"/></svg></span>
+          <span class="art-kind">skill</span>
+        </div>
+        <strong>git-flow-management</strong>
+        <span class="art-sub">Git con ceremonia proporcional</span>
+        <div class="art-foot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"></path></svg>contrato + verificación</div>
+      </div>
+      <div class="art-card art-b" style="--skill: #1e40af">
+        <div class="art-head">
+          <span class="art-ico"><svg viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="8" fill="#1e40af"/><path d="M11 7h7l4 4v14H11z" fill="none" stroke="#ffffff" stroke-width="2.2" stroke-linejoin="round"/><path d="M18 7v4h4" fill="none" stroke="#ffffff" stroke-width="2.2" stroke-linejoin="round"/><path d="M14 17h6M14 21h4" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round"/></svg></span>
+          <span class="art-kind">skill</span>
+        </div>
+        <strong>document-management-software</strong>
+        <span class="art-sub">Documentación con fuente de verdad</span>
+        <div class="art-foot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"></path></svg>inventario + auditoría</div>
+      </div>
+      <div class="art-card art-c" style="--skill: #15803d">
+        <div class="art-head">
+          <span class="art-ico"><svg viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="8" fill="#15803d"/><path d="M9 17l4 4 10-11" fill="none" stroke="#ffffff" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+          <span class="art-kind">go-testing</span>
+        </div>
+        <strong>go-testing-and-verification</strong>
+        <span class="art-sub">Cerrar con evidencia ejecutada</span>
+        <div class="art-foot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"></path></svg>gofmt · build · test · vet · race · lint</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<main class="section-wrap" id="main">
+
+  <section class="section" id="catalogo">
+    <div class="section-head"><span class="section-num" style="--num:#0f766e">1</span><h2 class="title">Las skills</h2><span class="chip-repo">8 skills · 7 propias · 1 fijada</span></div>
+    <p class="sub">Siete skills de autoría propia y una de terceros fijada a una revisión. Cada tarjeta abre su página; el enlace <strong>Contrato</strong> lleva al <code>SKILL.md</code>, que es la fuente de verdad.</p>
+
+    <div class="skills">
+      <article class="skill-card" style="--skill: #0f766e">
+        <div class="skill-top">
+          <span class="card-ico"><svg viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="8" fill="#0f766e"/><path d="M12 9a3 3 0 1 0 0 .01M12 12v11" fill="none" stroke="#ffffff" stroke-width="2.4" stroke-linecap="round"/><circle cx="21" cy="9" r="3" fill="none" stroke="#ffffff" stroke-width="2.4"/><path d="M21 12v3a4 4 0 0 1-4 4h-5" fill="none" stroke="#ffffff" stroke-width="2.4" stroke-linecap="round"/></svg></span>
+          <span class="tag">Git</span>
+        </div>
+        <h3><a href="git-flow-management/index.html">git-flow-management</a></h3>
+        <p class="tagline">Git con ceremonia proporcional y verificable</p>
+        <p class="desc">Clasifica cada operación por tamaño y riesgo, inspecciona antes de tocar nada y deja el cambio preparado con su mensaje. No ejecuta un commit, un push ni un borrado sin confirmación.</p>
+        <div class="card-foot">
+          <span class="meta">propia</span>
+          <a href="../src/git-flow-management/SKILL.md">Contrato
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 5l7 7-7 7"></path></svg>
+          </a>
+        </div>
+      </article>
+
+      <article class="skill-card" style="--skill: #1e40af">
+        <div class="skill-top">
+          <span class="card-ico"><svg viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="8" fill="#1e40af"/><path d="M11 7h7l4 4v14H11z" fill="none" stroke="#ffffff" stroke-width="2.2" stroke-linejoin="round"/><path d="M18 7v4h4" fill="none" stroke="#ffffff" stroke-width="2.2" stroke-linejoin="round"/><path d="M14 17h6M14 21h4" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round"/></svg></span>
+          <span class="tag">Documentación</span>
+        </div>
+        <h3><a href="document-management-software/index.html">document-management-software</a></h3>
+        <p class="tagline">Documentación con fuente de verdad</p>
+        <p class="desc">Inventaría lo que existe, decide la intervención mínima y clasifica la certeza de cada afirmación. Su script detecta enlaces rotos, documentos vacíos y referencias que caducan.</p>
+        <div class="card-foot">
+          <span class="meta">propia</span>
+          <a href="../src/document-management-software/SKILL.md">Contrato
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 5l7 7-7 7"></path></svg>
+          </a>
+        </div>
+      </article>
+
+      <article class="skill-card" style="--skill: #1e40af">
+        <div class="skill-top">
+          <span class="card-ico"><svg viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="8" fill="#1e40af"/><circle cx="16" cy="16" r="8" fill="none" stroke="#ffffff" stroke-width="2.2"/><path d="m19.8 12.2-2.3 5.3-5.3 2.3 2.3-5.3z" fill="#ffffff"/></svg></span>
+          <span class="tag">Producto</span>
+        </div>
+        <h3><a href="prd-cartographer/index.html">prd-cartographer</a></h3>
+        <p class="tagline">PRD verificable y trazable</p>
+        <p class="desc">Convierte una idea o una investigación en un PRD que separa hecho, decisión, inferencia, hipótesis y desconocido, con métricas medibles y criterios de aceptación observables.</p>
+        <div class="card-foot">
+          <span class="meta">propia</span>
+          <a href="../src/prd-cartographer/SKILL.md">Contrato
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 5l7 7-7 7"></path></svg>
+          </a>
+        </div>
+      </article>
+
+      <article class="skill-card" style="--skill: #0284c7">
+        <div class="skill-top">
+          <span class="card-ico"><svg viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="8" fill="#0284c7"/><path d="M8 10l4 3-4 3" fill="none" stroke="#ffffff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><path d="M16 19h8" fill="none" stroke="#ffffff" stroke-width="2.4" stroke-linecap="round"/></svg></span>
+          <span class="tag">Go</span>
+        </div>
+        <h3><a href="go-cli-ai-first/index.html">go-cli-ai-first</a></h3>
+        <p class="tagline">CLIs que un agente puede operar</p>
+        <p class="desc">Fija el contrato antes de implementar: stdout para el resultado, stderr para el diagnóstico, JSON estable, códigos de salida acotados y confirmación para lo destructivo.</p>
+        <div class="card-foot">
+          <span class="meta">propia</span>
+          <a href="../src/go-cli-ai-first/SKILL.md">Contrato
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 5l7 7-7 7"></path></svg>
+          </a>
+        </div>
+      </article>
+
+      <article class="skill-card" style="--skill: #7c3aed">
+        <div class="skill-top">
+          <span class="card-ico"><svg viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="8" fill="#7c3aed"/><path d="M12 10l-4 6 4 6M20 10l4 6-4 6" fill="none" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+          <span class="tag">Go</span>
+        </div>
+        <h3><a href="go-idiomatic-style/index.html">go-idiomatic-style</a></h3>
+        <p class="tagline">Go legible, mínimo y mantenible</p>
+        <p class="desc">La solución más simple que conserva claridad y capacidad de evolución: gofmt, nombres y paquetes claros, errores primero e interfaces pequeñas definidas por quien las consume.</p>
+        <div class="card-foot">
+          <span class="meta">propia</span>
+          <a href="../src/go-idiomatic-style/SKILL.md">Contrato
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 5l7 7-7 7"></path></svg>
+          </a>
+        </div>
+      </article>
+
+      <article class="skill-card" style="--skill: #c2410c">
+        <div class="skill-top">
+          <span class="card-ico"><svg viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="8" fill="#c2410c"/><path d="M16 7l8 17H8z" fill="none" stroke="#ffffff" stroke-width="2.2" stroke-linejoin="round"/><path d="M16 14v4" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round"/><circle cx="16" cy="21" r="1.2" fill="#ffffff"/></svg></span>
+          <span class="tag">Go</span>
+        </div>
+        <h3><a href="go-errors-and-lifecycle/index.html">go-errors-and-lifecycle</a></h3>
+        <p class="tagline">Errores como contrato y cierre ordenado</p>
+        <p class="desc">Clasifica y envuelve los errores, los inspecciona con <code>errors.Is</code> y <code>errors.As</code> y los traduce a códigos en una sola frontera. Separa cancelación, timeout y fallo interno.</p>
+        <div class="card-foot">
+          <span class="meta">propia</span>
+          <a href="../src/go-errors-and-lifecycle/SKILL.md">Contrato
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 5l7 7-7 7"></path></svg>
+          </a>
+        </div>
+      </article>
+
+      <article class="skill-card" style="--skill: #15803d">
+        <div class="skill-top">
+          <span class="card-ico"><svg viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="8" fill="#15803d"/><path d="M9 17l4 4 10-11" fill="none" stroke="#ffffff" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+          <span class="tag">Go</span>
+        </div>
+        <h3><a href="go-testing-and-verification/index.html">go-testing-and-verification</a></h3>
+        <p class="tagline">Cerrar con evidencia ejecutada</p>
+        <p class="desc">Pruebas de tabla y golden files, extremo a extremo del binario y casos de error, <code>--dry-run</code>, <code>--yes</code> y cancelación. La puerta ejecuta gofmt, build, test, vet, race y lint.</p>
+        <div class="card-foot">
+          <span class="meta">propia</span>
+          <a href="../src/go-testing-and-verification/SKILL.md">Contrato
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 5l7 7-7 7"></path></svg>
+          </a>
+        </div>
+      </article>
+
+      <article class="skill-card" style="--skill: #6d28d9">
+        <div class="skill-top">
+          <span class="card-ico"><svg viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="8" fill="#6d28d9"/><path d="M18.2 8.4l5.4 5.4-9.1 9.1-5.4-5.4z" fill="none" stroke="#ffffff" stroke-width="2" stroke-linejoin="round"/><path d="M8.6 23.4l-.9 1.9 1.9-.9" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+          <span class="tag">Meta</span>
+        </div>
+        <h3><a href="skill-creator/index.html">skill-creator</a></h3>
+        <p class="tagline">Skills que se descubren y se ejecutan</p>
+        <p class="desc">Procedimiento para crear skills nuevas con la especificación agentskills.io: estructura, redacción procedimental, metadatos para que se descubran y un validador.</p>
+        <div class="card-foot">
+          <span class="meta">terceros · fijada</span>
+          <a href="../.skills/skill-creator/SKILL.md">Contrato
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 5l7 7-7 7"></path></svg>
+          </a>
+        </div>
+      </article>
+    </div>
+
+    <a class="guide-feature" href="best-practices-create-skills/index.html">
+      <span class="guide-mark" aria-hidden="true">
+        <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round">
+          <path d="M9 6h10a2 2 0 0 1 2 2v18l-7-4-7 4V8a2 2 0 0 1 2-2z"></path>
+        </svg>
+      </span>
+      <div class="guide-body">
+        <span class="guide-eyebrow">Guía del repositorio</span>
+        <h3>Buenas prácticas para crear skills de agente</h3>
+        <p>El método completo para escribir una skill descubrible y mantenible: frontmatter, divulgación progresiva, instrucciones procedimentales, scripts deterministas y validación con LLM.</p>
+        <div class="guide-tags"><span>Frontmatter</span><span>Divulgación progresiva</span><span>Validación con LLM</span></div>
+      </div>
+      <span class="guide-cta">Leer la guía
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 5l7 7-7 7"></path></svg>
+      </span>
+    </a>
+
+    <div class="note">
+      <p><strong>El repositorio manda.</strong> Si esta página y un contrato difieren, el contrato del <code>SKILL.md</code> es la fuente de verdad. El índice del repositorio, en el <a href="../README.md">README</a>; la guía de autoría está justo arriba.</p>
+    </div>
+  </section>
+
+  <section class="section" id="uso">
+    <div class="section-head"><span class="section-num" style="--num:#2563eb">2</span><h2 class="title">Cómo se usa una skill</h2></div>
+    <p class="sub">El paquete está diseñado para divulgación progresiva: el agente lee el contrato entero y abre solo la referencia que la operación concreta pide. Nada se da por terminado sin la evidencia que el propio contrato exige.</p>
+
+    <div class="steps">
+      <div class="step">
+        <span class="step-num">01 · CONTRATO</span>
+        <strong>Lee el SKILL.md hasta el final</strong>
+        <p>Es el procedimiento completo y la fuente de verdad. Define el alcance, los límites y cuándo la tarea está terminada.</p>
+      </div>
+      <div class="step">
+        <span class="step-num">02 · REFERENCIAS</span>
+        <strong>Abre solo lo que la operación pide</strong>
+        <p>Cada referencia declara en su primera línea cuándo aplica. Se carga justo a tiempo, no por costumbre.</p>
+      </div>
+      <div class="step">
+        <span class="step-num">03 · SCRIPTS</span>
+        <strong>Ejecuta, no reescribas</strong>
+        <p>Las comprobaciones deterministas viven en <code>scripts/</code>. Ejecutarlas evita repetir a mano la misma lógica.</p>
+      </div>
+      <div class="step">
+        <span class="step-num">04 · EVIDENCIA</span>
+        <strong>Demuestra antes de cerrar</strong>
+        <p>La puerta de verificación se ejecuta. Lo que no se puede probar con comandos se declara no verificado.</p>
+      </div>
+    </div>
+
+    <div class="note">
+      <p><strong>Divulgación progresiva, no resumen.</strong> Las páginas de este catálogo explican qué hace cada skill y cuándo se activa, pero no copian sus reglas. La copia se desincronizaría; el contrato, no.</p>
+    </div>
+  </section>
+
+  <section class="section" id="estructura">
+    <div class="section-head"><span class="section-num" style="--num:#7c3aed">3</span><h2 class="title">Cómo se organiza</h2></div>
+    <p class="sub">Una responsabilidad por carpeta: los paquetes ejecutables en <code>src/</code>, la documentación en <code>docs/</code>, los enrutadores en <code>.skills/</code> y la validación en <code>scripts/</code>.</p>
+
+    <div class="struct">
+      <div class="struct-item">
+        <span class="path">src/&lt;skill&gt;/</span>
+        <p>El paquete canónico: <code>SKILL.md</code>, <code>references/</code>, <code>assets/</code> y <code>scripts/</code>. Solo lo que el agente necesita para ejecutar la skill.</p>
+      </div>
+      <div class="struct-item">
+        <span class="path">docs/</span>
+        <p>Este catálogo y una página por skill, con sus diagramas de flujo y arquitectura y su recibo de entrega.</p>
+      </div>
+      <div class="struct-item">
+        <span class="path">.skills/</span>
+        <p>Skills de terceros fijadas y enrutadores mínimos que hacen descubribles las skills propias sin duplicar su contenido.</p>
+      </div>
+      <div class="struct-item">
+        <span class="path">scripts/</span>
+        <p>Validación local de estructura, metadatos, rutas, recibos y sintaxis, con sus propias pruebas.</p>
+      </div>
+      <div class="struct-item">
+        <span class="path">.github/workflows/</span>
+        <p>CI que ejecuta la misma validación y las mismas suites en cada push y pull request.</p>
+      </div>
+      <div class="struct-item">
+        <span class="path">README.md · CONTRIBUTING.md</span>
+        <p>Índice del repositorio y política de ramas, commits e integración. El detalle operativo no se duplica aquí.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="verificacion">
+    <div class="verify">
+      <div>
+        <span class="eyebrow"><span class="dot" aria-hidden="true"></span>la puerta</span>
+        <h2>Nada se cierra sin evidencia</h2>
+        <p>La misma comprobación que ejecuta la CI se ejecuta en local. Un fallo señala qué script falló, no un resultado global sin contexto.</p>
+        <ul>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"></path></svg>Metadatos, estructura y enrutadores</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"></path></svg>Enlaces internos que resuelven</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"></path></svg>Recibos de los diagramas: sha256 y bytes</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"></path></svg>Sintaxis de los scripts</li>
+        </ul>
+        <div class="verify-links">
+          <a class="btn btn-ghost" href="../scripts/check-repo.py">Abrir el validador</a>
+          <a class="btn btn-ghost" href="../.github/workflows/validate.yml">Ver la CI</a>
+        </div>
+      </div>
+      <div class="code">
+        <pre><code><span class="comment"># la misma puerta en local y en CI</span>
+<span class="cmd">python</span> scripts/check-repo.py
+<span class="cmd">python</span> scripts/test-check-repo.py
+<span class="cmd">python</span> src/document-management-software/scripts/test-doc-inventory.py
+<span class="cmd">python</span> src/go-testing-and-verification/scripts/test-verify-go.py</code></pre>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="footer">
+  <div class="footer-inner">
+    <a class="brand" href="#top">
+      <span class="brand-mark" aria-hidden="true">
+        <svg viewBox="0 0 32 32" role="presentation">
+          <rect width="32" height="32" fill="#0f766e"></rect>
+          <rect x="7" y="8" width="18" height="4" rx="2" fill="#ffffff"></rect>
+          <rect x="7" y="14" width="14" height="4" rx="2" fill="#ffffff" opacity=".85"></rect>
+          <rect x="7" y="20" width="10" height="4" rx="2" fill="#ffffff" opacity=".7"></rect>
+        </svg>
+      </span>
+      <span class="brand-name">SKILLS-AGP<small>punto de entrada y catálogo</small></span>
+    </a>
+    <nav class="footer-nav" aria-label="Enlaces del repositorio">
+      <a href="../README.md">README</a>
+      <a href="../CONTRIBUTING.md">Contribuir</a>
+      <a href="../CHANGELOG.md">Cambios</a>
+      <a href="best-practices-create-skills/README.md">Guía de skills</a>
+      <a href="https://github.com/fred66sp/SKILLS-AGP">GitHub</a>
+    </nav>
+    <p class="footer-note">Documentación estática: sin tipografías, scripts ni peticiones externas. Los diagramas son artefactos de Archify con su recibo de entrega; esta página no se regenera con ellos.</p>
+  </div>
+</footer>
+
+<script>
+(function () {
+  "use strict";
+
+  var STORAGE_KEY = "skills-agp:prefs";
+  var root = document.documentElement;
+
+  var COPY_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>';
+  var CHECK_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>';
+
+  function updateThemeLabel() {
+    var btn = document.getElementById("theme-toggle");
+    if (!btn) { return; }
+    var dark = root.getAttribute("data-theme") === "dark";
+    btn.setAttribute("aria-label", dark ? "Cambiar a tema claro" : "Cambiar a tema oscuro");
+  }
+
+  function applyTheme(theme) {
+    if (theme !== "dark" && theme !== "light") { theme = "light"; }
+    root.setAttribute("data-theme", theme);
+    updateThemeLabel();
+  }
+
+  var prefs = {};
+  try { prefs = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}"); } catch (e) { prefs = {}; }
+
+  var initialTheme = prefs.theme;
+  if (initialTheme !== "dark" && initialTheme !== "light") {
+    initialTheme = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+  }
+  applyTheme(initialTheme);
+
+  function savePrefs() {
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(prefs)); } catch (e) {}
+  }
+
+  var themeBtn = document.getElementById("theme-toggle");
+  if (themeBtn) {
+    themeBtn.addEventListener("click", function () {
+      prefs.theme = root.getAttribute("data-theme") === "dark" ? "light" : "dark";
+      applyTheme(prefs.theme);
+      savePrefs();
+    });
+  }
+
+  // El botón de copiar se crea aquí: añadir un bloque de código no obliga a
+  // recordar su botón.
+  document.querySelectorAll(".code").forEach(function (block) {
+    if (block.querySelector(".copy")) { return; }
+    var btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "copy";
+    btn.innerHTML = COPY_ICON + "<span>Copiar</span>";
+    btn.setAttribute("aria-label", "Copiar comandos");
+    block.appendChild(btn);
+
+    btn.addEventListener("click", function () {
+      var pre = block.querySelector("pre");
+      var code = (pre && (pre.querySelector("code") || pre)) || null;
+      if (!code) { return; }
+      var done = function () {
+        btn.classList.add("copied");
+        btn.innerHTML = CHECK_ICON + "<span>Copiado</span>";
+        btn.setAttribute("aria-label", "Copiado");
+        setTimeout(function () {
+          btn.classList.remove("copied");
+          btn.innerHTML = COPY_ICON + "<span>Copiar</span>";
+          btn.setAttribute("aria-label", "Copiar comandos");
+        }, 1600);
+      };
+      var text = code.textContent;
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(done, done);
+      } else {
+        var ta = document.createElement("textarea");
+        ta.value = text;
+        ta.style.position = "fixed";
+        ta.style.opacity = "0";
+        document.body.appendChild(ta);
+        ta.select();
+        try { document.execCommand("copy"); } catch (e) {}
+        document.body.removeChild(ta);
+        done();
+      }
+    });
+  });
+
+  if ("IntersectionObserver" in window) {
+    var links = {};
+    document.querySelectorAll(".topnav a").forEach(function (a) { links[a.getAttribute("href").slice(1)] = a; });
+    var observer = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) {
+          Object.keys(links).forEach(function (id) { links[id].classList.remove("active"); });
+          if (links[entry.target.id]) { links[entry.target.id].classList.add("active"); }
+        }
+      });
+    }, { rootMargin: "-15% 0px -70% 0px", threshold: 0 });
+    Object.keys(links).forEach(function (id) {
+      var section = document.getElementById(id);
+      if (section) { observer.observe(section); }
+    });
+  }
+})();
+</script>
+</body>
+</html>

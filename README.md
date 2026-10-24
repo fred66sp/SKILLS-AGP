@@ -16,7 +16,7 @@ Este repositorio se inspira y se basa en dos fuentes externas:
 | Ruta | Qué contiene |
 |---|---|
 | `src/<skill>/` | Una skill por carpeta: `SKILL.md`, `references/`, `assets/`, `scripts/` |
-| `docs/` | Guías y diagramas del repositorio |
+| `docs/` | Catálogo de skills, guías y diagramas del repositorio |
 | `.skills/` | Skills de terceros fijadas a una versión, y enrutadores que hacen descubribles a las skills propias |
 | `scripts/` | Validación local de estructura, rutas, recibos y pruebas de los scripts |
 | `.github/workflows/` | CI que ejecuta la validación y las pruebas en cada push y pull request |
@@ -150,7 +150,9 @@ python src/go-testing-and-verification/scripts/test-verify-go.py
 
 ## Documentación
 
-- `docs/best-practices-create-skills/README.md` — guía de buenas prácticas para crear skills.
+- [`docs/index.html`](docs/index.html) — punto de entrada y catálogo: qué hace cada skill, dónde está su contrato, cómo se usa y cómo se verifica el repositorio.
+- [`docs/best-practices-create-skills/index.html`](docs/best-practices-create-skills/index.html) — guía de buenas prácticas en HTML, con los prompts de validación listos para copiar.
+- `docs/best-practices-create-skills/README.md` — fuente Markdown de la guía de buenas prácticas.
 - `docs/git-flow-management/index.html` — página principal de la skill `git-flow-management`.
 - `docs/git-flow-management/flujo-de-trabajo.html` — diagrama del flujo, del encargo al resultado verificado.
 - `docs/git-flow-management/arquitectura.html` — diagrama de las piezas del paquete y sus fronteras.
