@@ -32,3 +32,4 @@ El formato sigue [Keep a Changelog 1.1.0](https://keepachangelog.com/es-ES/1.1.0
 ### Corregido
 
 - Corregido el nombre de la carpeta de documentación de la skill, que tenía una errata. Los dos diagramas se re-entregaron para que sus recibos registren la ruta correcta.
+- Recibos de los dos diagramas de `git-flow-management`: registraban el hash de una copia con CRLF del spec (8.067 y 6.072 bytes) frente a un spec guardado con LF (7.743 y 5.812), así que el recibo no correspondía a nada reproducible después de un checkout. Reentregados con `deliver` desde el árbol principal: el contenido de los dos HTML no cambió y los cuatro hashes del recibo casan con el disco. Añadida al `README.md` la segunda parte de la comprobación de reproducibilidad, la que `archify check --require-provenance` no hace.
