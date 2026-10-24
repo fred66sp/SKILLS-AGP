@@ -208,6 +208,12 @@ python src/go-testing-and-verification/scripts/test-verify-go.py
 - `docs/skill-creator/index.html` — página principal de la skill `skill-creator`.
 - `docs/skill-creator/flujo-de-trabajo.html` — diagrama del flujo, del encargo al directorio validado.
 - `docs/skill-creator/arquitectura.html` — diagrama del paquete, las puertas de validación y el directorio producido.
+- `docs/typescript-idiomatic-style/index.html` — página principal de la skill `typescript-idiomatic-style`.
+- `docs/typescript-idiomatic-style/flujo-de-trabajo.html` — diagrama del flujo, de la inspección al diff revisado.
+- `docs/typescript-idiomatic-style/arquitectura.html` — diagrama del paquete, el modelo de tipos y el proyecto.
+- `docs/typescript-testing-and-verification/index.html` — página principal de la skill `typescript-testing-and-verification`.
+- `docs/typescript-testing-and-verification/flujo-de-trabajo.html` — diagrama del flujo, del mapa de riesgos al cierre con evidencia.
+- `docs/typescript-testing-and-verification/arquitectura.html` — diagrama del paquete, las fronteras validadas y la puerta.
 
 Los diagramas son artefactos de [archify](https://github.com/tt-a1i/archify) 3.2.0. Cada uno tiene su especificación (`*.json`) y su recibo de entrega (`*.delivery.json`) con el `sha256` del HTML y del spec. Para regenerarlos hace falta archify 3.2.0 y el checkout local en `archify/`, ignorado por Git, con los ajustes de ancho descritos en `archify/LOCAL-PATCH.md`; el comando es el mismo en todas las carpetas de `docs/<skill>/`:
 

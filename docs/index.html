@@ -750,8 +750,8 @@
 <main class="section-wrap" id="main">
 
   <section class="section" id="catalogo">
-    <div class="section-head"><span class="section-num" style="--num:#0f766e">1</span><h2 class="title">Las skills</h2><span class="chip-repo">8 skills · 7 propias · 1 fijada</span></div>
-    <p class="sub">Siete skills de autoría propia y una de terceros fijada a una revisión. Cada tarjeta abre su página; el enlace <strong>Contrato</strong> lleva al <code>SKILL.md</code>, que es la fuente de verdad.</p>
+    <div class="section-head"><span class="section-num" style="--num:#0f766e">1</span><h2 class="title">Las skills</h2><span class="chip-repo">10 skills · 9 propias · 1 fijada</span></div>
+    <p class="sub">Nueve skills de autoría propia y una de terceros fijada a una revisión. Cada tarjeta abre su página; el enlace <strong>Contrato</strong> lleva al <code>SKILL.md</code>, que es la fuente de verdad.</p>
 
     <div class="skills">
       <article class="skill-card" style="--skill: #0f766e">
@@ -861,6 +861,38 @@
         <div class="card-foot">
           <span class="meta">propia</span>
           <a href="../src/go-testing-and-verification/SKILL.md">Contrato
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 5l7 7-7 7"></path></svg>
+          </a>
+        </div>
+      </article>
+
+      <article class="skill-card" style="--skill: #1d4ed8">
+        <div class="skill-top">
+          <span class="card-ico"><svg viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="8" fill="#1d4ed8"/><path d="M12 10l-4 6 4 6M20 10l4 6-4 6" fill="none" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+          <span class="tag">TypeScript</span>
+        </div>
+        <h3><a href="typescript-idiomatic-style/index.html">typescript-idiomatic-style</a></h3>
+        <p class="tagline">TypeScript que no permite el estado imposible</p>
+        <p class="desc">Diseño type-first con <code>strict</code>, uniones discriminadas, tipos branded, <code>satisfies</code> y genéricos justificados. Módulos y <code>exports</code> mínimos, y una CLI con citty, cancelación y salida separada.</p>
+        <div class="card-foot">
+          <span class="meta">propia</span>
+          <a href="../src/typescript-idiomatic-style/SKILL.md">Contrato
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 5l7 7-7 7"></path></svg>
+          </a>
+        </div>
+      </article>
+
+      <article class="skill-card" style="--skill: #0f766e">
+        <div class="skill-top">
+          <span class="card-ico"><svg viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="8" fill="#0f766e"/><path d="M9 17l4 4 10-11" fill="none" stroke="#ffffff" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+          <span class="tag">TypeScript</span>
+        </div>
+        <h3><a href="typescript-testing-and-verification/index.html">typescript-testing-and-verification</a></h3>
+        <p class="tagline">Cerrar con evidencia ejecutada</p>
+        <p class="desc">Valida toda frontera externa con Zod 4 y deriva los tipos del esquema. Elige la capa de prueba más pequeña, prueba la CLI y ejecuta typecheck, lint, test y build con <code>verify-ts.py</code>.</p>
+        <div class="card-foot">
+          <span class="meta">propia</span>
+          <a href="../src/typescript-testing-and-verification/SKILL.md">Contrato
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 5l7 7-7 7"></path></svg>
           </a>
         </div>
@@ -991,7 +1023,8 @@
 <span class="cmd">python</span> scripts/check-repo.py
 <span class="cmd">python</span> scripts/test-check-repo.py
 <span class="cmd">python</span> src/document-management-software/scripts/test-doc-inventory.py
-<span class="cmd">python</span> src/go-testing-and-verification/scripts/test-verify-go.py</code></pre>
+<span class="cmd">python</span> src/go-testing-and-verification/scripts/test-verify-go.py
+<span class="cmd">python</span> src/typescript-testing-and-verification/scripts/test-verify-ts.py</code></pre>
       </div>
     </div>
   </section>
