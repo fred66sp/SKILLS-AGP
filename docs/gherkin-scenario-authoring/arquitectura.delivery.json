@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "c52a698f-c9ab-4cc8-9fe6-082cace0211f",
+  "status": "current",
+  "command": "deliver",
+  "type": "architecture",
+  "input": "C:\\SKILLS-AGP\\docs\\gherkin-scenario-authoring\\arquitectura.json",
+  "output": "C:\\SKILLS-AGP\\docs\\gherkin-scenario-authoring\\arquitectura.html",
+  "specification": {
+    "sha256": "baf20433c2e76f410135f1a01521202fbbf1bb0741a94b7c7c1c80ca0d0d6b16",
+    "bytes": 7116
+  },
+  "artifact": {
+    "sha256": "d9b0b31c5db76f6b2112a2465d2b37037ebf6904a08332f8fd1cb7910afbe6b9",
+    "bytes": 836798
+  }
+}
