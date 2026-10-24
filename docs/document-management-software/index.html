@@ -461,7 +461,7 @@
       <div class="code"><pre><code>python3 scripts/doc-inventory.py --root &lt;directorio&gt; [--glob "*.md"] [--json]</code></pre></div>
 
       <div class="qa"><h3>El script sale con 0</h3><p>Inventario completo sin hallazgos. Esa lista es la línea base antes de tocar nada.</p></div>
-      <div class="qa"><h3>El script sale con 3</h3><p>Hay hallazgos: enlaces relativos rotos, documentos sin título, documentos vacíos o encabezados repetidos entre documentos. Es una salida esperada. Para cada uno se decide si se corrige en este encargo o se reporta con evidencia.</p></div>
+      <div class="qa"><h3>El script sale con 3</h3><p>Hay hallazgos: enlaces relativos rotos, documentos sin título, documentos vacíos, encabezados repetidos entre documentos o estado de la entrega escrito como documentación. Es una salida esperada. Para cada uno se decide si se corrige en este encargo o se reporta con evidencia.</p></div>
       <div class="qa"><h3>El script sale con 2</h3><p>Error de uso: la ruta no existe, no es un directorio o el patrón incluye separadores. Se corrige el argumento; no se sustituye el script por una revisión a ojo.</p></div>
       <div class="qa"><h3>Falta una fuente imprescindible</h3><p>Se formula una sola pregunta concreta y se detiene el trabajo ahí. No se rellena el hueco con una suposición plausible.</p></div>
       <div class="qa"><h3>Dos fuentes se contradicen</h3><p>Se exponen las dos y se pide decisión. Si la documentación es la especificación vigente, a veces lo que hay que arreglar es el software, no el texto.</p></div>
@@ -470,7 +470,7 @@
 
     <section id="paquete" class="section">
       <div class="section-head"><span class="section-num">4</span><h2 class="title">Qué contiene el paquete</h2></div>
-      <p class="sub">Ocho ficheros. El agente lee <code>SKILL.md</code> al activarse y abre el resto solo cuando el paso en curso lo pide, así que la skill es estricta sin consumir contexto en cada conversación.</p>
+      <p class="sub">Nueve ficheros. El agente lee <code>SKILL.md</code> al activarse y abre el resto solo cuando el paso en curso lo pide, así que la skill es estricta sin consumir contexto en cada conversación.</p>
 
       <div class="code"><pre><code>document-management-software/
 ├── SKILL.md                        # el contrato: invariantes, pasos, formato de cierre
@@ -483,7 +483,8 @@
 │   ├── documentation-plan-template.md
 │   └── audit-report-template.md
 └── scripts/
-    └── doc-inventory.py            # inventario y hallazgos deterministas</code></pre></div>
+    ├── doc-inventory.py            # inventario y hallazgos deterministas
+    └── test-doc-inventory.py       # comprobaciones del inventario</code></pre></div>
 
       <div class="table-wrap wrap-cells">
         <table>
@@ -497,6 +498,7 @@
             <tr><td><code>assets/documentation-plan-template.md</code></td><td>Paso 4, si el encargo toca más de un documento.</td></tr>
             <tr><td><code>assets/audit-report-template.md</code></td><td>Paso 7, en auditorías o cuando quedan hallazgos abiertos.</td></tr>
             <tr><td><code>scripts/doc-inventory.py</code></td><td>Pasos 2 y 6, siempre.</td></tr>
+            <tr><td><code>scripts/test-doc-inventory.py</code></td><td>Al cambiar el inventario o sus clases de hallazgo.</td></tr>
           </tbody>
         </table>
       </div>

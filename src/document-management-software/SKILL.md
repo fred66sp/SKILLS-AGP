@@ -29,7 +29,7 @@ Gestiona la documentación como conocimiento con fuente de verdad, no como texto
 4. Si falta una fuente imprescindible o el encargo mezcla intención y estado sin aclararlo, formula una sola pregunta concreta y detente. No interrogues para rellenar una plantilla.
 
 **Paso 2 — Inventariar antes de decidir.**
-1. Ejecuta `python3 scripts/doc-inventory.py --root <ruta>` sobre el árbol documental afectado. Devuelve el inventario y los hallazgos deterministas: enlaces relativos rotos, documentos sin título, documentos vacíos y encabezados repetidos entre documentos.
+1. Ejecuta `python3 scripts/doc-inventory.py --root <ruta>` sobre el árbol documental afectado. Devuelve el inventario y los hallazgos deterministas: enlaces relativos rotos, documentos sin título, documentos vacíos, encabezados repetidos entre documentos y estado de la entrega escrito como documentación.
 2. Lee `references/document-inventory.md` para asignar responsabilidad a cada artefacto existente y decidir si hace falta uno nuevo.
 3. Resume la cobertura actual: qué responsabilidad documental ya está cubierta, cuál falta y cuál está cubierta dos veces.
 
@@ -93,4 +93,5 @@ Si un campo no se puede rellenar con evidencia, ese campo es el hallazgo.
 - [audit-checklist](references/audit-checklist.md) — auditoría de solo lectura y verificación de cierre. Léelo en el paso 6.
 - [documentation-plan-template](assets/documentation-plan-template.md) — plan de intervención. Úsalo en el paso 4.
 - [audit-report-template](assets/audit-report-template.md) — informe de auditoría. Úsalo en el paso 7.
-- [doc-inventory](scripts/doc-inventory.py) — inventario determinista y hallazgos de documentación. Úsalo en los pasos 2 y 6.
+- [doc-inventory](scripts/doc-inventory.py) — inventario determinista y hallazgos de documentación, incluido el estado de la entrega. Úsalo en los pasos 2 y 6.
+- [test-doc-inventory](scripts/test-doc-inventory.py) — comprobaciones del script: `python3 scripts/test-doc-inventory.py`. Se ejecutan al cambiar el script o sus clases de hallazgo.

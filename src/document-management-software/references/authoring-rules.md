@@ -44,6 +44,8 @@ Un documento describe el artefacto, no el trabajo que lo produjo. Deja fuera:
 
 Escribe en presente sobre el estado actual del proyecto. Quien necesite saber cómo se llegó lo consulta en Git; quien necesite saber qué falta, lo consulta en el registro de trabajo del encargo en curso. El registro de trabajo no es documentación de usuario: no se enlaza desde una guía ni se copia en ella.
 
+Las dos listas de narraciones y de recuentos que aparecen arriba son lo que comprueba `scripts/doc-inventory.py` en la prosa de los Markdown. La lista vive aquí; el script la ejecuta y no decide nada más.
+
 ## Exactitud operativa
 
 - Copia comandos, rutas, nombres de variables, tipos y valores exactos de la fuente.

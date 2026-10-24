@@ -7,8 +7,14 @@ Uso:
 
 Salida por stdout: tabla con ruta relativa, líneas, título H1 y número de enlaces
 relativos de cada documento, seguida de los hallazgos detectados:
-enlaces relativos rotos, documentos sin H1, documentos sin contenido y
-encabezados H2 repetidos entre documentos (señal de duplicación).
+enlaces relativos rotos, documentos sin H1, documentos sin contenido,
+encabezados H2 repetidos entre documentos (señal de duplicación) y estado de la
+entrega escrito como documentación.
+
+La clase de estado de la entrega solo mira la prosa: omite los bloques de código
+(``` y ~~~), las citas entre comillas anguladas (el ejemplo que la propia regla
+enumera no es un hallazgo) y los documentos que son registro de trabajo, que por
+convención llevan un encabezado H2 llamado `Log`.
 
 Códigos de salida:
     0  inventario completo sin hallazgos
@@ -35,30 +41,36 @@ LINK_RE = re.compile(r"!?\[[^\]]*\]\(\s*([^)\s]+)(?:\s+\"[^\"]*\")?\s*\)")
 SCHEME_RE = re.compile(r"^[A-Za-z][A-Za-z0-9+.\-]*:")
 FENCE_RE = re.compile(r"^\s*(```+|~~~+)")
 INLINE_CODE_RE = re.compile(r"`[^`\n]*`")
+QUOTED_RE = re.compile(r"«[^»]*»")
+NARRATION_RE = re.compile(
+    r"\bse corrigió\b|\bquedó reportado\b|\bantes dec[íi]a\b|"
+    r"\bpasa de\b|\bdejó de\b",
+    re.IGNORECASE,
+)
+RECOUNT_RE = re.compile(r"\b\d[\d.]*\s?(?:bytes|KB|MB|secciones)\b")
 
 
-def strip_fences(text):
-    """Devuelve las líneas del documento fuera de bloques de código."""
+def prose_lines(text):
+    """Devuelve (número de línea, texto) fuera del frontmatter y de los bloques de código."""
+    lines = text.splitlines()
+    start = 0
+    if lines and lines[0].strip() == "---":
+        for index in range(1, len(lines)):
+            if lines[index].strip() in ("---", "..."):
+                start = index + 1
+                break
     kept, open_fence = [], None
-    for line in text.splitlines():
+    for index in range(start, len(lines)):
+        line = lines[index]
         match = FENCE_RE.match(line)
         if open_fence is None:
             if match:
                 open_fence = match.group(1)[0] * 3
                 continue
-            kept.append(line)
+            kept.append((index + 1, line))
         elif match and match.group(1).startswith(open_fence):
             open_fence = None
     return kept
-
-
-def strip_frontmatter(lines):
-    """Omite un bloque YAML inicial delimitado por ---."""
-    if lines and lines[0].strip() == "---":
-        for index in range(1, len(lines)):
-            if lines[index].strip() in ("---", "..."):
-                return lines[index + 1:]
-    return lines
 
 
 def normalize(value):
@@ -69,7 +81,8 @@ def normalize(value):
 def analyze(path, root):
     with open(path, encoding="utf-8", errors="replace") as handle:
         raw = handle.read()
-    lines = strip_frontmatter(strip_fences(raw))
+    prose = prose_lines(raw)
+    lines = [line for _, line in prose]
     title, headings, links = None, [], []
     for line in lines:
         heading = HEADING_RE.match(line)
@@ -83,8 +96,22 @@ def analyze(path, root):
         for target in LINK_RE.findall(INLINE_CODE_RE.sub("", line)):
             links.append(resolve(target, path, root))
     has_content = any(line.strip() for line in lines)
+    delivery = []
+    if "log" not in {normalize(heading) for heading in headings}:
+        for number, line in prose:
+            plain = QUOTED_RE.sub("", line)
+            for family, pattern in (("narracion", NARRATION_RE), ("recuento", RECOUNT_RE)):
+                found = pattern.search(plain)
+                if found:
+                    delivery.append({
+                        "line": number,
+                        "family": family,
+                        "matched": found.group(0),
+                        "excerpt": plain.strip()[:80],
+                    })
     return {
         "path": os.path.relpath(path, root).replace(os.sep, "/"),
+        "delivery": delivery,
         "lines": raw.count("\n") + (0 if raw.endswith("\n") or not raw else 1),
         "title": title,
         "headings": headings,
@@ -165,12 +192,17 @@ def main(argv=None):
         "missing_h1": [document["path"] for document in results if document["title"] is None],
         "empty_documents": [document["path"] for document in results if not document["has_content"]],
         "duplicate_h2": duplicates,
+        "delivery_state": [
+            {"document": document["path"], **item}
+            for document in results for item in document["delivery"]
+        ],
         "documents_reviewed": len(results),
     }
 
     has_findings = bool(
         findings["broken_links"] or findings["missing_h1"]
         or findings["empty_documents"] or findings["duplicate_h2"]
+        or findings["delivery_state"]
     )
 
     if args.json:
@@ -178,7 +210,7 @@ def main(argv=None):
             "root": root.replace(os.sep, "/"),
             "glob": args.glob,
             "documents": [
-                {key: document[key] for key in ("path", "lines", "title", "links")}
+                {key: document[key] for key in ("path", "lines", "title", "links", "delivery")}
                 for document in results
             ],
             "findings": findings,
@@ -209,6 +241,11 @@ def main(argv=None):
         print(f"- sin contenido: {path}")
     for heading, paths in sorted(duplicates.items()):
         print(f"- encabezado repetido: \"{heading}\" en {', '.join(paths)}")
+    for item in findings["delivery_state"]:
+        print(
+            f"- estado de la entrega: {item['document']}:{item['line']} · {item['family']} · "
+            f"[{item['matched']}] {item['excerpt']}"
+        )
     return 3
 
 

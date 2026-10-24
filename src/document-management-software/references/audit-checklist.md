@@ -37,7 +37,7 @@ Una falta de verificación no es un incumplimiento: es un límite del alcance, y
 
 Antes de declarar terminada una intervención, comprueba y muestra:
 
-1. `python3 scripts/doc-inventory.py --root <ruta>` ejecutado después del cambio, con su código de salida.
+1. `python3 scripts/doc-inventory.py --root <ruta>` ejecutado después del cambio, con su código de salida. Incluye la clase de estado de la entrega; la comprobación 8 no se puede sustituir por un autoinforme.
 2. Que no haya enlaces relativos nuevos rotos.
 3. Que no haya encabezados duplicados nuevos entre documentos, salvo duplicación deliberada y justificada.
 4. Que cada afirmación modificada esté sustentada en una fuente identificable.
@@ -55,5 +55,6 @@ Cuando el encargo sea una auditoría, o cuando queden hallazgos sin resolver, re
 ## Falsos positivos conocidos
 
 - Un encabezado repetido puede ser correcto cuando dos documentos cubren la misma sección con audiencias distintas; decídelo explícitamente, no lo ignores.
+- El inventario determinista omite los bloques de código, las citas entre comillas anguladas (el ejemplo que la propia regla enumera) y los documentos con un encabezado H2 llamado `Log`, que son registro de trabajo y no documentación de usuario. Un tercero fijado a un commit tampoco es hallazgo: se busca la narración, no el hash.
 - Un enlace a una ruta generada puede no existir antes de compilar; verifica si el repositorio documenta ese paso de generación.
 - Una afirmación sin fuente puede ser una decisión del usuario no registrada: pregunta antes de borrarla.
