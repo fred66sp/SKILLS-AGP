@@ -11,11 +11,12 @@ La especificación de [agentskills.io](https://agentskills.io/) es la guía y la
 | `src/<skill>/` | Una skill por carpeta: `SKILL.md`, `references/`, `assets/`, `scripts/` |
 | `docs/` | Guías y diagramas del repositorio |
 | `tools/` | CLIs compartidas por más de una skill, ejecutadas desde la raíz del repositorio |
+| `.skills/` | Skills de terceros fijadas a una versión, y enrutadores que hacen descubribles a las skills propias |
 | `README.md` | Este fichero |
 | `CONTRIBUTING.md` | Política de ramas, commits e integración |
 | `CHANGELOG.md` | Historial de cambios |
 
-Queda fuera de git por ser estado local de cada máquina: `.atl/`, `.codegraph/`, `.pi/`, además de los secretos que cubre el `.gitignore`. Sí se versiona `.skills/`, porque contiene las skills de terceros que necesita el entorno de trabajo.
+Queda fuera de git por ser estado local de cada máquina: `.atl/`, `.codegraph/`, `.pi/`, además de los secretos que cubre el `.gitignore`. Sí se versiona `.skills/`, porque contiene las skills de terceros que necesita el entorno de trabajo y los enrutadores de las skills propias de `src/`.
 
 ## Skills disponibles
 
@@ -54,6 +55,17 @@ Procedimiento para crear skills nuevas con la especificación agentskills.io: es
 Ruta: [`.skills/skill-creator/SKILL.md`](.skills/skill-creator/SKILL.md). Se usa al crear cualquier skill nueva en `src/`.
 
 Documentación: [`docs/skill-creator/index.html`](docs/skill-creator/index.html).
+
+## Enrutadores de skills propias
+
+`.skills/` no solo guarda terceros: cada skill propia que quiera ser descubrible por el agente tiene ahí un enrutador. Un enrutador es un `SKILL.md` mínimo con dos cosas: la metadatos de disparo (nombre igual al de la carpeta y descripción con los disparadores) y una instrucción para leer el contrato completo en `src/<skill>/SKILL.md` antes de trabajar. No copia invariantes, ni tablas, ni procedimientos: si enrutador y paquete difieren, manda el paquete.
+
+| Enrutador | Fuente canónica |
+|---|---|
+| [`.skills/document-management-software/SKILL.md`](.skills/document-management-software/SKILL.md) | [`src/document-management-software/SKILL.md`](src/document-management-software/SKILL.md) |
+| [`.skills/git-flow-management/SKILL.md`](.skills/git-flow-management/SKILL.md) | [`src/git-flow-management/SKILL.md`](src/git-flow-management/SKILL.md) |
+
+La carpeta se registra como origen de skills en `.pi/settings.json` con `"skills": ["../.skills"]`. Como `.pi/` es estado local de cada máquina, ese registro se vuelve a escribir al clonar el repositorio en otra; sin él, `.skills/` no se descubre. Registrar la carpeta hace descubribles también a las skills de terceros que ya contiene.
 
 ## Cómo se usa una skill
 
