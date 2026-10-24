@@ -89,7 +89,7 @@ Si un campo no se puede rellenar con evidencia, ese campo es el hallazgo.
 
 - [document-inventory](references/document-inventory.md) — responsabilidad de cada tipo de documento y decisión de crearlo o no. Léelo en el paso 2.
 - [evidence-and-claims](references/evidence-and-claims.md) — grados de certeza, verificación por tipo de fuente y tratamiento de contradicciones. Léelo en el paso 3.
-- [authoring-rules](references/authoring-rules.md) — reglas de proporcionalidad, DRY documental, terminología y redacción. Léelo en el paso 5.
+- [authoring-rules](references/authoring-rules.md) — reglas de proporcionalidad, DRY documental, terminología, redacción y exclusión del estado de la entrega. Léelo en el paso 5.
 - [audit-checklist](references/audit-checklist.md) — auditoría de solo lectura y verificación de cierre. Léelo en el paso 6.
 - [documentation-plan-template](assets/documentation-plan-template.md) — plan de intervención. Úsalo en el paso 4.
 - [audit-report-template](assets/audit-report-template.md) — informe de auditoría. Úsalo en el paso 7.
