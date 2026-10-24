@@ -1,0 +1,12 @@
+interface:
+  display_name: CLI Go para agentes
+  short_description: Contrato estable y seguro para CLIs automatizables
+  default_prompt: Usa $go-cli-ai-first para fijar el contrato de la CLI antes de
+    implementar comandos, salida JSON, códigos de salida y operaciones seguras.
+policy:
+  products:
+  - chatgpt
+  - codex
+  - api
+  - atlas
+  allow_implicit_invocation: true

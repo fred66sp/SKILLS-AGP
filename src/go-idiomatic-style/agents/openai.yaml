@@ -1,0 +1,12 @@
+interface:
+  display_name: Estilo Go idiomático
+  short_description: Código Go simple, claro y mantenible
+  default_prompt: Usa $go-idiomatic-style para escribir o revisar Go idiomático con
+    la estructura mínima, nombres claros y dependencias justificadas.
+policy:
+  products:
+  - chatgpt
+  - codex
+  - api
+  - atlas
+  allow_implicit_invocation: true
