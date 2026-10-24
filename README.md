@@ -175,6 +175,7 @@ python scripts/check-repo.py
 python scripts/test-check-repo.py
 python src/document-management-software/scripts/test-doc-inventory.py
 python src/go-testing-and-verification/scripts/test-verify-go.py
+python src/typescript-testing-and-verification/scripts/test-verify-ts.py
 ```
 
 `check-repo.py` valida metadatos, estructura, enrutadores, enlaces Markdown, recibos de los diagramas y sintaxis de los scripts. Las pruebas unitarias se ejecutan aparte para que un fallo indique qué script falló. La CI (`.github/workflows/validate.yml`) ejecuta los mismos comandos en cada push y pull request.
