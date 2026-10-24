@@ -480,7 +480,8 @@
 ├── assets/
 │   └── verification-report.md    # formato de cierre con evidencia
 ├── scripts/
-│   └── verify-ts.py              # ejecuta typecheck, lint, test y build
+│   ├── verify-ts.py              # ejecuta typecheck, lint, test y build
+│   └── test-verify-ts.py         # pruebas del propio script
 └── agents/
     └── openai.yaml               # nombre visible e invocación implícita</code></pre></div>
 
@@ -493,6 +494,7 @@
             <tr><td><code>references/test-layers.md</code></td><td>Pasos 3 y 4, para elegir la capa y escribir el caso.</td></tr>
             <tr><td><code>assets/verification-report.md</code></td><td>Paso 5, al rellenar el cierre con la salida real.</td></tr>
             <tr><td><code>scripts/verify-ts.py</code></td><td>Paso 5, para ejecutar la puerta en texto o JSON.</td></tr>
+            <tr><td><code>scripts/test-verify-ts.py</code></td><td>Al cambiar el script de la puerta: comprueba sus casos.</td></tr>
             <tr><td><code>agents/openai.yaml</code></td><td>Nunca durante el trabajo: declara el nombre visible y la política de invocación.</td></tr>
           </tbody>
         </table>
