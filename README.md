@@ -81,7 +81,7 @@ Documentación: [`docs/skill-creator/index.html`](docs/skill-creator/index.html)
 - `docs/gherkin-scenario-authoring/flujo-de-trabajo.html` — diagrama del flujo, del encargo al mapa, a la redacción y a la puerta del comprobador.
 - `docs/gherkin-scenario-authoring/arquitectura.html` — diagrama del paquete con sus cuatro fronteras: la CLI compartida, la revisora, el SDD y el archivo producido.
 
-Los diagramas son artefactos de [archify](https://github.com/tt-a1i/archify) 3.2.0. Cada uno tiene su especificación (`*.json`) y su recibo de entrega (`*.delivery.json`) con el `sha256` del HTML y del spec. Para regenerarlos hace falta archify 3.2.0; el comando es el mismo en las cuatro carpetas, cambiando `<skill>` por `git-flow-management`, `skill-creator`, `document-management-software` o `gherkin-scenario-review`:
+Los diagramas son artefactos de [archify](https://github.com/tt-a1i/archify) 3.2.0. Cada uno tiene su especificación (`*.json`) y su recibo de entrega (`*.delivery.json`) con el `sha256` del HTML y del spec. Para regenerarlos hace falta archify 3.2.0; el comando es el mismo en todas las carpetas de `docs/<skill>/`. En este equipo la copia local vive en `.pi/vendor/archify`, que no está versionada porque `.pi/` es estado de cada máquina, y su binario es `.pi/vendor/archify/archify/bin/archify.mjs`:
 
 ```bash
 node <ruta-a-archify>/archify/bin/archify.mjs deliver workflow \
@@ -91,7 +91,7 @@ node <ruta-a-archify>/archify/bin/archify.mjs deliver workflow \
 
 `deliver` reescribe el recibo junto al HTML. La entrega es reproducible byte a byte: el mismo spec devuelve el mismo `sha256`.
 
-La comprobación de esa reproducibilidad tiene dos partes, y la herramienta solo hace una. `archify check <html> --require-provenance` verifica el HTML contra su recibo; no compara el spec que el recibo dice haber leído con el spec que está en el repositorio. La segunda parte es manual: comparar el `sha256` y los `bytes` de `specification` con el hash real del `.json`, y los de `artifact` con el del `.html`. Sin esa segunda parte se cuelan recibos válidos sobre un spec que ya no es el guardado: el caso real fueron los dos diagramas de `git-flow-management`, cuyos recibos registraban 8.067 y 6.072 bytes de un spec de 7.743 y 5.812 porque el hash se calculó sobre una copia con CRLF mientras el repositorio guarda LF. Antes de `deliver`, el spec debe estar en LF; se comprueba contando retornos de carro, y el resultado debe ser 0.
+La comprobación de esa reproducibilidad tiene dos partes, y la herramienta solo hace una. `archify check <html> --require-provenance` verifica el HTML contra su recibo; no compara el spec que el recibo dice haber leído con el spec que está en el repositorio. La segunda parte es manual: comparar el `sha256` y los `bytes` de `specification` con el hash real del `.json`, y los de `artifact` con el del `.html`. Sin esa segunda parte se cuelan recibos válidos sobre un spec que ya no es el guardado: basta con que el hash se calcule sobre una copia con CRLF mientras el repositorio guarda LF para que el recibo registre otros `bytes` bajo el mismo nombre. Antes de `deliver`, el spec debe estar en LF; se comprueba contando retornos de carro, y el resultado debe ser 0.
 
 ## Regla de empaquetado
 

@@ -16,6 +16,7 @@ Recorre el inventario y busca, por orden de impacto:
 8. Enlaces relativos rotos y referencias a rutas inexistentes.
 9. Instrucciones imposibles de ejecutar o de verificar.
 10. Contexto decisional perdido en decisiones que se reabren.
+11. Estado de la entrega escrito como documentación: ramas, commits, hashes, «se corrigió», «quedó reportado». Git y el registro de trabajo ya lo contienen.
 
 Prioriza por impacto sobre comprensión, implementación, operación y mantenimiento. El estilo solo cuenta si impide entender o ejecutar.
 
@@ -43,6 +44,7 @@ Antes de declarar terminada una intervención, comprueba y muestra:
 5. Que el contenido eliminado no fuera la única representación de un conocimiento válido.
 6. Que la terminología nueva coincida con la que ya usa el proyecto.
 7. Que los comandos, rutas y valores citados existan en el estado actual.
+8. Que el documento no conserve estado de la entrega que ya vive en Git o en el registro de trabajo: referencias a commits y ramas, hashes de artefactos, narración de correcciones y reentregas.
 
 Si falla cualquiera de estas comprobaciones, el resultado es INCOMPLETO o NO VERIFICADO, nunca "terminado". Explica qué condición falta.
 

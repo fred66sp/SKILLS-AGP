@@ -15,6 +15,7 @@ S5. La entrega va en una rama corta desde `main`, con commits por unidad revisab
 S6. Se cumple la regla de empaquetado del repositorio: dentro de `src/<skill>/` no hay `README.md`, `CHANGELOG.md` ni guías de instalación.
 S7. La documentación de la skill distingue el contrato general de la skill de la convención documental de este repositorio (`index.html`, diagramas de archify, recibos): lo que es del repositorio va marcado como tal y no se presenta como regla de la skill.
 S8. `docs/document-management-software/index.html` se escribe en presente y para quien llega por primera vez: siete secciones cortas, sin copiar las reglas del paquete (se remite a `SKILL.md` y a las `references/`) y sin narrar la entrega, sus defectos corregidos ni sus estados pasados.
+S9. Un documento de usuario no conserva estado de la entrega: ni referencias a ramas y commits, ni hashes de artefactos, ni narraciones de corrección. Ese estado ya está en Git y en el registro de trabajo. La regla se aplica a los documentos del repositorio, no al registro de trabajo de este documento.
 
 ## Tasks
 
@@ -26,10 +27,23 @@ S8. `docs/document-management-software/index.html` se escribe en presente y para
 | T4 | Página principal y sus enlaces en `README.md` y `CHANGELOG.md` | S4, S5 | `docs(document-management-software): documentar la skill con página y diagramas` |
 | T5 | Verificación de la entrega | S5 | sin commit propio: evidencia en el Log |
 | T6 | Reescribir la página como puerta de entrada en presente, sin duplicar el paquete | S7, S8 | `docs(document-management-software): rewrite the skill page as a present-tense entry point` |
+| T7 | Codificar en el paquete que el estado de la entrega no se documenta y barrer los documentos del repositorio | S9 | `feat(document-management-software): forbid delivery state in user-facing docs` |
 
 ### Límites de rebanada
 
 La guía del repositorio es de unas 400 líneas de autoría por commit. T1 y T2 se separaron de una única unidad de 622 líneas para respetarla; el contenido es idéntico. T3 incluye artefactos generados por archify (dos HTML de ~830 KB), que no cuentan como autoría: lo revisable es cada `*.json` y su recibo. T4 no se puede rebanar sin dejar la página rota a medias, porque la documentación referenciada debe existir en el mismo commit; se entrega como unidad única.
+
+## Commits
+
+La historia se unificó después en un único commit inicial del repositorio, así que estas unidades no son referencias resolubles: quedan como registro de los cortes de revisión con los que se escribió el paquete. Git es la fuente del estado actual.
+
+- `feat(document-management-software): añadir el contrato documental de la skill`
+- `feat(document-management-software): añadir plantillas y script de inventario`
+- `docs(document-management-software): añadir el diagrama de arquitectura`
+- `docs(document-management-software): añadir el diagrama de flujo de trabajo`
+- `docs(document-management-software): documentar la skill con página y diagramas`
+- `docs(odd): registrar los commits de la entrega`
+- `fix(document-management-software): corregir el recibo del diagrama de flujo`
 
 ## Log
 
@@ -57,19 +71,6 @@ L11 Diagnóstico de L10 y decisión: la página era un duplicado del paquete (10
 
 L12 Evidencia de T6: `doc-inventory.py --root src/document-management-software` → exit 0, sin hallazgos (el paquete no cambia). Comprobación estructural de la página reescrita → etiquetas balanceadas, 1 `h1`, 6 secciones de contenido, 0 anclas rotas, 3 enlaces a fichero resueltos (`SKILL.md`, `flujo-de-trabajo.html`, `arquitectura.html`). La página pasa de 70.078 a 39.255 bytes. Quedan reglas CSS del andamio original sin uso (`status-strip`, `sev-*`, `plain`, `cols-3`): se conservan para no divergir del andamio de las otras cuatro páginas.
 
-## Commits
-
-La historia se unificó después en un único commit inicial del repositorio. Las unidades que existieron antes de esa
-unificación, en orden, fueron:
-
-- `feat(document-management-software): añadir el contrato documental de la skill`
-- `feat(document-management-software): añadir plantillas y script de inventario`
-- `docs(document-management-software): añadir el diagrama de arquitectura`
-- `docs(document-management-software): añadir el diagrama de flujo de trabajo`
-- `docs(document-management-software): documentar la skill con página y diagramas`
-- `docs(odd): registrar los commits de la entrega`
-- `fix(document-management-software): corregir el recibo del diagrama de flujo`
-
 L13 (literal): «a mí lo de Preguntas cortas, me parecía buena idea y ayuda mucho en el entendimiento.»
 
 L14 Decisión derivada de L13: vuelve la sección Preguntas cortas como sección 6, con las seis preguntas que enseñan algo que la página ya no copia (inferencia frente a propuesta, documentar sin leer código, por qué el código no basta, convención propia del proyecto, dependencia externa, cierre proporcional). Se descartan las tres que repetían la sección 1 o la 2: si escribe o solo revisa, si siempre crea un documento nuevo, y si sustituye a los tests.
@@ -77,3 +78,11 @@ L14 Decisión derivada de L13: vuelve la sección Preguntas cortas como sección
 L15 (literal): «si puedes poner el enlace me parece buena idea.»
 
 L16 Verificación en `.pi/vendor/archify` (v3.2.0), hecha sobre una copia en directorio temporal, nunca sobre los ficheros del repositorio: el enlace de vuelta a `index.html` no es expresable dentro de un artefacto `workflow` ni `architecture`. `common.schema.json` solo admite `url` en `brandMark` (forzoso `https?://`) y en `repository` (que además exige una `revision` de 40 hex); `patch explainer` solo aplica a artefactos `explainer`, y el HTML generado no contiene ninguna región de explainer; los renderers no emiten ningún `<a>` salvo el data URL del brand mark. La vía manual queda descartada con evidencia: tras inyectar un `<a href="index.html">` en el HTML, `finalize workflow` da `pass` y vuelve a renderizar desde el spec, de modo que el enlace inyectado desaparece (0 apariciones). Decisión: se declara la limitación en la sección 7 de la página («se vuelve con el botón atrás del navegador») y los cuatro ficheros de los diagramas no se tocan, así que sus recibos siguen siendo válidos.
+
+L17 (literal): «Entiendo que el párrafo "Crear, actualizar o revisar README.md, guía de contribución, PRD, SDD, arquitectura, ADR, API, instalación, operación, runbooks o notas de release." es un ejemplo y realmente también funciona con ODD, etc.»
+
+L18 Verificación de L17: la `description` de `SKILL.md` cierra con «documentación de features u otra documentación técnica de un proyecto de software» y `references/document-inventory.md` tiene la fila «Guía de feature / trabajo en curso», así que los documentos de `odd/tasks/` entran en el disparador. La tabla de la sección 2 de la página recortaba esa lista al reescribirla; se restaura el texto del paquete para que el disparador de la página no sea más estrecho que el del contrato.
+
+L19 (literal): «una contradicción, si hace lo que promete la skill, como fue que la versión anterior fuese tan compleja y enrevesada, con estados vivos?? Una documentación correcta es la que no tiene estados vivos como por ejemplo referencias a commits, etc. Esos estados ya están en git.»
+
+L20 Diagnóstico de L19 y decisión: el hueco era del paquete, no solo de la página. Las reglas cubrían estado implementado frente a intención (invariante 6), pero nada prohibía narrar el estado de la entrega en un documento de usuario, y la página se había escrito con la voz del registro de trabajo. Se añade la sección «El estado de la entrega no se documenta» a `references/authoring-rules.md`, su búsqueda como hallazgo 11 de la auditoría de solo lectura y su comprobación como punto 8 del cierre en `references/audit-checklist.md`. El registro de trabajo queda excluido a propósito: conserva los cortes de revisión porque son evidencia del encargo. Barrido de S9 sobre los documentos del repositorio: `README.md` deja de citar el incidente de los recibos con sus cifras, describe el modo de fallo en presente, y deja de enumerar las carpetas con diagramas porque la lista caducaba con la quinta skill (se sustituye por la forma genérica). La página de esta skill ya no contenía estado vivo tras T6: comprobado buscando ramas, commits, hashes y narraciones de corrección sobre `docs/document-management-software/index.html`.

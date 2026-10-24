@@ -34,6 +34,16 @@ Cuando el proyecto aún no ha fijado un término, elige uno y úsalo de forma co
 
 No mezcles los cuatro registros en un mismo párrafo sin señalarlo.
 
+## El estado de la entrega no se documenta
+
+Un documento describe el artefacto, no el trabajo que lo produjo. Deja fuera:
+
+- Ramas, commits, etiquetas, hashes y `sha256` de artefactos de la propia entrega: Git ya los contiene y el documento tiene que sobrevivirlos.
+- Narraciones de proceso: «se corrigió», «quedó reportado, no corregido», «se reentregó», «antes decía».
+- Autores y fechas de la intervención, salvo que el formato del documento lo exija (notas de release, registro de cambios, ADR con su estado).
+
+Escribe en presente sobre el estado actual del proyecto. Quien necesite saber cómo se llegó lo consulta en Git; quien necesite saber qué falta, lo consulta en el registro de trabajo del encargo en curso. El registro de trabajo no es documentación de usuario: no se enlaza desde una guía ni se copia en ella.
+
 ## Exactitud operativa
 
 - Copia comandos, rutas, nombres de variables, tipos y valores exactos de la fuente.
