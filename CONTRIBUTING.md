@@ -51,7 +51,7 @@ Cualquier otra cosa entra por una rama corta. Ante la duda, rama.
 
 ## Remoto
 
-Ninguno por ahora. Crear un remoto, publicar o hacer `push` es una operación aparte, con su propio plan y su confirmación.
+Este repositorio no define remoto. Crear uno, publicar o hacer `push` es una operación aparte, con su propio plan y su confirmación.
 
 ## Documentación
 

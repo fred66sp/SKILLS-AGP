@@ -92,8 +92,4 @@ Dentro de `src/<skill>/` no se crean ficheros de documentación (`README.md`, `C
 
 ## Flujo de trabajo
 
-Ver [`CONTRIBUTING.md`](CONTRIBUTING.md). En resumen: `main` como única rama de larga vida, ramas cortas por cambio e integración con `--no-ff`.
-
-## Pendientes conocidos
-
-- El repositorio todavía no tiene remoto.
+Ver [`CONTRIBUTING.md`](CONTRIBUTING.md). En resumen: `main` como única rama de larga vida, ramas cortas por cambio e integración con `--no-ff`. El repositorio no define remoto, así que no hay publicación: crear uno, `push` o etiquetas es una operación aparte, con su propio plan y su confirmación.
