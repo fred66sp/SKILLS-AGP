@@ -1,0 +1,297 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "Arquitectura de la skill prd-cartographer",
+    "subtitle": "Qué piezas la componen, qué puertas impone y sobre qué superficie actúa: el paquete instalado, la evidencia que decide y el PRD que se entrega.",
+    "locale": "es",
+    "output": "docs/prd-cartographer/arquitectura.html",
+    "quality_profile": "showcase"
+  },
+  "components": [
+    {
+      "id": "persona",
+      "type": "external",
+      "label": "Persona",
+      "sublabel": "decide el encargo",
+      "icon": "person",
+      "pos": [
+        40,
+        80
+      ],
+      "size": [
+        130,
+        60
+      ]
+    },
+    {
+      "id": "agente",
+      "type": "external",
+      "label": "Agente anfitrión",
+      "sublabel": "Pi · Claude Code · Codex",
+      "pos": [
+        240,
+        80
+      ],
+      "size": [
+        170,
+        64
+      ]
+    },
+    {
+      "id": "skill",
+      "type": "frontend",
+      "label": "SKILL.md",
+      "sublabel": "invariantes y pasos",
+      "pos": [
+        480,
+        80
+      ],
+      "size": [
+        170,
+        64
+      ]
+    },
+    {
+      "id": "evidencia",
+      "type": "security",
+      "label": "Certeza por afirmación",
+      "sublabel": "hecho · inferencia · hipótesis",
+      "icon": "decision",
+      "pos": [
+        740,
+        80
+      ],
+      "size": [
+        170,
+        64
+      ]
+    },
+    {
+      "id": "estructura",
+      "type": "security",
+      "label": "Estructura del PRD",
+      "sublabel": "alcance · métricas · criterios",
+      "pos": [
+        1000,
+        80
+      ],
+      "size": [
+        170,
+        64
+      ]
+    },
+    {
+      "id": "refs",
+      "type": "database",
+      "label": "references/",
+      "sublabel": "evidencia · estructura · puerta",
+      "tag": "se leen cuando toca",
+      "pos": [
+        480,
+        280
+      ],
+      "size": [
+        170,
+        64
+      ]
+    },
+    {
+      "id": "assets",
+      "type": "database",
+      "label": "assets/",
+      "sublabel": "plantilla de PRD y cierre",
+      "pos": [
+        480,
+        480
+      ],
+      "size": [
+        170,
+        64
+      ]
+    },
+    {
+      "id": "prd",
+      "type": "database",
+      "label": "PRD trazable",
+      "sublabel": "producto · feature",
+      "pos": [
+        1000,
+        280
+      ],
+      "size": [
+        170,
+        64
+      ]
+    },
+    {
+      "id": "puerta",
+      "type": "security",
+      "label": "Puerta de calidad",
+      "sublabel": "veredicto explícito",
+      "tag": "evidencia o nada",
+      "pos": [
+        1000,
+        460
+      ],
+      "size": [
+        170,
+        64
+      ]
+    },
+    {
+      "id": "descubrimiento",
+      "type": "database",
+      "label": "Diagnóstico",
+      "sublabel": "Problem Statement",
+      "pos": [
+        740,
+        460
+      ],
+      "size": [
+        170,
+        64
+      ]
+    }
+  ],
+  "boundaries": [
+    {
+      "kind": "region",
+      "label": "Paquete instalado",
+      "wraps": [
+        "skill",
+        "refs",
+        "assets"
+      ]
+    },
+    {
+      "kind": "region",
+      "label": "Decisión y evidencia",
+      "wraps": [
+        "evidencia",
+        "estructura"
+      ]
+    },
+    {
+      "kind": "security-group",
+      "label": "Salida, control y degradación · fuera de la skill",
+      "wraps": [
+        "prd",
+        "puerta",
+        "descubrimiento"
+      ]
+    }
+  ],
+  "connections": [
+    {
+      "id": "encarga",
+      "from": "persona",
+      "to": "agente",
+      "label": "encarga",
+      "variant": "emphasis"
+    },
+    {
+      "id": "carga",
+      "from": "agente",
+      "to": "skill",
+      "label": "carga",
+      "variant": "emphasis"
+    },
+    {
+      "id": "exige",
+      "from": "skill",
+      "to": "evidencia",
+      "label": "exige certeza",
+      "variant": "emphasis"
+    },
+    {
+      "id": "decide",
+      "from": "evidencia",
+      "to": "estructura",
+      "label": "decide",
+      "variant": "emphasis"
+    },
+    {
+      "id": "consulta",
+      "from": "skill",
+      "to": "refs",
+      "label": "consulta",
+      "variant": "dashed"
+    },
+    {
+      "id": "copia",
+      "from": "skill",
+      "to": "assets",
+      "label": "copia la plantilla",
+      "variant": "dashed"
+    },
+    {
+      "id": "redacta",
+      "from": "estructura",
+      "to": "prd",
+      "label": "redacta"
+    },
+    {
+      "id": "sustenta",
+      "from": "evidencia",
+      "to": "prd",
+      "label": "sustenta"
+    },
+    {
+      "id": "exige-evidencia",
+      "from": "estructura",
+      "to": "puerta",
+      "label": "exige evidencia"
+    },
+    {
+      "id": "valida",
+      "from": "puerta",
+      "to": "prd",
+      "label": "valida",
+      "variant": "emphasis"
+    },
+    {
+      "id": "degrada",
+      "from": "evidencia",
+      "to": "descubrimiento",
+      "label": "si falta descubrimiento",
+      "variant": "dashed"
+    },
+    {
+      "id": "entrega",
+      "from": "puerta",
+      "to": "descubrimiento",
+      "label": "deriva",
+      "variant": "dashed"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "El paquete instalado",
+      "items": [
+        "SKILL.md es el cuerpo normativo: invariantes, pasos con criterio de parada y un cierre con evidencia",
+        "references/ se carga justo a tiempo: grados de certeza, criterio de cada sección y puerta de calidad",
+        "assets/ fija la estructura del PRD y del cierre para no improvisar la salida"
+      ]
+    },
+    {
+      "dot": "rose",
+      "title": "Las puertas de la evidencia",
+      "items": [
+        "Ninguna afirmación material se escribe como hecho sin fuente; si la evidencia es parcial, la redacción baja de grado",
+        "Una métrica sin método, fuente o línea base queda como hueco declarado, no como objetivo verificado",
+        "La puerta de calidad puede negar el PRD y derivar a un diagnóstico de preparación"
+      ]
+    },
+    {
+      "dot": "emerald",
+      "title": "Lo que la skill no hace",
+      "items": [
+        "No sustituye la arquitectura, el diseño técnico ni la especificación de implementación",
+        "No inventa usuarios, demanda, citas, causas ni líneas base para que el documento parezca completo",
+        "No presenta el PRD como aprobado si las decisiones del agente siguen siendo propuestas"
+      ]
+    }
+  ]
+}

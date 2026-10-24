@@ -1,0 +1,12 @@
+interface:
+  display_name: PRD Cartographer
+  short_description: Crea PRD verificables y trazables
+  default_prompt: Usa $prd-cartographer para convertir la información disponible en un
+    PRD trazable, con métricas medibles y huecos declarados.
+policy:
+  products:
+  - chatgpt
+  - codex
+  - api
+  - atlas
+  allow_implicit_invocation: true

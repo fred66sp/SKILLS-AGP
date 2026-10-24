@@ -38,6 +38,12 @@ Gestiona la documentación de un proyecto de software como conocimiento verifica
 
 Contrato completo: [`src/document-management-software/SKILL.md`](src/document-management-software/SKILL.md).
 
+### `prd-cartographer`
+
+Convierte una idea, una investigación o un concepto de producto en un PRD verificable, o revisa uno existente sin convertirlo en una especificación técnica. Separa hecho, decisión aprobada, inferencia, hipótesis, propuesta y desconocido; exige métricas con método de medida, alcance con exclusiones y criterios de aceptación observables; y entrega un estado de preparación explícito en lugar de un documento aparentemente completo. Incluye el Universal Idea Model, una plantilla de PRD, una plantilla de cierre y una puerta de calidad.
+
+Contrato completo: [`src/prd-cartographer/SKILL.md`](src/prd-cartographer/SKILL.md).
+
 ## Skills en uso
 
 Skills de terceros fijadas a una versión concreta, para que todas las máquinas trabajen con lo mismo. No son de autoría propia: no se editan aquí, se actualizan sustituyéndolas.
@@ -60,6 +66,7 @@ Documentación: [`docs/skill-creator/index.html`](docs/skill-creator/index.html)
 |---|---|
 | [`.skills/document-management-software/SKILL.md`](.skills/document-management-software/SKILL.md) | [`src/document-management-software/SKILL.md`](src/document-management-software/SKILL.md) |
 | [`.skills/git-flow-management/SKILL.md`](.skills/git-flow-management/SKILL.md) | [`src/git-flow-management/SKILL.md`](src/git-flow-management/SKILL.md) |
+| [`.skills/prd-cartographer/SKILL.md`](.skills/prd-cartographer/SKILL.md) | [`src/prd-cartographer/SKILL.md`](src/prd-cartographer/SKILL.md) |
 
 La carpeta se registra como origen de skills en `.pi/settings.json` con `"skills": ["../.skills"]`. Como `.pi/` es estado local de cada máquina, ese registro se vuelve a escribir al clonar el repositorio en otra; sin él, `.skills/` no se descubre. Registrar la carpeta hace descubribles también a las skills de terceros que ya contiene.
 
@@ -79,6 +86,9 @@ La carpeta se registra como origen de skills en `.pi/settings.json` con `"skills
 - `docs/document-management-software/index.html` — página principal de la skill `document-management-software`.
 - `docs/document-management-software/flujo-de-trabajo.html` — diagrama del flujo, del encargo al cierre verificado.
 - `docs/document-management-software/arquitectura.html` — diagrama del paquete, las puertas de la evidencia y la documentación que escribe.
+- `docs/prd-cartographer/index.html` — página principal de la skill `prd-cartographer`.
+- `docs/prd-cartographer/flujo-de-trabajo.html` — diagrama del flujo, del encargo al PRD revisado.
+- `docs/prd-cartographer/arquitectura.html` — diagrama del paquete, la evidencia y la puerta de calidad.
 - `docs/skill-creator/index.html` — página principal de la skill `skill-creator`.
 - `docs/skill-creator/flujo-de-trabajo.html` — diagrama del flujo, del encargo al directorio validado.
 - `docs/skill-creator/arquitectura.html` — diagrama del paquete, las puertas de validación y el directorio producido.

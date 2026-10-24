@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "f30323c4-5e96-4dcc-a51c-8ac02a11fe33",
+  "status": "current",
+  "command": "deliver",
+  "type": "workflow",
+  "input": "C:\\SKILLS-AGP\\docs\\prd-cartographer\\flujo-de-trabajo.json",
+  "output": "C:\\SKILLS-AGP\\docs\\prd-cartographer\\flujo-de-trabajo.html",
+  "specification": {
+    "sha256": "54c0d76fd6e8aad44da2b34618bcfb8d4487efcddc612af9d7cea40c02b16943",
+    "bytes": 7582
+  },
+  "artifact": {
+    "sha256": "24f56249473d24ea957ea977161ec1a2de350f17740adbbaf348b995eac0b004",
+    "bytes": 837648
+  }
+}

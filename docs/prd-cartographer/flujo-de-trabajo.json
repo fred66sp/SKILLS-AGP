@@ -1,0 +1,312 @@
+{
+  "schema_version": 2,
+  "diagram_type": "workflow",
+  "meta": {
+    "title": "Flujo de trabajo de PRD Cartographer",
+    "subtitle": "Del encargo al PRD revisado: cuándo hay descubrimiento suficiente, cómo se fija la certeza de cada afirmación, dónde se detiene el flujo y qué se comprueba antes de cerrar.",
+    "locale": "es",
+    "output": "docs/prd-cartographer/flujo-de-trabajo.html",
+    "visual_preset": "signal-flow",
+    "quality_profile": "showcase"
+  },
+  "lanes": [
+    {
+      "id": "persona",
+      "label": "Persona y encargo"
+    },
+    {
+      "id": "skill",
+      "label": "La skill: delimitar y redactar"
+    },
+    {
+      "id": "fuentes",
+      "label": "Fuentes y PRD"
+    },
+    {
+      "id": "control",
+      "label": "Evidencia y paradas",
+      "variant": "exception"
+    }
+  ],
+  "phases": [
+    {
+      "id": "entrada",
+      "label": "Delimitar y comprobar",
+      "fromCol": 0,
+      "toCol": 1
+    },
+    {
+      "id": "juicio",
+      "label": "Problema y certeza",
+      "fromCol": 2,
+      "toCol": 3,
+      "variant": "emphasis"
+    },
+    {
+      "id": "redaccion",
+      "label": "Redacción",
+      "fromCol": 4,
+      "toCol": 4
+    },
+    {
+      "id": "cierre",
+      "label": "Puerta y cierre",
+      "fromCol": 5,
+      "toCol": 5,
+      "variant": "security"
+    }
+  ],
+  "groups": [
+    {
+      "id": "antes-de-redactar",
+      "label": "Sin problema no hay PRD",
+      "lane": "skill",
+      "fromCol": 2,
+      "toCol": 3,
+      "variant": "emphasis"
+    },
+    {
+      "id": "prueba",
+      "label": "Evidencia mostrada",
+      "lane": "control",
+      "fromCol": 4,
+      "toCol": 5,
+      "variant": "security"
+    }
+  ],
+  "mainPath": [
+    "encargo",
+    "delimita",
+    "preparacion",
+    "problema",
+    "redacta",
+    "puerta",
+    "resultado"
+  ],
+  "nodes": [
+    {
+      "id": "encargo",
+      "lane": "persona",
+      "col": 0,
+      "type": "external",
+      "label": "Encargo de producto",
+      "sublabel": "crear · revisar · auditar",
+      "tag": "nada se escribe aún",
+      "icon": "start"
+    },
+    {
+      "id": "delimita",
+      "lane": "skill",
+      "col": 0,
+      "type": "backend",
+      "label": "Delimitar",
+      "sublabel": "producto o feature",
+      "tag": "una pregunta si bloquea"
+    },
+    {
+      "id": "preparacion",
+      "lane": "skill",
+      "col": 1,
+      "type": "backend",
+      "label": "Preparación",
+      "sublabel": "¿hay descubrimiento?",
+      "tag": "sin evidencia no hay PRD"
+    },
+    {
+      "id": "problema",
+      "lane": "skill",
+      "col": 2,
+      "type": "backend",
+      "label": "Problema y concepto",
+      "sublabel": "Universal Idea Model",
+      "tag": "hecho frente a hipótesis"
+    },
+    {
+      "id": "redacta",
+      "lane": "skill",
+      "col": 4,
+      "type": "backend",
+      "label": "PRD",
+      "sublabel": "plantilla y trazabilidad",
+      "tag": "métricas medibles"
+    },
+    {
+      "id": "fuentes",
+      "lane": "fuentes",
+      "col": 1,
+      "type": "database",
+      "label": "Fuentes",
+      "sublabel": "entrevistas · datos · documentos"
+    },
+    {
+      "id": "prd",
+      "lane": "fuentes",
+      "col": 5,
+      "type": "database",
+      "label": "PRD trazable",
+      "sublabel": "una fuente por afirmación"
+    },
+    {
+      "id": "contradiccion",
+      "lane": "control",
+      "col": 2,
+      "type": "security",
+      "label": "Contradicción",
+      "sublabel": "dos fuentes en conflicto",
+      "tag": "se pide decisión",
+      "icon": "stop"
+    },
+    {
+      "id": "descubrimiento",
+      "lane": "control",
+      "col": 1,
+      "type": "security",
+      "label": "Diagnóstico",
+      "sublabel": "no listo para PRD",
+      "tag": "Problem Statement",
+      "icon": "stop"
+    },
+    {
+      "id": "puerta",
+      "lane": "control",
+      "col": 4,
+      "type": "security",
+      "label": "Puerta de calidad",
+      "sublabel": "quality-gate.md",
+      "tag": "veredicto declarado"
+    },
+    {
+      "id": "resultado",
+      "lane": "control",
+      "col": 5,
+      "type": "frontend",
+      "label": "Resultado",
+      "sublabel": "estado y pendientes",
+      "icon": "success"
+    }
+  ],
+  "edges": [
+    {
+      "id": "pide",
+      "from": "encargo",
+      "to": "delimita",
+      "label": "pide",
+      "variant": "emphasis",
+      "role": "main"
+    },
+    {
+      "id": "alcance",
+      "from": "delimita",
+      "to": "preparacion",
+      "label": "alcance acotado",
+      "role": "main"
+    },
+    {
+      "id": "inventario",
+      "from": "preparacion",
+      "to": "fuentes",
+      "label": "inventaría",
+      "variant": "dashed",
+      "role": "branch"
+    },
+    {
+      "id": "suficiente",
+      "from": "preparacion",
+      "to": "problema",
+      "label": "hay evidencia",
+      "role": "main"
+    },
+    {
+      "id": "sin-descubrimiento",
+      "from": "preparacion",
+      "to": "descubrimiento",
+      "label": "falta problema",
+      "variant": "security",
+      "role": "return"
+    },
+    {
+      "id": "desbloquea",
+      "from": "descubrimiento",
+      "to": "problema",
+      "label": "evidencia nueva",
+      "variant": "dashed",
+      "role": "branch"
+    },
+    {
+      "id": "choca",
+      "from": "problema",
+      "to": "contradiccion",
+      "label": "choca",
+      "variant": "security",
+      "role": "return"
+    },
+    {
+      "id": "concepto",
+      "from": "problema",
+      "to": "redacta",
+      "label": "concepto sustentado",
+      "variant": "emphasis",
+      "role": "main"
+    },
+    {
+      "id": "escribe",
+      "from": "redacta",
+      "to": "puerta",
+      "label": "antes de cerrar",
+      "role": "main"
+    },
+    {
+      "id": "fuente-ausente",
+      "from": "redacta",
+      "to": "contradiccion",
+      "label": "fuente ausente",
+      "variant": "security",
+      "role": "return"
+    },
+    {
+      "id": "confirma",
+      "from": "puerta",
+      "to": "prd",
+      "label": "sustenta",
+      "variant": "emphasis",
+      "role": "main"
+    },
+    {
+      "id": "cierra",
+      "from": "puerta",
+      "to": "resultado",
+      "label": "veredicto",
+      "variant": "emphasis",
+      "role": "main"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "Qué se lee antes de escribir",
+      "items": [
+        "Se inventarían las fuentes con procedencia, fecha visible, alcance y limitación; una fuente sin contexto no sostiene una decisión",
+        "Se separan afirmaciones atómicas para no mezclar hechos, opiniones, objetivos y propuestas en una sola frase",
+        "El Universal Idea Model se completa o se dejan sus campos en UNKNOWN con la evidencia que los desbloquearía"
+      ]
+    },
+    {
+      "dot": "rose",
+      "title": "Dónde se detiene",
+      "items": [
+        "Sin problema entendido, usuarios identificados o evidencia de la oportunidad, no se fabrica un PRD: se entrega un diagnóstico de preparación",
+        "Una contradicción entre fuentes con la misma responsabilidad se expone y se pide decisión",
+        "Una métrica sin método, fuente o línea base no se presenta como objetivo verificable"
+      ]
+    },
+    {
+      "dot": "emerald",
+      "title": "Qué se prueba al cerrar",
+      "items": [
+        "Cada afirmación crítica tiene grado de certeza y trazabilidad; las que no se sostienen bajan de grado o se retiran",
+        "La puerta de calidad recorre evidencia, producto, usuarios, métricas, requisitos, riesgos y coherencia",
+        "El cierre declara estado, documento, contradicciones, UNKNOWN, decisiones pendientes y validaciones necesarias"
+      ]
+    }
+  ]
+}
