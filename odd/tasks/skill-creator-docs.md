@@ -18,23 +18,20 @@ S5. Declarar que <https://agentskills.io/> es la guía y la referencia estricta 
 
 ## Tasks
 
-| ID | Spec | Entrega | Commit | Estado |
+| ID | Spec | Entrega | Evidencia | Estado |
 |---|---|---|---|---|
-| T1 | S1 | Rama `docs/skill-creator`, este documento y espejo en Engram (el guardado en Engram falló: base de datos no disponible) | — | hecho |
-| T2 | S2, S3 | `docs/skill-creator/index.html` (1138 líneas, 15 secciones) | `docs: añadir la página de la skill skill-creator` | hecho |
-| T3 | S2 | `docs/skill-creator/flujo-de-trabajo.json`, `docs/skill-creator/arquitectura.json` | `docs: añadir los diagramas de skill-creator` | hecho |
-| T4 | S2, S4 | `docs/skill-creator/*.html` + `*.delivery.json` (archify 3.2.0, 9/9 comprobaciones cada uno) | `docs: añadir los diagramas de skill-creator` | hecho |
-
-Los SHA que tenía esta tabla dejaron de existir cuando la historia del repositorio se unificó en un commit
-inicial; se conservan las materias de commit como evidencia de la unidad de trabajo.
-| T5 | S1, S4 | `README.md`, `CHANGELOG.md` | último commit de la rama | hecho |
-| T6 | S2, S3, S4 | Verificación: enlaces, hashes, ausencia de recursos externos, salidas reales del validador | ver Log L6 | hecho |
-| T7 | S1 | Commits por unidad de trabajo | `docs: añadir la página`, `docs: añadir los diagramas` y el último de la serie | hecho |
-| T8 | S5 | Referencia estricta a <https://agentskills.io/> en README, guía, página y changelog | último commit de la rama | hecho |
+| T1 | S1 | Rama corta de la entrega, este documento y espejo en Engram (el guardado en Engram falló: base de datos no disponible) | historial de Git | hecho |
+| T2 | S2, S3 | `docs/skill-creator/index.html` (1138 líneas, 15 secciones) | historial de Git | hecho |
+| T3 | S2 | `docs/skill-creator/flujo-de-trabajo.json`, `docs/skill-creator/arquitectura.json` | historial de Git | hecho |
+| T4 | S2, S4 | `docs/skill-creator/*.html` + `*.delivery.json` (archify 3.2.0, 9/9 comprobaciones cada uno) | historial de Git | hecho |
+| T5 | S1, S4 | `README.md`, `CHANGELOG.md` | historial de Git | hecho |
+| T6 | S2, S3, S4 | Verificación: enlaces, hashes, ausencia de recursos externos, salidas reales del validador | evidencia en el Log L6 | hecho |
+| T7 | S1 | Unidades de trabajo por rebanada, según la sección siguiente | historial de Git | hecho |
+| T8 | S5 | Referencia estricta a <https://agentskills.io/> en README, guía, página y changelog | historial de Git | hecho |
 
 ## Fronteras de entrega
 
-Estrategia: commits secuenciales en la rama `docs/skill-creator` (no hay remoto, así que no hay PR ni cadena de PR). La rebanada de ~400 líneas se aplica a código revisable línea a línea; aquí las dos primeras rebanadas son artefactos indivisibles:
+Estrategia: unidades secuenciales sobre una rama corta de la entrega; el repositorio no define remoto, así que no hay PR ni cadena de PR. La rebanada de ~400 líneas se aplica a código revisable línea a línea; aquí las dos primeras rebanadas son artefactos indivisibles:
 
 | Rebanada | Contenido | Motivo de la frontera |
 |---|---|---|
@@ -54,15 +51,15 @@ L4 (incidencia, delegación): el trabajador `gentle-ai-worker` no arranca en est
 
 L5 (corrección, diagramas): el primer spec de arquitectura no pasó `archify validate`: tres componentes caían dentro de marcos de frontera sin pertenecer a ellos y una etiqueta no tenía hueco suficiente. Se reubicaron los componentes en dos clústeres compactos y se dio más separación a las conexiones etiquetadas. Segundo intento: `ok architecture (9 artifact checks; 0 errors, 0 warnings)`.
 
-L6 (verificación, evidencia): sobre el árbol de trabajo y sobre el commit — 0 enlaces rotos desde `index.html`, `README.md` y `CHANGELOG.md`; 0 recursos externos (`http`, `https`, `data:` de red, `@import`, tipografías remotas); 0 ids duplicados; 15 secciones y 15 entradas de índice; 0 errores de anidado HTML; 19 ítems de checklist y 5 bloques, que son las cifras que afirma la página; los `sha256` de los cuatro recibos coinciden con los blobs del commit (spec y artefacto); carga en navegador sin errores de consola y con el conmutador de tema funcionando (`#6d28d9` en claro, fondo `#0a0f1c` en oscuro).
+L6 (verificación, evidencia): sobre el árbol de trabajo y sobre los ficheros versionados — 0 enlaces rotos desde `index.html`, `README.md` y `CHANGELOG.md`; 0 recursos externos (`http`, `https`, `data:` de red, `@import`, tipografías remotas); 0 ids duplicados; 15 secciones y 15 entradas de índice; 0 errores de anidado HTML; 19 ítems de checklist y 5 bloques, que son las cifras que afirma la página; los `sha256` de los cuatro recibos coinciden con los bytes de los ficheros que registran (spec y artefacto); carga en navegador sin errores de consola y con el conmutador de tema funcionando (`#6d28d9` en claro, fondo `#0a0f1c` en oscuro).
 
-L7 (corrección, saltos de línea): la primera escritura de `arquitectura.json` salió con CRLF y el recibo registraba el hash del fichero con CRLF, distinto del blob normalizado a LF. Se reescribió el spec con LF y se re-entregó el diagrama: el HTML resultó idéntico byte a byte (`sha256 071b29d0367e`) y los cuatro recibos quedaron `current` contra el commit.
+L7 (corrección, saltos de línea): la primera escritura de `arquitectura.json` salió con CRLF y el recibo registraba el hash del fichero con CRLF, distinto del que tiene normalizado a LF. Se reescribió el spec con LF y se re-entregó el diagrama: el HTML resultó idéntico byte a byte y los cuatro recibos quedaron `current`.
 
 L8 (decisión, alcance): no se toca `.gitignore` por los artefactos de verificación; la captura de pantalla y el directorio del navegador se borraron tras comprobar la página. `odd/tasks/` se versiona porque forma parte del seguimiento del trabajo.
 
 L9 (cambio de requisito, literal): «añade donde sea necesario que este repositorio tiene como guía y referencia extricta de https://agentskills.io/»
 
-L10 (ejecución, S5): la referencia se declara en cuatro sitios, que son donde se lee la documentación: el `README.md` (párrafo de cabecera con el alcance de la norma), la guía de buenas prácticas (línea «Referencia estricta» antes de la documentación externa), la página de la skill (sección 1 y tarjeta de `SKILL.md`, con enlace) y el `CHANGELOG.md`. En la página es un enlace saliente: no añade ninguna carga de recurso externo, así que la afirmación de «página estática» del pie sigue siendo cierta. No se tocan los diagramas ni sus recibos; los cuatro `sha256` siguen coincidiendo con los blobs del commit.
+L10 (ejecución, S5): la referencia se declara en cuatro sitios, que son donde se lee la documentación: el `README.md` (párrafo de cabecera con el alcance de la norma), la guía de buenas prácticas (línea «Referencia estricta» antes de la documentación externa), la página de la skill (sección 1 y tarjeta de `SKILL.md`, con enlace) y el `CHANGELOG.md`. En la página es un enlace saliente: no añade ninguna carga de recurso externo, así que la afirmación de «página estática» del pie sigue siendo cierta. No se tocan los diagramas ni sus recibos; los cuatro `sha256` siguen coincidiendo con los bytes en disco.
 
 L11 (defecto reportado, literal): «en el index.html de skill-creator, el bloque "Cuándo aplica	Cuándo no" le falta margen supieror y eso hace que se vea pegado. Añade el margen necesario. No hace falta que lo compruebes en el navegador, me lo dices y yo lo compruebo.»
 

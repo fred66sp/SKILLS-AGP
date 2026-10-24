@@ -107,12 +107,57 @@ class EstadoDeLaEntrega(Base):
         )
         self.assertEqual(self.delivery(), [])
 
-    def test_fijacion_de_un_tercero_no_es_hallazgo(self):
+    def test_fijacion_de_un_tercero_enlazada_no_es_hallazgo(self):
         self.write(
             "a.md",
             "# Skills\n\n## Procedencia\n\n"
-            "Fijada al commit `a0bfa56bbcd676383f6ca57bb7e344d0856bc38e` del 2026-07-27.\n",
+            "Fijada en el commit [`a0bfa56`](https://github.com/mgechev/skills-best-practices/commit/"
+            "a0bfa56bbcd676383f6ca57bb7e344d0856bc38e) del 2026-07-27.\n",
         )
+        self.assertEqual(self.delivery(), [])
+
+
+class ReferenciaGit(Base):
+    """El registro de trabajo tampoco conserva referencias de Git."""
+
+    def test_sha_en_registro_de_trabajo_si_es_hallazgo(self):
+        self.write(
+            "a.md",
+            "# Registro\n\n## Specs\n\nS1.\n\n## Log\n\nL1 Cerrado en `802f79a feat(x): y`.\n",
+        )
+        hallazgos = self.delivery()
+        self.assertEqual([item["family"] for item in hallazgos], ["gitref"])
+
+    def test_sha_suelto_en_prosa_de_guia(self):
+        self.write("a.md", "# Guia\n\nSe integró como 1a2b3c4 en la rama principal.\n")
+        self.assertEqual(self.delivery()[0]["family"], "gitref")
+
+    def test_pin_enlazado_de_un_tercero_no_es_hallazgo(self):
+        self.write(
+            "a.md",
+            "# Skills\n\n## Procedencia\n\nFijada en el commit [`a0bfa56`]"
+            "(https://github.com/mgechev/skills-best-practices/commit/a0bfa56bbcd676383f6ca57bb7e344d0856bc38e).\n",
+        )
+        self.assertEqual(self.delivery(), [])
+
+    def test_hex_largo_de_recibo_no_es_hallazgo(self):
+        self.write("a.md", "# Diagramas\n\n## Recibo\n\nEl `sha256` del artefacto es `d3208c0e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2c`.\n")
+        self.assertEqual(self.delivery(), [])
+
+    def test_politica_de_commit_no_es_hallazgo(self):
+        self.write(
+            "a.md",
+            "# Contribuir\n\n## Commits\n\nNingún commit se ejecuta sin confirmación explícita.\n"
+            "Los cambios se dejan preparados en el stage.\nTrabajo directo en `main` para tareas pequeñas.\n",
+        )
+        self.assertEqual(self.delivery(), [])
+
+    def test_frases_de_estado_de_la_entrega(self):
+        self.write("a.md", "# Registro\n\n## Log\n\nL1 Quedó commiteado y el árbol limpio.\n")
+        self.assertEqual([item["family"] for item in self.delivery()], ["gitstate"])
+
+    def test_rutas_de_fichero_no_son_sha(self):
+        self.write("a.md", "# Guia\n\n## Uso\n\nEdita `deadbeef.md` y `scripts/doc-deadbeef.py`.\n")
         self.assertEqual(self.delivery(), [])
 
 

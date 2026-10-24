@@ -1,9 +1,9 @@
 # document-management-software
 
 Skill de gestión documental de software en `src/document-management-software/` y su documentación en `docs/document-management-software/`.
-Se trabajó en la rama `feature/document-management-software` desde `main`, con un arreglo posterior en
-`fix/document-management-software-recibos`; las dos se integraron con `--no-ff`. Después, la historia completa
-se unificó en un único commit inicial, a petición explícita y sin remoto de por medio. Sin remoto no hay publicación.
+La entrega se escribió en dos ramas cortas: la de la skill y una posterior para corregir los recibos de los
+diagramas; las dos se integraron con `--no-ff`. Después, la historia completa se unificó en un único commit
+inicial, a petición explícita. El repositorio no define remoto.
 
 ## Specs
 
@@ -19,15 +19,15 @@ S9. Un documento de usuario no conserva estado de la entrega: ni referencias a r
 
 ## Tasks
 
-| ID | Tarea | Specs | Unidad de commit |
+| ID | Tarea | Specs | Evidencia |
 |---|---|---|---|
-| T1 | Contrato documental: `SKILL.md` + cuatro `references/` | S1, S2, S3, S6 | `feat(document-management-software): añadir el contrato documental de la skill` |
-| T2 | Plantillas de plan e informe y `scripts/doc-inventory.py` | S6 | `feat(document-management-software): añadir plantillas y script de inventario` |
-| T3 | Especificaciones de archify y los dos diagramas entregados | S4 | `docs(document-management-software): añadir las especificaciones y los diagramas` |
-| T4 | Página principal y sus enlaces en `README.md` y `CHANGELOG.md` | S4, S5 | `docs(document-management-software): documentar la skill con página y diagramas` |
-| T5 | Verificación de la entrega | S5 | sin commit propio: evidencia en el Log |
-| T6 | Reescribir la página como puerta de entrada en presente, sin duplicar el paquete | S7, S8 | `docs(document-management-software): rewrite the skill page as a present-tense entry point` |
-| T7 | Codificar en el paquete que el estado de la entrega no se documenta y barrer los documentos del repositorio | S9 | `feat(document-management-software): forbid delivery state in user-facing docs` |
+| T1 | Contrato documental: `SKILL.md` + cuatro `references/` | S1, S2, S3, S6 | historial de Git |
+| T2 | Plantillas de plan e informe y `scripts/doc-inventory.py` | S6 | historial de Git |
+| T3 | Especificaciones de archify y los dos diagramas entregados | S4 | historial de Git |
+| T4 | Página principal y sus enlaces en `README.md` y `CHANGELOG.md` | S4, S5 | historial de Git |
+| T5 | Verificación de la entrega | S5 | evidencia en el Log |
+| T6 | Reescribir la página como puerta de entrada en presente, sin duplicar el paquete | S7, S8 | historial de Git |
+| T7 | Codificar en el paquete que el estado de la entrega no se documenta y barrer los documentos del repositorio | S9 | historial de Git |
 
 ### Límites de rebanada
 
@@ -35,15 +35,15 @@ La guía del repositorio es de unas 400 líneas de autoría por commit. T1 y T2 
 
 ## Cortes de revisión
 
-La historia se unificó después en un único commit inicial del repositorio, así que estas unidades no son referencias resolubles: quedan como registro de los cortes de revisión con los que se escribió el paquete. Git es la fuente del estado actual.
+La historia se unificó después en un único commit inicial del repositorio, así que estos cortes no son referencias resolubles en el historial: quedan como registro de las unidades con las que se escribió el paquete. Git es la fuente del estado actual.
 
-- `feat(document-management-software): añadir el contrato documental de la skill`
-- `feat(document-management-software): añadir plantillas y script de inventario`
-- `docs(document-management-software): añadir el diagrama de arquitectura`
-- `docs(document-management-software): añadir el diagrama de flujo de trabajo`
-- `docs(document-management-software): documentar la skill con página y diagramas`
-- `docs(odd): registrar los commits de la entrega`
-- `fix(document-management-software): corregir el recibo del diagrama de flujo`
+- El contrato documental: la skill y sus cuatro referencias.
+- Las plantillas de plan e informe y el script de inventario.
+- El diagrama de arquitectura.
+- El diagrama de flujo de trabajo.
+- La página principal con sus enlaces.
+- El registro de la entrega en `odd/`.
+- La corrección del recibo del diagrama de flujo.
 
 ## Log
 
@@ -53,7 +53,7 @@ L2 (literal): «la ruta que te di es la fuente, la creación es en este reposito
 
 L3 (literal): «Haz la documentación en docs/»
 
-L4 (literal): «adelante» — autoriza crear la rama desde `main`, los commits por unidad y deja la integración pendiente de revisión.
+L4 (literal): «adelante» — autoriza abrir la rama corta de la entrega con commits por unidad y deja la integración pendiente de revisión.
 
 L5 Decisión de interpretación: el nombre `document-management-software` se lee como «gestión documental de software», coherente con el `SKILL.md` de la fuente (disciplina documental), no como dominio de software de gestión documental (DMS). Queda declarado al usuario, que no lo corrigió.
 

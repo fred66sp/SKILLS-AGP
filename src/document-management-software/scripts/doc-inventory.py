@@ -11,10 +11,14 @@ enlaces relativos rotos, documentos sin H1, documentos sin contenido,
 encabezados H2 repetidos entre documentos (señal de duplicación) y estado de la
 entrega escrito como documentación.
 
-La clase de estado de la entrega solo mira la prosa: omite los bloques de código
-(``` y ~~~), las citas entre comillas anguladas (el ejemplo que la propia regla
-enumera no es un hallazgo) y los documentos que son registro de trabajo, que por
-convención llevan un encabezado H2 llamado `Log`.
+La clase de estado de la entrega tiene cuatro familias: narración de proceso,
+recuento que caduca, referencia de Git (SHA sueltos) y frase de estado de la
+entrega. Solo mira la prosa: omite los bloques de código (``` y ~~~) y las citas
+entre comillas anguladas. La narración y el recuento se admiten en el registro de
+trabajo, que por convención lleva un encabezado H2 llamado `Log`; las
+referencias de Git se buscan también ahí, porque un SHA no vive en un artefacto
+versionado. Un SHA enlazado a la página de su commit es la fijación de un tercero
+y no es hallazgo.
 
 Códigos de salida:
     0  inventario completo sin hallazgos
@@ -48,6 +52,15 @@ NARRATION_RE = re.compile(
     re.IGNORECASE,
 )
 RECOUNT_RE = re.compile(r"\b\d[\d.]*\s?(?:bytes|KB|MB|secciones)\b")
+GITREF_RE = re.compile(
+    r"(?<![0-9A-Za-z/-])[0-9a-f]{7,40}(?![0-9A-Za-z])"
+    r"(?!\.(?:md|py|html|json|js|ts|sh|png|svg|yml)\b)"
+)
+GITSTATE_RE = re.compile(
+    r"\bcommitead[oa]\b|árbol (de trabajo )?limpio|nada publicado|en cero l[íi]neas",
+    re.IGNORECASE,
+)
+COMMIT_LINK_RE = re.compile(r"\[[^\]]*\]\([^)]*/commit/[0-9a-f]{7,40}\)")
 
 
 def prose_lines(text):
@@ -97,18 +110,21 @@ def analyze(path, root):
             links.append(resolve(target, path, root))
     has_content = any(line.strip() for line in lines)
     delivery = []
-    if "log" not in {normalize(heading) for heading in headings}:
-        for number, line in prose:
-            plain = QUOTED_RE.sub("", line)
-            for family, pattern in (("narracion", NARRATION_RE), ("recuento", RECOUNT_RE)):
-                found = pattern.search(plain)
-                if found:
-                    delivery.append({
-                        "line": number,
-                        "family": family,
-                        "matched": found.group(0),
-                        "excerpt": plain.strip()[:80],
-                    })
+    is_record = "log" in {normalize(heading) for heading in headings}
+    for number, line in prose:
+        plain = QUOTED_RE.sub("", line)
+        familias = (("gitref", GITREF_RE), ("gitstate", GITSTATE_RE))
+        if not is_record:
+            familias = (("narracion", NARRATION_RE), ("recuento", RECOUNT_RE)) + familias
+        for family, pattern in familias:
+            found = pattern.search(COMMIT_LINK_RE.sub("", plain) if family == "gitref" else plain)
+            if found:
+                delivery.append({
+                    "line": number,
+                    "family": family,
+                    "matched": found.group(0),
+                    "excerpt": plain.strip()[:80],
+                })
     return {
         "path": os.path.relpath(path, root).replace(os.sep, "/"),
         "delivery": delivery,

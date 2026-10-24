@@ -16,7 +16,7 @@ Recorre el inventario y busca, por orden de impacto:
 8. Enlaces relativos rotos y referencias a rutas inexistentes.
 9. Instrucciones imposibles de ejecutar o de verificar.
 10. Contexto decisional perdido en decisiones que se reabren.
-11. Estado de la propia entrega escrito como documentación: sus ramas, commits, hashes, «se corrigió», «quedó reportado». Git y el registro de trabajo ya lo contienen. La fijación de un tercero (origen y commit de una copia vendida) no entra aquí: es su contrato de reproducibilidad.
+11. Estado de la propia entrega escrito en un artefacto versionado: SHA de commit, ramas, etiquetas, `HEAD`, el `stage`, mensajes de commit copiados, «commiteado», «árbol limpio», «nada publicado», «sin remoto», narraciones de corrección y recuentos que caducan. Eso solo vive en Git, y la prohibición incluye el registro de trabajo. La fijación de un tercero —origen y commit de una copia vendida, enlazada a ese commit— es su contrato de reproducibilidad y no entra aquí.
 
 Prioriza por impacto sobre comprensión, implementación, operación y mantenimiento. El estilo solo cuenta si impide entender o ejecutar.
 
@@ -44,7 +44,7 @@ Antes de declarar terminada una intervención, comprueba y muestra:
 5. Que el contenido eliminado no fuera la única representación de un conocimiento válido.
 6. Que la terminología nueva coincida con la que ya usa el proyecto.
 7. Que los comandos, rutas y valores citados existan en el estado actual.
-8. Que el documento no conserve estado de la propia entrega que ya vive en Git o en el registro de trabajo: referencias a sus commits y ramas, hashes de sus artefactos, narración de correcciones y reentregas. La fijación de un tercero se conserva: es un contrato de reproducibilidad, no historia de la entrega.
+8. Que el artefacto, sea una guía o el registro de trabajo, no conserve estado de la propia entrega: SHA, ramas, etiquetas, mensajes de commit, narración de correcciones y recuentos que caducan. La fijación de un tercero enlazada a su commit se conserva: es un contrato de reproducibilidad, no historia de la entrega.
 
 Si falla cualquiera de estas comprobaciones, el resultado es INCOMPLETO o NO VERIFICADO, nunca "terminado". Explica qué condición falta.
 
@@ -55,6 +55,7 @@ Cuando el encargo sea una auditoría, o cuando queden hallazgos sin resolver, re
 ## Falsos positivos conocidos
 
 - Un encabezado repetido puede ser correcto cuando dos documentos cubren la misma sección con audiencias distintas; decídelo explícitamente, no lo ignores.
-- El inventario determinista omite los bloques de código, las citas entre comillas anguladas (el ejemplo que la propia regla enumera) y los documentos con un encabezado H2 llamado `Log`, que son registro de trabajo y no documentación de usuario. Un tercero fijado a un commit tampoco es hallazgo: se busca la narración, no el hash.
+- El inventario determinista omite los bloques de código y las citas entre comillas anguladas (el ejemplo que la propia regla enumera). En los documentos con un encabezado H2 llamado `Log` admite además la narración y el recuento, que allí son evidencia del encargo; las referencias de Git se buscan también en ellos, porque un SHA no vive en un artefacto versionado.
+- Un SHA enlazado a la página de su commit es la fijación de un tercero, no estado de la entrega. Una ruta de fichero con forma hexadecimal (`deadbeef.md`) tampoco lo es.
 - Un enlace a una ruta generada puede no existir antes de compilar; verifica si el repositorio documenta ese paso de generación.
 - Una afirmación sin fuente puede ser una decisión del usuario no registrada: pregunta antes de borrarla.
