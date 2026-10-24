@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="Entrada a la skill skill-creator: qué hace, cuándo se activa, cómo se validan los metadatos, qué contiene el paquete de cuatro ficheros, dónde vive cada regla, las preguntas de la primera conversación y los dos diagramas. Las reglas están en SKILL.md, en la checklist, en la plantilla y en scripts/validate-metadata.py, no copiadas en esta página.">
+<meta name="description" content="Entrada a la skill skill-creator: qué hace, cuándo se activa, cómo se validan los metadatos, qué contiene el paquete, dónde vive cada regla, las preguntas de la primera conversación y los dos diagramas. Las reglas están en SKILL.md, en la checklist, en la plantilla y en scripts/validate-metadata.py, no copiadas en esta página.">
 <meta name="color-scheme" content="light dark">
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%236d28d9'/%3E%3Cpath d='M18.2 8.4l5.4 5.4-9.1 9.1-5.4-5.4z' fill='none' stroke='%23ffffff' stroke-width='2' stroke-linejoin='round'/%3E%3Cpath d='M8.6 23.4l-.9 1.9 1.9-.9' fill='none' stroke='%23ffffff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
 <title>skill-creator — Skills que se descubren y se ejecutan</title>
@@ -382,9 +382,9 @@
 
 <section class="hero" id="top">
   <div class="hero-inner">
-    <span class="pill"><span class="dot" aria-hidden="true"></span>una skill de terceros · cuatro ficheros · metadatos que pasan el validador o no pasan</span>
+    <span class="pill"><span class="dot" aria-hidden="true"></span>una skill de terceros · paquete fijado · metadatos que pasan el validador o no pasan</span>
     <h1>Skills que se descubren y se <span class="grad">ejecutan</span></h1>
-    <p class="lead">La skill <code>skill-creator</code> produce el directorio de una skill nueva con una forma concreta: metadatos que un validador acepta o rechaza, un <code>SKILL.md</code> corto escrito en imperativo y tres carpetas cuyo contenido se abre solo cuando la operación lo pide. El paquete es de terceros y está fijado a una versión: esta página describe lo que hace y remite a sus ficheros para las reglas.</p>
+    <p class="lead">La skill <code>skill-creator</code> produce el directorio de una skill nueva con una forma concreta: metadatos que un validador acepta o rechaza, un <code>SKILL.md</code> corto escrito en imperativo y carpetas de apoyo cuyo contenido se abre solo cuando la operación lo pide. El paquete es de terceros y está fijado a una versión: esta página describe lo que hace y remite a sus ficheros para las reglas.</p>
     <div class="hero-actions">
       <a class="btn btn-primary" href="#que-hace">Qué hace</a>
       <a class="btn btn-ghost" href="#uso">Cómo se usa</a>
@@ -456,7 +456,7 @@
 
     <section id="uso" class="section">
       <div class="section-head"><span class="section-num">3</span><h2 class="title">Cómo se usa</h2></div>
-      <p class="sub">El procedimiento son seis pasos —metadatos, directorio, <code>SKILL.md</code>, scripts, composición opcional y auditoría final— más una sección de errores. Esta página no los copia: documenta la única puerta automática del recorrido, el validador de metadatos, y el significado de lo que imprime. Los límites que aplica a <code>name</code> y <code>description</code> están en el paso 1 de <code>SKILL.md</code> y en el propio script. La ruta está escrita como la escribe el <code>SKILL.md</code>, relativa a la carpeta de la skill; desde la raíz del repositorio el fichero está en <code>.skills/skill-creator/scripts/validate-metadata.py</code>.</p>
+      <p class="sub">El procedimiento cubre metadatos, directorio, <code>SKILL.md</code>, scripts, composición opcional y auditoría final, más la gestión de errores. Esta página no los copia: documenta la única puerta automática del recorrido, el validador de metadatos, y el significado de lo que imprime. Los límites que aplica a <code>name</code> y <code>description</code> están en el paso 1 de <code>SKILL.md</code> y en el propio script. La ruta está escrita como la escribe el <code>SKILL.md</code>, relativa a la carpeta de la skill; desde la raíz del repositorio el fichero está en <code>.skills/skill-creator/scripts/validate-metadata.py</code>.</p>
 
       <div class="code"><pre><code>python3 scripts/validate-metadata.py --name "[name]" --description "[description]"</code></pre></div>
 
@@ -480,10 +480,10 @@
 
     <section id="paquete" class="section">
       <div class="section-head"><span class="section-num">4</span><h2 class="title">Qué contiene el paquete</h2></div>
-      <p class="sub">Cuatro ficheros y ninguna documentación para personas: el paquete se carga en la ventana de contexto del agente, así que lo que no se ejecuta no tiene sitio dentro.</p>
+      <p class="sub">Ninguna documentación para personas: el paquete se carga en la ventana de contexto del agente, así que lo que no se ejecuta no tiene sitio dentro.</p>
 
       <div class="code"><pre><code>skill-creator/
-├── SKILL.md                       # los seis pasos y la gestión de errores
+├── SKILL.md                       # los pasos y la gestión de errores
 ├── references/
 │   └── checklist.md               # la auditoría final, en cinco bloques
 ├── assets/
@@ -495,7 +495,7 @@
         <table>
           <thead><tr><th>Fichero</th><th>Cuándo lo abre el agente</th><th>Qué aporta</th></tr></thead>
           <tbody>
-            <tr><td><code>SKILL.md</code></td><td>Siempre: es el punto de entrada.</td><td>Los metadatos, los seis pasos numerados y las dos ramas de la gestión de errores.</td></tr>
+            <tr><td><code>SKILL.md</code></td><td>Siempre: es el punto de entrada.</td><td>Los metadatos, los pasos numerados y las ramas de la gestión de errores.</td></tr>
             <tr><td><code>references/checklist.md</code></td><td>Al final, en el paso 6.</td><td>La auditoría en cinco bloques; todas las casillas en «Pass» antes de dar la skill por desplegable.</td></tr>
             <tr><td><code>assets/SKILL.template.md</code></td><td>Al empezar a redactar, en el paso 3.</td><td>La forma del cuerpo que se copia: frontmatter, pasos numerados y sección de errores.</td></tr>
             <tr><td><code>scripts/validate-metadata.py</code></td><td>En el paso 1, antes de crear el directorio.</td><td>La validación del nombre y de la descripción, con códigos de salida y mensajes que sirven para autocorregir.</td></tr>
@@ -510,7 +510,7 @@
 
     <section id="reglas" class="section">
       <div class="section-head"><span class="section-num">5</span><h2 class="title">Dónde están las reglas</h2></div>
-      <p class="sub">Las reglas viven en los cuatro ficheros del paquete y en la especificación externa contra la que se contrastan, no en esta página. Aquí se indica qué responde a cada pregunta.</p>
+      <p class="sub">Las reglas viven en los ficheros del paquete y en la especificación externa contra la que se contrastan, no en esta página. Aquí se indica qué responde a cada pregunta.</p>
 
       <div class="table-wrap wrap-cells">
         <table>
@@ -562,7 +562,7 @@
         <a class="card card-link" href="arquitectura.html">
           <div class="card-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1.5"></rect><rect x="14" y="3" width="7" height="7" rx="1.5"></rect><rect x="3" y="14" width="7" height="7" rx="1.5"></rect><rect x="14" y="14" width="7" height="7" rx="1.5"></rect></svg></div>
           <h3>Arquitectura</h3>
-          <p>El paquete, las puertas de validación y la superficie sobre la que actúa: <code>SKILL.md</code>, las tres carpetas y el validador, con las fronteras que no cruza sola.</p>
+          <p>El paquete, las puertas de validación y la superficie sobre la que actúa: <code>SKILL.md</code>, sus carpetas y el validador, con las fronteras que no cruza sola.</p>
           <span class="go">Abrir el diagrama →</span>
         </a>
       </div>
@@ -570,7 +570,7 @@
       <p>Cada diagrama se abre como página suelta: archify 3.2.0 no enlaza desde el artefacto a una página local, así que se vuelve con el botón atrás del navegador o con el índice de arriba.</p>
 
       <div class="note">
-        <p><strong>Convenio de este repositorio, no mandato de la skill.</strong> <code>docs/&lt;skill&gt;/index.html</code>, los dos diagramas de archify y sus recibos <code>.delivery.json</code> son cómo SKILLS-AGP documenta sus skills. Los genera archify 3.2.0 desde el <code>.json</code> que está junto a cada HTML; el comando y la comprobación del recibo están en la sección Documentación del <code>README.md</code>. La skill no pide esta página ni ningún diagrama: otro repositorio documenta lo que quiera.</p>
+        <p><strong>Convenio de este repositorio, no mandato de la skill.</strong> <code>docs/&lt;skill&gt;/index.html</code>, los diagramas de archify y sus recibos <code>.delivery.json</code> son cómo SKILLS-AGP documenta sus skills. Los genera archify 3.2.0 desde el <code>.json</code> que está junto a cada HTML; el comando y la comprobación del recibo están en la sección Documentación del <code>README.md</code>. La skill no pide esta página ni ningún diagrama: otro repositorio documenta lo que quiera.</p>
       </div>
     </section>
   </main>

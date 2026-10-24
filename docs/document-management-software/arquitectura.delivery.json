@@ -1,17 +1,17 @@
 {
   "schemaVersion": 1,
-  "receiptId": "25983e00-53fb-4192-af98-0516f6440465",
+  "receiptId": "bed49f71-5e2d-4480-97ef-7e19eafa7b94",
   "status": "current",
   "command": "deliver",
   "type": "architecture",
   "input": "C:\\SKILLS-AGP\\docs\\document-management-software\\arquitectura.json",
   "output": "C:\\SKILLS-AGP\\docs\\document-management-software\\arquitectura.html",
   "specification": {
-    "sha256": "5e429b793a70a59472467d3f9412cf2a3b135267c44de544fb15af2a922326b9",
-    "bytes": 5901
+    "sha256": "5441fb728d9fd5be7dbb6c70956162e5b214380734daae3cbae1dcd642269aeb",
+    "bytes": 5868
   },
   "artifact": {
-    "sha256": "ecd2d0414a7f52197be010e9b40a0f9d6e4af44709c8887bc5b57050c30538cd",
-    "bytes": 831293
+    "sha256": "4e4fb85b878580c52a209759ea646e9d06d12a9e9488ad7ae88b364dc718b604",
+    "bytes": 831263
   }
 }

@@ -106,6 +106,7 @@ secrets/
 .impeccable/
 .lore/
 .pi/
+.opencode/
 .wrangler/
 # .skills/ is tracked on purpose: it holds the third-party skills this setup
 # depends on, so both machines run the same toolset (see README.md).

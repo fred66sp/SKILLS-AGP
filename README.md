@@ -48,7 +48,7 @@ Procedimiento para crear skills nuevas con la especificación agentskills.io: es
 
 Ruta: [`.skills/skill-creator/SKILL.md`](.skills/skill-creator/SKILL.md). Se usa al crear cualquier skill nueva en `src/`.
 
-Procedencia: [`mgechev/skills-best-practices`](https://github.com/mgechev/skills-best-practices/tree/main/skill), directorio `skill/`, fijada en el commit [`a0bfa56`](https://github.com/mgechev/skills-best-practices/commit/a0bfa56bbcd676383f6ca57bb7e344d0856bc38e) del 2026-07-27. Los cuatro ficheros de la copia son idénticos byte a byte a esa revisión. Actualizarla es sustituir el directorio por otra revisión y cambiar aquí el commit fijado; la fijación se comprueba con `git diff` contra esa revisión, no leyendo esta página.
+Procedencia: [`mgechev/skills-best-practices`](https://github.com/mgechev/skills-best-practices/tree/main/skill), directorio `skill/`, fijada en el commit [`a0bfa56`](https://github.com/mgechev/skills-best-practices/commit/a0bfa56bbcd676383f6ca57bb7e344d0856bc38e) del 2026-07-27. La copia es idéntica byte a byte a esa revisión. Actualizarla es sustituir el directorio por otra revisión y cambiar aquí el commit fijado; la fijación se comprueba con `git diff` contra esa revisión, no leyendo esta página.
 
 Documentación: [`docs/skill-creator/index.html`](docs/skill-creator/index.html).
 
@@ -83,7 +83,7 @@ La carpeta se registra como origen de skills en `.pi/settings.json` con `"skills
 - `docs/skill-creator/flujo-de-trabajo.html` — diagrama del flujo, del encargo al directorio validado.
 - `docs/skill-creator/arquitectura.html` — diagrama del paquete, las puertas de validación y el directorio producido.
 
-Los diagramas son artefactos de [archify](https://github.com/tt-a1i/archify) 3.2.0. Cada uno tiene su especificación (`*.json`) y su recibo de entrega (`*.delivery.json`) con el `sha256` del HTML y del spec. Para regenerarlos hace falta archify 3.2.0; el comando es el mismo en todas las carpetas de `docs/<skill>/`. En este equipo la copia local vive en `.pi/vendor/archify`, que no está versionada porque `.pi/` es estado de cada máquina, y su binario es `.pi/vendor/archify/archify/bin/archify.mjs`:
+Los diagramas son artefactos de [archify](https://github.com/tt-a1i/archify) 3.2.0. Cada uno tiene su especificación (`*.json`) y su recibo de entrega (`*.delivery.json`) con el `sha256` del HTML y del spec. Para regenerarlos hace falta archify 3.2.0; el comando es el mismo en todas las carpetas de `docs/<skill>/`. El binario se invoca con la ruta de la copia local, instalada fuera del repositorio:
 
 ```bash
 node <ruta-a-archify>/archify/bin/archify.mjs deliver workflow \
@@ -101,4 +101,4 @@ Dentro de `src/<skill>/` no se crean ficheros de documentación (`README.md`, `C
 
 ## Flujo de trabajo
 
-Ver [`CONTRIBUTING.md`](CONTRIBUTING.md). En resumen: `main` como única rama de larga vida, ramas cortas por cambio e integración con `--no-ff`. El repositorio no define remoto, así que no hay publicación: crear uno, `push` o etiquetas es una operación aparte, con su propio plan y su confirmación.
+Ver [`CONTRIBUTING.md`](CONTRIBUTING.md). En resumen: `main` como única rama de larga vida, ramas cortas por cambio e integración con `--no-ff`. Crear un remoto, publicar o hacer `push` es una operación aparte, con su propio plan y su confirmación.

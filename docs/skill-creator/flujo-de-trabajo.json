@@ -117,7 +117,7 @@
       "lane": "skill",
       "col": 3,
       "type": "backend",
-      "label": "Tres carpetas",
+      "label": "Carpetas de apoyo",
       "sublabel": "scripts · references · assets",
       "tag": "un nivel de profundidad"
     },
@@ -155,7 +155,7 @@
       "col": 3,
       "type": "database",
       "label": "Directorio de la skill",
-      "sublabel": "SKILL.md + tres carpetas"
+      "sublabel": "SKILL.md + carpetas de apoyo"
     },
     {
       "id": "resultado",
@@ -270,7 +270,7 @@
       "items": [
         "Que no queden huecos de alucinación: puntos donde el agente tendría que suponer un paso, una ruta o un formato",
         "Que todas las rutas sean relativas y usen barras inclinadas",
-        "Que las 19 comprobaciones de la checklist estén en Pass; una sin marcar deja la skill sin desplegar"
+        "Que las comprobaciones de la checklist estén en Pass; una sin marcar deja la skill sin desplegar"
       ]
     }
   ]

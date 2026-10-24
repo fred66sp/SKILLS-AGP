@@ -1,17 +1,17 @@
 {
   "schemaVersion": 1,
-  "receiptId": "cd19c066-d23d-47d5-b97a-cde097e56e5c",
+  "receiptId": "eb1ae30b-8e1f-4821-8e72-fb9726a65041",
   "status": "current",
   "command": "deliver",
   "type": "workflow",
   "input": "C:\\SKILLS-AGP\\docs\\document-management-software\\flujo-de-trabajo.json",
   "output": "C:\\SKILLS-AGP\\docs\\document-management-software\\flujo-de-trabajo.html",
   "specification": {
-    "sha256": "243b587ec9eebbcffdcbe8840cb8e37273951bdd688eaf374d27cdd723e7fec9",
-    "bytes": 7489
+    "sha256": "ff02801dc7b26fb3ad8aef5596a93d43c785dee80126e399f0af0ed49933512c",
+    "bytes": 7511
   },
   "artifact": {
-    "sha256": "a17b47f430f6d02dcf81196d196ab2db625ba0cbb4a780f256b6a304f83d1a6d",
-    "bytes": 836812
+    "sha256": "dced9bdbd6db30666409a331cee684ea46355802659bc2c657552a4176046b98",
+    "bytes": 836894
   }
 }

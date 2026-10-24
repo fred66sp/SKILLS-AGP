@@ -119,7 +119,7 @@
       "col": 2,
       "type": "backend",
       "label": "Certeza",
-      "sublabel": "seis grados",
+      "sublabel": "grados de certeza",
       "tag": "sin fuente no se escribe"
     },
     {
@@ -129,7 +129,7 @@
       "type": "backend",
       "label": "Intervención mínima",
       "sublabel": "actualizar > crear",
-      "tag": "siete opciones"
+      "tag": "opciones de decisión"
     },
     {
       "id": "redacta",
@@ -181,7 +181,7 @@
       "col": 5,
       "type": "frontend",
       "label": "Resultado",
-      "sublabel": "cinco campos",
+      "sublabel": "campos con evidencia",
       "icon": "success"
     }
   ],
@@ -276,7 +276,7 @@
       "dot": "cyan",
       "title": "Qué se lee antes de escribir",
       "items": [
-        "El encargo se delimita con cuatro datos: qué se pide, para quién, con qué fuente y si se describe el estado actual o una intención futura",
+        "El encargo se delimita con datos concretos: qué se pide, para quién, con qué fuente y si se describe el estado actual o una intención futura",
         "El inventario es determinista: el script recorre el árbol y devuelve enlaces rotos, documentos sin título, documentos vacíos y encabezados repetidos",
         "Cada afirmación material recibe un grado de certeza antes de redactarse; si no hay fuente, no se escribe como hecho"
       ]
@@ -296,7 +296,7 @@
       "items": [
         "El inventario se repite después del cambio: un enlace nuevo roto es una regresión de este encargo",
         "Cada afirmación modificada se contrasta contra su fuente, y el contenido eliminado se revisa por si era la única representación de algo válido",
-        "El cierre publica cinco campos con evidencia; un campo que no se puede rellenar es el hallazgo, no una omisión de forma"
+        "El cierre publica los campos con evidencia; un campo que no se puede rellenar es el hallazgo, no una omisión de forma"
       ]
     }
   ]

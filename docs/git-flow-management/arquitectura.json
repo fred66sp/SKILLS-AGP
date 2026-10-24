@@ -42,7 +42,7 @@
       "id": "skill",
       "type": "frontend",
       "label": "SKILL.md",
-      "sublabel": "doce invariantes · quince secciones",
+      "sublabel": "invariantes y secciones",
       "pos": [
         480,
         80
@@ -85,7 +85,7 @@
       "id": "refs",
       "type": "database",
       "label": "references/",
-      "sublabel": "nueve documentos",
+      "sublabel": "documentos de referencia",
       "tag": "se leen cuando toca",
       "pos": [
         480,
@@ -234,7 +234,7 @@
       "title": "El paquete instalado",
       "items": [
         "SKILL.md es el cuerpo normativo: clasificación proporcional, inspección, modelos de ramas, protocolo de commit y verificación",
-        "references/ son nueve documentos que solo se abren cuando la operación concreta los pide",
+        "references/ son documentos que solo se abren cuando la operación concreta los pide",
         "agents/openai.yaml declara «Git Flow seguro» y permite la invocación implícita; assets/ guarda el icono y las dos plantillas, y scripts/verify-branch.sh comprueba ascendencia y contención"
       ]
     },

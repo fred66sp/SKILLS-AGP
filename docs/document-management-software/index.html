@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="Entrada a la skill document-management-software: qué hace, cuándo se activa, los siete pasos, las preguntas de la primera conversación y dónde vive cada regla. Las reglas están en SKILL.md y en las referencias, no copiadas en esta página.">
+<meta name="description" content="Entrada a la skill document-management-software: qué hace, cuándo se activa, sus pasos, las preguntas de la primera conversación y dónde vive cada regla. Las reglas están en SKILL.md y en las referencias, no copiadas en esta página.">
 <meta name="color-scheme" content="light dark">
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%231e40af'/%3E%3Cpath d='M11 7h7l4 4v14H11z' fill='none' stroke='%23ffffff' stroke-width='2.2' stroke-linejoin='round'/%3E%3Cpath d='M18 7v4h4' fill='none' stroke='%23ffffff' stroke-width='2.2' stroke-linejoin='round'/%3E%3Cpath d='M14 17h6M14 21h4' fill='none' stroke='%23ffffff' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E">
 <title>document-management-software — Documentación de software con fuente de verdad</title>
@@ -380,7 +380,7 @@
 
 <section class="hero" id="top">
   <div class="hero-inner">
-    <span class="pill"><span class="dot" aria-hidden="true"></span>una skill · siete pasos · cada afirmación con su fuente</span>
+    <span class="pill"><span class="dot" aria-hidden="true"></span>una skill · pasos verificables · cada afirmación con su fuente</span>
     <h1>Documentación de software con <span class="grad">fuente de verdad</span></h1>
     <p class="lead">La skill <code>document-management-software</code> gestiona la documentación de un proyecto de software. No escribe nada antes de leer cómo está el proyecto: cada afirmación sale del código, de los tests, de la configuración o de una decisión explícita, y lo que no tiene fuente se queda como pregunta abierta. Si un dato ya está documentado, lo enlaza; si está mal, lo corrige; crea un documento solo cuando ese conocimiento no tiene dónde vivir.</p>
     <div class="hero-actions">
@@ -434,7 +434,7 @@
         <table>
           <thead><tr><th>Se activa para</th><th>No se activa para</th></tr></thead>
           <tbody>
-            <tr><td>Crear, actualizar o revisar <code>README.md</code>, guía de contribución, PRD, SDD, arquitectura, ADR, API, instalación, operación, runbooks, notas de release, documentación de features —guías y documentos de trabajo en curso, como los de <code>odd/tasks/</code>— u otra documentación técnica del proyecto.</td><td>Contenido comercial, artículos o material de marketing.</td></tr>
+            <tr><td>Crear, actualizar o revisar <code>README.md</code>, guía de contribución, PRD, SDD, arquitectura, ADR, API, instalación, operación, runbooks, notas de release, documentación de features —guías y documentos de trabajo en curso— u otra documentación técnica del proyecto.</td><td>Contenido comercial, artículos o material de marketing.</td></tr>
             <tr><td>Detectar documentación obsoleta, contradictoria o duplicada.</td><td>Documentación de producto no técnica.</td></tr>
             <tr><td>Decidir si un artefacto documental merece existir.</td><td>Describir una skill de agente: eso tiene su propia skill.</td></tr>
             <tr><td>Consolidar conocimiento repartido sin fuente canónica.</td><td>Sustituir tests, contratos ejecutables, comentarios de código o mensajes de commit.</td></tr>
@@ -445,7 +445,7 @@
 
     <section id="uso" class="section">
       <div class="section-head"><span class="section-num">3</span><h2 class="title">Cómo se usa</h2></div>
-      <p class="sub">Un encargo, siete pasos. El orden no cambia; lo que cambia con el tamaño del encargo es la profundidad de cada paso.</p>
+      <p class="sub">Un encargo, un procedimiento. El orden no cambia; lo que cambia con el tamaño del encargo es la profundidad de cada paso.</p>
 
       <div class="flow">
         <div class="flow-step"><code>paso 1</code><strong>Delimitar</strong><p>Qué se pide —crear, actualizar, auditar o responder—, para quién se escribe y qué fuente responde de cada afirmación.</p></div>
@@ -469,7 +469,7 @@
 
     <section id="paquete" class="section">
       <div class="section-head"><span class="section-num">4</span><h2 class="title">Qué contiene el paquete</h2></div>
-      <p class="sub">Nueve ficheros. El agente lee <code>SKILL.md</code> al activarse y abre el resto solo cuando el paso en curso lo pide, así que la skill es estricta sin consumir contexto en cada conversación.</p>
+      <p class="sub">El agente lee <code>SKILL.md</code> al activarse y abre el resto solo cuando el paso en curso lo pide, así que la skill es estricta sin consumir contexto en cada conversación.</p>
 
       <div class="code"><pre><code>document-management-software/
 ├── SKILL.md                        # el contrato: invariantes, pasos, formato de cierre
@@ -560,7 +560,7 @@
       <p>Cada diagrama se abre como página suelta: archify 3.2.0 no enlaza desde el artefacto a una página local, así que se vuelve con el botón atrás del navegador o con el índice de arriba.</p>
 
       <div class="note">
-        <p><strong>Convenio de este repositorio, no mandato de la skill.</strong> <code>docs/&lt;skill&gt;/index.html</code>, los dos diagramas y sus recibos <code>.delivery.json</code> son cómo SKILLS-AGP documenta sus skills. Los genera archify 3.2.0 desde el <code>.json</code> que está junto a cada HTML; el comando y la comprobación del recibo están en la sección Documentación del <code>README.md</code>. Otro repositorio documenta la skill como le parezca: la invariante 7 dice que la política documental del repositorio prevalece, y esta página se somete a la de este.</p>
+        <p><strong>Convenio de este repositorio, no mandato de la skill.</strong> <code>docs/&lt;skill&gt;/index.html</code>, los diagramas y sus recibos <code>.delivery.json</code> son cómo SKILLS-AGP documenta sus skills. Los genera archify 3.2.0 desde el <code>.json</code> que está junto a cada HTML; el comando y la comprobación del recibo están en la sección Documentación del <code>README.md</code>. Otro repositorio documenta la skill como le parezca: la invariante 7 dice que la política documental del repositorio prevalece, y esta página se somete a la de este.</p>
       </div>
     </section>
   </main>

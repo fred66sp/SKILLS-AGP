@@ -42,7 +42,7 @@
       "id": "skill",
       "type": "frontend",
       "label": "SKILL.md",
-      "sublabel": "seis pasos · una puerta",
+      "sublabel": "pasos · una puerta",
       "pos": [
         480,
         80
@@ -71,7 +71,7 @@
       "id": "paquete",
       "type": "database",
       "label": "Directorio de la skill",
-      "sublabel": "SKILL.md + tres carpetas",
+      "sublabel": "SKILL.md + carpetas de apoyo",
       "pos": [
         1000,
         80
@@ -252,9 +252,9 @@
       "dot": "cyan",
       "title": "El paquete instalado",
       "items": [
-        "SKILL.md es el cuerpo normativo: metadatos, seis pasos, divulgación progresiva y gestión de errores",
+        "SKILL.md es el cuerpo normativo: metadatos, pasos, divulgación progresiva y gestión de errores",
         "references/ y assets/ guardan el contexto y las plantillas que solo se leen cuando la operación los pide; scripts/ guarda los CLIs deterministas",
-        "Los tres directorios mantienen un único nivel de profundidad y no contienen documentación para personas"
+        "Los directorios mantienen un único nivel de profundidad y no contienen documentación para personas"
       ]
     },
     {

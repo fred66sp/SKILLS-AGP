@@ -42,7 +42,7 @@
       "id": "skill",
       "type": "frontend",
       "label": "SKILL.md",
-      "sublabel": "siete pasos · diez invariantes",
+      "sublabel": "pasos e invariantes",
       "pos": [
         480,
         80
@@ -56,7 +56,7 @@
       "id": "certeza",
       "type": "security",
       "label": "Certeza por afirmación",
-      "sublabel": "seis grados",
+      "sublabel": "grados de certeza",
       "icon": "decision",
       "pos": [
         740,
@@ -85,7 +85,7 @@
       "id": "refs",
       "type": "database",
       "label": "references/",
-      "sublabel": "cuatro documentos",
+      "sublabel": "documentos de referencia",
       "tag": "se leen cuando toca",
       "pos": [
         480,
@@ -233,8 +233,8 @@
       "dot": "cyan",
       "title": "El paquete instalado",
       "items": [
-        "SKILL.md es el cuerpo normativo: diez invariantes, siete pasos con criterio de parada y un cierre de cinco campos con evidencia",
-        "references/ son cuatro documentos de carga justo a tiempo: inventario y responsabilidad, certeza de las afirmaciones, reglas de redacción y auditoría",
+        "SKILL.md es el cuerpo normativo: invariantes, pasos con criterio de parada y un cierre con evidencia",
+        "references/ son documentos de carga justo a tiempo: inventario y responsabilidad, certeza de las afirmaciones, reglas de redacción y auditoría",
         "scripts/doc-inventory.py aporta lo que no debe decidir el modelo —enlaces rotos, documentos sin título, encabezados duplicados— y assets/ guarda las plantillas de plan e informe"
       ]
     },
