@@ -1,0 +1,316 @@
+{
+  "schema_version": 2,
+  "diagram_type": "workflow",
+  "meta": {
+    "title": "Flujo de trabajo de la skill go-idiomatic-style",
+    "subtitle": "De la inspección del proyecto al diff revisado: qué se decide antes de escribir, qué se demuestra con gofmt y build y qué se deja fuera del cambio.",
+    "locale": "es",
+    "output": "docs/go-idiomatic-style/flujo-de-trabajo.html",
+    "visual_preset": "signal-flow",
+    "quality_profile": "showcase"
+  },
+  "lanes": [
+    {
+      "id": "encargo",
+      "label": "Encargo y convención"
+    },
+    {
+      "id": "skill",
+      "label": "La skill: decidir"
+    },
+    {
+      "id": "codigo",
+      "label": "Código y herramientas"
+    },
+    {
+      "id": "control",
+      "label": "Límite y cierre",
+      "variant": "exception"
+    }
+  ],
+  "phases": [
+    {
+      "id": "inspeccion",
+      "label": "Inspección",
+      "fromCol": 0,
+      "toCol": 1
+    },
+    {
+      "id": "diseno",
+      "label": "Diseño",
+      "fromCol": 2,
+      "toCol": 3,
+      "variant": "emphasis"
+    },
+    {
+      "id": "escritura",
+      "label": "Escritura",
+      "fromCol": 4,
+      "toCol": 4
+    },
+    {
+      "id": "revision",
+      "label": "Revisión",
+      "fromCol": 5,
+      "toCol": 5,
+      "variant": "security"
+    }
+  ],
+  "groups": [
+    {
+      "id": "mapa",
+      "label": "Decisiones antes del código",
+      "lane": "skill",
+      "fromCol": 1,
+      "toCol": 3,
+      "variant": "emphasis"
+    },
+    {
+      "id": "comprobacion",
+      "label": "Comprobación del cambio",
+      "lane": "control",
+      "fromCol": 4,
+      "toCol": 5,
+      "variant": "security"
+    }
+  ],
+  "mainPath": [
+    "encargo",
+    "inspeccion",
+    "mapa",
+    "nombres",
+    "diseno",
+    "implementa",
+    "gofmt",
+    "revisa",
+    "resultado"
+  ],
+  "nodes": [
+    {
+      "id": "encargo",
+      "lane": "encargo",
+      "col": 0,
+      "type": "external",
+      "label": "Encargo de código",
+      "sublabel": "nuevo o refactor",
+      "tag": "leer antes de escribir",
+      "icon": "start"
+    },
+    {
+      "id": "convencion",
+      "lane": "encargo",
+      "col": 1,
+      "type": "database",
+      "label": "Convención del proyecto",
+      "sublabel": "go.mod · vecinos · regla escrita",
+      "tag": "prevalece si existe"
+    },
+    {
+      "id": "inspeccion",
+      "lane": "skill",
+      "col": 0,
+      "type": "backend",
+      "label": "Inspección",
+      "sublabel": "entrada · estilo · tests",
+      "tag": "sin escribir aún"
+    },
+    {
+      "id": "mapa",
+      "lane": "skill",
+      "col": 1,
+      "type": "backend",
+      "label": "Mapa de paquetes",
+      "sublabel": "una frase de responsabilidad",
+      "tag": "sin capas de más"
+    },
+    {
+      "id": "nombres",
+      "lane": "skill",
+      "col": 2,
+      "type": "backend",
+      "label": "Nombres y datos",
+      "sublabel": "ámbito · semántica",
+      "tag": "gofmt manda"
+    },
+    {
+      "id": "diseno",
+      "lane": "skill",
+      "col": 3,
+      "type": "backend",
+      "label": "Funciones e interfaces",
+      "sublabel": "consumidor · retorno concreto",
+      "tag": "sin abstracción preventiva"
+    },
+    {
+      "id": "implementa",
+      "lane": "codigo",
+      "col": 3,
+      "type": "backend",
+      "label": "Implementación",
+      "sublabel": "guard clauses · deps",
+      "tag": "camino normal primero"
+    },
+    {
+      "id": "gofmt",
+      "lane": "codigo",
+      "col": 4,
+      "type": "backend",
+      "label": "gofmt · vet · build",
+      "sublabel": "herramientas del lenguaje",
+      "tag": "el formato no se discute"
+    },
+    {
+      "id": "revisa",
+      "lane": "skill",
+      "col": 5,
+      "type": "security",
+      "label": "Revisión del diff",
+      "sublabel": "solo lo pedido",
+      "tag": "sin ruido ajeno"
+    },
+    {
+      "id": "parada",
+      "lane": "control",
+      "col": 3,
+      "type": "security",
+      "label": "Parada",
+      "sublabel": "convención o deuda",
+      "tag": "sin mezclar cambios",
+      "icon": "stop"
+    },
+    {
+      "id": "resultado",
+      "lane": "control",
+      "col": 5,
+      "type": "frontend",
+      "label": "Resultado",
+      "sublabel": "completo o con deuda",
+      "icon": "success"
+    }
+  ],
+  "edges": [
+    {
+      "id": "lee",
+      "from": "encargo",
+      "to": "inspeccion",
+      "label": "lee",
+      "variant": "emphasis",
+      "role": "main"
+    },
+    {
+      "id": "consulta",
+      "from": "inspeccion",
+      "to": "convencion",
+      "label": "consulta",
+      "variant": "dashed",
+      "role": "branch"
+    },
+    {
+      "id": "decide",
+      "from": "inspeccion",
+      "to": "mapa",
+      "label": "una frase",
+      "role": "main"
+    },
+    {
+      "id": "nombra",
+      "from": "mapa",
+      "to": "nombres",
+      "label": "nombra",
+      "role": "main"
+    },
+    {
+      "id": "contrato",
+      "from": "nombres",
+      "to": "diseno",
+      "label": "firma",
+      "role": "main"
+    },
+    {
+      "id": "escribe",
+      "from": "diseno",
+      "to": "implementa",
+      "label": "escribe",
+      "variant": "emphasis",
+      "role": "main"
+    },
+    {
+      "id": "formatea",
+      "from": "implementa",
+      "to": "gofmt",
+      "label": "formatea",
+      "role": "main"
+    },
+    {
+      "id": "revisa-diff",
+      "from": "gofmt",
+      "to": "revisa",
+      "label": "revisa",
+      "variant": "emphasis",
+      "role": "main"
+    },
+    {
+      "id": "cierra",
+      "from": "revisa",
+      "to": "resultado",
+      "label": "diff limpio",
+      "variant": "emphasis",
+      "role": "main"
+    },
+    {
+      "id": "deuda",
+      "from": "diseno",
+      "to": "parada",
+      "label": "amplía el cambio",
+      "variant": "security",
+      "role": "return"
+    },
+    {
+      "id": "no-compila",
+      "from": "gofmt",
+      "to": "parada",
+      "label": "no compila",
+      "variant": "security",
+      "role": "return",
+      "fromSide": "left",
+      "toSide": "right"
+    },
+    {
+      "id": "vuelve",
+      "from": "parada",
+      "to": "mapa",
+      "label": "tarea aparte",
+      "variant": "dashed",
+      "role": "return"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "Qué se decide antes de escribir",
+      "items": [
+        "La convención del proyecto se lee primero: si hay una regla escrita, prevalece sobre la preferencia de la skill",
+        "Cada paquete se explica en una frase; si necesita dos responsabilidades, está mal dividido",
+        "Los nombres crecen con el ámbito; las interfaces se declaran en el consumidor y los constructores devuelven el tipo concreto"
+      ]
+    },
+    {
+      "dot": "rose",
+      "title": "Dónde se detiene",
+      "items": [
+        "Migrar la estructura del proyecto no entra en un cambio funcional: se propone aparte",
+        "Una abstracción incorrecta que amplía el cambio termina la tarea actual y se registra como deuda, no se esconde en el diff",
+        "gofmt gana a cualquier convención de formato; una dependencia sin licencia o mantenimiento revisable se declara como bloqueo"
+      ]
+    },
+    {
+      "dot": "emerald",
+      "title": "Cómo se demuestra el cierre",
+      "items": [
+        "gofmt -w, go vet y go build sin errores; golangci-lint solo si el proyecto ya lo tiene configurado",
+        "El diff no reformatea código ajeno ni mezcla refactorización con comportamiento",
+        "El resultado declara paquetes tocados, decisiones de diseño, deuda y lo no verificado"
+      ]
+    }
+  ]
+}

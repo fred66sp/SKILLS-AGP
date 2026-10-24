@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "a909a6dd-2a7f-4363-a85f-da945ec856d8",
+  "status": "current",
+  "command": "deliver",
+  "type": "architecture",
+  "input": "C:\\SKILLS-AGP\\docs\\go-errors-and-lifecycle\\arquitectura.json",
+  "output": "C:\\SKILLS-AGP\\docs\\go-errors-and-lifecycle\\arquitectura.html",
+  "specification": {
+    "sha256": "e607ed20f9d4195c8988cf513877787688b6213f42297fc144c88c0a9d5d0661",
+    "bytes": 5505
+  },
+  "artifact": {
+    "sha256": "19cd3fca558640c7f6b9981a719aca7621c9402da2edc079c63a961849514c4b",
+    "bytes": 830658
+  }
+}

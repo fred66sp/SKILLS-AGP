@@ -1,0 +1,298 @@
+{
+  "schema_version": 2,
+  "diagram_type": "workflow",
+  "meta": {
+    "title": "Flujo de trabajo de la skill go-testing-and-verification",
+    "subtitle": "Del comportamiento observable a la evidencia ejecutada: elegir la capa, fijar el formato, probar el binario y pasar la puerta sin omitir lo no disponible.",
+    "locale": "es",
+    "output": "docs/go-testing-and-verification/flujo-de-trabajo.html",
+    "visual_preset": "signal-flow",
+    "quality_profile": "showcase"
+  },
+  "lanes": [
+    {
+      "id": "cambio",
+      "label": "Cambio y riesgo"
+    },
+    {
+      "id": "skill",
+      "label": "La skill: elegir y escribir"
+    },
+    {
+      "id": "evidencia",
+      "label": "Evidencia ejecutada"
+    },
+    {
+      "id": "control",
+      "label": "Parada y cierre",
+      "variant": "exception"
+    }
+  ],
+  "phases": [
+    {
+      "id": "mapear",
+      "label": "Mapear",
+      "fromCol": 0,
+      "toCol": 1
+    },
+    {
+      "id": "escribir",
+      "label": "Escribir",
+      "fromCol": 2,
+      "toCol": 3,
+      "variant": "emphasis"
+    },
+    {
+      "id": "ejecutar",
+      "label": "Ejecutar",
+      "fromCol": 4,
+      "toCol": 4
+    },
+    {
+      "id": "cerrar",
+      "label": "Cierre probado",
+      "fromCol": 5,
+      "toCol": 5,
+      "variant": "security"
+    }
+  ],
+  "groups": [
+    {
+      "id": "capas",
+      "label": "Elección de capa",
+      "lane": "skill",
+      "fromCol": 0,
+      "toCol": 1,
+      "variant": "emphasis"
+    },
+    {
+      "id": "puerta",
+      "label": "Puerta de verificación",
+      "lane": "evidencia",
+      "fromCol": 3,
+      "toCol": 5,
+      "variant": "security"
+    }
+  ],
+  "mainPath": [
+    "cambio",
+    "mapear",
+    "escribe",
+    "determinismo",
+    "puerta",
+    "race",
+    "informe",
+    "resultado"
+  ],
+  "nodes": [
+    {
+      "id": "cambio",
+      "lane": "cambio",
+      "col": 0,
+      "type": "external",
+      "label": "Cambio",
+      "sublabel": "comportamiento observable",
+      "tag": "no detalles internos",
+      "icon": "start"
+    },
+    {
+      "id": "riesgo",
+      "lane": "cambio",
+      "col": 1,
+      "type": "external",
+      "label": "Riesgos",
+      "sublabel": "datos · secretos · carrera",
+      "tag": "deciden la capa"
+    },
+    {
+      "id": "mapear",
+      "lane": "skill",
+      "col": 0,
+      "type": "backend",
+      "label": "Mapa de capas",
+      "sublabel": "unitaria · golden · e2e",
+      "tag": "la más pequeña"
+    },
+    {
+      "id": "escribe",
+      "lane": "skill",
+      "col": 1,
+      "type": "backend",
+      "label": "Pruebas",
+      "sublabel": "tabla · golden · binario",
+      "tag": "got antes que want"
+    },
+    {
+      "id": "determinismo",
+      "lane": "skill",
+      "col": 2,
+      "type": "security",
+      "label": "Determinismo",
+      "sublabel": "sin red · sin sleep",
+      "tag": "normaliza el entorno"
+    },
+    {
+      "id": "puerta",
+      "lane": "evidencia",
+      "col": 3,
+      "type": "security",
+      "label": "Puerta",
+      "sublabel": "gofmt · build · test · vet",
+      "tag": "se ejecuta, no se cita"
+    },
+    {
+      "id": "race",
+      "lane": "evidencia",
+      "col": 4,
+      "type": "security",
+      "label": "Carreras",
+      "sublabel": "-race y lint si aplica",
+      "tag": "sin equivalente falso"
+    },
+    {
+      "id": "informe",
+      "lane": "evidencia",
+      "col": 5,
+      "type": "frontend",
+      "label": "Informe",
+      "sublabel": "comando y salida real",
+      "tag": "lo no verificado se declara"
+    },
+    {
+      "id": "parada",
+      "lane": "control",
+      "col": 2,
+      "type": "security",
+      "label": "Parada",
+      "sublabel": "test inestable o golden",
+      "tag": "no se reintenta",
+      "icon": "stop"
+    },
+    {
+      "id": "resultado",
+      "lane": "control",
+      "col": 5,
+      "type": "frontend",
+      "label": "Resultado",
+      "sublabel": "completo o bloqueado",
+      "icon": "success"
+    }
+  ],
+  "edges": [
+    {
+      "id": "mapea",
+      "from": "cambio",
+      "to": "mapear",
+      "label": "mapea",
+      "variant": "emphasis",
+      "role": "main"
+    },
+    {
+      "id": "marca-riesgo",
+      "from": "cambio",
+      "to": "riesgo",
+      "label": "marca",
+      "variant": "dashed",
+      "role": "branch"
+    },
+    {
+      "id": "escribe-prueba",
+      "from": "mapear",
+      "to": "escribe",
+      "label": "escribe",
+      "role": "main"
+    },
+    {
+      "id": "fija",
+      "from": "escribe",
+      "to": "determinismo",
+      "label": "fija",
+      "variant": "emphasis",
+      "role": "main"
+    },
+    {
+      "id": "ejecuta",
+      "from": "determinismo",
+      "to": "puerta",
+      "label": "ejecuta",
+      "role": "main"
+    },
+    {
+      "id": "condicion",
+      "from": "puerta",
+      "to": "race",
+      "label": "si hay concurrencia",
+      "role": "main"
+    },
+    {
+      "id": "documenta",
+      "from": "race",
+      "to": "informe",
+      "label": "resultado",
+      "role": "main"
+    },
+    {
+      "id": "cierra",
+      "from": "informe",
+      "to": "resultado",
+      "label": "evidencia",
+      "variant": "emphasis",
+      "role": "main"
+    },
+    {
+      "id": "inestable",
+      "from": "determinismo",
+      "to": "parada",
+      "label": "no determinista",
+      "variant": "security",
+      "role": "return"
+    },
+    {
+      "id": "regresion",
+      "from": "puerta",
+      "to": "parada",
+      "label": "falla",
+      "variant": "security",
+      "role": "return",
+      "fromSide": "left",
+      "toSide": "right"
+    },
+    {
+      "id": "investiga",
+      "from": "parada",
+      "to": "determinismo",
+      "label": "corrige la causa",
+      "variant": "dashed",
+      "role": "return"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "La capa la decide el comportamiento",
+      "items": [
+        "Unitaria para lógica pura; tabla cuando todos los casos comparten el mismo camino; golden para formatos estables",
+        "Extremo a extremo para el contrato del binario: stdout, stderr y código de salida por separado, sin asumir TTY",
+        "Integración solo cuando el contrato cruza una frontera real, como un fichero o un servidor local"
+      ]
+    },
+    {
+      "dot": "rose",
+      "title": "Dónde se detiene",
+      "items": [
+        "Un test inestable no se reintenta hasta que pase: se elimina el no determinismo o se declara defecto",
+        "Un golden que cambia sin comportamiento explicado no se actualiza: se investiga la regresión",
+        "Una comprobación no disponible, como -race o el lint, se declara; no se sustituye por otra y se presenta como equivalente"
+      ]
+    },
+    {
+      "dot": "emerald",
+      "title": "Cómo se cierra",
+      "items": [
+        "La puerta ejecuta gofmt sin salida, build, test y vet; añade -race si hay concurrencia y lint solo si el proyecto lo configura",
+        "El informe copia la salida real de cada comando; la cobertura es una señal, nunca un objetivo",
+        "El resultado enumera comportamientos cubiertos, capas, comandos y lo no verificado con su motivo"
+      ]
+    }
+  ]
+}

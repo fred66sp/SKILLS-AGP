@@ -1,0 +1,12 @@
+interface:
+  display_name: Errores y ciclo de vida Go
+  short_description: Errores accionables, context y cierre ordenado
+  default_prompt: Usa $go-errors-and-lifecycle para definir el contrato de errores,
+    propagar context y cerrar el proceso sin fugas.
+policy:
+  products:
+  - chatgpt
+  - codex
+  - api
+  - atlas
+  allow_implicit_invocation: true

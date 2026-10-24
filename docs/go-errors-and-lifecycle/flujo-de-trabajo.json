@@ -1,0 +1,298 @@
+{
+  "schema_version": 2,
+  "diagram_type": "workflow",
+  "meta": {
+    "title": "Flujo de trabajo de la skill go-errors-and-lifecycle",
+    "subtitle": "Del fallo observado al cierre ordenado: clasificar, envolver, traducir en una frontera y demostrar que el proceso termina por todas sus salidas.",
+    "locale": "es",
+    "output": "docs/go-errors-and-lifecycle/flujo-de-trabajo.html",
+    "visual_preset": "signal-flow",
+    "quality_profile": "showcase"
+  },
+  "lanes": [
+    {
+      "id": "operacion",
+      "label": "Operación y fallo"
+    },
+    {
+      "id": "skill",
+      "label": "La skill: clasificar y traducir"
+    },
+    {
+      "id": "proceso",
+      "label": "Contexto y concurrencia"
+    },
+    {
+      "id": "control",
+      "label": "Parada y cierre",
+      "variant": "exception"
+    }
+  ],
+  "phases": [
+    {
+      "id": "clasificar",
+      "label": "Clasificar",
+      "fromCol": 0,
+      "toCol": 1
+    },
+    {
+      "id": "propagar",
+      "label": "Envolver y propagar",
+      "fromCol": 2,
+      "toCol": 3,
+      "variant": "emphasis"
+    },
+    {
+      "id": "terminar",
+      "label": "Terminar",
+      "fromCol": 4,
+      "toCol": 4
+    },
+    {
+      "id": "cerrar",
+      "label": "Cierre probado",
+      "fromCol": 5,
+      "toCol": 5,
+      "variant": "security"
+    }
+  ],
+  "groups": [
+    {
+      "id": "taxonomia",
+      "label": "Contrato del error",
+      "lane": "skill",
+      "fromCol": 0,
+      "toCol": 1,
+      "variant": "emphasis"
+    },
+    {
+      "id": "vida",
+      "label": "Terminación y cierre",
+      "lane": "proceso",
+      "fromCol": 3,
+      "toCol": 5,
+      "variant": "security"
+    }
+  ],
+  "mainPath": [
+    "fallo",
+    "inventario",
+    "taxonomia",
+    "envuelve",
+    "frontera",
+    "contexto",
+    "concurrencia",
+    "cierre",
+    "resultado"
+  ],
+  "nodes": [
+    {
+      "id": "fallo",
+      "lane": "operacion",
+      "col": 0,
+      "type": "external",
+      "label": "Fallo observado",
+      "sublabel": "I/O · red · estado",
+      "tag": "quién puede actuar",
+      "icon": "start"
+    },
+    {
+      "id": "inventario",
+      "lane": "skill",
+      "col": 0,
+      "type": "backend",
+      "label": "Inventario",
+      "sublabel": "operaciones y fronteras",
+      "tag": "antes de la taxonomía"
+    },
+    {
+      "id": "taxonomia",
+      "lane": "skill",
+      "col": 1,
+      "type": "backend",
+      "label": "Taxonomía",
+      "sublabel": "centinela · tipo · opaco",
+      "tag": "code estable"
+    },
+    {
+      "id": "envuelve",
+      "lane": "skill",
+      "col": 2,
+      "type": "backend",
+      "label": "Envoltura",
+      "sublabel": "%w · contexto útil",
+      "tag": "sin repetir el mensaje"
+    },
+    {
+      "id": "frontera",
+      "lane": "skill",
+      "col": 3,
+      "type": "security",
+      "label": "Frontera CLI",
+      "sublabel": "code · mensaje · exit",
+      "tag": "un solo punto"
+    },
+    {
+      "id": "contexto",
+      "lane": "proceso",
+      "col": 3,
+      "type": "backend",
+      "label": "Contexto",
+      "sublabel": "timeout en su frontera",
+      "tag": "cancelación distinta"
+    },
+    {
+      "id": "concurrencia",
+      "lane": "proceso",
+      "col": 4,
+      "type": "security",
+      "label": "Concurrencia",
+      "sublabel": "dueño · fin · espera",
+      "tag": "sin goroutine huérfana"
+    },
+    {
+      "id": "cierre",
+      "lane": "proceso",
+      "col": 5,
+      "type": "security",
+      "label": "Cierre verificado",
+      "sublabel": "inverso · Is/As · -race",
+      "tag": "sin goroutines ni temporales"
+    },
+    {
+      "id": "parada",
+      "lane": "control",
+      "col": 2,
+      "type": "security",
+      "label": "Parada",
+      "sublabel": "sin salida o sin mapeo",
+      "tag": "no inventa code",
+      "icon": "stop"
+    },
+    {
+      "id": "resultado",
+      "lane": "control",
+      "col": 5,
+      "type": "frontend",
+      "label": "Resultado",
+      "sublabel": "completo o parcial",
+      "icon": "success"
+    }
+  ],
+  "edges": [
+    {
+      "id": "observa",
+      "from": "fallo",
+      "to": "inventario",
+      "label": "observa",
+      "variant": "emphasis",
+      "role": "main"
+    },
+    {
+      "id": "clasifica",
+      "from": "inventario",
+      "to": "taxonomia",
+      "label": "clasifica",
+      "role": "main"
+    },
+    {
+      "id": "envuelve-err",
+      "from": "taxonomia",
+      "to": "envuelve",
+      "label": "%w",
+      "role": "main"
+    },
+    {
+      "id": "traduce",
+      "from": "envuelve",
+      "to": "frontera",
+      "label": "traduce",
+      "variant": "emphasis",
+      "role": "main"
+    },
+    {
+      "id": "propaga",
+      "from": "frontera",
+      "to": "contexto",
+      "label": "propaga ctx",
+      "role": "main"
+    },
+    {
+      "id": "justifica",
+      "from": "contexto",
+      "to": "concurrencia",
+      "label": "si aplica",
+      "role": "main"
+    },
+    {
+      "id": "espera",
+      "from": "concurrencia",
+      "to": "cierre",
+      "label": "cancela y espera",
+      "role": "main"
+    },
+    {
+      "id": "cierra",
+      "from": "cierre",
+      "to": "resultado",
+      "label": "evidencia",
+      "variant": "emphasis",
+      "role": "main"
+    },
+    {
+      "id": "sin-salida",
+      "from": "concurrencia",
+      "to": "parada",
+      "label": "sin condición de fin",
+      "variant": "security",
+      "role": "return",
+      "fromSide": "left",
+      "toSide": "right"
+    },
+    {
+      "id": "sin-mapeo",
+      "from": "taxonomia",
+      "to": "parada",
+      "label": "sin code",
+      "variant": "security",
+      "role": "return"
+    },
+    {
+      "id": "redisenya",
+      "from": "parada",
+      "to": "inventario",
+      "label": "redisenya",
+      "variant": "dashed",
+      "role": "return"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "El error como contrato",
+      "items": [
+        "Cada fallo se clasifica por quién actúa: el llamador corrige, reintenta, decide o aborta; el defecto de programación no se convierte en error de operación",
+        "Centinela para condiciones estables, tipo propio para datos inspeccionables y error opaco cuando solo hace falta depurar",
+        "La causa se conserva con %w y el contexto añade lo que el llamador no tiene: operación, recurso o identificador"
+      ]
+    },
+    {
+      "dot": "rose",
+      "title": "Dónde se detiene",
+      "items": [
+        "Un error sin decisión para el llamador no inventa un code: es interno y sale como 1 con mensaje genérico",
+        "Una goroutine que no puede terminar por diseño no se lanza: se usa una operación síncrona o un límite explícito",
+        "Un cierre que no cabe en el plazo no se bloquea: se cancela, se registra lo que no cerró y se sale con el código que corresponda"
+      ]
+    },
+    {
+      "dot": "emerald",
+      "title": "Cómo se demuestra el cierre",
+      "items": [
+        "Los caminos de error se prueban con errors.Is y errors.As, nunca comparando textos",
+        "La cancelación se prueba con un contexto cancelado: retorno pronto, sin goroutines ni temporales",
+        "go test, go vet y go test -race cuando hay concurrencia; el resultado declara taxonomía, contexto, concurrencia y límites"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "81e4ab2a-1040-4de4-9936-d3dda55ed491",
+  "status": "current",
+  "command": "deliver",
+  "type": "architecture",
+  "input": "C:\\SKILLS-AGP\\docs\\go-cli-ai-first\\arquitectura.json",
+  "output": "C:\\SKILLS-AGP\\docs\\go-cli-ai-first\\arquitectura.html",
+  "specification": {
+    "sha256": "6b119b33f3347782ef9f9d0534a3951e6cde9e5367a5780fe1392d6b9895c98a",
+    "bytes": 4766
+  },
+  "artifact": {
+    "sha256": "2d8094d41c7d3fb8d6f713be88066a7e72a95114b34be4b1e4521a6f4a1990d5",
+    "bytes": 826822
+  }
+}

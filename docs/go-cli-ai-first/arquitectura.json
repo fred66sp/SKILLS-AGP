@@ -1,0 +1,228 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "Arquitectura de la skill go-cli-ai-first",
+    "subtitle": "El paquete, la frontera de la CLI y el programa: contrato escrito, superficie predecible y salida que un agente puede consumir.",
+    "locale": "es",
+    "output": "docs/go-cli-ai-first/arquitectura.html",
+    "quality_profile": "showcase"
+  },
+  "components": [
+    {
+      "id": "consumidor",
+      "type": "external",
+      "label": "Agente o script",
+      "sublabel": "ejecuta y decide",
+      "icon": "person",
+      "pos": [
+        40,
+        80
+      ],
+      "size": [
+        140,
+        64
+      ]
+    },
+    {
+      "id": "main",
+      "type": "backend",
+      "label": "cmd/main.go",
+      "sublabel": "cableado · os.Exit",
+      "pos": [
+        220,
+        80
+      ],
+      "size": [
+        150,
+        64
+      ]
+    },
+    {
+      "id": "skill",
+      "type": "frontend",
+      "label": "SKILL.md",
+      "sublabel": "invariantes y pasos",
+      "pos": [
+        220,
+        300
+      ],
+      "size": [
+        150,
+        64
+      ]
+    },
+    {
+      "id": "cli",
+      "type": "backend",
+      "label": "internal/cli",
+      "sublabel": "flags · ayuda · render",
+      "pos": [
+        400,
+        80
+      ],
+      "size": [
+        150,
+        64
+      ]
+    },
+    {
+      "id": "app",
+      "type": "backend",
+      "label": "internal/app",
+      "sublabel": "casos de uso",
+      "pos": [
+        580,
+        80
+      ],
+      "size": [
+        150,
+        64
+      ]
+    },
+    {
+      "id": "ficha",
+      "type": "database",
+      "label": "command-spec.md",
+      "sublabel": "una ficha por comando",
+      "tag": "antes del código",
+      "pos": [
+        400,
+        300
+      ],
+      "size": [
+        150,
+        64
+      ]
+    },
+    {
+      "id": "contrato",
+      "type": "database",
+      "label": "cli-contract.md",
+      "sublabel": "gramática · JSON · códigos",
+      "tag": "se consulta cuando toca",
+      "pos": [
+        580,
+        300
+      ],
+      "size": [
+        150,
+        64
+      ]
+    },
+    {
+      "id": "io",
+      "type": "frontend",
+      "label": "stdout · stderr · exit",
+      "sublabel": "resultado y diagnóstico",
+      "pos": [
+        760,
+        80
+      ],
+      "size": [
+        150,
+        64
+      ]
+    }
+  ],
+  "boundaries": [
+    {
+      "kind": "region",
+      "label": "Paquete instalado",
+      "wraps": [
+        "skill",
+        "ficha",
+        "contrato"
+      ]
+    },
+    {
+      "kind": "region",
+      "label": "Programa Go",
+      "wraps": [
+        "main",
+        "cli",
+        "app",
+        "io"
+      ]
+    }
+  ],
+  "connections": [
+    {
+      "id": "invoca",
+      "from": "consumidor",
+      "to": "main",
+      "label": "invoca",
+      "variant": "emphasis"
+    },
+    {
+      "id": "run",
+      "from": "main",
+      "to": "cli",
+      "label": "run(ctx, args)",
+      "variant": "emphasis"
+    },
+    {
+      "id": "aplica",
+      "from": "skill",
+      "to": "cli",
+      "label": "aplica",
+      "variant": "dashed"
+    },
+    {
+      "id": "copia",
+      "from": "skill",
+      "to": "ficha",
+      "label": "copia",
+      "variant": "dashed"
+    },
+    {
+      "id": "consulta",
+      "from": "skill",
+      "to": "contrato",
+      "label": "consulta",
+      "variant": "dashed"
+    },
+    {
+      "id": "casos",
+      "from": "cli",
+      "to": "app",
+      "label": "casos de uso"
+    },
+    {
+      "id": "render",
+      "from": "cli",
+      "to": "io",
+      "label": "renderiza",
+      "variant": "emphasis"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "El paquete instalado",
+      "items": [
+        "SKILL.md fija los invariantes y el procedimiento; la ficha de comando se copia y se rellena antes de implementar",
+        "cli-contract.md resuelve gramática, flags, salida, códigos, sobre JSON, ayuda y compatibilidad",
+        "agents/openai.yaml declara el nombre visible y la invocación implícita"
+      ]
+    },
+    {
+      "dot": "rose",
+      "title": "La frontera que no se cruza",
+      "items": [
+        "main solo cablea: construye dependencias, llama a run y hace os.Exit",
+        "El dominio y los casos de uso no conocen códigos de proceso ni escriben en la salida",
+        "La traducción de error a code, mensaje y código de salida vive en un único punto"
+      ]
+    },
+    {
+      "dot": "emerald",
+      "title": "Lo que la skill no hace",
+      "items": [
+        "No diseña el producto, la interfaz gráfica ni una API HTTP",
+        "No sustituye las reglas de estilo, errores o pruebas: remite a sus skills",
+        "No impone su sobre JSON sobre un contrato ya publicado; documenta las diferencias"
+      ]
+    }
+  ]
+}

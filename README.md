@@ -44,6 +44,41 @@ Convierte una idea, una investigación o un concepto de producto en un PRD verif
 
 Contrato completo: [`src/prd-cartographer/SKILL.md`](src/prd-cartographer/SKILL.md).
 
+### `go-cli-ai-first`
+
+Fija el contrato de una CLI en Go antes de implementarla, con el agente como consumidor principal: comandos y flags estables, `stdout` para el resultado y `stderr` para el diagnóstico, salida JSON con sobre de éxito y de error, códigos de salida acotados, modo no interactivo, `--dry-run`, `--yes` para operaciones destructivas, idempotencia, salida limitada, cancelación por señal y ayuda como mecanismo de descubrimiento. Incluye una ficha de comando y una referencia con la gramática, el sobre JSON y las reglas de compatibilidad.
+
+Contrato completo: [`src/go-cli-ai-first/SKILL.md`](src/go-cli-ai-first/SKILL.md).
+
+### `go-idiomatic-style`
+
+Escribe y revisa Go idiomático para CLIs y servicios pequeños: formato con `gofmt`, nombres y paquetes claros, estructura mínima sin capas anticipadas, funciones con errores primero, datos con semántica explícita, interfaces pequeñas definidas por el consumidor y dependencias justificadas. La regla es la solución más simple que mantiene claridad, seguridad y capacidad de evolución; la concurrencia se delega a la skill de ciclo de vida.
+
+Contrato completo: [`src/go-idiomatic-style/SKILL.md`](src/go-idiomatic-style/SKILL.md).
+
+### `go-errors-and-lifecycle`
+
+Convierte los errores en un contrato: los clasifica, los envuelve con contexto, los inspecciona con `errors.Is` y `errors.As`, los traduce a códigos de salida y a mensajes machine-readable en una sola frontera, y separa cancelación de timeout y de fallo interno. Cubre `context`, timeouts, señales, concurrencia con propietario y terminación, y cierre ordenado sin fugas.
+
+Contrato completo: [`src/go-errors-and-lifecycle/SKILL.md`](src/go-errors-and-lifecycle/SKILL.md).
+
+### `go-testing-and-verification`
+
+Cierra el cambio con evidencia: pruebas unitarias y de tabla para lógica, golden files deterministas para formatos, pruebas de extremo a extremo del binario con `stdout`, `stderr` y código de salida separados, y casos de error, `--dry-run`, `--yes` y cancelación. Incluye la puerta `gofmt`, `build`, `test`, `vet`, `race` y `lint` en `scripts/verify-go.py`, con salida de texto o JSON, y una plantilla de informe.
+
+Contrato completo: [`src/go-testing-and-verification/SKILL.md`](src/go-testing-and-verification/SKILL.md).
+
+Las skills de Go sintetizan tres fuentes: el subagente [`golang-pro`](https://github.com/VoltAgent/awesome-claude-code-subagents/blob/main/categories/02-language-specialists/golang-pro.md), la colección [`cxuu/golang-skills`](https://github.com/cxuu/golang-skills/tree/main/skills), publicada con licencia Apache 2.0, y el contrato `go-style-contract` v0.2.0. No copian su texto: seleccionan y reorganizan las decisiones que sostienen una CLI automatizable, separan lo que cada skill posee y añaden el contrato de agente, el mapeo de errores a códigos de salida y la puerta de verificación.
+
+| Necesidad de una CLI AI first | Skill | Fuentes que la sostienen |
+|---|---|---|
+| Contrato máquina estable, seguro y automatizable | `go-cli-ai-first` | `golang-pro` (CLI tools), `go-packages` (flags y `main`), contrato local (estructura y verificación) y criterio propio de agente |
+| Código legible, mínimo y mantenible | `go-idiomatic-style` | Contrato local y las skills `go-style-core`, `go-naming`, `go-packages`, `go-declarations`, `go-functions`, `go-control-flow`, `go-data-structures`, `go-interfaces` y `go-defensive` |
+| Fallos accionables y terminación limpia | `go-errors-and-lifecycle` | Contrato local y las skills `go-error-handling`, `go-context`, `go-concurrency`, `go-defensive` y `go-logging` |
+| Confianza demostrada antes de cerrar | `go-testing-and-verification` | Contrato local y las skills `go-testing`, `go-linting` y `go-code-review` |
+
+Quedan fuera como skills separadas los genéricos, las opciones funcionales, el logging, el rendimiento y la documentación de API: no cambian el contrato de una CLI y sus reglas esenciales viven dentro de las cuatro anteriores o se posponen hasta que exista una necesidad medida.
+
 ## Skills en uso
 
 Skills de terceros fijadas a una versión concreta, para que todas las máquinas trabajen con lo mismo. No son de autoría propia: no se editan aquí, se actualizan sustituyéndolas.
@@ -67,6 +102,10 @@ Documentación: [`docs/skill-creator/index.html`](docs/skill-creator/index.html)
 | [`.skills/document-management-software/SKILL.md`](.skills/document-management-software/SKILL.md) | [`src/document-management-software/SKILL.md`](src/document-management-software/SKILL.md) |
 | [`.skills/git-flow-management/SKILL.md`](.skills/git-flow-management/SKILL.md) | [`src/git-flow-management/SKILL.md`](src/git-flow-management/SKILL.md) |
 | [`.skills/prd-cartographer/SKILL.md`](.skills/prd-cartographer/SKILL.md) | [`src/prd-cartographer/SKILL.md`](src/prd-cartographer/SKILL.md) |
+| [`.skills/go-cli-ai-first/SKILL.md`](.skills/go-cli-ai-first/SKILL.md) | [`src/go-cli-ai-first/SKILL.md`](src/go-cli-ai-first/SKILL.md) |
+| [`.skills/go-idiomatic-style/SKILL.md`](.skills/go-idiomatic-style/SKILL.md) | [`src/go-idiomatic-style/SKILL.md`](src/go-idiomatic-style/SKILL.md) |
+| [`.skills/go-errors-and-lifecycle/SKILL.md`](.skills/go-errors-and-lifecycle/SKILL.md) | [`src/go-errors-and-lifecycle/SKILL.md`](src/go-errors-and-lifecycle/SKILL.md) |
+| [`.skills/go-testing-and-verification/SKILL.md`](.skills/go-testing-and-verification/SKILL.md) | [`src/go-testing-and-verification/SKILL.md`](src/go-testing-and-verification/SKILL.md) |
 
 La carpeta se registra como origen de skills en `.pi/settings.json` con `"skills": ["../.skills"]`. Como `.pi/` es estado local de cada máquina, ese registro se vuelve a escribir al clonar el repositorio en otra; sin él, `.skills/` no se descubre. Registrar la carpeta hace descubribles también a las skills de terceros que ya contiene.
 
@@ -89,6 +128,18 @@ La carpeta se registra como origen de skills en `.pi/settings.json` con `"skills
 - `docs/prd-cartographer/index.html` — página principal de la skill `prd-cartographer`.
 - `docs/prd-cartographer/flujo-de-trabajo.html` — diagrama del flujo, del encargo al PRD revisado.
 - `docs/prd-cartographer/arquitectura.html` — diagrama del paquete, la evidencia y la puerta de calidad.
+- `docs/go-cli-ai-first/index.html` — página principal de la skill `go-cli-ai-first`.
+- `docs/go-cli-ai-first/flujo-de-trabajo.html` — diagrama del flujo, del encargo a la CLI verificada.
+- `docs/go-cli-ai-first/arquitectura.html` — diagrama del paquete, la frontera de la CLI y el programa.
+- `docs/go-idiomatic-style/index.html` — página principal de la skill `go-idiomatic-style`.
+- `docs/go-idiomatic-style/flujo-de-trabajo.html` — diagrama del flujo, de la inspección al diff revisado.
+- `docs/go-idiomatic-style/arquitectura.html` — diagrama del paquete, las reglas de estilo y el proyecto.
+- `docs/go-errors-and-lifecycle/index.html` — página principal de la skill `go-errors-and-lifecycle`.
+- `docs/go-errors-and-lifecycle/flujo-de-trabajo.html` — diagrama del flujo, del fallo al cierre verificado.
+- `docs/go-errors-and-lifecycle/arquitectura.html` — diagrama del paquete, la frontera del error y los recursos.
+- `docs/go-testing-and-verification/index.html` — página principal de la skill `go-testing-and-verification`.
+- `docs/go-testing-and-verification/flujo-de-trabajo.html` — diagrama del flujo, del cambio a la evidencia ejecutada.
+- `docs/go-testing-and-verification/arquitectura.html` — diagrama del paquete, las capas de prueba y la puerta.
 - `docs/skill-creator/index.html` — página principal de la skill `skill-creator`.
 - `docs/skill-creator/flujo-de-trabajo.html` — diagrama del flujo, del encargo al directorio validado.
 - `docs/skill-creator/arquitectura.html` — diagrama del paquete, las puertas de validación y el directorio producido.

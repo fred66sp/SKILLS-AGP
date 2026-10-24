@@ -1,0 +1,261 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "Arquitectura de la skill go-errors-and-lifecycle",
+    "subtitle": "El paquete, la frontera del proceso y la superficie: la traducción en un solo punto, el dominio sin códigos y los recursos cerrados en orden inverso.",
+    "locale": "es",
+    "output": "docs/go-errors-and-lifecycle/arquitectura.html",
+    "quality_profile": "showcase"
+  },
+  "components": [
+    {
+      "id": "persona",
+      "type": "external",
+      "label": "Persona o agente",
+      "sublabel": "lee el resultado",
+      "icon": "person",
+      "pos": [
+        40,
+        80
+      ],
+      "size": [
+        140,
+        64
+      ]
+    },
+    {
+      "id": "main",
+      "type": "backend",
+      "label": "main",
+      "sublabel": "señal · run · salida",
+      "pos": [
+        440,
+        80
+      ],
+      "size": [
+        150,
+        64
+      ]
+    },
+    {
+      "id": "skill",
+      "type": "frontend",
+      "label": "SKILL.md",
+      "sublabel": "invariantes y pasos",
+      "pos": [
+        240,
+        80
+      ],
+      "size": [
+        150,
+        64
+      ]
+    },
+    {
+      "id": "contrato",
+      "type": "database",
+      "label": "error-contract.md",
+      "sublabel": "clases · envoltura · frontera",
+      "tag": "se abre antes de definir",
+      "pos": [
+        240,
+        260
+      ],
+      "size": [
+        150,
+        64
+      ]
+    },
+    {
+      "id": "vida",
+      "type": "database",
+      "label": "lifecycle.md",
+      "sublabel": "ctx · goroutines · cierre",
+      "tag": "se abre en los pasos 5 a 7",
+      "pos": [
+        240,
+        440
+      ],
+      "size": [
+        150,
+        64
+      ]
+    },
+    {
+      "id": "mapper",
+      "type": "security",
+      "label": "Frontera de error",
+      "sublabel": "code · mensaje · exit",
+      "tag": "un solo punto",
+      "pos": [
+        640,
+        80
+      ],
+      "size": [
+        150,
+        64
+      ]
+    },
+    {
+      "id": "dominio",
+      "type": "backend",
+      "label": "Dominio",
+      "sublabel": "errores centinela y tipos",
+      "pos": [
+        640,
+        260
+      ],
+      "size": [
+        150,
+        64
+      ]
+    },
+    {
+      "id": "goroutines",
+      "type": "backend",
+      "label": "Tareas concurrentes",
+      "sublabel": "errgroup · canales · mutex",
+      "pos": [
+        840,
+        260
+      ],
+      "size": [
+        150,
+        64
+      ]
+    },
+    {
+      "id": "recursos",
+      "type": "database",
+      "label": "Recursos",
+      "sublabel": "archivos · conexiones",
+      "pos": [
+        440,
+        440
+      ],
+      "size": [
+        150,
+        64
+      ]
+    },
+    {
+      "id": "salida",
+      "type": "frontend",
+      "label": "stdout · stderr · exit",
+      "sublabel": "resultado y diagnóstico",
+      "pos": [
+        840,
+        80
+      ],
+      "size": [
+        150,
+        64
+      ]
+    }
+  ],
+  "boundaries": [
+    {
+      "kind": "region",
+      "label": "Paquete instalado",
+      "wraps": [
+        "skill",
+        "contrato",
+        "vida"
+      ]
+    },
+    {
+      "kind": "security-group",
+      "label": "Frontera y salida",
+      "wraps": [
+        "mapper",
+        "salida"
+      ]
+    }
+  ],
+  "connections": [
+    {
+      "id": "encarga",
+      "from": "persona",
+      "to": "skill",
+      "label": "encarga",
+      "variant": "emphasis"
+    },
+    {
+      "id": "carga",
+      "from": "skill",
+      "to": "main",
+      "label": "carga",
+      "variant": "emphasis"
+    },
+    {
+      "id": "consulta",
+      "from": "skill",
+      "to": "contrato",
+      "label": "consulta",
+      "variant": "dashed"
+    },
+    {
+      "id": "consulta-vida",
+      "from": "skill",
+      "to": "vida",
+      "label": "consulta",
+      "variant": "dashed"
+    },
+    {
+      "id": "produce",
+      "from": "dominio",
+      "to": "mapper",
+      "label": "devuelve error",
+      "variant": "emphasis"
+    },
+    {
+      "id": "traduce",
+      "from": "mapper",
+      "to": "salida",
+      "label": "traduce",
+      "variant": "emphasis"
+    },
+    {
+      "id": "posee",
+      "from": "dominio",
+      "to": "goroutines",
+      "label": "lanza"
+    },
+    {
+      "id": "cierra",
+      "from": "main",
+      "to": "recursos",
+      "label": "cierra"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "El paquete instalado",
+      "items": [
+        "SKILL.md fija la clasificación, el procedimiento y el bloque de resultado",
+        "error-contract.md reúne clases, estrategia, envoltura, inspección y el mapeo de la frontera",
+        "lifecycle.md reúne context, goroutines, errgroup, canales, mutex, señales y cierre ordenado"
+      ]
+    },
+    {
+      "dot": "rose",
+      "title": "La frontera que no cruza el dominio",
+      "items": [
+        "El dominio devuelve error con contexto y no conoce códigos de proceso ni sobres JSON",
+        "La traducción a code, mensaje y código de salida ocurre en un único punto, cerca de main",
+        "Los detalles completos van a --debug y stderr, redactados; el mensaje público no expone rutas, tokens ni cabeceras"
+      ]
+    },
+    {
+      "dot": "emerald",
+      "title": "Lo que la skill no hace",
+      "items": [
+        "No define los comandos, flags ni el contrato de la CLI: los consume y los respeta",
+        "No impone estilo general ni escribe la puerta de pruebas",
+        "No sustituye un envelope de errores ya publicado por el proyecto"
+      ]
+    }
+  ]
+}
