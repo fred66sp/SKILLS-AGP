@@ -1,14 +1,14 @@
 {
   "schemaVersion": 1,
-  "receiptId": "572a15ac-d341-43e3-aee6-d565d55da569",
+  "receiptId": "1fd99c13-479a-4401-bc21-b0eae192ff0e",
   "status": "current",
   "command": "deliver",
   "type": "workflow",
   "input": "C:\\SKILLS-AGP\\docs\\gherkin-scenario-authoring\\flujo-de-trabajo.json",
   "output": "C:\\SKILLS-AGP\\docs\\gherkin-scenario-authoring\\flujo-de-trabajo.html",
   "specification": {
-    "sha256": "939a495209f757ec218d1a78876e015ff6f646d98e9a7b41e25001b638ea21a3",
-    "bytes": 8569
+    "sha256": "560a170f2731e02752542b7a2547cfb42dc5b43b7bf2b2cde1251629fd398744",
+    "bytes": 8253
   },
   "artifact": {
     "sha256": "f0606cbadc573d896f47864c0def5fe9be2c8669c5e1933cbf365588ed190239",
