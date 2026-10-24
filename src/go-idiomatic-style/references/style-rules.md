@@ -2,7 +2,7 @@
 
 ## 1. Formato
 
-- `gofmt` decide el formato. Ejecuta `gofmt -w .`; no corrijas a mano lo que la herramienta normaliza.
+- `gofmt` decide el formato. Ejecuta `go fmt ./...`; no corrijas a mano lo que la herramienta normaliza. No formatees `vendor/` ni `testdata/`.
 - `goimports` solo si el proyecto ya lo usa. No es un requisito del lenguaje.
 - La llave de apertura va en la misma línea. No hay límite rígido de longitud: divide por claridad, no por una columna.
 - Reduce anidación con retornos tempranos. Omite el `else` cuando el `if` ya retorna, continúa o rompe.
@@ -40,17 +40,16 @@
 
 ## 4. Estructura
 
-Aplicación pequeña o librería:
+Aplicación pequeña:
 
 ```text
 project/
 ├── go.mod
 ├── go.sum
-├── main.go          # solo si hay un único binario
-├── internal/
-│   └── <dominio>/
-└── README.md
+└── main.go          # cableado; la lógica empieza aquí
 ```
+
+- Si la lógica deja de caber en `main.go`, añade `internal/<dominio>`; no antes.
 
 Varios binarios:
 

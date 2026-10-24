@@ -7,6 +7,8 @@ description: "Diseña, implementa y revisa CLIs en Go pensadas para agentes de I
 
 El consumidor principal de estas CLIs es un agente que ejecuta comandos, lee stdout y decide el siguiente paso. La interfaz humana importa, pero el contrato máquina manda: si el agente no puede descubrir, ejecutar y verificar una operación sin adivinar, la CLI no está terminada.
 
+Esta skill posee el contrato de la CLI: comandos, flags, flujos, JSON, códigos de salida y seguridad. La estructura y el estilo del código son de `go-idiomatic-style`; los errores, `context`, la concurrencia y el cierre, de `go-errors-and-lifecycle`; las pruebas y la puerta, de `go-testing-and-verification`.
+
 ## Invariantes de la CLI para agentes
 
 1. No implementes un comando sin un contrato escrito: nombre, propósito, argumentos, flags, entrada, salida, efectos, idempotencia, seguridad y códigos de salida. Copia `assets/command-spec.md` y rellénalo antes de tocar código.
@@ -40,10 +42,9 @@ El consumidor principal de estas CLIs es un agente que ejecuta comandos, lee std
 4. Identifica los cambios incompatibles y decide versión y migración antes de implementar.
 
 **Paso 3 — Elegir la estructura.**
-1. Mantén `cmd/<binario>/main.go` como cableado: construye dependencias, llama a `run` y hace `os.Exit`.
-2. Coloca el parseo, la ayuda, la selección de formato y el mapeo de errores en `internal/cli`.
-3. Coloca los casos de uso en `internal/app` y el dominio en paquetes con responsabilidad propia. No crees capas por anticipado.
-4. Inyecta `stdin`, `stdout`, `stderr`, reloj y entorno como dependencias. No uses `os.Stdout` ni `time.Now` dentro de la lógica de negocio.
+1. Empieza por la estructura mínima que mantenga `main` como cableado y la lógica en una función `run` testeable. Cuántos paquetes hacen falta lo decide `go-idiomatic-style`.
+2. Cuando la CLI tenga varios comandos o el paquete único deje de ser legible, separa `cmd/<binario>/main.go` (cableado), `internal/cli` (parseo, ayuda, formato y mapeo de errores) e `internal/app` (casos de uso). No crees esas capas antes de que exista la necesidad.
+3. Inyecta `stdin`, `stdout`, `stderr`, reloj y entorno como dependencias. No uses `os.Stdout` ni `time.Now` dentro de la lógica de negocio.
 
 **Paso 4 — Implementar la superficie.**
 1. Implementa la ayuda raíz y la de cada comando antes que la lógica. Un comando sin ayuda no está listo.
@@ -60,19 +61,20 @@ El consumidor principal de estas CLIs es un agente que ejecuta comandos, lee std
 5. Limita listados y flujos; rechaza `--limit` negativo o cero cuando no tenga sentido.
 
 **Paso 6 — Resolver el ciclo de vida.**
-1. Crea el contexto con `signal.NotifyContext` en `main`; propaga `ctx` por todas las operaciones de I/O.
-2. Aplica timeouts en la frontera que corresponda, no en todas las capas.
-3. Al cancelar, deja de aceptar trabajo, espera a las tareas en curso con un límite y cierra recursos en orden inverso a su apertura.
-4. Trata `EPIPE` como una salida normal: si el consumidor cierra la tubería, termina con `0` sin ruido.
+Aplica `go-errors-and-lifecycle`. En la CLI:
+
+1. `main` crea el contexto con `signal.NotifyContext`, lo propaga a las operaciones y sale con `3` al cancelar.
+2. Trata `EPIPE` como una salida normal: si el consumidor cierra la tubería, termina con `0` sin ruido.
 
 **Paso 7 — Probar el contrato, no solo la lógica.**
-1. Cubre la lógica pura con pruebas unitarias y de tabla.
-2. Cubre la superficie con pruebas de extremo a extremo que ejecutan el binario y comprueban por separado `stdout`, `stderr` y código de salida.
-3. Verifica ayuda, versión, comando desconocido, flag desconocido, JSON válido, `--dry-run`, falta de `--yes`, cancelación y `EPIPE`.
-4. Usa golden files para la salida estable y normaliza rutas, tiempos y mensajes del sistema.
+Aplica las capas de `go-testing-and-verification`. En la CLI cubre además:
+
+1. La superficie con pruebas de extremo a extremo que ejecutan el binario y comprueban por separado `stdout`, `stderr` y código de salida.
+2. Ayuda, versión, comando desconocido, flag desconocido, JSON válido, `--dry-run`, falta de `--yes`, cancelación y `EPIPE`.
+3. Golden files para la salida estable, normalizando rutas, tiempos y mensajes del sistema.
 
 **Paso 8 — Cerrar con evidencia.**
-1. Ejecuta `gofmt -l .`, `go build ./...`, `go test ./...` y `go vet ./...`. Añade `go test -race ./...` si hay concurrencia.
+1. Ejecuta la puerta de `go-testing-and-verification` y adjunta su resultado.
 2. Rellena el bloque de resultado. Ningún comando del contrato queda sin verificar o declarado como no disponible.
 
 ## Errores y paradas de la CLI

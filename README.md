@@ -18,6 +18,8 @@ Este repositorio se inspira y se basa en dos fuentes externas:
 | `src/<skill>/` | Una skill por carpeta: `SKILL.md`, `references/`, `assets/`, `scripts/` |
 | `docs/` | Guías y diagramas del repositorio |
 | `.skills/` | Skills de terceros fijadas a una versión, y enrutadores que hacen descubribles a las skills propias |
+| `scripts/` | Validación local de estructura, rutas, recibos y pruebas de los scripts |
+| `.github/workflows/` | CI que ejecuta la validación y las pruebas en cada push y pull request |
 | `README.md` | Este fichero |
 | `CONTRIBUTING.md` | Política de ramas, commits e integración |
 | `CHANGELOG.md` | Historial de cambios |
@@ -79,6 +81,13 @@ Las skills de Go sintetizan tres fuentes: el subagente [`golang-pro`](https://gi
 
 Quedan fuera como skills separadas los genéricos, las opciones funcionales, el logging, el rendimiento y la documentación de API: no cambian el contrato de una CLI y sus reglas esenciales viven dentro de las cuatro anteriores o se posponen hasta que exista una necesidad medida.
 
+### Precedencia entre las skills de Go
+
+Cada skill posee una materia y las demás la referencian: el contrato de la CLI es de `go-cli-ai-first`; el estilo, la estructura de paquetes y las dependencias son de `go-idiomatic-style`; los errores, `context`, la concurrencia y el cierre son de `go-errors-and-lifecycle`; las pruebas y la puerta son de `go-testing-and-verification`. La convención del proyecto donde se trabaja gana sobre la preferencia de estilo cuando no contradice el contrato de la CLI.
+
+- **CLI mínima:** un `main.go` con el cableado y una función `run` testeable. El contrato de `go-cli-ai-first` se aplica completo y no se crean `cmd/`, `internal/` ni `pkg/` por anticipación.
+- **CLI con varios comandos:** `cmd/<binario>/main.go`, `internal/cli` e `internal/app`. La estructura se justifica por el tamaño, no por la plantilla, y el contrato de la CLI no cambia.
+
 ## Skills en uso
 
 Skills de terceros fijadas a una versión concreta, para que todas las máquinas trabajen con lo mismo. No son de autoría propia: no se editan aquí, se actualizan sustituyéndolas.
@@ -95,7 +104,7 @@ Documentación: [`docs/skill-creator/index.html`](docs/skill-creator/index.html)
 
 ## Enrutadores de skills propias
 
-`.skills/` no solo guarda terceros: cada skill propia que quiera ser descubrible por el agente tiene ahí un enrutador. Un enrutador es un `SKILL.md` mínimo con dos cosas: la metadatos de disparo (nombre igual al de la carpeta y descripción con los disparadores) y una instrucción para leer el contrato completo en `src/<skill>/SKILL.md` antes de trabajar. No copia invariantes, ni tablas, ni procedimientos: si enrutador y paquete difieren, manda el paquete.
+`.skills/` no solo guarda terceros: cada skill propia que quiera ser descubrible por el agente tiene ahí un enrutador. Un enrutador es un `SKILL.md` mínimo con dos cosas: los metadatos de disparo (nombre igual al de la carpeta y descripción con los disparadores) y una instrucción para leer el contrato completo en `../../src/<skill>/SKILL.md` antes de trabajar. La ruta es relativa a la carpeta del enrutador, porque Pi resuelve las rutas relativas contra el directorio del `SKILL.md`, no contra el directorio de trabajo. No copia invariantes, ni tablas, ni procedimientos: si enrutador y paquete difieren, manda el paquete.
 
 | Enrutador | Fuente canónica |
 |---|---|
@@ -107,7 +116,17 @@ Documentación: [`docs/skill-creator/index.html`](docs/skill-creator/index.html)
 | [`.skills/go-errors-and-lifecycle/SKILL.md`](.skills/go-errors-and-lifecycle/SKILL.md) | [`src/go-errors-and-lifecycle/SKILL.md`](src/go-errors-and-lifecycle/SKILL.md) |
 | [`.skills/go-testing-and-verification/SKILL.md`](.skills/go-testing-and-verification/SKILL.md) | [`src/go-testing-and-verification/SKILL.md`](src/go-testing-and-verification/SKILL.md) |
 
-La carpeta se registra como origen de skills en `.pi/settings.json` con `"skills": ["../.skills"]`. Como `.pi/` es estado local de cada máquina, ese registro se vuelve a escribir al clonar el repositorio en otra; sin él, `.skills/` no se descubre. Registrar la carpeta hace descubribles también a las skills de terceros que ya contiene.
+`python scripts/check-repo.py` comprueba que cada enrutador resuelve su contrato desde su propio directorio, que el nombre del enrutador y el del contrato coinciden y que no hay enrutadores huérfanos ni skills canónicas sin enrutador.
+
+La carpeta se registra como origen de skills en `.pi/settings.json` con `"skills": ["../.skills"]`; la ruta es relativa a `.pi/`, no al directorio de trabajo. Como `.pi/` es estado local de cada máquina, al clonar el repositorio en otra hay que volver a crear `.pi/settings.json` con esa clave (y las demás preferencias locales); sin ella, `.skills/` no se descubre. La clave mínima es:
+
+```json
+{
+  "skills": ["../.skills"]
+}
+```
+
+Registrar la carpeta hace descubribles también a las skills de terceros que ya contiene.
 
 ## Cómo se usa una skill
 
@@ -115,6 +134,19 @@ La carpeta se registra como origen de skills en `.pi/settings.json` con `"skills
 2. Abre las `references/` solo cuando la operación concreta lo pida: cada una declara en su primera línea cuándo aplica.
 3. Ejecuta los scripts de `scripts/` en lugar de reescribir su lógica.
 4. No des una tarea por terminada sin la evidencia que el propio `SKILL.md` exige.
+
+## Validación
+
+La misma comprobación que ejecuta la CI se ejecuta en local:
+
+```bash
+python scripts/check-repo.py
+python scripts/test-check-repo.py
+python src/document-management-software/scripts/test-doc-inventory.py
+python src/go-testing-and-verification/scripts/test-verify-go.py
+```
+
+`check-repo.py` valida metadatos, estructura, enrutadores, enlaces Markdown, recibos de los diagramas y sintaxis de los scripts. Las pruebas unitarias se ejecutan aparte para que un fallo indique qué script falló. La CI (`.github/workflows/validate.yml`) ejecuta los mismos comandos en cada push y pull request.
 
 ## Documentación
 
@@ -154,7 +186,9 @@ node archify/archify/bin/archify.mjs deliver workflow \
 
 `deliver` reescribe el recibo junto al HTML. Con ese checkout, la entrega es reproducible byte a byte: el mismo spec devuelve el mismo `sha256`.
 
-La comprobación de esa reproducibilidad tiene dos partes, y la herramienta solo hace una. `archify check <html> --require-provenance` verifica el HTML contra su recibo; no compara el spec que el recibo dice haber leído con el spec que está en el repositorio. La segunda parte es manual: comparar el `sha256` y los `bytes` de `specification` con el hash real del `.json`, y los de `artifact` con el del `.html`. Sin esa segunda parte se cuelan recibos válidos sobre un spec que ya no es el guardado: basta con que el hash se calcule sobre una copia con CRLF mientras el repositorio guarda LF para que el recibo registre otros `bytes` bajo el mismo nombre. Antes de `deliver`, el spec debe estar en LF; se comprueba contando retornos de carro, y el resultado debe ser 0.
+La comprobación de esa reproducibilidad tiene dos niveles. `archify check <html> --require-provenance` verifica el HTML contra su recibo. `python scripts/check-repo.py` compara el `sha256` y los `bytes` de `specification` con el `.json` y los de `artifact` con el `.html`, y exige que el spec esté en LF. El segundo nivel no necesita Archify y detecta el recibo válido sobre un spec que ya no es el guardado: basta con que el hash se calcule sobre una copia con CRLF mientras el repositorio guarda LF para que el recibo registre otros `bytes` bajo el mismo nombre. Antes de `deliver`, el spec debe estar en LF; se comprueba contando retornos de carro, y el resultado debe ser 0.
+
+Regenera solo el diagrama cuyo `.json` haya cambiado; los demás HTML y recibos no se tocan. Un cambio de texto en una página `index.html` no obliga a regenerar diagramas. Si no se dispone del checkout local de Archify, la verificación de recibos sigue siendo posible; la regeneración, no.
 
 ## Regla de empaquetado
 

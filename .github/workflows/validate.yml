@@ -1,0 +1,34 @@
+name: validate
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - uses: actions/setup-go@v5
+        with:
+          go-version: "1.22.x"
+
+      - name: Validate structure, routes and delivery receipts
+        run: python3 scripts/check-repo.py
+
+      - name: Test the repository validator
+        run: python3 scripts/test-check-repo.py
+
+      - name: Test the documentation inventory
+        run: python3 src/document-management-software/scripts/test-doc-inventory.py
+
+      - name: Test the Go verification gate
+        run: python3 src/go-testing-and-verification/scripts/test-verify-go.py

@@ -7,6 +7,8 @@ description: "Diseña el contrato de errores y el ciclo de vida de un programa G
 
 Un error no es un texto: es un valor con significado, un contrato entre capas y una decisión sobre qué puede hacer el llamador. Un proceso no termina cuando `main` retorna: termina cuando sus goroutines, conexiones y archivos han cerrado en el orden correcto.
 
+Esta skill posee los errores, `context`, la concurrencia y el cierre. El contrato de la CLI es de `go-cli-ai-first`; el estilo y la estructura, de `go-idiomatic-style`; las pruebas y la puerta, de `go-testing-and-verification`.
+
 ## Invariantes de errores y ciclo de vida
 
 1. Clasifica antes de escribir: error esperado de operación, error de uso, conflicto de estado, cancelación o defecto de programación. Cada clase tiene un tratamiento distinto.
@@ -73,7 +75,7 @@ Un error no es un texto: es un valor con significado, un contrato entre capas y 
 **Paso 8 — Verificar y cerrar.**
 1. Prueba los caminos de error con `errors.Is`/`errors.As`, no con textos.
 2. Prueba la cancelación: el contexto se cancela, la operación retorna pronto y no quedan goroutines.
-3. Ejecuta `go test ./...`, `go vet ./...` y `go test -race ./...` si hay concurrencia.
+3. Ejecuta la puerta de `go-testing-and-verification` sobre los caminos de error y cancelación.
 4. Rellena el bloque de resultado.
 
 ## Errores y paradas del ciclo de vida
