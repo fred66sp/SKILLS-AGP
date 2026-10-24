@@ -1,4 +1,6 @@
-## Resultado verificado
+# Resultado verificado de la operación Git
+
+## Estado del resultado
 
 - Estado:
 - Tamaño de la tarea:

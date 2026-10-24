@@ -33,7 +33,7 @@ S9. Un documento de usuario no conserva estado de la entrega: ni referencias a r
 
 La guía del repositorio es de unas 400 líneas de autoría por commit. T1 y T2 se separaron de una única unidad de 622 líneas para respetarla; el contenido es idéntico. T3 incluye artefactos generados por archify (dos HTML de ~830 KB), que no cuentan como autoría: lo revisable es cada `*.json` y su recibo. T4 no se puede rebanar sin dejar la página rota a medias, porque la documentación referenciada debe existir en el mismo commit; se entrega como unidad única.
 
-## Commits
+## Cortes de revisión
 
 La historia se unificó después en un único commit inicial del repositorio, así que estas unidades no son referencias resolubles: quedan como registro de los cortes de revisión con los que se escribió el paquete. Git es la fuente del estado actual.
 

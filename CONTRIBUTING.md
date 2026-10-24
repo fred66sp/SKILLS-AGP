@@ -53,7 +53,7 @@ Cualquier otra cosa entra por una rama corta. Ante la duda, rama.
 
 Este repositorio no define remoto. Crear uno, publicar o hacer `push` es una operación aparte, con su propio plan y su confirmación.
 
-## Documentación
+## Ficheros de raíz
 
 - `README.md`: qué es el repositorio y cómo se usa una skill.
 - `CHANGELOG.md`: historial, con formato Keep a Changelog 1.1.0 y versionado SemVer 2.0.0.

@@ -12,22 +12,12 @@ Usa MAJOR.MINOR.PATCH solo si el proyecto declara Semantic Versioning o el usuar
 
 No deduzcas una versión nueva solo a partir del tipo de commit. Comprueba los cambios públicos, el historial y la política del proyecto.
 
-## Release
+## Qué decide esta referencia
 
-1. Verifica que release/<version> procede de develop.
-2. Limita cambios a estabilización, versión, notas y correcciones aprobadas.
-3. Comprueba ubicaciones de versión y changelog si existen.
-4. Integra release en main mediante el mecanismo previsto.
-5. Crea etiqueta y publicación solo si están en el plan aprobado.
-6. Integra el resultado de main de vuelta a develop.
-7. Verifica que ambos destinos contienen la release.
+El recorrido de ramas —crear, integrar, probar contención y proponer borrado— está descrito una sola vez en [operaciones Git Flow verificables](git-flow-operations.md). Este fichero aporta lo que ese recorrido necesita por su parte y no puede deducirse del Git:
 
-## Hotfix
+- El número de versión que toca, dónde lo declara el proyecto y su entrada en el changelog.
+- La etiqueta y la publicación: se crean solo si están en el plan aprobado.
+- El nombre esperado de la rama: `release/<version>` y `hotfix/<id>-<slug>`.
 
-1. Verifica que hotfix/<id>-<slug> procede de main.
-2. Mantén el parche mínimo.
-3. Integra en main y publica etiqueta solo si procede.
-4. Integra el mismo resultado de vuelta a develop.
-5. Verifica que main y develop contienen la corrección.
-
-No elimines una rama de release u hotfix por el hecho de haber integrado cambios. El borrado requiere una operación y autorización específica.
+Si falta alguna de esas tres decisiones, se pregunta antes de integrar: una release sin versión fijada no se puede cerrar. No hay una segunda lista de pasos en este fichero a la que mantener sincronizada la anterior.

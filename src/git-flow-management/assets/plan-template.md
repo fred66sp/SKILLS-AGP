@@ -1,3 +1,5 @@
+# Plan de operación Git
+
 ## Estado detectado
 
 - Repositorio:
