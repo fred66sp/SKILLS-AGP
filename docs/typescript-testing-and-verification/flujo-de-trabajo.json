@@ -1,0 +1,283 @@
+{
+  "schema_version": 2,
+  "diagram_type": "workflow",
+  "meta": {
+    "title": "Flujo de trabajo de la skill typescript-testing-and-verification",
+    "subtitle": "Del mapa de comportamientos al cambio cerrado con evidencia: fronteras validadas, pruebas por capa y la puerta ejecutada sin atajos.",
+    "locale": "es",
+    "output": "docs/typescript-testing-and-verification/flujo-de-trabajo.html",
+    "visual_preset": "signal-flow",
+    "quality_profile": "showcase"
+  },
+  "lanes": [
+    {
+      "id": "encargo",
+      "label": "Encargo y riesgo"
+    },
+    {
+      "id": "skill",
+      "label": "La skill: validar y probar"
+    },
+    {
+      "id": "codigo",
+      "label": "Pruebas y puerta"
+    },
+    {
+      "id": "control",
+      "label": "Límite y cierre",
+      "variant": "exception"
+    }
+  ],
+  "phases": [
+    {
+      "id": "mapa",
+      "label": "Mapa",
+      "fromCol": 0,
+      "toCol": 1
+    },
+    {
+      "id": "validacion",
+      "label": "Validación",
+      "fromCol": 2,
+      "toCol": 2,
+      "variant": "emphasis"
+    },
+    {
+      "id": "pruebas",
+      "label": "Pruebas",
+      "fromCol": 3,
+      "toCol": 4
+    },
+    {
+      "id": "cierre",
+      "label": "Evidencia",
+      "fromCol": 5,
+      "toCol": 5,
+      "variant": "security"
+    }
+  ],
+  "groups": [
+    {
+      "id": "frontera",
+      "label": "Fronteras y capas",
+      "lane": "skill",
+      "fromCol": 1,
+      "toCol": 3,
+      "variant": "emphasis"
+    },
+    {
+      "id": "evidencia",
+      "label": "Evidencia ejecutada",
+      "lane": "control",
+      "fromCol": 4,
+      "toCol": 5,
+      "variant": "security"
+    }
+  ],
+  "mainPath": [
+    "encargo",
+    "fronteras",
+    "esquemas",
+    "logica",
+    "cli",
+    "puerta",
+    "informe",
+    "resultado"
+  ],
+  "nodes": [
+    {
+      "id": "encargo",
+      "lane": "encargo",
+      "col": 0,
+      "type": "external",
+      "label": "Encargo de verificación",
+      "sublabel": "prueba, frontera o cierre",
+      "tag": "leer antes de probar",
+      "icon": "start"
+    },
+    {
+      "id": "fronteras",
+      "lane": "skill",
+      "col": 1,
+      "type": "backend",
+      "label": "Mapear comportamientos",
+      "sublabel": "observable · capa mínima",
+      "tag": "sin prueba decorativa"
+    },
+    {
+      "id": "esquemas",
+      "lane": "skill",
+      "col": 2,
+      "type": "backend",
+      "label": "Validar fronteras",
+      "sublabel": "Zod 4 · z.infer · errores",
+      "tag": "unknown antes de usar"
+    },
+    {
+      "id": "logica",
+      "lane": "skill",
+      "col": 3,
+      "type": "backend",
+      "label": "Cubrir la lógica",
+      "sublabel": "esquema · unidad · integración",
+      "tag": "casos por causa"
+    },
+    {
+      "id": "cli",
+      "lane": "codigo",
+      "col": 4,
+      "type": "backend",
+      "label": "Probar la CLI",
+      "sublabel": "stdout · stderr · exit code",
+      "tag": "sin TTY ni red real"
+    },
+    {
+      "id": "puerta",
+      "lane": "codigo",
+      "col": 5,
+      "type": "security",
+      "label": "verify-ts.py",
+      "sublabel": "typecheck · lint · test · build",
+      "tag": "se ejecuta, no se supone"
+    },
+    {
+      "id": "informe",
+      "lane": "skill",
+      "col": 5,
+      "type": "security",
+      "label": "Informe de cierre",
+      "sublabel": "comandos · resultado · límites",
+      "tag": "sin estado sin evidencia"
+    },
+    {
+      "id": "parada",
+      "lane": "control",
+      "col": 3,
+      "type": "security",
+      "label": "Parada",
+      "sublabel": "inestable o no reproducible",
+      "tag": "defecto, no reintento",
+      "icon": "stop"
+    },
+    {
+      "id": "resultado",
+      "lane": "control",
+      "col": 5,
+      "type": "frontend",
+      "label": "Resultado",
+      "sublabel": "completo, parcial o bloqueado",
+      "icon": "success"
+    }
+  ],
+  "edges": [
+    {
+      "id": "lee",
+      "from": "encargo",
+      "to": "fronteras",
+      "label": "lee",
+      "variant": "emphasis",
+      "role": "main"
+    },
+    {
+      "id": "valida",
+      "from": "fronteras",
+      "to": "esquemas",
+      "label": "una capa por riesgo",
+      "role": "main"
+    },
+    {
+      "id": "cubre",
+      "from": "esquemas",
+      "to": "logica",
+      "label": "prueba",
+      "role": "main"
+    },
+    {
+      "id": "extremo",
+      "from": "logica",
+      "to": "cli",
+      "label": "extremo a extremo",
+      "variant": "emphasis",
+      "role": "main"
+    },
+    {
+      "id": "ejecuta",
+      "from": "cli",
+      "to": "puerta",
+      "label": "ejecuta",
+      "role": "main"
+    },
+    {
+      "id": "declara",
+      "from": "puerta",
+      "to": "informe",
+      "label": "resultado real",
+      "variant": "emphasis",
+      "role": "main"
+    },
+    {
+      "id": "cierra",
+      "from": "informe",
+      "to": "resultado",
+      "label": "evidencia",
+      "variant": "emphasis",
+      "role": "main"
+    },
+    {
+      "id": "inestable",
+      "from": "logica",
+      "to": "parada",
+      "label": "no determinista",
+      "variant": "security",
+      "role": "return"
+    },
+    {
+      "id": "falla-puerta",
+      "from": "puerta",
+      "to": "parada",
+      "label": "falla",
+      "variant": "security",
+      "role": "return"
+    },
+    {
+      "id": "vuelve",
+      "from": "parada",
+      "to": "esquemas",
+      "label": "corrige la causa",
+      "variant": "dashed",
+      "role": "return"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "Qué se decide antes de probar",
+      "items": [
+        "Se enumeran comandos, flags, formatos, errores, códigos de salida y efectos que el usuario puede observar",
+        "Cada dato no confiable se marca en su frontera: HTTP, webhook, formulario, fichero, process.env o argumentos",
+        "Se elige la capa más pequeña que demuestre el comportamiento; la más alta solo cuando el contrato la cruza",
+        "Un riesgo de datos destruidos o secretos filtrados se prueba explícitamente"
+      ]
+    },
+    {
+      "dot": "rose",
+      "title": "Dónde se detiene",
+      "items": [
+        "Una prueba inestable no se reintenta hasta que pase: se elimina el no determinismo o se declara defecto",
+        "Un snapshot cambiado sin cambio de comportamiento explicado se investiga, no se actualiza",
+        "Si no hay Zod, no se instala: se aplica el mismo contrato con el validador existente",
+        "Si falta tsc local o el script typecheck, se declara el bloqueo en vez de descargar otra versión"
+      ]
+    },
+    {
+      "dot": "emerald",
+      "title": "Cómo se demuestra el cierre",
+      "items": [
+        "typecheck, lint, test y build se ejecutan con verify-ts.py o los scripts del proyecto; lo ausente se declara",
+        "Las fronteras se prueban con válidos, inválidos y límites; el error se comprueba por forma",
+        "La CLI cubre ayuda, versión, comando y flag desconocidos, JSON, modo no interactivo, cancelación, --dry-run y falta de --yes",
+        "El informe copia las salidas reales, declara lo no verificado y no convierte un fallo conocido en pendiente"
+      ]
+    }
+  ]
+}

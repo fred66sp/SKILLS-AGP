@@ -81,6 +81,35 @@ Las skills de Go sintetizan tres fuentes: el subagente [`golang-pro`](https://gi
 
 Quedan fuera como skills separadas los genéricos, las opciones funcionales, el logging, el rendimiento y la documentación de API: no cambian el contrato de una CLI y sus reglas esenciales viven dentro de las cuatro anteriores o se posponen hasta que exista una necesidad medida.
 
+### `typescript-idiomatic-style`
+
+Diseña y escribe TypeScript type-first para librerías, servicios y CLIs: `tsconfig` estricto, uniones discriminadas, tipos branded, type guards, genéricos y tipos calculados solo cuando la API los necesita, `satisfies`, objetos const en lugar de `enum`, módulos y `exports` explícitos, dependencias justificadas y project references únicamente con una medición del build. Incluye el contrato de una CLI de TypeScript con citty, `@clack/prompts`, completion perezosa, separación de `stdout` y `stderr`, modo no interactivo y empaquetado.
+
+Contrato completo: [`src/typescript-idiomatic-style/SKILL.md`](src/typescript-idiomatic-style/SKILL.md).
+
+### `typescript-testing-and-verification`
+
+Cierra el cambio con evidencia en TypeScript: valida toda frontera externa con Zod 4 y deriva los tipos del esquema, comprueba los tipos con `tsc --noEmit`, escribe pruebas unitarias, de esquema, de integración y de extremo a extremo de la CLI, fija la salida determinista y revisa el arranque con variables de entorno inválidas. Incluye la puerta `scripts/verify-ts.py`, que detecta el gestor de paquetes, ejecuta typecheck y, cuando se piden, los scripts `lint`, `test` y `build` del proyecto, y devuelve texto o JSON.
+
+Contrato completo: [`src/typescript-testing-and-verification/SKILL.md`](src/typescript-testing-and-verification/SKILL.md).
+
+Las skills de TypeScript sintetizan cuatro fuentes: [`typescript-pro`](https://www.skillsdirectory.com/skills/monoes-typescript-pro), de monoes, publicado con licencia MIT y procedente de [`Jeffallan/claude-skills`](https://github.com/Jeffallan/claude-skills/tree/882ef55e377dbf9a4dbe496bb41ac6ccd0e555cf/skills/typescript-pro); [`typescript-patterns`](https://opencodeskills.dev/skills/code-quality/typescript-patterns/) 1.0.1 y [`zod-validation`](https://opencodeskills.dev/skills/code-quality/zod-validation/) 1.0.0, ambas de OpenCode Skills con licencia MIT declarada; y [`cli-building`](https://www.typingmind.com/skills/damusix-cli-building), de damusix, fijada en la [revisión de damusix](https://github.com/damusix/skills/tree/efa8de4096f167cc896af6b869412def1614ccf0/cli-building), cuya ficha y repositorio no declaran licencia y se usa solo como referencia de decisiones. No copian su texto: seleccionan y reorganizan las reglas que sostienen tipos verificables, una CLI automatizable y una frontera validada, y añaden el contrato de agente, la separación de responsabilidades y la puerta de verificación.
+
+| Necesidad | Skill | Fuentes que la sostienen |
+|---|---|---|
+| Tipos que impiden estados inválidos y una CLI mantenible | `typescript-idiomatic-style` | `typescript-pro`, `typescript-patterns`, `cli-building` y criterio propio de agente |
+| Fronteras validadas y confianza demostrada antes de cerrar | `typescript-testing-and-verification` | `zod-validation`, `typescript-patterns`, `cli-building` y criterio propio de agente |
+
+Quedan fuera como skills separadas los frameworks de UI, el rendimiento de build, la estrategia de errores y la publicación: no cambian el contrato de tipos ni la verificación y sus reglas esenciales viven en las dos anteriores o se posponen hasta que exista una necesidad medida.
+
+### Precedencia entre las skills de TypeScript
+
+Cada skill posee una materia y la otra la referencia: el diseño de tipos, los módulos, las dependencias y la forma de la CLI son de `typescript-idiomatic-style`; la validación en la frontera, las pruebas y la puerta son de `typescript-testing-and-verification`. La convención del proyecto gana sobre la preferencia de estilo cuando no contradice el lenguaje ni el contrato de la CLI.
+
+- **Proyecto con otro validador:** no se añade Zod. Se mantiene el contrato de validar toda frontera y se usa la herramienta existente.
+- **CLI de un solo fichero:** es válida. La estructura `cli/` solo se propone cuando el número de comandos o el tamaño la justifican.
+- **Proyecto sin `typecheck`:** la puerta ejecuta la copia local de TypeScript con `--noEmit`; si no existe, declara el bloqueo en lugar de descargar una versión distinta.
+
 ### Precedencia entre las skills de Go
 
 Cada skill posee una materia y las demás la referencian: el contrato de la CLI es de `go-cli-ai-first`; el estilo, la estructura de paquetes y las dependencias son de `go-idiomatic-style`; los errores, `context`, la concurrencia y el cierre son de `go-errors-and-lifecycle`; las pruebas y la puerta son de `go-testing-and-verification`. La convención del proyecto donde se trabaja gana sobre la preferencia de estilo cuando no contradice el contrato de la CLI.
@@ -115,6 +144,8 @@ Documentación: [`docs/skill-creator/index.html`](docs/skill-creator/index.html)
 | [`.skills/go-idiomatic-style/SKILL.md`](.skills/go-idiomatic-style/SKILL.md) | [`src/go-idiomatic-style/SKILL.md`](src/go-idiomatic-style/SKILL.md) |
 | [`.skills/go-errors-and-lifecycle/SKILL.md`](.skills/go-errors-and-lifecycle/SKILL.md) | [`src/go-errors-and-lifecycle/SKILL.md`](src/go-errors-and-lifecycle/SKILL.md) |
 | [`.skills/go-testing-and-verification/SKILL.md`](.skills/go-testing-and-verification/SKILL.md) | [`src/go-testing-and-verification/SKILL.md`](src/go-testing-and-verification/SKILL.md) |
+| [`.skills/typescript-idiomatic-style/SKILL.md`](.skills/typescript-idiomatic-style/SKILL.md) | [`src/typescript-idiomatic-style/SKILL.md`](src/typescript-idiomatic-style/SKILL.md) |
+| [`.skills/typescript-testing-and-verification/SKILL.md`](.skills/typescript-testing-and-verification/SKILL.md) | [`src/typescript-testing-and-verification/SKILL.md`](src/typescript-testing-and-verification/SKILL.md) |
 
 `python scripts/check-repo.py` comprueba que cada enrutador resuelve su contrato desde su propio directorio, que el nombre del enrutador y el del contrato coinciden y que no hay enrutadores huérfanos ni skills canónicas sin enrutador.
 
@@ -177,6 +208,12 @@ python src/go-testing-and-verification/scripts/test-verify-go.py
 - `docs/skill-creator/index.html` — página principal de la skill `skill-creator`.
 - `docs/skill-creator/flujo-de-trabajo.html` — diagrama del flujo, del encargo al directorio validado.
 - `docs/skill-creator/arquitectura.html` — diagrama del paquete, las puertas de validación y el directorio producido.
+- `docs/typescript-idiomatic-style/index.html` — página principal de la skill `typescript-idiomatic-style`.
+- `docs/typescript-idiomatic-style/flujo-de-trabajo.html` — diagrama del flujo, de la inspección al diff revisado.
+- `docs/typescript-idiomatic-style/arquitectura.html` — diagrama del paquete, el modelo de tipos y el proyecto.
+- `docs/typescript-testing-and-verification/index.html` — página principal de la skill `typescript-testing-and-verification`.
+- `docs/typescript-testing-and-verification/flujo-de-trabajo.html` — diagrama del flujo, del mapa de riesgos al cierre con evidencia.
+- `docs/typescript-testing-and-verification/arquitectura.html` — diagrama del paquete, las fronteras validadas y la puerta.
 
 Los diagramas son artefactos de [archify](https://github.com/tt-a1i/archify) 3.2.0. Cada uno tiene su especificación (`*.json`) y su recibo de entrega (`*.delivery.json`) con el `sha256` del HTML y del spec. Para regenerarlos hace falta archify 3.2.0 y el checkout local en `archify/`, ignorado por Git, con los ajustes de ancho descritos en `archify/LOCAL-PATCH.md`; el comando es el mismo en todas las carpetas de `docs/<skill>/`:
 

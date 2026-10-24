@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "2181679f-5cb7-4e4f-af08-f593e4451439",
+  "status": "current",
+  "command": "deliver",
+  "type": "workflow",
+  "input": "C:\\SKILLS-AGP\\docs\\typescript-idiomatic-style\\flujo-de-trabajo.json",
+  "output": "C:\\SKILLS-AGP\\docs\\typescript-idiomatic-style\\flujo-de-trabajo.html",
+  "specification": {
+    "sha256": "496d5aadbcf173c356226f00ada575d1f65d3e8a15c44111061b008b8a179ad4",
+    "bytes": 7360
+  },
+  "artifact": {
+    "sha256": "38c5e8878f66d165f20888532f24898855d57958cd0034e0d95398f1e415b7e6",
+    "bytes": 834645
+  }
+}

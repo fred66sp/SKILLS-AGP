@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Entrada a la skill typescript-idiomatic-style: qué hace, cuándo se activa, cómo se usa, qué contiene el paquete, dónde vive cada regla, las preguntas de la primera conversación y los dos diagramas. Las reglas están en SKILL.md y en las referencias de tipos y CLI, no copiadas en esta página.">
+<meta name="color-scheme" content="light dark">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%231d4ed8'/%3E%3Cpath d='M12 10l-4 6 4 6M20 10l4 6-4 6' fill='none' stroke='%23ffffff' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+<title>typescript-idiomatic-style — TypeScript que no permite el estado imposible</title>
+<script>
+(function () {
+  try {
+    var p = JSON.parse(localStorage.getItem("typescript-idiomatic-style:prefs") || "{}");
+    var t = p.theme || (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+    document.documentElement.setAttribute("data-theme", t);
+  } catch (e) { document.documentElement.setAttribute("data-theme", "light"); }
+})();
+</script>
+<style>/* Identidad visual: verde de verificación (teal) con azul como segundo
+     acento. Donde el color lleva texto se usa la variante oscurecida,que
+     mantiene el contraste AA sobre el fondo claro. */
+  :root {--bg: #f8fafc;
+    --bg-elev: #ffffff;
+    --bg-soft: #f1f5f9;
+    --text: #0f172a;
+    --muted: #5f6b80;
+    --border: #e2e8f0;
+    --border-strong: #cbd5e1;
+    --accent: #1d4ed8;
+    --accent-2: #2563eb;
+    --accent-3: #c026d3;
+    --accent-soft: rgba(29, 78, 216, .10);
+    --ok: #10b981;
+    --warn: #f59e0b;
+    --ok-text: #047857;
+    --warn-text: #b45309;
+    --error-text: #b91c1c;
+    --code-bg: #0a0f1c;
+    --code-text: #e5e7eb;
+    --code-border: #1f2937;
+    --shadow: 0 1px 2px rgba(15, 23, 42, .05), 0 8px 24px -12px rgba(15, 23, 42, .18);
+    --shadow-lg: 0 20px 60px -30px rgba(15, 23, 42, .35);
+    --radius: 16px;
+    --radius-sm: 10px;
+    /* No se descargan tipografías: si Inter o JetBrains Mono no están
+       instaladas, el navegador cae en la pila del sistema. */
+    --font: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    --mono: "JetBrains Mono", ui-monospace, "SF Mono", "Fira Code", Menlo, Consolas, monospace;
+}:root[data-theme="dark"] {--bg: #0a0f1c;
+    --bg-elev: #111827;
+    --bg-soft: #1f2937;
+    --text: #e5e7eb;
+    --muted: #94a3b8;
+    --border: #334155;
+    --border-strong: #475569;
+    --accent: #60a5fa;
+    --accent-2: #60a5fa;
+    --accent-3: #22d3ee;
+    --accent-soft: rgba(96, 165, 250, .14);
+    --ok: #34d399;
+    --warn: #fbbf24;
+    --ok-text: #34d399;
+    --warn-text: #fbbf24;
+    --error-text: #f87171;
+    --code-bg: #070b16;
+    --code-text: #e5e7eb;
+    --code-border: #1f2937;
+    --shadow: 0 1px 2px rgba(0, 0, 0, .4), 0 12px 32px -18px rgba(0, 0, 0, .8);
+    --shadow-lg: 0 24px 70px -34px rgba(0, 0, 0, .9);
+}* {box-sizing: border-box;
+}html {scroll-behavior: smooth; scroll-padding-top: 88px;
+}body {margin: 0;
+    font-family: var(--font);
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+}a {color: var(--accent); text-decoration: none;
+}a:hover {text-decoration: underline; text-underline-offset: 3px;
+}code,pre,kbd {font-family: var(--mono);
+}.topbar {position: sticky;
+    top: 0;
+    z-index: 50;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 12px clamp(16px, 4vw, 40px);
+    background: color-mix(in srgb, var(--bg) 82%, transparent);
+    -webkit-backdrop-filter: saturate(180%) blur(14px);
+    backdrop-filter: saturate(180%) blur(14px);
+    border-bottom: 1px solid var(--border);
+}.brand {display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--text);
+}.brand:hover {text-decoration: none;
+}.brand-mark {display: block;
+    width: 34px; height: 34px;
+    border-radius: 10px;
+    box-shadow: var(--shadow);
+    overflow: hidden;
+}.brand-mark svg {width: 100%; height: 100%; display: block;
+}.brand-name {font-weight: 700; letter-spacing: -.02em; font-size: 15px;
+}.brand-name small {display: block; font-weight: 500; color: var(--muted); font-size: 11px; letter-spacing: .04em; text-transform: uppercase;
+}.topbar-spacer {flex: 1;
+}.icon-btn {display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    height: 36px;
+    padding: 0 12px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: var(--bg-elev);
+    color: var(--text);
+    font: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: border-color .15s, background .15s, transform .1s;
+}.icon-btn:hover {border-color: var(--border-strong);
+}.icon-btn:active {transform: translateY(1px);
+}.icon-btn svg {width: 16px; height: 16px;
+}:root[data-theme="light"] .icon-sun {display: none;
+}:root[data-theme="dark"] .icon-moon {display: none;
+}.hero {position: relative;
+    overflow: hidden;
+    padding: clamp(48px, 9vw, 104px) clamp(16px, 4vw, 40px) clamp(40px, 6vw, 72px);
+    border-bottom: 1px solid var(--border);
+}.hero::before {content: "";
+    position: absolute;
+    inset: -40% -10% auto -10%;
+    height: 420px;
+    background:
+      radial-gradient(60% 60% at 22% 30%, color-mix(in srgb, var(--accent) 26%, transparent), transparent 70%),
+      radial-gradient(50% 50% at 70% 6%, color-mix(in srgb, var(--accent-2) 22%, transparent), transparent 70%),
+      radial-gradient(42% 42% at 92% 26%, color-mix(in srgb, var(--accent-3) 20%, transparent), transparent 70%);
+    filter: blur(6px);
+    pointer-events: none;
+}.hero-inner {position: relative; max-width: 1080px; margin: 0 auto;
+}.pill {display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 5px 12px;
+    border: 1px solid var(--border-strong);
+    border-radius: 999px;
+    background: var(--bg-elev);
+    color: var(--muted);
+    font-size: 12.5px;
+    font-weight: 600;
+    letter-spacing: .01em;
+}.pill .dot {width: 7px; height: 7px; border-radius: 50%; background: var(--ok); box-shadow: 0 0 0 3px color-mix(in srgb, var(--ok) 22%, transparent);
+}.hero h1 {margin: 22px 0 0;
+    font-size: clamp(34px, 6vw, 62px);
+    line-height: 1.04;
+    letter-spacing: -.035em;
+    font-weight: 800;
+}.hero h1 .grad {color: var(--accent);
+}.hero p.lead {margin: 20px 0 0;
+    max-width: 660px;
+    font-size: clamp(16px, 2.2vw, 19px);
+    color: var(--muted);
+}.hero-actions {display: flex; flex-wrap: wrap; gap: 12px; margin-top: 30px;
+}.btn {display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 11px 18px;
+    border-radius: var(--radius-sm);
+    font-weight: 650;
+    font-size: 14.5px;
+    border: 1px solid transparent;
+    cursor: pointer;
+    transition: transform .12s, box-shadow .2s, border-color .15s;
+}.btn:hover {text-decoration: none; transform: translateY(-1px);
+}.btn-primary {background: linear-gradient(135deg, var(--accent), var(--accent-2)); color: #fff; box-shadow: var(--shadow);
+}.btn-ghost {background: var(--bg-elev); border-color: var(--border-strong); color: var(--text);
+}.layout {max-width: 1180px;
+    margin: 0 auto;
+    padding: clamp(32px, 5vw, 60px) clamp(16px, 4vw, 40px) 80px;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 48px;
+}@media (min-width: 1020px){.layout {grid-template-columns: 214px minmax(0, 1fr); gap: 56px;
+}
+  }.toc {display: none;
+}@media (min-width: 1020px){.toc {display: block; position: sticky; top: 84px; align-self: start;
+}.toc h2 {font-size: 11px; text-transform: uppercase; letter-spacing: .1em; color: var(--muted); margin: 0 0 12px;
+}.toc a {display: block;
+      padding: 7px 12px;
+      border-left: 2px solid var(--border);
+      color: var(--muted);
+      font-size: 14px;
+      font-weight: 550;
+}.toc a:hover {color: var(--text); text-decoration: none;
+}.toc a.active {color: var(--accent); border-left-color: var(--accent); background: var(--accent-soft); border-radius: 0 8px 8px 0;
+}
+  }main {min-width: 0;
+}section {scroll-margin-top: 88px;
+}section + section {margin-top: 64px;
+}.section-head {display: flex; align-items: center; gap: 12px; margin-bottom: 8px;
+}.section-num {display: grid; place-items: center;
+    width: 30px; height: 30px;
+    border-radius: 9px;
+    background: var(--accent-soft);
+    color: var(--accent);
+    font-size: 13px;
+    font-weight: 800;
+    font-variant-numeric: tabular-nums;
+}h2.title {margin: 0; font-size: clamp(22px, 3vw, 28px); letter-spacing: -.02em;
+}.chip-repo {margin-left: auto;
+    flex: none;
+    font-size: 11.5px;
+    font-weight: 700;
+    letter-spacing: .03em;
+    color: var(--muted);
+    border: 1px dashed color-mix(in srgb, var(--muted) 45%, transparent);
+    border-radius: 999px;
+    padding: 3px 10px;
+    white-space: nowrap;
+}.section > p.sub {margin: 6px 0 24px; color: var(--muted); max-width: 74ch;
+}h3 {margin: 30px 0 10px; font-size: 17px; letter-spacing: -.01em;
+}.grid {display: grid; gap: 16px;
+}.grid + .grid,.grid + .note,.grid + h3 {margin-top: 24px;
+}@media (min-width: 640px){.grid.cols-2 {grid-template-columns: 1fr 1fr;
+} }.card {background: var(--bg-elev);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px;
+    box-shadow: var(--shadow);
+}.card h3 {margin: 0 0 6px; font-size: 15px;
+}.card p {margin: 0; color: var(--muted); font-size: 14px;
+}.card p + p {margin-top: 8px;
+}.card ul {margin: 8px 0 0; padding-left: 18px; color: var(--muted); font-size: 13.5px;
+}.card li + li {margin-top: 4px;
+}.card .card-ico {display: grid; place-items: center;
+    width: 34px; height: 34px; margin-bottom: 12px;
+    border-radius: 9px;
+    background: var(--accent-soft); color: var(--accent);
+}.card .card-ico svg {width: 18px; height: 18px;
+}.table-wrap {overflow-x: auto; border: 1px solid var(--border); border-radius: var(--radius); background: var(--bg-elev); box-shadow: var(--shadow);
+}.table-wrap + .note,.table-wrap + p {margin-top: 16px;
+}table {width: 100%; border-collapse: collapse; font-size: 14px;
+}thead th {text-align: left;
+    padding: 12px 16px;
+    background: var(--bg-soft);
+    color: var(--muted);
+    font-size: 11.5px;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    border-bottom: 1px solid var(--border);
+    white-space: nowrap;
+}tbody td {padding: 11px 16px; border-bottom: 1px solid var(--border); vertical-align: top;
+}tbody tr:last-child td {border-bottom: 0;
+}tbody tr:hover {background: color-mix(in srgb, var(--accent) 3%, transparent);
+}td code,th code {font-size: 12.8px;
+}tbody td:first-child {white-space: nowrap;
+}.table-wrap.wrap-cells td:first-child {white-space: normal;
+}.table-wrap.wrap-cells td code {overflow-wrap: anywhere;
+}/* En pantallas estrechas,la primera columna deja de ir en una sola línea:
+     con nowrap,los nombres largos se parten mal. */
+  @media (max-width: 640px) {table { font-size: 13.5px; }
+    thead th, tbody td { padding: 9px 12px; }
+    tbody td:first-child { white-space: normal; }
+}.code {position: relative; margin: 14px 0;
+}.code pre {margin: 0;
+    padding: 16px 52px 16px 18px;
+    background: var(--code-bg);
+    color: var(--code-text);
+    border: 1px solid var(--code-border);
+    border-radius: var(--radius);
+    overflow-x: auto;
+    font-size: 13.2px;
+    line-height: 1.6;
+    box-shadow: var(--shadow);
+}.code pre code {background: none; padding: 0; color: inherit; font-size: inherit;
+}.code .copy {position: absolute;
+    top: 9px; right: 9px;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    height: 30px;
+    padding: 0 9px;
+    border: 1px solid var(--code-border);
+    border-radius: 8px;
+    background: color-mix(in srgb, var(--code-bg) 60%, #ffffff 8%);
+    color: #c8d2e8;
+    font: inherit;
+    font-size: 11.5px;
+    font-weight: 600;
+    cursor: pointer;
+    opacity: 0;
+    transition: opacity .15s, border-color .15s;
+}.code:hover .copy,.code .copy:focus-visible {opacity: 1;
+}.code .copy:hover {border-color: #3b4c72;
+}@media (hover: none){.code .copy {opacity: 1;
+} }.code .copy.copied {color: var(--ok); border-color: var(--ok);
+}.code .copy svg {width: 13px; height: 13px;
+}p code,li code,td code {background: var(--bg-soft);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: .08em .42em;
+    font-size: .88em;
+}.note {display: flex;
+    gap: 12px;
+    padding: 14px 16px;
+    border-left: 1px solid var(--accent);
+    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+    background: var(--accent-soft);
+    font-size: 14px;
+    margin: 16px 0;
+}.note strong {color: var(--text);
+}.note p {margin: 0;
+}.note p + p {margin-top: 8px;
+}.flow {display: grid; grid-template-columns: 1fr; gap: 12px;
+}@media (min-width: 640px){.flow {grid-template-columns: repeat(2, 1fr);
+} }.flow-step {min-height: 142px;
+    padding: 16px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    background: var(--bg-elev);
+}.flow-step code {color: var(--accent); font-weight: 700;
+}.flow-step strong {display: block; margin-top: 10px; font-size: 15px;
+}.flow-step p {margin: 5px 0 0; color: var(--muted); font-size: 13.5px;
+}a.card-link {display: block; text-decoration: none; color: inherit; transition: border-color .15s, transform .12s;
+}a.card-link:hover {text-decoration: none; border-color: var(--accent); transform: translateY(-1px);
+}a.card-link:focus-visible {outline: 2px solid var(--accent); outline-offset: 3px;
+}a.card-link .go {display: inline-block; margin-top: 12px; color: var(--accent); font-weight: 650; font-size: 13.5px;
+}a.card-link .card-ico {transition: background .15s;
+}.footer {border-top: 1px solid var(--border);
+    padding: 28px clamp(16px, 4vw, 40px);
+    color: var(--muted);
+    font-size: 13.5px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px 20px;
+    align-items: center;
+    justify-content: space-between;
+    max-width: 1180px;
+    margin: 0 auto;
+}.footer code {background: var(--bg-soft); border: 1px solid var(--border); border-radius: 6px; padding: 1px 6px;
+}::selection {background: color-mix(in srgb, var(--accent) 30%, transparent);
+}@media (prefers-reduced-motion: reduce){* {scroll-behavior: auto !important; transition: none !important;
+} }.qa {border-bottom: 1px solid var(--border); padding: 18px 0;
+}.qa:last-child {border-bottom: 0;
+}.qa h3 {margin: 0 0 6px; font-size: 15.5px;
+}.qa p {margin: 0; color: var(--muted); font-size: 14px;
+}.qa p + p {margin-top: 8px;
+}/* Una rejilla de pasos seguida de una tabla necesita el mismo aire que una
+     rejilla seguida de otra: sin esta regla la tabla queda pegada al último
+     paso,porque ni `.flow` ni `.table-wrap` traen margen propio. */
+  .flow + .table-wrap,.grid + .table-wrap {margin-top: 24px;
+}
+</style>
+</head>
+<body>
+<header class="topbar">
+  <a class="brand" href="#top">
+    <span class="brand-mark" aria-hidden="true">
+      <svg viewBox="0 0 32 32" role="presentation">
+        <defs>
+          <linearGradient id="brand-grad" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="#1d4ed8"></stop>
+            <stop offset="1" stop-color="#0ea5e9"></stop>
+          </linearGradient>
+        </defs>
+        <rect width="32" height="32" fill="url(#brand-grad)"></rect>
+        <path d="M11 10l-4 6 4 6" fill="none" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"></path><path d="M21 10l4 6-4 6" fill="none" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"></path><path d="M18 8l-4 16" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round"></path>
+      </svg>
+    </span>
+    <span class="brand-name">typescript-idiomatic-style<small>tipos, módulos y CLI</small></span>
+  </a>
+  <span class="topbar-spacer"></span>
+  <button class="icon-btn" id="theme-toggle" type="button" aria-label="Cambiar a tema oscuro">
+    <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"></path></svg>
+    <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"></path></svg>
+    <span>Tema</span>
+  </button>
+</header>
+
+<section class="hero" id="top">
+  <div class="hero-inner">
+    <span class="pill"><span class="dot" aria-hidden="true"></span>strict primero · estados imposibles fuera · CLI con contrato</span>
+    <h1>TypeScript que no permite el <span class="grad">estado imposible</span></h1>
+    <p class="lead">La skill <code>typescript-idiomatic-style</code> escribe y revisa TypeScript type-first para librerías, servicios y CLIs. Modela primero los estados, usa <code>unknown</code> en las fronteras y reserva los genéricos, las project references y las dependencias para una necesidad demostrada. El compilador es la primera prueba; el diff, la segunda.</p>
+    <div class="hero-actions">
+      <a class="btn btn-primary" href="#que-hace">Qué hace</a>
+      <a class="btn btn-ghost" href="#uso">Cómo se usa</a>
+      <a class="btn btn-ghost" href="#reglas">Dónde están las reglas</a>
+      <a class="btn btn-ghost" href="#diagramas">Los diagramas</a>
+    </div>
+  </div>
+</section>
+
+<div class="layout">
+  <nav class="toc" aria-label="Índice de la página">
+    <h2>En esta página</h2>
+    <a href="#que-hace">1. Qué hace</a>
+    <a href="#cuando">2. Cuándo se activa</a>
+    <a href="#uso">3. Cómo se usa</a>
+    <a href="#paquete">4. Qué contiene el paquete</a>
+    <a href="#reglas">5. Dónde están las reglas</a>
+    <a href="#preguntas">6. Preguntas cortas</a>
+    <a href="#diagramas">7. Los diagramas</a>
+  </nav>
+
+  <main>
+    <section id="que-hace" class="section">
+      <div class="section-head"><span class="section-num">1</span><h2 class="title">Qué hace</h2></div>
+      <p class="sub">Reduce el coste de leer y cambiar TypeScript sin sacrificar seguridad de tipos, claridad ni capacidad de evolución. El sistema de tipos se usa para diseñar, no para satisfacer al compilador con <code>as</code>.</p>
+
+      <div class="table-wrap wrap-cells">
+        <table>
+          <thead><tr><th>Situación</th><th>Qué hace la skill</th></tr></thead>
+          <tbody>
+            <tr><td>Hay que escribir TypeScript nuevo en una librería, un servicio o una CLI.</td><td>Lee <code>tsconfig</code>, versión y convención; modela los estados antes de escribir cuerpos.</td></tr>
+            <tr><td>Aparecen varios booleanos que se excluyen.</td><td>Los sustituye por una unión discriminada con campo literal y comprobación <code>never</code>.</td></tr>
+            <tr><td>Un identificador de dominio se mezcla con texto libre.</td><td>Lo modela con un tipo branded construido en un único módulo.</td></tr>
+            <tr><td>Hay que decidir genéricos, tipos calculados o <code>satisfies</code>.</td><td>Exige dos usos reales o una relación entre entrada y salida; si no, escribe el tipo concreto.</td></tr>
+            <tr><td>Hay que resolver módulos, <code>exports</code> o project references.</td><td>Mantiene el barrel solo para la API pública y añade referencias tras medir el build.</td></tr>
+            <tr><td>Hay que construir o revisar una CLI.</td><td>Aplica <code>defineCommand</code>, <code>isCancel</code>, completion perezosa y códigos de salida <code>0/1/2</code>.</td></tr>
+            <tr><td>Una regla de la skill choca con una convención escrita.</td><td>Prevalece la convención del proyecto cuando no contradice al lenguaje.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="note">
+        <p><strong>Lo que no hace.</strong> No valida datos en runtime, no escribe pruebas ni ejecuta la puerta de CI. La frontera no confiable, las capas de prueba y la evidencia son de <code>typescript-testing-and-verification</code>.</p>
+      </div>
+    </section>
+
+    <section id="cuando" class="section">
+      <div class="section-head"><span class="section-num">2</span><h2 class="title">Cuándo se activa</h2></div>
+      <p class="sub">La columna izquierda dispara la skill; la derecha está escrita en su descripción para que no se active donde no aporta.</p>
+
+      <div class="table-wrap wrap-cells">
+        <table>
+          <thead><tr><th>Se activa para</th><th>No se activa para</th></tr></thead>
+          <tbody>
+            <tr><td>Crear, refactorizar o revisar tipos, APIs y código TypeScript.</td><td>Validar cuerpos HTTP, formularios, entorno o respuestas de terceros.</td></tr>
+            <tr><td>Elegir uniones, tipos branded, guards, genéricos y tipos calculados.</td><td>Escribir pruebas, snapshots, pruebas de esquema o la puerta de verificación.</td></tr>
+            <tr><td>Decidir estructura de módulos, <code>exports</code>, dependencias y project references.</td><td>Diseñar el contrato de errores de runtime o la política de cancelación.</td></tr>
+            <tr><td>Construir una CLI de TypeScript con citty y <code>@clack/prompts</code>.</td><td>Añadir un framework de CLI o un validador que el proyecto no tiene.</td></tr>
+            <tr><td>Alinear un cambio con la convención que ya usa el proyecto.</td><td>Activar <code>strict</code> o migrar la estructura dentro de un cambio funcional.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="note">
+        <p><strong>La convención gana los empates.</strong> Cuando dos decisiones son igual de claras, se sigue lo que ya hace el proyecto. La skill no impone un estilo propio sobre código que funciona y se lee.</p>
+      </div>
+    </section>
+
+    <section id="uso" class="section">
+      <div class="section-head"><span class="section-num">3</span><h2 class="title">Cómo se usa</h2></div>
+      <p class="sub">Seis pasos. El primero y el último son de lectura; los de en medio modelan, escriben y comprueban.</p>
+
+      <div class="flow">
+        <div class="flow-step"><code>paso 1</code><strong>Inspeccionar</strong><p><code>package.json</code>, <code>tsconfig.json</code>, versión de TypeScript, gestor y vecinos. Ejecuta el typecheck de partida.</p></div>
+        <div class="flow-step"><code>paso 2</code><strong>Modelar los estados</strong><p>Una frase por estado y por transición. Identificadores con brand; dato externo marcado como frontera.</p></div>
+        <div class="flow-step"><code>paso 3</code><strong>Escribir tipos e implementación</strong><p>Uniones, guards con <code>value is T</code>, firmas antes que cuerpos, <code>satisfies</code> en tablas y <code>as const</code> en constantes.</p></div>
+        <div class="flow-step"><code>paso 4</code><strong>Resolver módulos y exports</strong><p>Dominio separado del adaptador, sin ciclos, barrel solo para la API pública y <code>exports</code> explícito en librerías.</p></div>
+        <div class="flow-step"><code>paso 5</code><strong>Construir la CLI, si la hay</strong><p><code>defineCommand</code>, subcomandos perezosos, <code>isCancel</code> tras cada prompt, salida separada y completion fuera del arranque.</p></div>
+        <div class="flow-step"><code>paso 6</code><strong>Comprobar el diff</strong><p><code>tsc --noEmit</code> y lint. Busca <code>any</code>, <code>as</code>, <code>enum</code> y supresiones nuevas. Cierra con el bloque de resultado.</p></div>
+      </div>
+
+      <div class="qa"><h3>¿Cuándo se justifica un genérico?</h3><p>Cuando hay al menos dos instancias reales o una relación entre parámetros y retorno. Un genérico de un solo uso es un tipo concreto disfrazado; se escribe el concreto y se explica qué lo haría merecer la abstracción.</p></div>
+      <div class="qa"><h3>¿Por qué no <code>enum</code>?</h3><p>Porque genera código en runtime y complica el contrato con JavaScript. Un const object con <code>as const</code> y una unión derivada da los mismos valores sin esa carga.</p></div>
+      <div class="qa"><h3>¿Puedo usar <code>as</code>?</h3><p>Solo cuando el valor ya cumple una invariante demostrada, de forma puntual y comentada. En una frontera externa, <code>as</code> no valida: se parsea con la skill de verificación.</p></div>
+      <div class="qa"><h3>¿Se activan las project references?</h3><p>Cuando una medición del build demuestra el problema y la mejora. No son parte de la plantilla mínima ni se añaden por anticipación.</p></div>
+      <div class="qa"><h3>¿Qué pasa si el proyecto no usa <code>strict</code>?</h3><p>No se activa dentro de un cambio funcional. Se propone la migración aparte, con su coste y sus errores esperados.</p></div>
+      <div class="qa"><h3>¿La skill ejecuta las pruebas?</h3><p>No. Ejecuta el typecheck y el linter si existe. Las pruebas, la validación en runtime y la puerta completa pertenecen a <code>typescript-testing-and-verification</code>.</p></div>
+    </section>
+
+    <section id="paquete" class="section">
+      <div class="section-head"><span class="section-num">4</span><h2 class="title">Qué contiene el paquete</h2></div>
+      <p class="sub">El agente lee <code>SKILL.md</code> al activarse y abre la referencia solo cuando una decisión concreta no es evidente.</p>
+
+      <div class="code"><pre><code>typescript-idiomatic-style/
+├── SKILL.md                      # invariantes, procedimiento y bloque de cierre
+├── references/
+│   ├── type-rules.md             # tsconfig, unknown, estados, branded, guards, genéricos, módulos, exports y dependencias
+│   └── cli-rules.md              # citty, @clack/prompts, completion, salida y empaquetado
+└── agents/
+    └── openai.yaml               # nombre visible e invocación implícita</code></pre></div>
+
+      <div class="table-wrap wrap-cells">
+        <table>
+          <thead><tr><th>Fichero</th><th>Cuándo lo abre el agente</th></tr></thead>
+          <tbody>
+            <tr><td><code>SKILL.md</code></td><td>Siempre, al disparar la skill.</td></tr>
+            <tr><td><code>references/type-rules.md</code></td><td>Pasos 2 a 4, cuando una decisión de tipos, módulos o exports no sea evidente.</td></tr>
+            <tr><td><code>references/cli-rules.md</code></td><td>Paso 5, antes de estructurar comandos, prompts, completion o empaquetado.</td></tr>
+            <tr><td><code>agents/openai.yaml</code></td><td>Nunca durante el trabajo: declara el nombre visible y la política de invocación.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="note">
+        <p><strong>Esta página no consume contexto.</strong> Vive en <code>docs/</code>, fuera del paquete, y <code>SKILL.md</code> no la enlaza: la skill solo carga lo que enlaza.</p>
+      </div>
+    </section>
+
+    <section id="reglas" class="section">
+      <div class="section-head"><span class="section-num">5</span><h2 class="title">Dónde están las reglas</h2></div>
+      <p class="sub">Las reglas viven en el paquete. Aquí no se copian: se indica qué fichero responde a cada pregunta.</p>
+
+      <div class="table-wrap wrap-cells">
+        <table>
+          <thead><tr><th>Pregunta</th><th>Se responde en</th></tr></thead>
+          <tbody>
+            <tr><td>Qué es obligatorio, en qué orden se trabaja y cómo se cierra.</td><td><code>SKILL.md</code></td></tr>
+            <tr><td>Qué opciones de <code>tsconfig</code> se activan y cuándo.</td><td><code>references/type-rules.md</code>, sección 1.</td></tr>
+            <tr><td>Cuándo se usa <code>unknown</code>, <code>any</code>, <code>as</code>, <code>satisfies</code> o <code>as const</code>.</td><td><code>references/type-rules.md</code>, secciones 2 y 5.</td></tr>
+            <tr><td>Cómo se modelan estados, identificadores y uniones.</td><td><code>references/type-rules.md</code>, secciones 3 y 4.</td></tr>
+            <tr><td>Cuándo un genérico o un tipo calculado está justificado.</td><td><code>references/type-rules.md</code>, sección 6.</td></tr>
+            <tr><td>Cómo se resuelven módulos, barrels, alias y project references.</td><td><code>references/type-rules.md</code>, sección 8.</td></tr>
+            <tr><td>Qué contrato tiene la CLI: canales, códigos, prompts, completion y empaquetado.</td><td><code>references/cli-rules.md</code></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="note">
+        <p><strong>Si esta página y el paquete no coinciden, manda el paquete.</strong> Es lo que el agente ejecuta. Esta página no añade normas ni suaviza las que existen.</p>
+      </div>
+    </section>
+
+    <section id="preguntas" class="section">
+      <div class="section-head"><span class="section-num">6</span><h2 class="title">Preguntas cortas</h2></div>
+      <p class="sub">Lo que se pregunta antes de usar la skill por primera vez.</p>
+
+      <div class="qa"><h3>¿Es una guía de estilo propia?</h3><p>No. Ordena las decisiones del lenguaje para que los tipos y la CLI se mantengan legibles. Donde el proyecto ya tiene una regla escrita, manda la del proyecto.</p></div>
+      <div class="qa"><h3>¿Hay que migrar a <code>strict</code>?</h3><p>No dentro de un cambio funcional. La migración se propone aparte, con el coste medido y las reglas que se puedan asumir: <code>noUncheckedIndexedAccess</code>, <code>exactOptionalPropertyTypes</code>, <code>isolatedModules</code>.</p></div>
+      <div class="qa"><h3>¿Monomrepo o un paquete?</h3><p>Un paquete y un <code>tsconfig</code> hasta que el tamaño o el build demuestren lo contrario. Las project references se añaden con una medición, no como plantilla.</p></div>
+      <div class="qa"><h3>¿Qué CLI usa?</h3><p>citty para los comandos y <code>@clack/prompts</code> para la interacción. Si el proyecto ya tiene otra, se respeta; no se añade un segundo parser.</p></div>
+      <div class="qa"><h3>¿Y los tipos de una dependencia rota?</h3><p>Se aísla el <code>any</code> en un adaptador, con comentario y sin extenderlo por el dominio. No se parchea <code>node_modules</code>.</p></div>
+      <div class="qa"><h3>¿La skill arregla la deuda que encuentra?</h3><p>No la esconde en el mismo diff. Si la corrección amplía el cambio, se termina la tarea actual y se registra la deuda con su motivo.</p></div>
+    </section>
+
+    <section id="diagramas" class="section">
+      <div class="section-head"><span class="section-num">7</span><h2 class="title">Los diagramas</h2><span class="chip-repo">de este repositorio</span></div>
+      <p class="sub">Dos vistas del mismo criterio: el recorrido de la inspección al diff revisado, y las piezas que conectan el modelo de tipos con el código real.</p>
+
+      <div class="grid cols-2">
+        <a class="card card-link" href="flujo-de-trabajo.html">
+          <div class="card-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h6v5H4zM14 13h6v5h-6z"></path><path d="M10 8.5h2a2 2 0 0 1 2 2v5"></path></svg></div>
+          <h3>Flujo de trabajo</h3>
+          <p>De la inspección del proyecto al diff revisado: qué se modela antes de escribir, cuándo se resuelven los módulos y qué demuestra el compilador.</p>
+          <span class="go">Abrir el diagrama →</span>
+        </a>
+        <a class="card card-link" href="arquitectura.html">
+          <div class="card-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1.5"></rect><rect x="14" y="3" width="7" height="7" rx="1.5"></rect><rect x="3" y="14" width="7" height="7" rx="1.5"></rect><rect x="14" y="14" width="7" height="7" rx="1.5"></rect></svg></div>
+          <h3>Arquitectura</h3>
+          <p>El paquete, las reglas de tipos y el proyecto que revisa: <code>SKILL.md</code>, las referencias, el <code>tsconfig</code>, el modelo de tipos y el código.</p>
+          <span class="go">Abrir el diagrama →</span>
+        </a>
+      </div>
+
+      <p>Cada diagrama se abre como página suelta: archify no enlaza desde el artefacto a una página local, así que se vuelve con el botón atrás del navegador o con el índice de arriba.</p>
+
+      <div class="note">
+        <p><strong>Convenio de este repositorio, no mandato de la skill.</strong> <code>docs/&lt;skill&gt;/index.html</code>, los diagramas y sus recibos <code>.delivery.json</code> son cómo SKILLS-AGP documenta sus skills. Los genera archify desde el <code>.json</code> que está junto a cada HTML; el comando y la comprobación del recibo están en la sección Documentación del <code>README.md</code>.</p>
+      </div>
+    </section>
+  </main>
+</div>
+
+<footer class="footer">
+  <span><code>docs/typescript-idiomatic-style/</code> · skill <code>typescript-idiomatic-style</code> · documento en español</span>
+  <span><a href="#top">Volver arriba</a> · <a href="../../src/typescript-idiomatic-style/SKILL.md">SKILL.md</a> · <a href="flujo-de-trabajo.html">Flujo</a> · <a href="arquitectura.html">Arquitectura</a></span>
+  <span>Página estática: no envía datos ni carga recursos externos · <code>docs/typescript-idiomatic-style/index.html</code></span>
+</footer>
+</body>
+</html>

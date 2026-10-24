@@ -1,0 +1,300 @@
+{
+  "schema_version": 2,
+  "diagram_type": "workflow",
+  "meta": {
+    "title": "Flujo de trabajo de la skill typescript-idiomatic-style",
+    "subtitle": "De la inspección del proyecto al diff revisado: cómo se modelan los estados, dónde se resuelven los módulos y qué demuestra el compilador antes de cerrar.",
+    "locale": "es",
+    "output": "docs/typescript-idiomatic-style/flujo-de-trabajo.html",
+    "visual_preset": "signal-flow",
+    "quality_profile": "showcase"
+  },
+  "lanes": [
+    {
+      "id": "encargo",
+      "label": "Encargo y convención"
+    },
+    {
+      "id": "skill",
+      "label": "La skill: decidir"
+    },
+    {
+      "id": "codigo",
+      "label": "Código y compilador"
+    },
+    {
+      "id": "control",
+      "label": "Límite y cierre",
+      "variant": "exception"
+    }
+  ],
+  "phases": [
+    {
+      "id": "inspeccion",
+      "label": "Inspección",
+      "fromCol": 0,
+      "toCol": 1
+    },
+    {
+      "id": "modelo",
+      "label": "Modelo de tipos",
+      "fromCol": 2,
+      "toCol": 3,
+      "variant": "emphasis"
+    },
+    {
+      "id": "escritura",
+      "label": "Escritura",
+      "fromCol": 4,
+      "toCol": 4
+    },
+    {
+      "id": "revision",
+      "label": "Revisión",
+      "fromCol": 5,
+      "toCol": 5,
+      "variant": "security"
+    }
+  ],
+  "groups": [
+    {
+      "id": "decisiones",
+      "label": "Decisiones antes del código",
+      "lane": "skill",
+      "fromCol": 1,
+      "toCol": 3,
+      "variant": "emphasis"
+    },
+    {
+      "id": "comprobacion",
+      "label": "Comprobación del cambio",
+      "lane": "control",
+      "fromCol": 4,
+      "toCol": 5,
+      "variant": "security"
+    }
+  ],
+  "mainPath": [
+    "encargo",
+    "inspeccion",
+    "estados",
+    "tipos",
+    "modulos",
+    "cli",
+    "typecheck",
+    "revisa",
+    "resultado"
+  ],
+  "nodes": [
+    {
+      "id": "encargo",
+      "lane": "encargo",
+      "col": 0,
+      "type": "external",
+      "label": "Encargo de tipos o CLI",
+      "sublabel": "nuevo o refactor",
+      "tag": "leer antes de escribir",
+      "icon": "start"
+    },
+    {
+      "id": "inspeccion",
+      "lane": "skill",
+      "col": 0,
+      "type": "backend",
+      "label": "Inspección",
+      "sublabel": "strict · runner",
+      "tag": "sin escribir aún"
+    },
+    {
+      "id": "estados",
+      "lane": "skill",
+      "col": 1,
+      "type": "backend",
+      "label": "Modelar estados",
+      "sublabel": "uniones · branded · frontera",
+      "tag": "sin combinaciones imposibles"
+    },
+    {
+      "id": "tipos",
+      "lane": "skill",
+      "col": 2,
+      "type": "backend",
+      "label": "Tipos e implementación",
+      "sublabel": "guards · satisfies",
+      "tag": "firmas antes que cuerpos"
+    },
+    {
+      "id": "modulos",
+      "lane": "skill",
+      "col": 3,
+      "type": "backend",
+      "label": "Módulos y exports",
+      "sublabel": "adaptador · exports",
+      "tag": "sin barrels internos"
+    },
+    {
+      "id": "cli",
+      "lane": "codigo",
+      "col": 3,
+      "type": "backend",
+      "label": "CLI, si la hay",
+      "sublabel": "citty · prompts",
+      "tag": "isCancel tras cada prompt"
+    },
+    {
+      "id": "typecheck",
+      "lane": "codigo",
+      "col": 4,
+      "type": "backend",
+      "label": "tsc --noEmit · lint · build",
+      "sublabel": "verdad del compilador",
+      "tag": "sin suprimir reglas"
+    },
+    {
+      "id": "revisa",
+      "lane": "skill",
+      "col": 5,
+      "type": "security",
+      "label": "Revisión del diff",
+      "sublabel": "any · as · enum · deuda",
+      "tag": "solo lo pedido"
+    },
+    {
+      "id": "parada",
+      "lane": "control",
+      "col": 3,
+      "type": "security",
+      "label": "Parada",
+      "sublabel": "strict, deps o abstracción",
+      "tag": "sin mezclar cambios",
+      "icon": "stop"
+    },
+    {
+      "id": "resultado",
+      "lane": "control",
+      "col": 5,
+      "type": "frontend",
+      "label": "Resultado",
+      "sublabel": "completo o con deuda",
+      "icon": "success"
+    }
+  ],
+  "edges": [
+    {
+      "id": "lee",
+      "from": "encargo",
+      "to": "inspeccion",
+      "label": "lee",
+      "variant": "emphasis",
+      "role": "main"
+    },
+    {
+      "id": "modela",
+      "from": "inspeccion",
+      "to": "estados",
+      "label": "una frase por estado",
+      "role": "main"
+    },
+    {
+      "id": "tipa",
+      "from": "estados",
+      "to": "tipos",
+      "label": "tipos",
+      "role": "main"
+    },
+    {
+      "id": "estructura",
+      "from": "tipos",
+      "to": "modulos",
+      "label": "módulos",
+      "role": "main"
+    },
+    {
+      "id": "cablea",
+      "from": "modulos",
+      "to": "cli",
+      "label": "CLI",
+      "variant": "emphasis",
+      "role": "main"
+    },
+    {
+      "id": "compila",
+      "from": "cli",
+      "to": "typecheck",
+      "label": "compila",
+      "role": "main"
+    },
+    {
+      "id": "revisa-diff",
+      "from": "typecheck",
+      "to": "revisa",
+      "label": "revisa",
+      "variant": "emphasis",
+      "role": "main"
+    },
+    {
+      "id": "cierra",
+      "from": "revisa",
+      "to": "resultado",
+      "label": "diff limpio",
+      "variant": "emphasis",
+      "role": "main"
+    },
+    {
+      "id": "deuda",
+      "from": "tipos",
+      "to": "parada",
+      "label": "amplía el cambio",
+      "variant": "security",
+      "role": "return"
+    },
+    {
+      "id": "no-compila",
+      "from": "typecheck",
+      "to": "parada",
+      "label": "no compila",
+      "variant": "security",
+      "role": "return"
+    },
+    {
+      "id": "vuelve",
+      "from": "parada",
+      "to": "estados",
+      "label": "tarea aparte",
+      "variant": "dashed",
+      "role": "return"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "Qué se decide antes de escribir",
+      "items": [
+        "tsconfig, versión de TypeScript, gestor y estado del typecheck se leen primero; la convención escrita del proyecto prevalece",
+        "Cada estado del dominio se escribe en una frase y los que no deben coexistir se separan en una unión discriminada",
+        "Los identificadores de dominio llevan brand; los valores libres no",
+        "La frontera de dato externo se marca y se deja para typescript-testing-and-verification"
+      ]
+    },
+    {
+      "dot": "rose",
+      "title": "Dónde se detiene",
+      "items": [
+        "Activar strict o migrar la estructura no entra en un cambio funcional: se propone aparte con su coste",
+        "Una abstracción genérica sin dos usos reales se entrega concreta y se explica qué la haría merecerla",
+        "Una dependencia sin licencia, mantenimiento o tipos utilizables se declara como bloqueo; no se parchea node_modules",
+        "Un tipo condicional que no cabe en una línea legible obliga a replantear la API"
+      ]
+    },
+    {
+      "dot": "emerald",
+      "title": "Cómo se demuestra el cierre",
+      "items": [
+        "tsc --noEmit con el tsconfig del proyecto y el linter si existe, sin suprimir reglas nuevas",
+        "Las exportadas declaran retorno; import type y verbatimModuleSyntax se respetan",
+        "La CLI responde a --help con todos los comandos y flags registrados antes de cerrar",
+        "El resultado declara módulos, decisiones de tipos y estructura, CLI, comprobaciones, deuda y lo no verificado"
+      ]
+    }
+  ]
+}

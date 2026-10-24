@@ -1,0 +1,180 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "Arquitectura de la skill typescript-idiomatic-style",
+    "subtitle": "El paquete, las reglas de tipos y el proyecto que revisa: modelo de estados, fronteras tipadas, módulos y una CLI con contrato observable.",
+    "locale": "es",
+    "output": "docs/typescript-idiomatic-style/arquitectura.html",
+    "quality_profile": "showcase"
+  },
+  "components": [
+    {
+      "id": "persona",
+      "type": "external",
+      "label": "Persona",
+      "sublabel": "encarga y revisa",
+      "icon": "person",
+      "pos": [40, 80],
+      "size": [140, 64]
+    },
+    {
+      "id": "agente",
+      "type": "external",
+      "label": "Agente anfitrión",
+      "sublabel": "carga la skill",
+      "pos": [260, 80],
+      "size": [150, 64]
+    },
+    {
+      "id": "skill",
+      "type": "frontend",
+      "label": "SKILL.md",
+      "sublabel": "invariantes y pasos",
+      "pos": [500, 80],
+      "size": [150, 64]
+    },
+    {
+      "id": "reglas",
+      "type": "database",
+      "label": "type-rules · cli-rules",
+      "sublabel": "tablas de decisión",
+      "tag": "se abren si no es evidente",
+      "pos": [740, 80],
+      "size": [150, 64]
+    },
+    {
+      "id": "proyecto",
+      "type": "database",
+      "label": "Proyecto TypeScript",
+      "sublabel": "package.json · tsconfig · vecinos",
+      "pos": [260, 300],
+      "size": [150, 64]
+    },
+    {
+      "id": "tipado",
+      "type": "backend",
+      "label": "Modelo de tipos",
+      "sublabel": "uniones · branded · guards",
+      "pos": [500, 300],
+      "size": [150, 64]
+    },
+    {
+      "id": "codigo",
+      "type": "backend",
+      "label": "Código producido",
+      "sublabel": "módulos · exports · CLI",
+      "pos": [740, 300],
+      "size": [150, 64]
+    },
+    {
+      "id": "herramientas",
+      "type": "security",
+      "label": "tsc · lint · build",
+      "sublabel": "verdad del compilador",
+      "tag": "sin suprimir reglas",
+      "pos": [960, 300],
+      "size": [180, 64]
+    }
+  ],
+  "boundaries": [
+    {
+      "kind": "region",
+      "label": "Paquete instalado",
+      "wraps": ["skill", "reglas"]
+    },
+    {
+      "kind": "region",
+      "label": "Trabajo sobre el proyecto",
+      "wraps": ["proyecto", "tipado", "codigo", "herramientas"]
+    }
+  ],
+  "connections": [
+    {
+      "id": "encarga",
+      "from": "persona",
+      "to": "agente",
+      "label": "encarga",
+      "variant": "emphasis"
+    },
+    {
+      "id": "carga",
+      "from": "agente",
+      "to": "skill",
+      "label": "carga",
+      "variant": "emphasis"
+    },
+    {
+      "id": "consulta",
+      "from": "skill",
+      "to": "reglas",
+      "label": "consulta",
+      "variant": "dashed"
+    },
+    {
+      "id": "lee",
+      "from": "skill",
+      "to": "proyecto",
+      "label": "lee",
+      "variant": "emphasis"
+    },
+    {
+      "id": "modela",
+      "from": "proyecto",
+      "to": "tipado",
+      "label": "estados",
+      "variant": "emphasis"
+    },
+    {
+      "id": "escribe",
+      "from": "tipado",
+      "to": "codigo",
+      "label": "escribe"
+    },
+    {
+      "id": "comprueba",
+      "from": "codigo",
+      "to": "herramientas",
+      "label": "comprueba",
+      "variant": "emphasis"
+    },
+    {
+      "id": "informa",
+      "from": "herramientas",
+      "to": "agente",
+      "label": "diff y resultado"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "El paquete instalado",
+      "items": [
+        "SKILL.md fija los invariantes, el procedimiento y el bloque de resultado",
+        "type-rules.md reúne tsconfig, unknown y as, estados, branded, guards, genéricos, módulos, exports y dependencias",
+        "cli-rules.md posee el contrato de citty, @clack/prompts, completion, salida y empaquetado",
+        "agents/openai.yaml declara el nombre visible y la invocación implícita"
+      ]
+    },
+    {
+      "dot": "rose",
+      "title": "Las decisiones que se ven en el diff",
+      "items": [
+        "Los estados imposibles se eliminan con uniones discriminadas y una comprobación never",
+        "unknown en toda frontera; any solo local, justificado y fuera de la API pública",
+        "Los identificadores de dominio usan tipos branded construidos en un único punto",
+        "satisfies y as const sustituyen a enum; los genéricos exigen dos usos reales"
+      ]
+    },
+    {
+      "dot": "emerald",
+      "title": "Lo que la skill no hace",
+      "items": [
+        "No valida datos en runtime: esa frontera pertenece a typescript-testing-and-verification",
+        "No escribe pruebas, snapshots ni la puerta de CI",
+        "No activa strict dentro de un cambio funcional ni migra la estructura del proyecto",
+        "No añade project references, monorepo ni dependencias sin una medición o una necesidad"
+      ]
+    }
+  ]
+}

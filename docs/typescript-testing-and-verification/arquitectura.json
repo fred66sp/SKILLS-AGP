@@ -1,0 +1,180 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "Arquitectura de la skill typescript-testing-and-verification",
+    "subtitle": "El paquete, las fronteras validadas y la evidencia: esquemas Zod 4, capas de prueba y la puerta que se ejecuta antes de cerrar.",
+    "locale": "es",
+    "output": "docs/typescript-testing-and-verification/arquitectura.html",
+    "quality_profile": "showcase"
+  },
+  "components": [
+    {
+      "id": "persona",
+      "type": "external",
+      "label": "Persona",
+      "sublabel": "encarga y revisa",
+      "icon": "person",
+      "pos": [40, 80],
+      "size": [140, 64]
+    },
+    {
+      "id": "agente",
+      "type": "external",
+      "label": "Agente anfitrión",
+      "sublabel": "carga la skill",
+      "pos": [260, 80],
+      "size": [150, 64]
+    },
+    {
+      "id": "skill",
+      "type": "frontend",
+      "label": "SKILL.md",
+      "sublabel": "invariantes y pasos",
+      "pos": [500, 80],
+      "size": [150, 64]
+    },
+    {
+      "id": "referencias",
+      "type": "database",
+      "label": "validation-rules · test-layers",
+      "sublabel": "Zod 4 y capas de prueba",
+      "tag": "se abren por paso",
+      "pos": [720, 80],
+      "size": [200, 64]
+    },
+    {
+      "id": "proyecto",
+      "type": "database",
+      "label": "Proyecto TypeScript",
+      "sublabel": "fronteras · suites · scripts",
+      "pos": [260, 300],
+      "size": [150, 64]
+    },
+    {
+      "id": "esquemas",
+      "type": "backend",
+      "label": "Esquemas de frontera",
+      "sublabel": "z.infer · safeParse · errores",
+      "pos": [500, 300],
+      "size": [150, 64]
+    },
+    {
+      "id": "pruebas",
+      "type": "backend",
+      "label": "Pruebas por capa",
+      "sublabel": "esquema · unidad · integración · CLI",
+      "pos": [740, 300],
+      "size": [150, 64]
+    },
+    {
+      "id": "puerta",
+      "type": "security",
+      "label": "verify-ts.py",
+      "sublabel": "typecheck · lint · test · build",
+      "tag": "se ejecuta, no se supone",
+      "pos": [980, 300],
+      "size": [150, 64]
+    }
+  ],
+  "boundaries": [
+    {
+      "kind": "region",
+      "label": "Paquete instalado",
+      "wraps": ["skill", "referencias"]
+    },
+    {
+      "kind": "region",
+      "label": "Frontera y evidencia",
+      "wraps": ["proyecto", "esquemas", "pruebas", "puerta"]
+    }
+  ],
+  "connections": [
+    {
+      "id": "encarga",
+      "from": "persona",
+      "to": "agente",
+      "label": "encarga",
+      "variant": "emphasis"
+    },
+    {
+      "id": "carga",
+      "from": "agente",
+      "to": "skill",
+      "label": "carga",
+      "variant": "emphasis"
+    },
+    {
+      "id": "consulta",
+      "from": "skill",
+      "to": "referencias",
+      "label": "consulta",
+      "variant": "dashed"
+    },
+    {
+      "id": "lee",
+      "from": "skill",
+      "to": "proyecto",
+      "label": "lee",
+      "variant": "emphasis"
+    },
+    {
+      "id": "valida",
+      "from": "proyecto",
+      "to": "esquemas",
+      "label": "frontera",
+      "variant": "emphasis"
+    },
+    {
+      "id": "prueba",
+      "from": "esquemas",
+      "to": "pruebas",
+      "label": "prueba"
+    },
+    {
+      "id": "ejecuta",
+      "from": "pruebas",
+      "to": "puerta",
+      "label": "ejecuta",
+      "variant": "emphasis"
+    },
+    {
+      "id": "informa",
+      "from": "puerta",
+      "to": "agente",
+      "label": "informe y evidencia"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "El paquete instalado",
+      "items": [
+        "SKILL.md fija los invariantes, el procedimiento y el bloque de resultado",
+        "validation-rules.md reúne Zod 4, tipos inferidos, parse y safeParse, errores, entorno y rendimiento",
+        "test-layers.md ordena las capas, la CLI de extremo a extremo y el determinismo",
+        "verify-ts.py ejecuta la puerta y devuelve texto o JSON; verification-report.md fija el cierre"
+      ]
+    },
+    {
+      "dot": "rose",
+      "title": "Las decisiones que se ven en el cambio",
+      "items": [
+        "El esquema es la fuente del tipo: z.infer y z.input, sin interfaces duplicadas",
+        "unknown en la entrada; safeParse en handlers y parse en configuración e invariantes",
+        "Cada frontera tiene casos válidos, inválidos y de límite, y el error se comprueba por forma",
+        "La CLI se prueba con stdout, stderr y código de salida separados, sin TTY ni red real"
+      ]
+    },
+    {
+      "dot": "emerald",
+      "title": "Lo que la skill no hace",
+      "items": [
+        "No diseña los tipos, los módulos ni la arquitectura de la CLI: eso es de typescript-idiomatic-style",
+        "No añade Zod si el proyecto ya usa otro validador",
+        "No instala un framework de tipos ni un linter solo para completar la puerta",
+        "No declara terminado sin comandos ejecutados y resultado"
+      ]
+    }
+  ]
+}
