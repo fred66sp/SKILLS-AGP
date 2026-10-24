@@ -220,7 +220,6 @@
 }.grid {display: grid; gap: 16px;
 }.grid + .grid,.grid + .note,.grid + h3 {margin-top: 24px;
 }@media (min-width: 640px){.grid.cols-2 {grid-template-columns: 1fr 1fr;
-}.grid.cols-3 {grid-template-columns: repeat(3, 1fr);
 } }.card {background: var(--bg-elev);
     border: 1px solid var(--border);
     border-radius: var(--radius);
@@ -445,24 +444,7 @@
         </table>
       </div>
 
-      <h3>Cuánta ceremonia pide cada tarea</h3>
-      <div class="grid cols-3">
-        <div class="card">
-          <div class="card-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="8"></circle><path d="M4 12h16"></path></svg></div>
-          <h3>Pequeña</h3>
-          <p>Texto, documentación, configuración o una corrección localizada: diff pequeño y reversible. Un commit coherente, trabajo directo en <code>main</code> y una comprobación localizada si existe.</p>
-        </div>
-        <div class="card">
-          <div class="card-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h10"></path></svg></div>
-          <h3>Normal</h3>
-          <p>Funcionalidad completa, corrección de varios archivos o cambio coordinado: rama corta recomendada si se está en <code>main</code>, un commit coherente y la validación principal del proyecto.</p>
-        </div>
-        <div class="card">
-          <div class="card-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v18"></path><path d="M6 8l6-5 6 5M6 16l6 5 6-5"></path></svg></div>
-          <h3>Compleja</h3>
-          <p>Cambio incompatible, migración, reestructuración amplia o riesgo de recuperación: rama específica obligatoria, varios commits por unidad funcional y comprobaciones de los puntos críticos.</p>
-        </div>
-      </div>
+      <p>Qué tamaño tiene cada tarea, cuánta ceremonia pide y qué exige cada categoría lo decide <code>SKILL.md</code>; esta página no repite esa tabla.</p>
 
       <div class="note">
         <p><strong>La política del repositorio manda.</strong> Si el repositorio declara su propio flujo, se conserva tal cual. Si no declara ninguno, se aplica el modelo por defecto: <code>main</code> como línea estable y ramas cortas cuando la tarea lo justifica. Ante la duda razonable, la tarea se trata como la categoría superior.</p>

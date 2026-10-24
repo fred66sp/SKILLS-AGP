@@ -224,7 +224,6 @@
      paso,porque ni `.flow` ni `.table-wrap` traen margen propio. */
   .flow + .table-wrap,.grid + .table-wrap {margin-top: 24px;
 }@media (min-width: 640px){.grid.cols-2 {grid-template-columns: 1fr 1fr;
-}.grid.cols-3 {grid-template-columns: repeat(3, 1fr);
 } }.card {background: var(--bg-elev);
     border: 1px solid var(--border);
     border-radius: var(--radius);
@@ -457,19 +456,9 @@
 
     <section id="uso" class="section">
       <div class="section-head"><span class="section-num">3</span><h2 class="title">Cómo se usa</h2></div>
-      <p class="sub">El procedimiento son seis pasos —metadatos, directorio, <code>SKILL.md</code>, scripts, composición opcional y auditoría final— más una sección de errores. Esta página no los copia: copia la única puerta automática del recorrido, el validador de metadatos, y el significado de lo que imprime. La ruta está escrita como la escribe el <code>SKILL.md</code>, relativa a la carpeta de la skill; desde la raíz del repositorio el fichero está en <code>.skills/skill-creator/scripts/validate-metadata.py</code>.</p>
+      <p class="sub">El procedimiento son seis pasos —metadatos, directorio, <code>SKILL.md</code>, scripts, composición opcional y auditoría final— más una sección de errores. Esta página no los copia: documenta la única puerta automática del recorrido, el validador de metadatos, y el significado de lo que imprime. Los límites que aplica a <code>name</code> y <code>description</code> están en el paso 1 de <code>SKILL.md</code> y en el propio script. La ruta está escrita como la escribe el <code>SKILL.md</code>, relativa a la carpeta de la skill; desde la raíz del repositorio el fichero está en <code>.skills/skill-creator/scripts/validate-metadata.py</code>.</p>
 
       <div class="code"><pre><code>python3 scripts/validate-metadata.py --name "[name]" --description "[description]"</code></pre></div>
-
-      <div class="table-wrap wrap-cells">
-        <table>
-          <thead><tr><th>Argumento</th><th>Obligatorio</th><th>Qué comprueba</th></tr></thead>
-          <tbody>
-            <tr><td><code>--name</code></td><td>Sí</td><td>De 1 a 64 caracteres y el patrón <code>^[a-z0-9]+(-[a-z0-9]+)*$</code>.</td></tr>
-            <tr><td><code>--description</code></td><td>No: su valor por defecto es vacío</td><td>Máximo 1.024 caracteres y ausencia de palabras en primera o segunda persona.</td></tr>
-          </tbody>
-        </table>
-      </div>
 
       <h3>Qué significa cada salida</h3>
       <div class="table-wrap wrap-cells">
