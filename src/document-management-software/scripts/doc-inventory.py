@@ -8,17 +8,18 @@ Uso:
 Salida por stdout: tabla con ruta relativa, líneas, título H1 y número de enlaces
 relativos de cada documento, seguida de los hallazgos detectados:
 enlaces relativos rotos, documentos sin H1, documentos sin contenido,
-encabezados H2 repetidos entre documentos (señal de duplicación) y estado de la
-entrega escrito como documentación.
+encabezados H2 repetidos entre documentos (señal de duplicación) y referencias
+vivas escritas como documentación.
 
-La clase de estado de la entrega tiene cuatro familias: narración de proceso,
-recuento que caduca, referencia de Git (SHA sueltos) y frase de estado de la
-entrega. Solo mira la prosa: omite los bloques de código (``` y ~~~) y las citas
-entre comillas anguladas. La narración y el recuento se admiten en el registro de
-trabajo, que por convención lleva un encabezado H2 llamado `Log`; las
-referencias de Git se buscan también ahí, porque un SHA no vive en un artefacto
-versionado. Un SHA enlazado a la página de su commit es la fijación de un tercero
-y no es hallazgo.
+La clase de referencias vivas tiene cinco familias: narración de proceso,
+recuento de artefactos que caduca, referencia de Git (SHA sueltos), ruta de una
+máquina concreta y frase de estado del entorno (remoto, etiquetas, publicación,
+versionado o commit). Solo mira la prosa: omite los bloques de código (``` y ~~~)
+y las citas entre comillas anguladas. La narración y el recuento se admiten en el
+registro de trabajo, que por convención lleva un encabezado H2 llamado `Log`; las
+demás familias se buscan también ahí, porque una referencia viva no se vuelve
+portable por estar en un registro. Un SHA enlazado a la página de su commit es la
+fijación de un tercero y no es hallazgo.
 
 Códigos de salida:
     0  inventario completo sin hallazgos
@@ -51,13 +52,31 @@ NARRATION_RE = re.compile(
     r"\bpasa de\b|\bdejó de\b",
     re.IGNORECASE,
 )
-RECOUNT_RE = re.compile(r"\b\d[\d.]*\s?(?:bytes|KB|MB|secciones)\b")
+RECOUNT_RE = re.compile(
+    r"\b(?:\d{1,3}(?:[.,]\d{3})+|\d+|tres|cuatro|cinco|seis|siete|ocho|nueve|diez|once|doce)\s+"
+    r"(?:bytes|KB|MB|GB|secciones|pasos|invariantes|grados|ficheros|archivos|"
+    r"carpetas|documentos|diagramas|referencias|tests|casos|tablas|recibos|"
+    r"enlaces|p[aá]ginas|ramas|etiquetas)\b",
+    re.IGNORECASE,
+)
 GITREF_RE = re.compile(
     r"(?<![0-9A-Za-z/-])[0-9a-f]{7,40}(?![0-9A-Za-z])"
     r"(?!\.(?:md|py|html|json|js|ts|sh|png|svg|yml)\b)"
 )
-GITSTATE_RE = re.compile(
-    r"\bcommitead[oa]\b|árbol (de trabajo )?limpio|nada publicado|en cero l[íi]neas",
+LOCAL_PATH_RE = re.compile(
+    r"(?<![\w:/])[A-Za-z]:\\[^\s`\"'<>|]+"
+    r"|\\\\[A-Za-z0-9._-]+\\"
+    r"|(?<![\w:])/(?:home|Users|mnt|opt|srv|var/tmp)/[^\s`\"'<>|]+"
+)
+LIVE_STATE_RE = re.compile(
+    r"\bno (?:define|tiene|hay|existe) (?:un |ning[uú]n )?remoto\b"
+    r"|\bsin remoto\b"
+    r"|\b(?:nada|no) publicado\b|\bsin publicar\b"
+    r"|\bno existe(?:n)? (?:ninguna |ning[uú]n )?(?:etiqueta|versi[oó]n|publicaci[oó]n)s?\b"
+    r"|\b(?:todav[ií]a|a[uú]n) no hay\b"
+    r"|\bno est[aá] versionad[oa]\b"
+    r"|\ben este equipo\b|\ben esta m[aá]quina\b"
+    r"|\bcommitead[oa]\b|\bárbol (?:de trabajo )?limpio\b|\ben cero l[ií]neas\b",
     re.IGNORECASE,
 )
 COMMIT_LINK_RE = re.compile(r"\[[^\]]*\]\([^)]*/commit/[0-9a-f]{7,40}\)")
@@ -109,17 +128,21 @@ def analyze(path, root):
         for target in LINK_RE.findall(INLINE_CODE_RE.sub("", line)):
             links.append(resolve(target, path, root))
     has_content = any(line.strip() for line in lines)
-    delivery = []
+    live = []
     is_record = "log" in {normalize(heading) for heading in headings}
     for number, line in prose:
         plain = QUOTED_RE.sub("", line)
-        familias = (("gitref", GITREF_RE), ("gitstate", GITSTATE_RE))
+        familias = (
+            ("gitref", GITREF_RE),
+            ("rutalocal", LOCAL_PATH_RE),
+            ("estadovivo", LIVE_STATE_RE),
+        )
         if not is_record:
             familias = (("narracion", NARRATION_RE), ("recuento", RECOUNT_RE)) + familias
         for family, pattern in familias:
             found = pattern.search(COMMIT_LINK_RE.sub("", plain) if family == "gitref" else plain)
             if found:
-                delivery.append({
+                live.append({
                     "line": number,
                     "family": family,
                     "matched": found.group(0),
@@ -127,7 +150,7 @@ def analyze(path, root):
                 })
     return {
         "path": os.path.relpath(path, root).replace(os.sep, "/"),
-        "delivery": delivery,
+        "live": live,
         "lines": raw.count("\n") + (0 if raw.endswith("\n") or not raw else 1),
         "title": title,
         "headings": headings,
@@ -208,9 +231,9 @@ def main(argv=None):
         "missing_h1": [document["path"] for document in results if document["title"] is None],
         "empty_documents": [document["path"] for document in results if not document["has_content"]],
         "duplicate_h2": duplicates,
-        "delivery_state": [
+        "live_references": [
             {"document": document["path"], **item}
-            for document in results for item in document["delivery"]
+            for document in results for item in document["live"]
         ],
         "documents_reviewed": len(results),
     }
@@ -218,7 +241,7 @@ def main(argv=None):
     has_findings = bool(
         findings["broken_links"] or findings["missing_h1"]
         or findings["empty_documents"] or findings["duplicate_h2"]
-        or findings["delivery_state"]
+        or findings["live_references"]
     )
 
     if args.json:
@@ -226,7 +249,7 @@ def main(argv=None):
             "root": root.replace(os.sep, "/"),
             "glob": args.glob,
             "documents": [
-                {key: document[key] for key in ("path", "lines", "title", "links", "delivery")}
+                {key: document[key] for key in ("path", "lines", "title", "links", "live")}
                 for document in results
             ],
             "findings": findings,
@@ -257,9 +280,9 @@ def main(argv=None):
         print(f"- sin contenido: {path}")
     for heading, paths in sorted(duplicates.items()):
         print(f"- encabezado repetido: \"{heading}\" en {', '.join(paths)}")
-    for item in findings["delivery_state"]:
+    for item in findings["live_references"]:
         print(
-            f"- estado de la entrega: {item['document']}:{item['line']} · {item['family']} · "
+            f"- referencia viva: {item['document']}:{item['line']} · {item['family']} · "
             f"[{item['matched']}] {item['excerpt']}"
         )
     return 3

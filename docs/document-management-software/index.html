@@ -416,6 +416,7 @@
             <tr><td>Hay que documentar algo que ya funciona.</td><td>Lee código, tests y configuración antes de escribir, y copia de ahí los nombres, las rutas, los valores y los comandos.</td></tr>
             <tr><td>El mismo dato está en dos documentos.</td><td>Uno queda como fuente canónica y el otro lo enlaza. Dos representaciones que pueden divergir no se mantienen a mano.</td></tr>
             <tr><td>El README describe algo que el código ya no hace.</td><td>Corrige la afirmación o la marca como histórica con su motivo. No la completa con generalidades.</td></tr>
+            <tr><td>La guía cita un SHA, una ruta de la máquina de quien escribió o un recuento de ficheros.</td><td>Lo deja fuera y lo sustituye por el dato estable: la ruta relativa, el comando, la regla. Eso envejece sin aviso y nadie lo actualiza.</td></tr>
             <tr><td>Falta un documento.</td><td>Mira primero si el contenido cabe en uno existente sin degradar su responsabilidad. Crear es la última opción, no la primera.</td></tr>
           </tbody>
         </table>
@@ -460,7 +461,7 @@
       <div class="code"><pre><code>python3 scripts/doc-inventory.py --root &lt;directorio&gt; [--glob "*.md"] [--json]</code></pre></div>
 
       <div class="qa"><h3>El script sale con 0</h3><p>Inventario completo sin hallazgos. Esa lista es la línea base antes de tocar nada.</p></div>
-      <div class="qa"><h3>El script sale con 3</h3><p>Hay hallazgos: enlaces relativos rotos, documentos sin título, documentos vacíos, encabezados repetidos entre documentos o estado de la entrega escrito como documentación. Es una salida esperada. Para cada uno se decide si se corrige en este encargo o se reporta con evidencia.</p></div>
+      <div class="qa"><h3>El script sale con 3</h3><p>Hay hallazgos: enlaces relativos rotos, documentos sin título, documentos vacíos, encabezados repetidos entre documentos o referencias vivas escritas como documentación. Es una salida esperada. Para cada uno se decide si se corrige en este encargo o se reporta con evidencia.</p></div>
       <div class="qa"><h3>El script sale con 2</h3><p>Error de uso: la ruta no existe, no es un directorio o el patrón incluye separadores. Se corrige el argumento; no se sustituye el script por una revisión a ojo.</p></div>
       <div class="qa"><h3>Falta una fuente imprescindible</h3><p>Se formula una sola pregunta concreta y se detiene el trabajo ahí. No se rellena el hueco con una suposición plausible.</p></div>
       <div class="qa"><h3>Dos fuentes se contradicen</h3><p>Se exponen las dos y se pide decisión. Si la documentación es la especificación vigente, a veces lo que hay que arreglar es el software, no el texto.</p></div>
@@ -476,7 +477,7 @@
 ├── references/
 │   ├── document-inventory.md       # qué documento merece existir y por qué
 │   ├── evidence-and-claims.md      # grados de certeza y qué confirma cada fuente
-│   ├── authoring-rules.md          # proporcionalidad, DRY, terminología, estado de la entrega
+│   ├── authoring-rules.md          # proporcionalidad, DRY, terminología, referencias vivas
 │   └── audit-checklist.md          # auditoría de solo lectura y cierre
 ├── assets/
 │   ├── documentation-plan-template.md
@@ -514,7 +515,7 @@
             <tr><td>Qué no se puede saltar y en qué orden.</td><td><code>SKILL.md</code></td></tr>
             <tr><td>Qué documento merece existir y de qué conocimiento es responsable cada uno.</td><td><code>references/document-inventory.md</code></td></tr>
             <tr><td>Qué grado tiene una afirmación y qué confirma o no confirma cada fuente.</td><td><code>references/evidence-and-claims.md</code></td></tr>
-            <tr><td>Cómo se escribe para no engañar: extensión, repetición, terminología, estado frente a intención y por qué el estado de la entrega no va aquí.</td><td><code>references/authoring-rules.md</code></td></tr>
+            <tr><td>Cómo se escribe para no engañar: extensión, repetición, terminología, estado frente a intención y por qué las referencias vivas no van aquí.</td><td><code>references/authoring-rules.md</code></td></tr>
             <tr><td>Qué busca una auditoría, cómo se emite el veredicto y qué se comprueba al cerrar.</td><td><code>references/audit-checklist.md</code></td></tr>
             <tr><td>Cómo se presenta el trabajo a media hacer o el resultado de una auditoría.</td><td><code>assets/documentation-plan-template.md</code>, <code>assets/audit-report-template.md</code></td></tr>
           </tbody>

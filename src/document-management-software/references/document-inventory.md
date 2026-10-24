@@ -35,6 +35,7 @@ Cada artefacto responde a una sola pregunta. Si dos documentos responden a la mi
 - El mismo dato repetido en dos documentos sin referencia entre ellos.
 - Documentos que describen el estado obsoleto y conviven con la fuente vigente.
 - Un documento por tarea trivial.
+- Datos que solo describen la máquina o el momento de escribir: rutas locales, estado de Git, remoto o publicación y recuentos de artefactos.
 - Secciones que solo explican conceptos obvios para la audiencia declarada.
 
 ## Señales de sub-documentación

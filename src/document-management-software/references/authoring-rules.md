@@ -34,23 +34,24 @@ Cuando el proyecto aún no ha fijado un término, elige uno y úsalo de forma co
 
 No mezcles los cuatro registros en un mismo párrafo sin señalarlo.
 
-## El estado de la entrega no se documenta
+## Las referencias vivas no se documentan
 
-Un artefacto versionado describe el estado del proyecto, no el trabajo que lo produjo. La prohibición no tiene exención por tipo de artefacto: rige igual para una guía, para el `README.md` y para el registro de trabajo.
+Un artefacto versionado describe el estado del proyecto y sus reglas, no el estado de la máquina, de Git o del inventario en el momento de escribir. Esos datos cambian sin que nadie actualice el texto y el lector no puede saber que dejaron de ser ciertos. La prohibición no tiene exención por tipo de artefacto: rige igual para una guía, para el `README.md` y para el registro de trabajo.
 
 Fuera de cualquier artefacto versionado:
 
-- SHA de commit, nombres de rama y de etiqueta, `HEAD`, el `stage`, `push`, «commiteado», «árbol limpio», «nada publicado», «sin remoto». Git los contiene y los muestra mejor que cualquier copia.
+- Estado de Git: SHA de commit, nombres de rama y de etiqueta, `HEAD`, el `stage`, `push`, «commiteado», «árbol limpio», «nada publicado», «sin remoto». Git los contiene y los muestra mejor que cualquier copia.
+- Estado del entorno: si hay remoto, si una etiqueta o una versión está publicada, si un directorio está versionado, y rutas de una máquina concreta como «C:\Users\...», «/home/...» o «\\servidor\...». Dentro del repositorio se usan rutas relativas.
+- Recuentos que caducan: bytes, número de secciones, de documentos, de ficheros, de pasos, de tests o de diagramas de la versión actual del propio proyecto.
 - Mensajes de commit copiados como evidencia de una tarea.
 - Narraciones de proceso: «se corrigió», «quedó reportado, no corregido», «se reentregó», «antes decía».
-- Recuentos que caducan: bytes y número de secciones de una versión anterior del propio documento.
 - Autores y fechas de la intervención, salvo que el formato del documento lo exija (notas de release, registro de cambios, ADR con su estado).
 
 La única referencia a un commit que sí se escribe es la fijación de un tercero: repositorio de origen y commit al que está fijada una copia vendida, enlazado a ese commit. Es un contrato de reproducibilidad, no historia de la propia entrega.
 
-Del registro de trabajo, lo que no se pierde: las palabras literales del encargo, las decisiones con su motivo, los resultados de las comprobaciones y los límites declarados. Lo que no: ninguna referencia de Git. Se escribe en presente sobre el estado actual — «el escaneo devuelve 4 hallazgos», no «bajó de 10 a 4»— y quien necesite el commit lo consulta en el historial.
+Del registro de trabajo, lo que no se pierde: las palabras literales del encargo, las decisiones con su motivo, los resultados de las comprobaciones y los límites declarados. Lo que no: ninguna referencia viva. Se escribe en presente sobre el estado actual — «el escaneo devuelve 4 hallazgos», no «bajó de 10 a 4»— y quien necesite el commit lo consulta en el historial.
 
-`scripts/doc-inventory.py` comprueba en la prosa de los Markdown cuatro familias sacadas de la lista de arriba: narraciones de proceso, recuentos que caducan, referencias de Git (SHA sueltos de 7 a 40 hexadecimales) y frases de estado de la entrega («commiteado», «árbol limpio», «nada publicado», «sin remoto», «en cero líneas»). La lista vive en este fichero; el script la ejecuta y no decide nada más. Las ramas y las etiquetas con nombre propio no las comprueba: son vocabulario habitual del dominio en un repositorio que gestiona Git, y ahí la comprobación es leer.
+`scripts/doc-inventory.py` comprueba en la prosa de los Markdown cinco familias sacadas de la lista de arriba: narraciones de proceso, recuentos de artefactos que caducan, referencias de Git (SHA sueltos de 7 a 40 hexadecimales), rutas de una máquina concreta y frases de estado del entorno («commiteado», «árbol limpio», «nada publicado», «sin remoto», «no define remoto», «todavía no hay versiones», «no está versionado», «en este equipo»). La lista vive en este fichero; el script la ejecuta y no decide nada más. Las ramas y las etiquetas con nombre propio no las comprueba: son vocabulario habitual del dominio en un repositorio que gestiona Git, y ahí la comprobación es leer.
 
 ## Exactitud operativa
 

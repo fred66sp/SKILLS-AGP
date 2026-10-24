@@ -22,7 +22,7 @@ Rellena esta plantilla para una auditoría o cuando queden hallazgos sin resolve
 
 | # | Impacto | Tipo | Ubicación | Hallazgo | Acción propuesta |
 |---|---|---|---|---|---|
-| 1 | <alto \| medio \| bajo> | <sin soporte \| obsoleto \| contradictorio \| ausente \| duplicado \| sin responsabilidad \| enlace roto \| terminología> | <ruta:línea o sección> | <qué está mal, en una frase verificable> | <corrección mínima> |
+| 1 | <alto \| medio \| bajo> | <sin soporte \| obsoleto \| contradictorio \| ausente \| duplicado \| sin responsabilidad \| enlace roto \| referencia viva \| terminología> | <ruta:línea o sección> | <qué está mal, en una frase verificable> | <corrección mínima> |
 
 Impacto alto: induce a error en implementación, operación o seguridad, o destruye conocimiento único.
 Impacto medio: obliga a reconstruir conocimiento o a reabrir una decisión ya tomada.

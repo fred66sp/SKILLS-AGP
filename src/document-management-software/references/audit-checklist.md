@@ -16,7 +16,7 @@ Recorre el inventario y busca, por orden de impacto:
 8. Enlaces relativos rotos y referencias a rutas inexistentes.
 9. Instrucciones imposibles de ejecutar o de verificar.
 10. Contexto decisional perdido en decisiones que se reabren.
-11. Estado de la propia entrega escrito en un artefacto versionado: SHA de commit, ramas, etiquetas, `HEAD`, el `stage`, mensajes de commit copiados, «commiteado», «árbol limpio», «nada publicado», «sin remoto», narraciones de corrección y recuentos que caducan. Eso solo vive en Git, y la prohibición incluye el registro de trabajo. La fijación de un tercero —origen y commit de una copia vendida, enlazada a ese commit— es su contrato de reproducibilidad y no entra aquí.
+11. Referencias vivas escritas en un artefacto versionado: estado de Git (SHA de commit, ramas, etiquetas, `HEAD`, el `stage`, mensajes de commit copiados, «commiteado», «árbol limpio», «nada publicado», «sin remoto»), estado del entorno (remoto, publicación, versionado, rutas de una máquina concreta), narraciones de corrección y recuentos de artefactos que caducan. Envejecen sin que nadie los actualice y la prohibición incluye el registro de trabajo. La fijación de un tercero —origen y commit de una copia vendida, enlazada a ese commit— es su contrato de reproducibilidad y no entra aquí.
 
 Prioriza por impacto sobre comprensión, implementación, operación y mantenimiento. El estilo solo cuenta si impide entender o ejecutar.
 
@@ -37,14 +37,14 @@ Una falta de verificación no es un incumplimiento: es un límite del alcance, y
 
 Antes de declarar terminada una intervención, comprueba y muestra:
 
-1. `python3 scripts/doc-inventory.py --root <ruta>` ejecutado después del cambio, con su código de salida. Incluye la clase de estado de la entrega; la comprobación 8 no se puede sustituir por un autoinforme.
+1. `python3 scripts/doc-inventory.py --root <ruta>` ejecutado después del cambio, con su código de salida. Incluye la clase de referencias vivas; la comprobación 8 no se puede sustituir por un autoinforme.
 2. Que no haya enlaces relativos nuevos rotos.
 3. Que no haya encabezados duplicados nuevos entre documentos, salvo duplicación deliberada y justificada.
 4. Que cada afirmación modificada esté sustentada en una fuente identificable.
 5. Que el contenido eliminado no fuera la única representación de un conocimiento válido.
 6. Que la terminología nueva coincida con la que ya usa el proyecto.
 7. Que los comandos, rutas y valores citados existan en el estado actual.
-8. Que el artefacto, sea una guía o el registro de trabajo, no conserve estado de la propia entrega: SHA, ramas, etiquetas, mensajes de commit, narración de correcciones y recuentos que caducan. La fijación de un tercero enlazada a su commit se conserva: es un contrato de reproducibilidad, no historia de la entrega.
+8. Que el artefacto, sea una guía o el registro de trabajo, no conserve referencias vivas: SHA, ramas, etiquetas, mensajes de commit, remoto o publicación, rutas de una máquina concreta, narración de correcciones y recuentos de artefactos que caducan. La fijación de un tercero enlazada a su commit se conserva: es un contrato de reproducibilidad, no historia de la entrega.
 
 Si falla cualquiera de estas comprobaciones, el resultado es INCOMPLETO o NO VERIFICADO, nunca "terminado". Explica qué condición falta.
 
@@ -55,7 +55,10 @@ Cuando el encargo sea una auditoría, o cuando queden hallazgos sin resolver, re
 ## Falsos positivos conocidos
 
 - Un encabezado repetido puede ser correcto cuando dos documentos cubren la misma sección con audiencias distintas; decídelo explícitamente, no lo ignores.
-- El inventario determinista omite los bloques de código y las citas entre comillas anguladas (el ejemplo que la propia regla enumera). En los documentos con un encabezado H2 llamado `Log` admite además la narración y el recuento, que allí son evidencia del encargo; las referencias de Git se buscan también en ellos, porque un SHA no vive en un artefacto versionado.
-- Un SHA enlazado a la página de su commit es la fijación de un tercero, no estado de la entrega. Una ruta de fichero con forma hexadecimal (`deadbeef.md`) tampoco lo es.
+- El inventario determinista omite los bloques de código y las citas entre comillas anguladas (el ejemplo que la propia regla enumera). En los documentos con un encabezado H2 llamado `Log` admite además la narración y el recuento, que allí son evidencia del encargo; las demás familias se buscan también en ellos, porque una referencia viva no se vuelve portable por estar en un registro.
+- Un SHA enlazado a la página de su commit es la fijación de un tercero, no una referencia viva. Una ruta de fichero con forma hexadecimal (`deadbeef.md`) tampoco lo es.
+- Un recuento de comportamiento del producto («50 registros», «4 reintentos») describe el software y se queda; el que caduca cuenta artefactos del propio proyecto.
+- Una ruta absoluta de plataforma («C:\Program Files», «/etc/nginx») documenta el entorno del lector; la ruta donde vive una herramienta en la máquina de quien escribe es una referencia viva. Prefiere la relativa y, si la absoluta es inevitable, decide leyendo.
+- En una condicional, «dos documentos» no es un recuento del inventario: el script pide una cifra o un número mayor que dos.
 - Un enlace a una ruta generada puede no existir antes de compilar; verifica si el repositorio documenta ese paso de generación.
 - Una afirmación sin fuente puede ser una decisión del usuario no registrada: pregunta antes de borrarla.

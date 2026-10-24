@@ -19,6 +19,7 @@ Gestiona la documentación como conocimiento con fuente de verdad, no como texto
 8. No destruyas conocimiento válido para simplificar. Antes de eliminar, determina qué información quedaría sin representación.
 9. No declares terminada una intervención documental sin ejecutar la verificación del paso 6 y mostrar su resultado.
 10. Ante contradicción entre fuentes, no la resuelvas con redacción ambigua: hazla visible y pide decisión si el alcance no permite resolverla.
+11. No escribas referencias vivas: ni estado de Git, ni remoto o publicación, ni rutas de una máquina concreta, ni recuentos de artefactos que cambian. Envejecen sin aviso y nadie las actualiza.
 
 ## Procedimiento
 
@@ -29,7 +30,7 @@ Gestiona la documentación como conocimiento con fuente de verdad, no como texto
 4. Si falta una fuente imprescindible o el encargo mezcla intención y estado sin aclararlo, formula una sola pregunta concreta y detente. No interrogues para rellenar una plantilla.
 
 **Paso 2 — Inventariar antes de decidir.**
-1. Ejecuta `python3 scripts/doc-inventory.py --root <ruta>` sobre el árbol documental afectado. Devuelve el inventario y los hallazgos deterministas: enlaces relativos rotos, documentos sin título, documentos vacíos, encabezados repetidos entre documentos y estado de la entrega escrito como documentación.
+1. Ejecuta `python3 scripts/doc-inventory.py --root <ruta>` sobre el árbol documental afectado. Devuelve el inventario y los hallazgos deterministas: enlaces relativos rotos, documentos sin título, documentos vacíos, encabezados repetidos entre documentos y referencias vivas escritas como documentación (estado de Git, rutas de una máquina concreta y recuentos de artefactos).
 2. Lee `references/document-inventory.md` para asignar responsabilidad a cada artefacto existente y decidir si hace falta uno nuevo.
 3. Resume la cobertura actual: qué responsabilidad documental ya está cubierta, cuál falta y cuál está cubierta dos veces.
 
@@ -52,7 +53,7 @@ Gestiona la documentación como conocimiento con fuente de verdad, no como texto
 5. Deja fuera toda sección que no aporte información verificable. Una sección vacía de plantilla es un defecto de entrega.
 
 **Paso 6 — Verificar.**
-1. Vuelve a ejecutar `python3 scripts/doc-inventory.py --root <ruta>`: un enlace roto o un encabezado nuevo duplicado es una regresión que introduce este cambio.
+1. Vuelve a ejecutar `python3 scripts/doc-inventory.py --root <ruta>`: un enlace roto, un encabezado nuevo duplicado o una referencia viva nueva es una regresión que introduce este cambio.
 2. Lee `references/audit-checklist.md` y recorre la lista de comprobación aplicable al tipo de intervención.
 3. Contraste cada afirmación modificada contra su fuente. Si una afirmación no se puede verificar en el alcance disponible, degrada su redacción a lo que sí se sostiene.
 4. Comprueba que no se perdió conocimiento válido: compara el contenido anterior con el nuevo antes de aceptar una reescritura.
@@ -89,9 +90,9 @@ Si un campo no se puede rellenar con evidencia, ese campo es el hallazgo.
 
 - [document-inventory](references/document-inventory.md) — responsabilidad de cada tipo de documento y decisión de crearlo o no. Léelo en el paso 2.
 - [evidence-and-claims](references/evidence-and-claims.md) — grados de certeza, verificación por tipo de fuente y tratamiento de contradicciones. Léelo en el paso 3.
-- [authoring-rules](references/authoring-rules.md) — reglas de proporcionalidad, DRY documental, terminología, redacción y exclusión del estado de la entrega. Léelo en el paso 5.
+- [authoring-rules](references/authoring-rules.md) — reglas de proporcionalidad, DRY documental, terminología, redacción y exclusión de las referencias vivas. Léelo en el paso 5.
 - [audit-checklist](references/audit-checklist.md) — auditoría de solo lectura y verificación de cierre. Léelo en el paso 6.
 - [documentation-plan-template](assets/documentation-plan-template.md) — plan de intervención. Úsalo en el paso 4.
 - [audit-report-template](assets/audit-report-template.md) — informe de auditoría. Úsalo en el paso 7.
-- [doc-inventory](scripts/doc-inventory.py) — inventario determinista y hallazgos de documentación, incluido el estado de la entrega. Úsalo en los pasos 2 y 6.
+- [doc-inventory](scripts/doc-inventory.py) — inventario determinista y hallazgos de documentación, incluidas las referencias vivas. Úsalo en los pasos 2 y 6.
 - [test-doc-inventory](scripts/test-doc-inventory.py) — comprobaciones del script: `python3 scripts/test-doc-inventory.py`. Se ejecutan al cambiar el script o sus clases de hallazgo.

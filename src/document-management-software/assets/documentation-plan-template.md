@@ -34,6 +34,7 @@ Justificación de la creación o eliminación: <por qué el conocimiento no cabe
 ## Verificación prevista
 
 - Inventario repetido tras el cambio: sí
+- Referencias vivas (rutas de máquina, remoto, recuentos de artefactos) fuera del texto: sí
 - Enlaces relativos comprobados: sí
 - Contraste contra fuente por afirmación modificada: sí
 - Revisión de contenido eliminado: sí

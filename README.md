@@ -34,7 +34,7 @@ Contrato completo: [`src/git-flow-management/SKILL.md`](src/git-flow-management/
 
 ### `document-management-software`
 
-Gestiona la documentación de un proyecto de software como conocimiento verificable: inventaría los artefactos existentes, decide la intervención mínima, clasifica la certeza de cada afirmación antes de redactarla y demuestra con comprobaciones que lo documentado sigue siendo cierto. Cubre README, PRD, SDD, arquitectura, ADR, API, instalación, operación, runbooks y documentación de features. Incluye el script `scripts/doc-inventory.py`, que detecta enlaces relativos rotos, documentos sin título, documentos sin contenido, encabezados duplicados y estado de la entrega escrito como documentación.
+Gestiona la documentación de un proyecto de software como conocimiento verificable: inventaría los artefactos existentes, decide la intervención mínima, clasifica la certeza de cada afirmación antes de redactarla y demuestra con comprobaciones que lo documentado sigue siendo cierto. Cubre README, PRD, SDD, arquitectura, ADR, API, instalación, operación, runbooks y documentación de features. Incluye el script `scripts/doc-inventory.py`, que detecta enlaces relativos rotos, documentos sin título, documentos sin contenido, encabezados duplicados y referencias vivas escritas como documentación: estado de Git, rutas de una máquina concreta y recuentos de artefactos que caducan.
 
 Contrato completo: [`src/document-management-software/SKILL.md`](src/document-management-software/SKILL.md).
 
