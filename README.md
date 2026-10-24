@@ -77,6 +77,9 @@ Documentación: [`docs/skill-creator/index.html`](docs/skill-creator/index.html)
 - `docs/gherkin-scenario-review/index.html` — página principal de la skill `gherkin-scenario-review`.
 - `docs/gherkin-scenario-review/flujo-de-trabajo.html` — diagrama del flujo, del encargo al informe con veredicto cerrado.
 - `docs/gherkin-scenario-review/arquitectura.html` — diagrama del paquete, la frontera con Git y con SDD, y las referencias por stack.
+- `docs/gherkin-scenario-authoring/index.html` — página principal de la skill `gherkin-scenario-authoring`.
+- `docs/gherkin-scenario-authoring/flujo-de-trabajo.html` — diagrama del flujo, del encargo al mapa, a la redacción y a la puerta del comprobador.
+- `docs/gherkin-scenario-authoring/arquitectura.html` — diagrama del paquete con sus cuatro fronteras: la CLI compartida, la revisora, el SDD y el archivo producido.
 
 Los diagramas son artefactos de [archify](https://github.com/tt-a1i/archify) 3.2.0. Cada uno tiene su especificación (`*.json`) y su recibo de entrega (`*.delivery.json`) con el `sha256` del HTML y del spec. Para regenerarlos hace falta archify 3.2.0; el comando es el mismo en las cuatro carpetas, cambiando `<skill>` por `git-flow-management`, `skill-creator`, `document-management-software` o `gherkin-scenario-review`:
 
