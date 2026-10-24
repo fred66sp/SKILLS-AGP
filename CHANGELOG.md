@@ -8,6 +8,8 @@ El formato sigue [Keep a Changelog 1.1.0](https://keepachangelog.com/es-ES/1.1.0
 
 ### Añadido
 
+- Punto de entrada y catálogo en `docs/index.html`: las skills del repositorio con su página y su contrato, la identidad visual de cada favicon, la puerta de verificación y una tarjeta destacada de la guía de autoría.
+- Versión HTML de la guía de autoría en `docs/best-practices-create-skills/index.html`: estructura, frontmatter, divulgación progresiva, instrucciones, scripts, composición y validación, con los prompts de validación copiables.
 - Validación local y CI ligera: `scripts/check-repo.py` comprueba metadatos, estructura, enrutadores, enlaces Markdown, recibos de los diagramas y sintaxis de los scripts; `scripts/test-check-repo.py` prueba las detecciones con repositorios temporales; `.github/workflows/validate.yml` ejecuta la validación y las pruebas de los scripts en cada push y pull request.
 - Skill `skill-creator` fijada en `.skills/`, la de terceros que se usa al crear skills nuevas: procedimiento, plantilla, lista de comprobación y validador de metadatos.
 - Skill `git-flow-management`: gestión y verificación de operaciones Git con ceremonia proporcional al tamaño y al riesgo, guardia de ramas, plantillas de plan y de resultado, y el script `scripts/verify-branch.sh` para comprobar ascendencia y contención entre referencias.
@@ -42,6 +44,8 @@ El formato sigue [Keep a Changelog 1.1.0](https://keepachangelog.com/es-ES/1.1.0
 
 ### Modificado
 
+- `README.md`: enlaces al catálogo y a la guía de autoría en HTML.
+- `docs/prd-cartographer/index.html`: favicon y marca de cabecera con un compás azul, para no compartir icono con `document-management-software`.
 - Diagramas de `docs/`: todos se ajustan al ancho disponible, igual que el flujo de `prd-cartographer`. El checkout local de Archify, en `archify/` e ignorado por Git, emite `data-reader-fit="width-first"` para los lienzos automáticos de flujo y arquitectura, y su plantilla y `viewer.css` dejan el mínimo móvil en `0` en vez de `720 px`. Los diagramas se regeneran con ese renderizador y los recibos de entrega se recalculan con los bytes y el `sha256` resultantes.
 - Skill `git-flow-management`: el flujo es proporcional al tamaño y al riesgo de la tarea. Las tareas pequeñas admiten commit directo en `main`; las normales y complejas proponen rama corta. Todo commit se deja preparado en el stage con su mensaje Conventional Commits en inglés y se ejecuta solo tras confirmación explícita. El borrado de una rama ya integrada y cualquier `push` requieren su propia confirmación, y una confirmación no se reaprovecha para trabajo posterior. Git Flow es una política que se aplica solo si el repositorio la declara.
 - Skill `git-flow-management`: commitear con cabos sueltos está prohibido. Antes de pedir la confirmación se hace un barrido de documentación, `CHANGELOG`, plantillas, referencias y políticas del repositorio; lo que requiera una decisión del usuario se pregunta antes del commit y entra en ese mismo commit. Un commit que obliga a un commit de corrección inmediata es un fallo de preparación, no una decisión pendiente.

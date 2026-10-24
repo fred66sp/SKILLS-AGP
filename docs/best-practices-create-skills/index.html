@@ -1,0 +1,1094 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Guía de buenas prácticas para crear skills de agente: estructura, frontmatter para el descubrimiento, divulgación progresiva, instrucciones procedimentales, scripts deterministas, composición y validación con LLM. Referencia estricta: agentskills.io.">
+<meta name="color-scheme" content="light dark">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23b45309'/%3E%3Cpath d='M9 7h10a2 2 0 0 1 2 2v16l-7-4-7 4V9a2 2 0 0 1 2-2z' fill='none' stroke='%23ffffff' stroke-width='2.2' stroke-linejoin='round'/%3E%3C/svg%3E">
+<title>Buenas prácticas para crear skills de agente — guía de autoría</title>
+<script>
+(function () {
+  try {
+    var p = JSON.parse(localStorage.getItem("best-practices:prefs") || "{}");
+    var t = p.theme || (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+    document.documentElement.setAttribute("data-theme", t);
+  } catch (e) { document.documentElement.setAttribute("data-theme", "light"); }
+})();
+</script>
+<style>/* Guía de autoría. Comparte la identidad de las páginas de skill: teal y
+     azul sobre fondo claro/oscuro, con un ámbar propio de guía para separarla
+     del catálogo de skills. */
+  :root {--bg: #f8fafc;
+    --bg-elev: #ffffff;
+    --bg-soft: #f1f5f9;
+    --text: #0f172a;
+    --muted: #5f6b80;
+    --border: #e2e8f0;
+    --border-strong: #cbd5e1;
+    --accent: #0f766e;
+    --accent-2: #2563eb;
+    --accent-3: #0891b2;
+    --accent-4: #7c3aed;
+    --accent-soft: rgba(15, 118, 110, .10);
+    --ok: #10b981;
+    --ok-text: #047857;
+    --warn-text: #b45309;
+    --error-text: #b91c1c;
+    --guide: #b45309;
+    --guide-2: #ea580c;
+    --guide-ink: color-mix(in srgb, var(--guide) 58%, var(--text));
+    --code-bg: #0a0f1c;
+    --code-text: #e5e7eb;
+    --code-border: #1f2937;
+    --shadow: 0 1px 2px rgba(15, 23, 42, .05), 0 8px 24px -12px rgba(15, 23, 42, .18);
+    --shadow-lg: 0 20px 60px -30px rgba(15, 23, 42, .35);
+    --radius: 16px;
+    --radius-sm: 10px;
+    /* No se descargan tipografías: si Inter o JetBrains Mono no están
+       instaladas, el navegador cae en la pila del sistema. */
+    --font: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    --mono: "JetBrains Mono", ui-monospace, "SF Mono", "Fira Code", Menlo, Consolas, monospace;
+}:root[data-theme="dark"] {--bg: #0a0f1c;
+    --bg-elev: #111827;
+    --bg-soft: #1f2937;
+    --text: #e5e7eb;
+    --muted: #94a3b8;
+    --border: #334155;
+    --border-strong: #475569;
+    --accent: #2dd4bf;
+    --accent-2: #60a5fa;
+    --accent-3: #22d3ee;
+    --accent-4: #a78bfa;
+    --accent-soft: rgba(45, 212, 191, .14);
+    --ok: #34d399;
+    --ok-text: #34d399;
+    --warn-text: #fbbf24;
+    --error-text: #f87171;
+    --guide: #fbbf24;
+    --guide-2: #fb923c;
+    --guide-ink: color-mix(in srgb, var(--guide) 58%, var(--text));
+    --code-bg: #070b16;
+    --code-text: #e5e7eb;
+    --code-border: #1f2937;
+    --shadow: 0 1px 2px rgba(0, 0, 0, .4), 0 12px 32px -18px rgba(0, 0, 0, .8);
+    --shadow-lg: 0 24px 70px -34px rgba(0, 0, 0, .9);
+}* {box-sizing: border-box;
+}html {scroll-behavior: smooth; scroll-padding-top: 88px;
+}body {margin: 0;
+    font-family: var(--font);
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+}a {color: var(--accent); text-decoration: none;
+}a:hover {text-decoration: underline; text-underline-offset: 3px;
+}a:focus-visible,button:focus-visible {outline: 2px solid var(--guide); outline-offset: 3px; border-radius: 6px;
+}code,pre,kbd {font-family: var(--mono);
+}p code,li code,td code,.card code {background: var(--bg-soft);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: .08em .42em;
+    font-size: .88em;
+}.skip-link {position: absolute;
+    left: 16px; top: -60px;
+    z-index: 100;
+    padding: 10px 16px;
+    border-radius: var(--radius-sm);
+    background: var(--bg-elev);
+    border: 1px solid var(--guide);
+    color: var(--text);
+    font-weight: 650;
+    font-size: 14px;
+}.skip-link:focus {top: 12px;
+}.topbar {position: sticky;
+    top: 0;
+    z-index: 50;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 12px clamp(16px, 4vw, 40px);
+    background: color-mix(in srgb, var(--bg) 82%, transparent);
+    -webkit-backdrop-filter: saturate(180%) blur(14px);
+    backdrop-filter: saturate(180%) blur(14px);
+    border-bottom: 1px solid var(--border);
+}.brand {display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--text);
+}.brand:hover {text-decoration: none;
+}.brand-mark {display: block;
+    width: 34px; height: 34px;
+    border-radius: 10px;
+    box-shadow: var(--shadow);
+    overflow: hidden;
+    flex: none;
+}.brand-mark svg {width: 100%; height: 100%; display: block;
+}.brand-name {font-weight: 750; letter-spacing: -.02em; font-size: 15px;
+}.brand-name small {display: block; font-weight: 500; color: var(--muted); font-size: 11px; letter-spacing: .04em; text-transform: uppercase;
+}.topbar-spacer {flex: 1;
+}.topnav {display: none;
+}@media (min-width: 860px){.topnav {display: flex; align-items: center; gap: 2px;
+}.topnav a {padding: 7px 11px;
+      border-radius: 8px;
+      color: var(--muted);
+      font-size: 13.5px;
+      font-weight: 600;
+      white-space: nowrap;
+}.topnav a:hover {color: var(--text); text-decoration: none; background: var(--bg-soft);
+}.topnav a.active {color: var(--guide-ink); background: color-mix(in srgb, var(--guide) 10%, transparent);
+}.topnav a.catalog {color: var(--guide-ink);
+}
+  }.icon-btn {display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    height: 36px;
+    padding: 0 12px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: var(--bg-elev);
+    color: var(--text);
+    font: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: border-color .15s, background .15s, transform .1s;
+}.icon-btn:hover {border-color: var(--border-strong);
+}.icon-btn:active {transform: translateY(1px);
+}.icon-btn svg {width: 16px; height: 16px;
+}.icon-btn.only-icon {width: 36px; padding: 0;
+}:root[data-theme="light"] .icon-sun {display: none;
+}:root[data-theme="dark"] .icon-moon {display: none;
+}.hero {position: relative;
+    overflow: hidden;
+    padding: clamp(44px, 7vw, 84px) clamp(16px, 4vw, 40px) clamp(44px, 6vw, 72px);
+    border-bottom: 1px solid var(--border);
+}.hero::before {content: "";
+    position: absolute;
+    inset: -40% -10% auto -10%;
+    height: 460px;
+    background:
+      radial-gradient(58% 58% at 18% 30%, color-mix(in srgb, var(--guide) 22%, transparent), transparent 70%),
+      radial-gradient(48% 48% at 66% 6%, color-mix(in srgb, var(--accent-2) 20%, transparent), transparent 70%),
+      radial-gradient(40% 40% at 94% 34%, color-mix(in srgb, var(--accent-4) 16%, transparent), transparent 70%);
+    filter: blur(6px);
+    pointer-events: none;
+}.hero::after {content: "";
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(to right, color-mix(in srgb, var(--border-strong) 45%, transparent) 1px, transparent 1px),
+      linear-gradient(to bottom, color-mix(in srgb, var(--border-strong) 45%, transparent) 1px, transparent 1px);
+    background-size: 56px 56px;
+    -webkit-mask-image: radial-gradient(70% 65% at 50% 20%, #000 0%, transparent 78%);
+    mask-image: radial-gradient(70% 65% at 50% 20%, #000 0%, transparent 78%);
+    opacity: .45;
+    pointer-events: none;
+}.hero-inner {position: relative;
+    z-index: 1;
+    max-width: 1180px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 40px;
+    align-items: center;
+}@media (min-width: 960px){.hero-inner {grid-template-columns: minmax(0, 1.06fr) minmax(0, .94fr); gap: 52px;
+}
+  }.pill {display: inline-flex;
+    align-items: center;
+    flex-wrap: wrap;
+    max-width: 100%;
+    gap: 8px;
+    padding: 5px 12px;
+    border: 1px solid color-mix(in srgb, var(--guide) 35%, var(--border));
+    border-radius: 999px;
+    background: var(--bg-elev);
+    color: var(--guide-ink);
+    font-size: 12.5px;
+    font-weight: 650;
+    letter-spacing: .01em;
+}.pill .dot {width: 7px; height: 7px; border-radius: 50%; background: var(--guide); box-shadow: 0 0 0 3px color-mix(in srgb, var(--guide) 22%, transparent);
+}.hero h1 {margin: 22px 0 0;
+    font-size: clamp(34px, 5.3vw, 60px);
+    line-height: 1.04;
+    letter-spacing: -.035em;
+    font-weight: 800;
+}.hero h1 .grad {background: linear-gradient(112deg, var(--guide) 0%, var(--guide-2) 55%, var(--accent-4) 110%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}.hero p.lead {margin: 20px 0 0;
+    max-width: 640px;
+    font-size: clamp(15.5px, 2vw, 18px);
+    color: var(--muted);
+}.hero-actions {display: flex; flex-wrap: wrap; gap: 12px; margin-top: 28px;
+}.btn {display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 11px 18px;
+    border-radius: var(--radius-sm);
+    font-weight: 650;
+    font-size: 14.5px;
+    border: 1px solid transparent;
+    cursor: pointer;
+    transition: transform .12s, box-shadow .2s, border-color .15s;
+}.btn:hover {text-decoration: none; transform: translateY(-1px);
+}.btn svg {width: 16px; height: 16px;
+}.btn-primary {background: linear-gradient(135deg, #b45309, #c2410c); color: #ffffff; box-shadow: var(--shadow);
+}.btn-primary:hover {box-shadow: var(--shadow-lg);
+}.btn-ghost {background: var(--bg-elev); border-color: var(--border-strong); color: var(--text);
+}.hero-feats {display: flex;
+    flex-wrap: wrap;
+    gap: 8px 18px;
+    margin: 26px 0 0;
+    padding: 0;
+    list-style: none;
+    color: var(--muted);
+    font-size: 13px;
+    font-weight: 600;
+}.hero-feats li {display: inline-flex; align-items: center; gap: 7px;
+}.hero-feats svg {width: 14px; height: 14px; color: var(--guide); flex: none;
+}.hero-art {position: relative;
+    display: none;
+    min-height: 356px;
+}@media (min-width: 960px){.hero-art {display: block;
+}
+  }.art-blob {position: absolute;
+    width: 310px; height: 310px;
+    top: 10px; left: 50%;
+    transform: translateX(-48%);
+    border-radius: 50%;
+    background:
+      radial-gradient(circle at 32% 30%, color-mix(in srgb, var(--guide) 38%, transparent), transparent 62%),
+      radial-gradient(circle at 74% 70%, color-mix(in srgb, var(--accent-2) 33%, transparent), transparent 64%);
+    filter: blur(28px);
+    opacity: .55;
+}.fm-card {position: relative;
+    border-radius: 16px;
+    background: linear-gradient(160deg, #111827, #0a0f1c);
+    border: 1px solid #1f2937;
+    box-shadow: 0 30px 70px -30px rgba(0, 0, 0, .7);
+    overflow: hidden;
+    transform: rotate(-1.4deg);
+}.fm-head {display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 11px 15px;
+    border-bottom: 1px solid #1f2937;
+    color: #cbd5e1;
+    font-family: var(--mono);
+    font-size: 11.5px;
+    font-weight: 650;
+}.fm-head .dot {width: 7px; height: 7px; border-radius: 50%; background: #f59e0b; box-shadow: 0 0 0 3px rgba(245, 158, 11, .15);
+}.fm-badge {margin-left: auto;
+    color: #34d399;
+    border: 1px solid rgba(52, 211, 153, .35);
+    background: rgba(52, 211, 153, .1);
+    border-radius: 999px;
+    padding: 1px 7px;
+    font-family: var(--font);
+    font-size: 9.5px;
+    font-weight: 700;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+}.fm-code {padding: 15px 16px;
+    font-family: var(--mono);
+    font-size: 11.6px;
+    line-height: 1.75;
+    color: #e5e7eb;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+}.fm-code .punc {color: #64748b;
+}.fm-code .key {color: #5eead4;
+}.fm-code .val {color: #fbbf24;
+}.fm-code .str {color: #93c5fd;
+}.fm-foot {display: flex;
+    align-items: center;
+    gap: 7px;
+    padding: 10px 15px;
+    border-top: 1px solid #1f2937;
+    color: #a7f3d0;
+    font-size: 10.6px;
+    font-weight: 650;
+    letter-spacing: .02em;
+}.fm-foot svg {width: 12px; height: 12px; color: #34d399; flex: none;
+}.fm-folders {display: flex;
+    flex-wrap: wrap;
+    gap: 7px;
+    margin-top: 13px;
+    padding-left: 14px;
+}.fm-folders span {font-family: var(--mono);
+    font-size: 10.5px;
+    font-weight: 650;
+    color: var(--muted);
+    background: var(--bg-elev);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    padding: 3px 9px;
+    box-shadow: var(--shadow);
+}.hero-copy {animation: rise .6s ease-out both;
+}.hero-art {animation: rise .8s .1s ease-out both;
+}@keyframes rise {from {opacity: 0; transform: translateY(14px); } to {opacity: 1; transform: none; }
+}.layout {max-width: 1180px;
+    margin: 0 auto;
+    padding: clamp(32px, 5vw, 58px) clamp(16px, 4vw, 40px) 80px;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 44px;
+}@media (min-width: 1020px){.layout {grid-template-columns: 214px minmax(0, 1fr); gap: 56px;
+}
+  }.toc {display: none;
+}@media (min-width: 1020px){.toc {display: block; position: sticky; top: 84px; align-self: start;
+}.toc h2 {font-size: 11px; text-transform: uppercase; letter-spacing: .1em; color: var(--muted); margin: 0 0 12px;
+}.toc a {display: block;
+      padding: 7px 12px;
+      border-left: 2px solid var(--border);
+      color: var(--muted);
+      font-size: 14px;
+      font-weight: 550;
+}.toc a:hover {color: var(--text); text-decoration: none;
+}.toc a.active {color: var(--guide-ink); border-left-color: var(--guide); background: color-mix(in srgb, var(--guide) 9%, transparent); border-radius: 0 8px 8px 0;
+}.toc .toc-extra {margin-top: 18px; padding-top: 14px; border-top: 1px solid var(--border);
+}.toc .toc-extra a {color: var(--guide-ink);
+}
+  }main {min-width: 0;
+}section {scroll-margin-top: 88px;
+}section + section {margin-top: clamp(48px, 6vw, 68px);
+}.section-head {display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; margin-bottom: 8px;
+}.section-num {display: grid; place-items: center;
+    width: 30px; height: 30px;
+    border-radius: 9px;
+    background: color-mix(in srgb, var(--num, var(--guide)) 13%, transparent);
+    color: color-mix(in srgb, var(--num, var(--guide)) 58%, var(--text));
+    font-size: 13px;
+    font-weight: 800;
+    font-variant-numeric: tabular-nums;
+    flex: none;
+}h2.title {margin: 0; font-size: clamp(22px, 3vw, 29px); letter-spacing: -.02em;
+}.section > p.sub {margin: 6px 0 24px; color: var(--muted); max-width: 78ch;
+}.chip-repo {margin-left: auto;
+    flex: none;
+    font-size: 11.5px;
+    font-weight: 700;
+    letter-spacing: .03em;
+    color: var(--muted);
+    border: 1px dashed color-mix(in srgb, var(--muted) 45%, transparent);
+    border-radius: 999px;
+    padding: 3px 10px;
+    white-space: nowrap;
+}.prose p {margin: 0 0 14px; max-width: 80ch;
+}.prose p:last-child {margin-bottom: 0;
+}.prose h3 {margin: 30px 0 10px; font-size: 17px; letter-spacing: -.01em;
+}.prose h3:first-child {margin-top: 0;
+}.prose strong {color: var(--text);
+}.prose ul,.prose ol {margin: 0 0 16px; padding-left: 22px; max-width: 80ch;
+}.prose li {margin: 0 0 7px;
+}.prose li:last-child {margin-bottom: 0;
+}.prose li::marker {color: var(--guide-ink); font-weight: 700;
+}.prose em {color: var(--text);
+}.cards {display: grid; gap: 14px;
+}.cards + .cards,.cards + .compare,.cards + .note,.compare + .note {margin-top: 18px;
+}@media (min-width: 640px){.cards.c2 {grid-template-columns: repeat(2, minmax(0, 1fr));
+}.cards.c3 {grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+  }@media (min-width: 1050px){.cards.c3 {grid-template-columns: repeat(3, minmax(0, 1fr));
+}.cards.c4 {grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+  }.card {padding: 17px 18px 16px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    background: linear-gradient(168deg, color-mix(in srgb, var(--guide) 4%, var(--bg-elev)), var(--bg-elev) 55%);
+    box-shadow: var(--shadow);
+}.card h3 {margin: 0 0 6px; font-size: 14.5px; letter-spacing: -.01em;
+}.card h3 code {font-size: 13px;
+}.card p {margin: 0; color: var(--muted); font-size: 13px; line-height: 1.55;
+}.card p + p {margin-top: 7px;
+}.card ul {margin: 7px 0 0; padding-left: 17px; color: var(--muted); font-size: 12.8px; line-height: 1.55;
+}.card li + li {margin-top: 4px;
+}.rules {margin: 0 0 20px; padding: 0; list-style: none; display: grid; gap: 10px;
+}.rules li {position: relative; padding: 13px 15px 13px 42px; border: 1px solid var(--border); border-radius: var(--radius-sm); background: var(--bg-elev); font-size: 13.6px;
+}.rules li::before {content: ""; position: absolute; left: 15px; top: 17px; width: 14px; height: 14px; border-radius: 50%; background: color-mix(in srgb, var(--guide) 16%, transparent); border: 1px solid color-mix(in srgb, var(--guide) 40%, transparent);
+}.rules li::after {content: ""; position: absolute; left: 19px; top: 21px; width: 6px; height: 3px; border-left: 1.8px solid var(--guide-ink); border-bottom: 1.8px solid var(--guide-ink); transform: rotate(-45deg);
+}.rules strong {color: var(--text);
+}.rules code {font-size: 12.2px;
+}.compare {display: grid; gap: 14px;
+}@media (min-width: 720px){.compare {grid-template-columns: minmax(0, .7fr) minmax(0, 1.3fr);
+}
+  }.example {padding: 15px 17px; border-radius: var(--radius-sm); border: 1px solid var(--border); background: var(--bg-elev);
+}.example.bad {border-left: 3px solid var(--error-text);
+}.example.good {border-left: 3px solid var(--ok);
+}.ex-label {display: inline-flex; align-items: center; gap: 6px; font-size: 10px; font-weight: 800; letter-spacing: .09em; text-transform: uppercase;
+}.example.bad .ex-label {color: var(--error-text);
+}.example.good .ex-label {color: var(--ok-text);
+}.example p {margin: 7px 0 0; font-size: 13.4px; color: var(--text);
+}.example.bad p {color: var(--muted);
+}.example .ex-note {font-size: 12px; color: var(--muted);
+}.code {position: relative; margin: 16px 0 20px;
+}.code pre {margin: 0;
+    padding: 17px 52px 17px 18px;
+    background: var(--code-bg);
+    color: var(--code-text);
+    border: 1px solid var(--code-border);
+    border-radius: var(--radius);
+    overflow-x: auto;
+    font-size: 12.8px;
+    line-height: 1.65;
+    box-shadow: var(--shadow);
+}.code pre code {background: none; padding: 0; color: inherit; font-size: inherit;
+}.code .comment {color: #64748b;
+}.code .copy {position: absolute;
+    top: 10px; right: 10px;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    height: 29px;
+    padding: 0 9px;
+    border: 1px solid var(--code-border);
+    border-radius: 8px;
+    background: #111827;
+    color: #c8d2e8;
+    font: inherit;
+    font-size: 11px;
+    font-weight: 600;
+    cursor: pointer;
+    opacity: 0;
+    transition: opacity .15s, border-color .15s;
+}.code:hover .copy,.code .copy:focus-visible {opacity: 1;
+}.code .copy:hover {border-color: #3b4c72;
+}@media (hover: none){.code .copy {opacity: 1;
+} }.code .copy.copied {color: var(--ok); border-color: var(--ok);
+}.code .copy svg {width: 12px; height: 12px;
+}.note {display: flex;
+    gap: 12px;
+    padding: 14px 16px;
+    border-left: 2px solid var(--guide);
+    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+    background: color-mix(in srgb, var(--guide) 9%, transparent);
+    font-size: 13.6px;
+    margin: 18px 0;
+}.note strong {color: var(--text);
+}.note p {margin: 0;
+}.note p + p {margin-top: 8px;
+}.note a {color: var(--guide-ink); font-weight: 650;
+}.prompt {border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--bg-elev);
+    box-shadow: var(--shadow);
+    margin: 16px 0 20px;
+    overflow: hidden;
+}.prompt-head {display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 10px 14px 10px 16px;
+    background: color-mix(in srgb, var(--guide) 7%, var(--bg-elev));
+    border-bottom: 1px solid var(--border);
+}.prompt-label {display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 11px;
+    font-weight: 750;
+    letter-spacing: .09em;
+    text-transform: uppercase;
+    color: var(--guide-ink);
+}.prompt-label::before {content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--guide);
+}.prompt-copy {display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    height: 28px;
+    padding: 0 9px;
+    border: 1px solid var(--border);
+    border-radius: 7px;
+    background: var(--bg-elev);
+    color: var(--muted);
+    font: inherit;
+    font-size: 11px;
+    font-weight: 650;
+    cursor: pointer;
+    transition: border-color .15s, color .15s;
+}.prompt-copy:hover {border-color: var(--guide); color: var(--guide-ink);
+}.prompt-copy.copied {color: var(--ok-text); border-color: var(--ok);
+}.prompt-copy svg {width: 12px; height: 12px;
+}.prompt-body {padding: 16px 18px 17px; font-size: 13.6px; line-height: 1.62;
+}.prompt-body p {margin: 0 0 11px;
+}.prompt-body p:last-child {margin-bottom: 0;
+}.prompt-body ol,.prompt-body ul {margin: 0 0 12px; padding-left: 22px;
+}.prompt-body li {margin: 0 0 6px;
+}.prompt-body li::marker {color: var(--guide-ink); font-weight: 700;
+}.prompt-code {margin: 10px 0 12px; padding: 12px 14px; background: var(--code-bg); border: 1px solid var(--code-border); border-radius: 9px; color: var(--code-text); font-size: 11.8px; line-height: 1.6; overflow-x: auto;
+}.prompt-code code {background: none; border: 0; padding: 0; color: inherit;
+}.placeholder {color: var(--muted); font-style: italic;
+}.next {display: grid;
+    gap: 18px;
+    margin-top: 26px;
+    padding: 22px;
+    border-radius: var(--radius);
+    border: 1px solid color-mix(in srgb, var(--guide) 26%, var(--border));
+    background: linear-gradient(120deg, color-mix(in srgb, var(--guide) 9%, var(--bg-elev)), var(--bg-elev) 60%);
+    box-shadow: var(--shadow);
+}@media (min-width: 760px){.next {grid-template-columns: minmax(0, 1fr) auto; align-items: center;
+}
+  }.next .eyebrow {display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 10.5px;
+    font-weight: 750;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--guide-ink);
+}.next h3 {margin: 7px 0 0; font-size: 18px; letter-spacing: -.02em;
+}.next p {margin: 6px 0 0; color: var(--muted); font-size: 13.4px; max-width: 65ch;
+}.next-links {display: flex; flex-wrap: wrap; gap: 10px;
+}.footer {border-top: 1px solid var(--border);
+    margin-top: clamp(52px, 7vw, 84px);
+}.footer-inner {max-width: 1180px;
+    margin: 0 auto;
+    padding: 30px clamp(16px, 4vw, 40px) 34px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 18px 28px;
+    align-items: center;
+    justify-content: space-between;
+}.footer .brand-name small {text-transform: none; letter-spacing: .02em;
+}.footer-nav {display: flex; flex-wrap: wrap; gap: 8px 18px; font-size: 13px; font-weight: 650;
+}.footer-nav a {color: var(--muted);
+}.footer-nav a:hover {color: var(--guide-ink);
+}.footer-note {width: 100%;
+    color: var(--muted);
+    font-size: 12.5px;
+    border-top: 1px solid var(--border);
+    padding-top: 16px;
+}.footer-note code {background: var(--bg-soft); border: 1px solid var(--border); border-radius: 6px; padding: 1px 6px;
+}::selection {background: color-mix(in srgb, var(--guide) 26%, transparent);
+}@media (prefers-reduced-motion: reduce){* {scroll-behavior: auto !important; transition: none !important; animation: none !important;
+}
+  }
+</style>
+</head>
+<body>
+<a class="skip-link" href="#estructura">Saltar a la guía</a>
+
+<header class="topbar">
+  <a class="brand" href="../index.html">
+    <span class="brand-mark" aria-hidden="true">
+      <svg viewBox="0 0 32 32" role="presentation">
+        <defs>
+          <linearGradient id="brand-grad" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="#d97706"></stop>
+            <stop offset="1" stop-color="#ea580c"></stop>
+          </linearGradient>
+        </defs>
+        <rect width="32" height="32" fill="url(#brand-grad)"></rect>
+        <path d="M9 6h10a2 2 0 0 1 2 2v18l-7-4-7 4V8a2 2 0 0 1 2-2z" fill="none" stroke="#ffffff" stroke-width="2.1" stroke-linejoin="round"></path>
+      </svg>
+    </span>
+    <span class="brand-name">SKILLS-AGP<small>guía de autoría</small></span>
+  </a>
+  <span class="topbar-spacer"></span>
+  <nav class="topnav" aria-label="Secciones de la guía">
+    <a href="#estructura">Estructura</a>
+    <a href="#frontmatter">Frontmatter</a>
+    <a href="#validacion">Validación</a>
+    <a class="catalog" href="../index.html">Catálogo</a>
+  </nav>
+  <a class="icon-btn only-icon" href="https://github.com/fred66sp/SKILLS-AGP" aria-label="Repositorio en GitHub" title="Repositorio en GitHub">
+    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 .5C5.7.5.5 5.7.5 12c0 5.1 3.3 9.4 7.9 10.9.6.1.8-.3.8-.6v-2c-3.2.7-3.9-1.4-3.9-1.4-.5-1.3-1.3-1.7-1.3-1.7-1.1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.7 1.3 3.4 1 .1-.8.4-1.3.8-1.6-2.6-.3-5.3-1.3-5.3-5.8 0-1.3.5-2.3 1.2-3.1-.1-.3-.5-1.5.1-3.1 0 0 1-.3 3.2 1.2a11 11 0 0 1 5.8 0c2.2-1.5 3.2-1.2 3.2-1.2.6 1.6.2 2.8.1 3.1.8.8 1.2 1.8 1.2 3.1 0 4.5-2.7 5.5-5.3 5.8.4.4.8 1.1.8 2.2v3.2c0 .3.2.7.8.6 4.6-1.5 7.9-5.8 7.9-10.9C23.5 5.7 18.3.5 12 .5z"></path></svg>
+  </a>
+  <button class="icon-btn" id="theme-toggle" type="button" aria-label="Cambiar a tema oscuro">
+    <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"></path></svg>
+    <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"></path></svg>
+    <span>Tema</span>
+  </button>
+</header>
+
+<section class="hero">
+  <div class="hero-inner">
+    <div class="hero-copy">
+      <span class="pill"><span class="dot" aria-hidden="true"></span>guía · 7 secciones · prompts listos para copiar</span>
+      <h1>Buenas prácticas para crear <span class="grad">skills de agente</span></h1>
+      <p class="lead">Cómo escribir skills de nivel profesional, validarlas con un LLM y mantener una ventana de contexto ajustada. La especificación de <a href="https://agentskills.io/">agentskills.io</a> es la referencia estricta; esta guía la resume y añade el método de validación.</p>
+      <div class="hero-actions">
+        <a class="btn btn-primary" href="#estructura">Empezar por la estructura
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 5l7 7-7 7"></path></svg>
+        </a>
+        <a class="btn btn-ghost" href="#validacion">Ir a la validación</a>
+        <a class="btn btn-ghost" href="../index.html">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 19l-7-7 7-7"></path></svg>
+          Volver al catálogo
+        </a>
+      </div>
+      <ul class="hero-feats">
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"></path></svg>Referencia agentskills.io</li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"></path></svg>Divulgación progresiva</li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"></path></svg>Validación con LLM</li>
+      </ul>
+    </div>
+
+    <div class="hero-art" aria-hidden="true">
+      <div class="art-blob"></div>
+      <div class="fm-card">
+        <div class="fm-head"><span class="dot"></span>SKILL.md<span class="fm-badge">válido</span></div>
+        <div class="fm-code"><span class="punc">---</span>
+<span class="key">name:</span> angular-testing
+<span class="key">description:</span> <span class="val">Creates and runs Angular tests.</span>
+  <span class="val">Use when the user asks for specs or coverage.</span>
+  <span class="val">Don't use it for React or Vue projects.</span>
+<span class="punc">---</span></div>
+        <div class="fm-foot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"></path></svg>name = carpeta · description ≤ 1024</div>
+      </div>
+      <div class="fm-folders"><span>references/</span><span>scripts/</span><span>assets/</span></div>
+    </div>
+  </div>
+</section>
+
+<div class="layout">
+  <nav class="toc" aria-label="Índice de la guía">
+    <h2>En esta guía</h2>
+    <a href="#estructura">1. Estructura</a>
+    <a href="#frontmatter">2. Frontmatter</a>
+    <a href="#divulgacion">3. Divulgación progresiva</a>
+    <a href="#instrucciones">4. Instrucciones</a>
+    <a href="#scripts">5. Scripts</a>
+    <a href="#composicion">6. Composición</a>
+    <a href="#validacion">7. Validación</a>
+    <div class="toc-extra"><a href="../index.html">Volver al catálogo</a></div>
+  </nav>
+
+  <main>
+    <section id="estructura" class="section">
+      <div class="section-head"><span class="section-num" style="--num:#0f766e">1</span><h2 class="title">Estructura de una skill</h2><span class="chip-repo">estructura obligatoria</span></div>
+      <p class="sub">Toda skill sigue esta estructura de directorios. El paquete contiene lo que el agente necesita para ejecutar, no documentación para personas.</p>
+
+      <div class="code"><pre><code>skill-name/
+├── SKILL.md              <span class="comment"># Obligatorio: metadatos + instrucciones centrales (&lt;500 líneas)</span>
+├── scripts/              <span class="comment"># Código ejecutable (Python/Bash) como CLIs minúsculas</span>
+├── references/           <span class="comment"># Contexto complementario (esquemas, cheatsheets)</span>
+└── assets/               <span class="comment"># Plantillas o archivos estáticos usados en la salida</span></code></pre></div>
+
+      <div class="cards c4">
+        <div class="card">
+          <h3><code>SKILL.md</code></h3>
+          <p>Actúa como el «cerebro». Úsalo para la navegación y los procedimientos de alto nivel.</p>
+        </div>
+        <div class="card">
+          <h3><code>references/</code></h3>
+          <p>Contexto complementario. Enlázalos directamente desde <code>SKILL.md</code> y mantenlos a un único nivel de profundidad.</p>
+        </div>
+        <div class="card">
+          <h3><code>scripts/</code></h3>
+          <p>Operaciones frágiles o repetitivas donde la variación es un error. No empaquetes aquí código de librería.</p>
+        </div>
+        <div class="card">
+          <h3><code>assets/</code></h3>
+          <p>Plantillas, esquemas y archivos estáticos que la skill usa para producir su salida.</p>
+        </div>
+      </div>
+    </section>
+    <section id="frontmatter" class="section">
+      <div class="section-head"><span class="section-num" style="--num:#1e40af">2</span><h2 class="title">Optimiza el frontmatter para el descubrimiento</h2></div>
+      <p class="sub">El <code>name</code> y la <code>description</code> del frontmatter son los únicos campos que el agente ve antes de disparar una skill. Si no están optimizados para el descubrimiento y no son lo bastante específicos, tu skill es invisible.</p>
+
+      <div class="cards c2">
+        <div class="card">
+          <h3><code>name</code>: estricto y comprobable</h3>
+          <ul>
+            <li>Entre 1 y 64 caracteres.</li>
+            <li>Solo letras minúsculas, números y guiones simples; sin guiones consecutivos.</li>
+            <li>Debe coincidir exactamente con el nombre del directorio padre.</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3><code>description</code>: optimizada para el disparo</h3>
+          <ul>
+            <li>Máximo 1024 caracteres.</li>
+            <li>Describe la capacidad en tercera persona.</li>
+            <li>Incluye disparadores positivos y negativos: cuándo sí y cuándo no.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="note">
+        <p><strong>El nombre manda en la ruta.</strong> <code>name: angular-testing</code> debe residir en <code>angular-testing/SKILL.md</code>. La descripción es el único metadato que el agente ve para el enrutamiento.</p>
+      </div>
+
+      <div class="compare">
+        <div class="example bad">
+          <span class="ex-label">Mal</span>
+          <p>«React skills.»</p>
+          <p class="ex-note">Demasiado vago: no dice qué hace, cuándo se activa ni cuándo no.</p>
+        </div>
+        <div class="example good">
+          <span class="ex-label">Bien</span>
+          <p>«Creates and builds React components using Tailwind CSS. Use when the user wants to update component styles or UI logic. Don't use it for Vue, Svelte, or vanilla CSS projects.»</p>
+          <p class="ex-note">Capacidad, disparadores y límites en la misma descripción.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="divulgacion" class="section">
+      <div class="section-head"><span class="section-num" style="--num:#7c3aed">3</span><h2 class="title">Divulgación progresiva y gestión de recursos</h2></div>
+      <p class="sub">Mantén una ventana de contexto impecable cargando información solo cuando sea necesario. <code>SKILL.md</code> es el «cerebro» de la lógica de alto nivel; delega los detalles en subdirectorios.</p>
+
+      <ul class="rules">
+        <li><strong>Mantén <code>SKILL.md</code> ligero.</strong> Limita el archivo principal a <code>&lt;500 líneas</code>. Úsalo para la navegación y los procedimientos principales.</li>
+        <li><strong>Usa subdirectorios planos.</strong> Mueve el contexto voluminoso a las carpetas estándar y mantén los archivos exactamente a un nivel de profundidad: <code>references/schema.md</code>, no <code>references/db/v1/schema.md</code>.</li>
+        <li><strong>Carga justo a tiempo (JiT).</strong> Indica explícitamente al agente cuándo debe leer un archivo. No verá estos recursos hasta que se lo indiques, por ejemplo: «Consulta <code>references/auth-flow.md</code> para los códigos de error concretos».</li>
+        <li><strong>Rutas explícitas.</strong> Usa siempre rutas relativas a la carpeta de la skill con barras inclinadas (<code>/</code>), independientemente del sistema operativo. Pi resuelve una ruta relativa contra el directorio del <code>SKILL.md</code>, no contra el directorio de trabajo.</li>
+      </ul>
+
+      <div class="note">
+        <p><strong>Las skills son para agentes, no para personas.</strong> El fin es mantener la ventana de contexto ajustada y evitar un consumo innecesario de tokens.</p>
+      </div>
+
+      <h3>No crees</h3>
+      <div class="cards c3">
+        <div class="card">
+          <h3>Archivos de documentación</h3>
+          <p><code>README.md</code>, <code>CHANGELOG.md</code> o <code>INSTALLATION_GUIDE.md</code> dentro del paquete de la skill.</p>
+        </div>
+        <div class="card">
+          <h3>Lógica redundante</h3>
+          <p>Si el agente ya resuelve una tarea de forma fiable sin ayuda, elimina la instrucción.</p>
+        </div>
+        <div class="card">
+          <h3>Código de librería</h3>
+          <p>Referencia herramientas existentes o incluye scripts minúsculos de un solo propósito. El código de larga vida pertenece a los directorios CLI del repositorio.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="instrucciones" class="section">
+      <div class="section-head"><span class="section-num" style="--num:#0284c7">4</span><h2 class="title">Instrucciones procedimentales, no prosa</h2></div>
+      <p class="sub">Crea instrucciones para LLM, no para personas. Un procedimiento explícito reduce la interpretación y los pasos inventados.</p>
+
+      <ul class="rules">
+        <li><strong>Usa numeración paso a paso.</strong> Define el flujo de trabajo como una secuencia cronológica estricta. Si hay un árbol de decisión, mapéalo con claridad: «Paso 2: si necesitas mapas de código fuente, ejecuta <code>ng build --source-map</code>. En caso contrario, salta al paso 3».</li>
+        <li><strong>Aporta plantillas concretas.</strong> Los agentes hacen coincidencia de patrones excepcionalmente bien. En lugar de gastar párrafos describiendo una salida JSON, coloca una plantilla en <code>assets/</code> e indica al agente que copie su estructura.</li>
+        <li><strong>Escribe en imperativo y en tercera persona.</strong> Formula las instrucciones como órdenes directas: «Extrae el texto…», no «Voy a extraer…» ni «Deberías extraer…».</li>
+      </ul>
+
+      <h3>Coherencia y especificidad</h3>
+      <div class="cards c2">
+        <div class="card">
+          <h3>Terminología idéntica</h3>
+          <p>Elige un único término para un concepto concreto y úsalo en todo el paquete. Los sinónimos introducen ambigüedad.</p>
+        </div>
+        <div class="card">
+          <h3>La palabra propia del dominio</h3>
+          <p>Usa la terminología más específica del dominio que describes. En Angular, «template» antes que «html», «markup» o «view».</p>
+        </div>
+      </div>
+    </section>
+    <section id="scripts" class="section">
+      <div class="section-head"><span class="section-num" style="--num:#15803d">5</span><h2 class="title">Scripts deterministas para operaciones repetitivas</h2></div>
+      <p class="sub">No pidas al LLM que escriba lógica de análisis compleja o código repetitivo desde cero cada vez que ejecuta una skill.</p>
+
+      <ul class="rules">
+        <li><strong>Delega las tareas frágiles o repetitivas.</strong> Si el agente necesita analizar un conjunto de datos complejo o consultar una base de datos concreta, dale un script probado de Python, Bash o Node para ejecutar desde <code>scripts/</code>.</li>
+        <li><strong>Gestiona los casos límite con elegancia.</strong> Un agente se apoya en la salida estándar (<code>stdout</code>/<code>stderr</code>) para saber si un script ha funcionado. Escribe scripts que devuelvan errores muy descriptivos y legibles, para que el agente sepa cómo autocorregirse sin intervención del usuario.</li>
+      </ul>
+
+      <div class="note">
+        <p><strong>La variación es el enemigo.</strong> Si un paso exige repetir exactamente la misma lógica, conviértelo en un script de un solo propósito y haz que el <code>SKILL.md</code> lo invoque.</p>
+      </div>
+    </section>
+
+    <section id="composicion" class="section">
+      <div class="section-head"><span class="section-num" style="--num:#c2410c">6</span><h2 class="title">Composición de skills</h2></div>
+      <p class="sub">Puedes componer skills —también conocidas como skills enrutadoras— si quieres incluir una skill de forma condicional o crear una skill compuesta por subskills.</p>
+
+      <div class="code"><pre><code>---
+name: build-project
+description: ...
+---
+
+## Descripción general
+...
+
+## Objetivos de compilación
+
+### Cliente
+
+Para compilar el cliente en un binario desplegable, consulta [ruta a las skills].
+
+### Servidor
+
+Para compilar el servidor en un binario desplegable, consulta [ruta a la skill].
+
+...</code></pre></div>
+
+      <div class="note">
+        <p><strong>El enrutador no copia el contrato.</strong> Decide a qué skill derivar y deja que la skill de destino conserve sus propias reglas. Así no hay dos fuentes de verdad.</p>
+      </div>
+    </section>
+
+    <section id="validacion" class="section">
+      <div class="section-head"><span class="section-num" style="--num:#b45309">7</span><h2 class="title">Guía de validación</h2></div>
+      <p class="sub">Como los LLM van a usar tus skills, la mejor forma de asegurar que son útiles es validarlas en colaboración con un LLM. Un benchmark popular es <a href="https://arxiv.org/abs/2602.12670">SkillsBench</a>, que puede servir de inspiración; para evaluar si tus skills funcionan bien y evitar regresiones, revisa <a href="https://github.com/mgechev/skillgrade">skillgrade</a>.</p>
+
+      <div class="note">
+        <p><strong>Cuatro conversaciones, cuatro controles.</strong> Copia cada prompt en un chat nuevo y trabaja sobre la respuesta. El botón de copiar incluye todo el texto del panel.</p>
+      </div>
+
+      <h3>Validación del descubrimiento</h3>
+      <p class="prose">Los agentes cargan las skills basándose estrictamente en el frontmatter YAML. Prueba cómo interpreta un LLM tu descripción de forma aislada, para evitar falsos disparos: por ejemplo, que se active para una aplicación React cuando está pensada para Angular.</p>
+
+      <div class="prompt">
+        <div class="prompt-head">
+          <span class="prompt-label">Prompt · descubrimiento</span>
+          <button class="prompt-copy" type="button" aria-label="Copiar prompt de descubrimiento">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+            <span>Copiar</span>
+          </button>
+        </div>
+        <div class="prompt-body">
+          <p>Estoy creando una Agent Skill basada en la especificación de agentskills.io. Los agentes decidirán si cargan esta skill basándose enteramente en los metadatos YAML de abajo.</p>
+          <pre class="prompt-code"><code>name: angular-vite-migrator
+description: Migrates Angular CLI projects from Webpack to Vite and esbuild. Use when the user wants to update builder configurations, replace webpack plugins with rollup equivalents, or speed up Angular compilation.</code></pre>
+          <p>Basándote estrictamente en esta descripción:</p>
+          <ol>
+            <li>Genera 3 prompts de usuario realistas que con total seguridad deberían disparar esta skill.</li>
+            <li>Genera 3 prompts de usuario que suenen parecido pero que NO deberían disparar esta skill (por ejemplo, migrar una aplicación React a Vite o simplemente actualizar versiones de Angular).</li>
+            <li>Critica la descripción: ¿es demasiado amplia? Propón una reescritura optimizada.</li>
+          </ol>
+        </div>
+      </div>
+
+      <p>Además, encarga a los agentes tareas que esperas que disparen la lectura de una skill e inspecciona su proceso de razonamiento. Itera con el agente para identificar por qué eligió —o no— determinadas skills.</p>
+
+      <h3>Validación de la lógica</h3>
+      <p>Asegúrate de que tus instrucciones paso a paso son deterministas y no fuerzan al agente a alucinar pasos que faltan. Entrega al LLM tu <code>SKILL.md</code> completo y el árbol de directorios.</p>
+
+      <div class="prompt">
+        <div class="prompt-head">
+          <span class="prompt-label">Prompt · lógica</span>
+          <button class="prompt-copy" type="button" aria-label="Copiar prompt de lógica">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+            <span>Copiar</span>
+          </button>
+        </div>
+        <div class="prompt-body">
+          <p>Aquí tienes el borrador completo de mi SKILL.md y el árbol de directorios de sus archivos de apoyo.</p>
+          <pre class="prompt-code"><code>├── SKILL.md
+├── scripts/esbuild-optimizer.mjs
+└── assets/vite.config.template.ts</code></pre>
+          <p class="placeholder">[Pega aquí el contenido de tu SKILL.md]</p>
+          <p>Actúa como un agente autónomo que acaba de disparar esta skill. Simula tu ejecución paso a paso ante la petición «Migra mi aplicación Angular v17 a Vite».</p>
+          <p>Para cada paso, escribe tu monólogo interno:</p>
+          <ol>
+            <li>¿Qué estás haciendo exactamente?</li>
+            <li>¿Qué archivo o script concreto estás leyendo o ejecutando?</li>
+            <li>Señala cualquier bloqueo de ejecución: indica la línea exacta en la que te ves obligado a adivinar o alucinar porque mis instrucciones son ambiguas (por ejemplo, cómo mapear los archivos de entorno de Angular a <code>import.meta.env</code> de Vite).</li>
+          </ol>
+        </div>
+      </div>
+
+      <h3>Pruebas de casos límite</h3>
+      <p>Fuerza al LLM a buscar vulnerabilidades, configuraciones no soportadas y estados de fallo propios de las herramientas web. Pídele que ataque tu lógica.</p>
+
+      <div class="prompt">
+        <div class="prompt-head">
+          <span class="prompt-label">Prompt · casos límite</span>
+          <button class="prompt-copy" type="button" aria-label="Copiar prompt de casos límite">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+            <span>Copiar</span>
+          </button>
+        </div>
+        <div class="prompt-body">
+          <p>Ahora cambia de rol. Actúa como un probador de QA implacable. Tu objetivo es romper esta skill.</p>
+          <p>Hazme entre 3 y 5 preguntas muy específicas y exigentes sobre casos límite, estados de fallo o respaldos ausentes en el <code>SKILL.md</code>. Céntrate en:</p>
+          <ul>
+            <li>¿Qué ocurre si <code>scripts/esbuild-optimizer.mjs</code> falla por una dependencia CommonJS heredada?</li>
+            <li>¿Qué ocurre si el <code>angular.json</code> del usuario contiene builders de Webpack muy personalizados (<code>@angular-builders/custom-webpack</code>) que Vite no soporta?</li>
+            <li>¿Hay suposiciones implícitas sobre el entorno Node del usuario que yo haya asumido?</li>
+          </ul>
+          <p>No corrijas estos problemas todavía. Hazme solo las preguntas numeradas y espera a que las responda.</p>
+        </div>
+      </div>
+
+      <h3>Refinamiento de la arquitectura</h3>
+      <p>A menudo los LLM intentan meter archivos de configuración grandes directamente en el prompt principal. Usa este paso para imponer la divulgación progresiva y reducir el consumo de tokens. Pide al LLM que aplique tus correcciones y reestructure la skill.</p>
+
+      <div class="prompt">
+        <div class="prompt-head">
+          <span class="prompt-label">Prompt · arquitectura</span>
+          <button class="prompt-copy" type="button" aria-label="Copiar prompt de arquitectura">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+            <span>Copiar</span>
+          </button>
+        </div>
+        <div class="prompt-body">
+          <p>A partir de mis respuestas a tus preguntas sobre casos límite, reescribe el archivo <code>SKILL.md</code> aplicando estrictamente el patrón de diseño de divulgación progresiva:</p>
+          <ol>
+            <li>Mantén el <code>SKILL.md</code> principal estrictamente como un conjunto de pasos de alto nivel, con comandos en imperativo y tercera persona (por ejemplo, «Ejecuta el script de esbuild», «Lee la plantilla de configuración de Vite»).</li>
+            <li>Si hay reglas densas, plantillas grandes de <code>vite.config.ts</code> o esquemas complejos de <code>angular.json</code> que ahora mismo están en el archivo, elimínalos. Indícame que cree un archivo nuevo en <code>references/</code> o <code>assets/</code>, y sustituye el texto de <code>SKILL.md</code> por una orden estricta de leer ese archivo concreto solo cuando sea necesario.</li>
+            <li>Añade al final una sección dedicada a la gestión de errores que incorpore mis respuestas sobre los respaldos de Webpack y la resolución de CommonJS.</li>
+          </ol>
+        </div>
+      </div>
+    </section>
+
+    <section id="cierre" class="section">
+      <div class="note">
+        <p><strong>La especificación manda.</strong> Esta guía la resume y añade pruebas de validación; si hay conflicto, manda <a href="https://agentskills.io/">agentskills.io</a>. Para documentación exhaustiva, consulta la <a href="https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices">documentación de Claude</a>.</p>
+      </div>
+
+      <div class="next">
+        <div>
+          <span class="eyebrow">Siguiente paso</span>
+          <h3>De la guía a la práctica</h3>
+          <p>La skill <code>skill-creator</code> convierte estas reglas en un procedimiento ejecutable: plantilla, checklist y validador de metadatos. El catálogo reúne el resto de skills del repositorio.</p>
+        </div>
+        <div class="next-links">
+          <a class="btn btn-primary" href="../skill-creator/index.html">Abrir skill-creator
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 5l7 7-7 7"></path></svg>
+          </a>
+          <a class="btn btn-ghost" href="../index.html">Volver al catálogo</a>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<footer class="footer">
+  <div class="footer-inner">
+    <a class="brand" href="../index.html">
+      <span class="brand-mark" aria-hidden="true">
+        <svg viewBox="0 0 32 32" role="presentation">
+          <rect width="32" height="32" fill="#b45309"></rect>
+          <path d="M9 6h10a2 2 0 0 1 2 2v18l-7-4-7 4V8a2 2 0 0 1 2-2z" fill="none" stroke="#ffffff" stroke-width="2.1" stroke-linejoin="round"></path>
+        </svg>
+      </span>
+      <span class="brand-name">SKILLS-AGP<small>guía de autoría</small></span>
+    </a>
+    <nav class="footer-nav" aria-label="Enlaces del repositorio">
+      <a href="../index.html">Catálogo</a>
+      <a href="../skill-creator/index.html">skill-creator</a>
+      <a href="../../README.md">README</a>
+      <a href="https://agentskills.io/">agentskills.io</a>
+      <a href="https://github.com/fred66sp/SKILLS-AGP">GitHub</a>
+    </nav>
+    <p class="footer-note">Guía estática: sin tipografías, scripts ni peticiones externas. La fuente Markdown vive en <code>docs/best-practices-create-skills/README.md</code>; si hay una discrepancia, manda la especificación de <a href="https://agentskills.io/">agentskills.io</a>.</p>
+  </div>
+</footer>
+
+<script>
+(function () {
+  "use strict";
+
+  var STORAGE_KEY = "best-practices:prefs";
+  var root = document.documentElement;
+
+  var COPY_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>';
+  var CHECK_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>';
+
+  function updateThemeLabel() {
+    var btn = document.getElementById("theme-toggle");
+    if (!btn) { return; }
+    var dark = root.getAttribute("data-theme") === "dark";
+    btn.setAttribute("aria-label", dark ? "Cambiar a tema claro" : "Cambiar a tema oscuro");
+  }
+
+  function applyTheme(theme) {
+    if (theme !== "dark" && theme !== "light") { theme = "light"; }
+    root.setAttribute("data-theme", theme);
+    updateThemeLabel();
+  }
+
+  var prefs = {};
+  try { prefs = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}"); } catch (e) { prefs = {}; }
+
+  var initialTheme = prefs.theme;
+  if (initialTheme !== "dark" && initialTheme !== "light") {
+    initialTheme = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+  }
+  applyTheme(initialTheme);
+
+  function savePrefs() {
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(prefs)); } catch (e) {}
+  }
+
+  var themeBtn = document.getElementById("theme-toggle");
+  if (themeBtn) {
+    themeBtn.addEventListener("click", function () {
+      prefs.theme = root.getAttribute("data-theme") === "dark" ? "light" : "dark";
+      applyTheme(prefs.theme);
+      savePrefs();
+    });
+  }
+
+  function copyText(text, btn, label) {
+    var idle = COPY_ICON + "<span>" + label + "</span>";
+    var done = function () {
+      btn.classList.add("copied");
+      btn.innerHTML = CHECK_ICON + "<span>Copiado</span>";
+      btn.setAttribute("aria-label", "Copiado");
+      setTimeout(function () {
+        btn.classList.remove("copied");
+        btn.innerHTML = idle;
+        btn.setAttribute("aria-label", "Copiar " + label.toLowerCase());
+      }, 1600);
+    };
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(done, done);
+    } else {
+      var ta = document.createElement("textarea");
+      ta.value = text;
+      ta.style.position = "fixed";
+      ta.style.opacity = "0";
+      document.body.appendChild(ta);
+      ta.select();
+      try { document.execCommand("copy"); } catch (e) {}
+      document.body.removeChild(ta);
+      done();
+    }
+  }
+
+  // Bloques de código: el botón se crea aquí para no duplicarlo en el marcado.
+  document.querySelectorAll(".code").forEach(function (block) {
+    if (block.querySelector(".copy")) { return; }
+    var btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "copy";
+    btn.innerHTML = COPY_ICON + "<span>Copiar</span>";
+    btn.setAttribute("aria-label", "Copiar bloque de código");
+    block.appendChild(btn);
+    btn.addEventListener("click", function () {
+      var pre = block.querySelector("pre");
+      var code = (pre && (pre.querySelector("code") || pre)) || null;
+      if (!code) { return; }
+      copyText(code.textContent, btn, "Copiar");
+    });
+  });
+
+  // Prompts de validación: se copia el texto del cuerpo, sin la etiqueta.
+  document.querySelectorAll(".prompt").forEach(function (block) {
+    var btn = block.querySelector(".prompt-copy");
+    var body = block.querySelector(".prompt-body");
+    if (!btn || !body) { return; }
+    btn.addEventListener("click", function () {
+      copyText(body.innerText, btn, "Copiar");
+    });
+  });
+
+  if ("IntersectionObserver" in window) {
+    var links = {};
+    document.querySelectorAll(".toc a").forEach(function (a) {
+      var href = a.getAttribute("href") || "";
+      if (href.charAt(0) !== "#") { return; }
+      links[href.slice(1)] = a;
+    });
+    var observer = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) {
+          Object.keys(links).forEach(function (id) { links[id].classList.remove("active"); });
+          if (links[entry.target.id]) { links[entry.target.id].classList.add("active"); }
+        }
+      });
+    }, { rootMargin: "-20% 0px -70% 0px", threshold: 0 });
+    document.querySelectorAll("main section").forEach(function (s) { observer.observe(s); });
+  }
+})();
+</script>
+</body>
+</html>
