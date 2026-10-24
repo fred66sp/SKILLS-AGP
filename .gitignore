@@ -105,6 +105,8 @@ secrets/
 .harnessed/
 .impeccable/
 .lore/
+# Local Archify checkout used to regenerate docs diagrams; not part of the repo.
+/archify/
 .pi/
 .opencode/
 .wrangler/

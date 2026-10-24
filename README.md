@@ -93,15 +93,15 @@ La carpeta se registra como origen de skills en `.pi/settings.json` con `"skills
 - `docs/skill-creator/flujo-de-trabajo.html` — diagrama del flujo, del encargo al directorio validado.
 - `docs/skill-creator/arquitectura.html` — diagrama del paquete, las puertas de validación y el directorio producido.
 
-Los diagramas son artefactos de [archify](https://github.com/tt-a1i/archify) 3.2.0. Cada uno tiene su especificación (`*.json`) y su recibo de entrega (`*.delivery.json`) con el `sha256` del HTML y del spec. Para regenerarlos hace falta archify 3.2.0; el comando es el mismo en todas las carpetas de `docs/<skill>/`. El binario se invoca con la ruta de la copia local, instalada fuera del repositorio:
+Los diagramas son artefactos de [archify](https://github.com/tt-a1i/archify) 3.2.0. Cada uno tiene su especificación (`*.json`) y su recibo de entrega (`*.delivery.json`) con el `sha256` del HTML y del spec. Para regenerarlos hace falta archify 3.2.0 y el checkout local en `archify/`, ignorado por Git, con los ajustes de ancho descritos en `archify/LOCAL-PATCH.md`; el comando es el mismo en todas las carpetas de `docs/<skill>/`:
 
 ```bash
-node <ruta-a-archify>/archify/bin/archify.mjs deliver workflow \
+node archify/archify/bin/archify.mjs deliver workflow \
   docs/<skill>/flujo-de-trabajo.json \
   docs/<skill>/flujo-de-trabajo.html --quality showcase
 ```
 
-`deliver` reescribe el recibo junto al HTML. La entrega es reproducible byte a byte: el mismo spec devuelve el mismo `sha256`.
+`deliver` reescribe el recibo junto al HTML. Con ese checkout, la entrega es reproducible byte a byte: el mismo spec devuelve el mismo `sha256`.
 
 La comprobación de esa reproducibilidad tiene dos partes, y la herramienta solo hace una. `archify check <html> --require-provenance` verifica el HTML contra su recibo; no compara el spec que el recibo dice haber leído con el spec que está en el repositorio. La segunda parte es manual: comparar el `sha256` y los `bytes` de `specification` con el hash real del `.json`, y los de `artifact` con el del `.html`. Sin esa segunda parte se cuelan recibos válidos sobre un spec que ya no es el guardado: basta con que el hash se calcule sobre una copia con CRLF mientras el repositorio guarda LF para que el recibo registre otros `bytes` bajo el mismo nombre. Antes de `deliver`, el spec debe estar en LF; se comprueba contando retornos de carro, y el resultado debe ser 0.
 
