@@ -82,6 +82,8 @@ node <ruta-a-archify>/archify/bin/archify.mjs deliver workflow \
 
 `deliver` reescribe el recibo junto al HTML. La entrega es reproducible byte a byte: el mismo spec devuelve el mismo `sha256`.
 
+La comprobación de esa reproducibilidad tiene dos partes, y la herramienta solo hace una. `archify check <html> --require-provenance` verifica el HTML contra su recibo; no compara el spec que el recibo dice haber leído con el spec que está en el repositorio. La segunda parte es manual: comparar el `sha256` y los `bytes` de `specification` con el hash real del `.json`, y los de `artifact` con el del `.html`. Sin esa segunda parte se cuelan recibos válidos sobre un spec que ya no es el guardado: el caso real fueron los dos diagramas de `git-flow-management`, cuyos recibos registraban 8.067 y 6.072 bytes de un spec de 7.743 y 5.812 porque el hash se calculó sobre una copia con CRLF mientras el repositorio guarda LF. Antes de `deliver`, el spec debe estar en LF; se comprueba contando retornos de carro, y el resultado debe ser 0.
+
 ## Regla de empaquetado
 
 Dentro de `src/<skill>/` no se crean ficheros de documentación (`README.md`, `CHANGELOG.md`, guías de instalación): el paquete de una skill solo contiene lo que el agente necesita para ejecutarla. La documentación del repositorio vive en `docs/` y en la raíz. Ver [la guía](docs/best-practices-create-skills/README.md).
