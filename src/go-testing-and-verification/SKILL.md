@@ -7,6 +7,8 @@ description: "Diseña y ejecuta la verificación de código Go, con prioridad en
 
 Una prueba existe para aumentar la confianza en el comportamiento que importa, no para llenar un porcentaje. En una CLI, el comportamiento incluye lo que se escribe en `stdout`, lo que se escribe en `stderr`, el código de salida y el estado que queda tras ejecutar.
 
+Esta skill posee las pruebas y la puerta de verificación. El contrato de la CLI es de `go-cli-ai-first`; el estilo y la estructura, de `go-idiomatic-style`; los errores y el ciclo de vida, de `go-errors-and-lifecycle`.
+
 ## Invariantes de verificación
 
 1. Prueba comportamiento observable, no detalles de implementación. Si renombrar una función privada rompe el test, el test estaba mal situado.
@@ -23,7 +25,7 @@ Una prueba existe para aumentar la confianza en el comportamiento que importa, n
 12. Usa `go test -race ./...` cuando haya concurrencia. Un test que solo pasa sin `-race` no demuestra seguridad.
 13. Nada de `time.Sleep` para sincronizar, red real, servicios externos ni dependencia del reloj. Inyecta reloj, transporte y filesystem cuando el comportamiento lo necesite.
 14. La cobertura es una señal, no un objetivo. No escribas tests triviales para subir un número.
-15. La puerta de verificación es explícita: `gofmt -l .` sin salida, `go build ./...`, `go test ./...`, `go vet ./...`; `-race` si hay concurrencia; `golangci-lint` solo si el proyecto lo tiene configurado.
+15. La puerta de verificación es explícita: `gofmt -l` sobre los paquetes del módulo, sin salida (sin `vendor/`, `testdata/` ni directorios ocultos), `go build ./...`, `go test ./...`, `go vet ./...`; `-race` si hay concurrencia; `golangci-lint` solo si el proyecto lo tiene configurado.
 16. No declares un cambio terminado sin mostrar los comandos ejecutados y su resultado. Un check no disponible se declara como tal; no se omite.
 17. Al corregir un defecto, escribe primero una prueba que falle por la causa y luego la corrección. La prueba queda como regresión.
 

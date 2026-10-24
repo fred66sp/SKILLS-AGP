@@ -45,7 +45,7 @@ Mantén una ventana de contexto impecable cargando información solo cuando sea 
   * `scripts/`: código ejecutable para tareas deterministas.  
   * `assets/`: plantillas de salida, esquemas JSON, imágenes.  
 * **Carga justo a tiempo (JiT):** indica explícitamente al agente cuándo debe leer un archivo. No verá estos recursos hasta que se lo indiques (por ejemplo, *"Consulta `references/auth-flow.md` para los códigos de error concretos"*).  
-* **Rutas explícitas:** usa siempre **rutas relativas** con barras inclinadas (`/`), independientemente del sistema operativo.
+* **Rutas explícitas:** usa siempre **rutas relativas a la carpeta de la skill** con barras inclinadas (`/`), independientemente del sistema operativo. Pi resuelve una ruta relativa contra el directorio del `SKILL.md`, no contra el directorio de trabajo.
 
 Las skills son para agentes, no para personas. El fin es mantener la ventana de contexto ajustada y evitar un consumo innecesario de tokens. **No crees:**
 

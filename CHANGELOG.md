@@ -8,6 +8,7 @@ El formato sigue [Keep a Changelog 1.1.0](https://keepachangelog.com/es-ES/1.1.0
 
 ### Añadido
 
+- Validación local y CI ligera: `scripts/check-repo.py` comprueba metadatos, estructura, enrutadores, enlaces Markdown, recibos de los diagramas y sintaxis de los scripts; `scripts/test-check-repo.py` prueba las detecciones con repositorios temporales; `.github/workflows/validate.yml` ejecuta la validación y las pruebas de los scripts en cada push y pull request.
 - Skill `skill-creator` fijada en `.skills/`, la de terceros que se usa al crear skills nuevas: procedimiento, plantilla, lista de comprobación y validador de metadatos.
 - Skill `git-flow-management`: gestión y verificación de operaciones Git con ceremonia proporcional al tamaño y al riesgo, guardia de ramas, plantillas de plan y de resultado, y el script `scripts/verify-branch.sh` para comprobar ascendencia y contención entre referencias.
 - Skill `document-management-software`: gestión documental de un proyecto de software como conocimiento verificable, con inventario y responsabilidad por artefacto, grados de certeza por afirmación, reglas de redacción, auditoría de solo lectura, plantillas de plan e informe, y el script `scripts/doc-inventory.py` para detectar enlaces relativos rotos, documentos sin título, documentos sin contenido, encabezados duplicados y referencias vivas escritas como documentación.
@@ -16,11 +17,11 @@ El formato sigue [Keep a Changelog 1.1.0](https://keepachangelog.com/es-ES/1.1.0
 - Skill `go-idiomatic-style`: código Go idiomático para CLIs, con formato `gofmt`, nombres y paquetes claros, estructura mínima, errores primero, datos con semántica explícita, interfaces del consumidor y dependencias justificadas.
 - Skill `go-errors-and-lifecycle`: contrato de errores con clasificación, envoltura e inspección, mapeo a códigos de salida, propagación de `context`, cancelación, señales, concurrencia con propietario y cierre ordenado.
 - Skill `go-testing-and-verification`: pruebas por capas para lógica, formato y binario, con golden files deterministas, casos de error, `--dry-run`, `--yes` y cancelación, la puerta `gofmt`, `build`, `test`, `vet`, `race` y `lint` en `scripts/verify-go.py`, y una plantilla de informe.
-- Enrutadores de las skills `go-cli-ai-first`, `go-idiomatic-style`, `go-errors-and-lifecycle` y `go-testing-and-verification` en `.skills/`: metadatos de disparo y lectura del contrato completo en `src/<skill>/SKILL.md`.
+- Enrutadores de las skills `go-cli-ai-first`, `go-idiomatic-style`, `go-errors-and-lifecycle` y `go-testing-and-verification` en `.skills/`: metadatos de disparo y lectura del contrato completo en `../../src/<skill>/SKILL.md`.
 - Pruebas del script `verify-go.py` en `scripts/test-verify-go.py`: módulo formateado, módulo sin formatear, salida JSON y raíz inexistente.
 - Enrutador de la skill `prd-cartographer` en `.skills/prd-cartographer/`: metadatos de disparo y lectura del contrato completo en `src/prd-cartographer/SKILL.md`.
 - Guía de buenas prácticas para crear skills, en `docs/best-practices-create-skills/README.md`.
-- Enrutadores de las skills propias en `.skills/document-management-software/` y `.skills/git-flow-management/`: un `SKILL.md` mínimo con los metadatos de disparo y la instrucción de leer el contrato completo en `src/<skill>/SKILL.md`. No duplican invariantes ni procedimientos; la fuente canónica sigue siendo el paquete. El registro del origen de skills vive en `.pi/settings.json`, que es estado local de cada máquina.
+- Enrutadores de las skills propias en `.skills/document-management-software/` y `.skills/git-flow-management/`: un `SKILL.md` mínimo con los metadatos de disparo y la instrucción de leer el contrato completo en `../../src/<skill>/SKILL.md`. No duplican invariantes ni procedimientos; la fuente canónica sigue siendo el paquete. El registro del origen de skills vive en `.pi/settings.json`, que es estado local de cada máquina.
 - Documentación de la skill en `docs/git-flow-management/`: página principal, diagrama de flujo de trabajo y diagrama de arquitectura, cada uno con su especificación y su recibo de entrega.
 - Documentación de la skill `skill-creator` en `docs/skill-creator/`: página principal, diagrama de flujo de trabajo y diagrama de arquitectura, cada uno con su especificación y su recibo de entrega.
 - Documentación de la skill `document-management-software` en `docs/document-management-software/`: página principal, diagrama de flujo de trabajo y diagrama de arquitectura, cada uno con su especificación y su recibo de entrega.
@@ -31,6 +32,13 @@ El formato sigue [Keep a Changelog 1.1.0](https://keepachangelog.com/es-ES/1.1.0
 - Política de flujo del repositorio en `CONTRIBUTING.md`.
 - `README.md` con la descripción del repositorio y su estructura.
 - Registro de procedencia del repositorio en `README.md`: la sección «De dónde viene» nombra las fuentes externas en las que se inspira y se basa, y la de `skill-creator` declara origen, ruta y commit fijado para que la fijación de terceros se pueda comprobar.
+
+### Corregido
+
+- Enrutadores de `.skills/`: las referencias al contrato usan `../../src/<skill>/SKILL.md`, relativas a la carpeta del enrutador. Pi resuelve las rutas relativas contra el directorio del `SKILL.md`, no contra el directorio de trabajo; con la ruta anterior el contrato no se localizaba al ejecutar Pi fuera de la raíz.
+- Skills de Go: `go-cli-ai-first` deja de imponer `cmd/` e `internal/` a cualquier CLI y deja la estructura mínima a `go-idiomatic-style`; `--version` queda en la raíz y `--help` en la raíz y en cada comando. Cada skill declara la materia que posee y las demás la referencian.
+- `verify-go.py`: los fallos de lanzamiento y permisos se devuelven como diagnóstico accionable en vez de traza; los timeouts conservan la salida capturada; la salida de los comandos se decodifica como UTF-8 con reemplazo. Texto, JSON y código de salida coinciden en los fallos.
+- Recibos de `docs/`: `scripts/check-repo.py` verifica el `sha256` y los `bytes` del spec y del HTML y exige el spec en LF, sin depender de Archify ni de rutas absolutas guardadas en el recibo.
 
 ### Modificado
 

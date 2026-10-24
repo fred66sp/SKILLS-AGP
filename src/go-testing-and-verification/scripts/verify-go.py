@@ -9,6 +9,10 @@ Ejecuta gofmt -l, go build, go test, go vet y, opcionalmente, go test -race y
 golangci-lint. Devuelve código 0 si todo lo ejecutado pasa, 1 si alguna
 comprobación falla y 2 si la raíz o una herramienta obligatoria no existe.
 
+gofmt se aplica a los ficheros .go de los paquetes del módulo: se omiten
+vendor/, testdata/, node_modules/ y los directorios que empiezan por . o _,
+que Go tampoco considera parte del módulo.
+
 La salida de texto muestra una línea por comprobación. --json devuelve un
 documento con el detalle y el código de salida de cada comando.
 """
@@ -30,9 +34,12 @@ def executable(name, go_exe):
         return found
 
     suffix = ".exe" if os.name == "nt" else ""
-    sibling = Path(go_exe).parent / (name + suffix)
-    if sibling.exists():
-        return str(sibling)
+    try:
+        sibling = Path(go_exe).parent / (name + suffix)
+        if sibling.exists():
+            return str(sibling)
+    except OSError:
+        pass
 
     return None
 
@@ -44,23 +51,52 @@ def run(command, cwd, timeout):
             cwd=str(cwd),
             capture_output=True,
             text=True,
+            encoding="utf-8",
+            errors="replace",
             timeout=timeout,
         )
     except subprocess.TimeoutExpired as exc:
-        output = (exc.stdout or "") + (exc.stderr or "")
+        stdout = exc.stdout or ""
+        stderr = exc.stderr or ""
+        if isinstance(stdout, bytes):
+            stdout = stdout.decode("utf-8", "replace")
+        if isinstance(stderr, bytes):
+            stderr = stderr.decode("utf-8", "replace")
+        output = stdout + stderr
         return None, f"timed out after {timeout}s\n{output}".strip()
+    except OSError as exc:
+        return None, f"could not run {command[0]}: {exc}"
 
     output = (completed.stdout or "") + (completed.stderr or "")
     return completed.returncode, output.strip()
 
 
-def check_gofmt(command, cwd, timeout):
-    code, output = run(command, cwd, timeout)
-    if code != 0:
-        return "failed", code, output or "gofmt failed"
-    if output:
-        return "failed", code, "unformatted files:\n" + output
-    return "passed", code, ""
+def check_gofmt(gofmt_exe, root, timeout):
+    files = []
+    for dirpath, dirnames, filenames in os.walk(root):
+        dirnames[:] = sorted(
+            name for name in dirnames
+            if name not in {".git", "vendor", "testdata", "node_modules"}
+            and not name.startswith((".", "_"))
+        )
+        files.extend(
+            os.path.join(dirpath, name) for name in sorted(filenames) if name.endswith(".go")
+        )
+
+    if not files:
+        return "passed", 0, ""
+
+    unformatted = []
+    for index in range(0, len(files), 200):
+        code, output = run([gofmt_exe, "-l", *files[index:index + 200]], root, timeout)
+        if code != 0:
+            return "failed", code, output or "gofmt failed"
+        if output:
+            unformatted.append(output)
+
+    if unformatted:
+        return "failed", 0, "unformatted files:\n" + "\n".join(unformatted)
+    return "passed", 0, ""
 
 
 def check_command(command, cwd, timeout):
@@ -83,8 +119,13 @@ def main():
         print("error: --timeout must be greater than zero", file=sys.stderr)
         return 2
 
-    root = Path(args.root).resolve()
-    if not root.is_dir():
+    try:
+        root = Path(args.root).resolve()
+        is_directory = root.is_dir()
+    except OSError as exc:
+        print(f"error: cannot read root {args.root}: {exc}", file=sys.stderr)
+        return 2
+    if not is_directory:
         print(f"error: root is not a directory: {root}", file=sys.stderr)
         return 2
 
@@ -99,8 +140,8 @@ def main():
         return 2
 
     checks = []
-    gofmt_result = check_gofmt([gofmt_exe, "-l", "."], root, args.timeout)
-    checks.append(("gofmt", " ".join([gofmt_exe, "-l", "."]), *gofmt_result))
+    gofmt_result = check_gofmt(gofmt_exe, root, args.timeout)
+    checks.append(("gofmt", "gofmt -l .", *gofmt_result))
 
     commands = [
         ("build", [go_exe, "build", "./..."]),

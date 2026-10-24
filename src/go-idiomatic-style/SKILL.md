@@ -7,6 +7,8 @@ description: "Escribe y revisa Go idiomático para CLIs y servicios pequeños: f
 
 Escribe Go que otro lector pueda mantener sin reconstruir la intención. La sencillez no es una preferencia estética: es lo que permite cambiar el código sin miedo y probarlo sin ceremonia.
 
+Esta skill posee el estilo, la estructura y las dependencias. El contrato de la CLI es de `go-cli-ai-first`; los errores, `context` y el ciclo de vida, de `go-errors-and-lifecycle`; las pruebas y la puerta, de `go-testing-and-verification`.
+
 ## Invariantes de estilo
 
 1. Ordena las decisiones por claridad, simplicidad, concisión, mantenibilidad y consistencia. La consistencia con el proyecto gana cuando las demás están empatadas.
@@ -36,7 +38,7 @@ Escribe Go que otro lector pueda mantener sin reconstruir la intención. La senc
 
 **Paso 2 — Fijar el mapa de paquetes.**
 1. Escribe una frase por paquete con su responsabilidad. Si una frase necesita dos responsabilidades, el paquete está mal dividido.
-2. Mantén el dominio separado del parseo de flags y de la presentación. Una CLI pequeña puede vivir en `cmd/` + `internal/app`; no añadas más capas.
+2. Mantén el dominio separado del parseo de flags y de la presentación. Una CLI pequeña puede vivir en un solo paquete; cuando el binario y la lógica dejen de caber con claridad, separa `cmd/<binario>` e `internal/<dominio>`. No añadas más capas.
 3. Comprueba que no hay ciclos ni paquetes comodín. Si aparece un `util`, asígnalo a un paquete con nombre de dominio.
 
 **Paso 3 — Nombrar.**
@@ -62,7 +64,7 @@ Escribe Go que otro lector pueda mantener sin reconstruir la intención. La senc
 4. Si añades una dependencia, escribe en el diff por qué la biblioteca estándar no basta.
 
 **Paso 6 — Formatear y compilar.**
-1. Ejecuta `gofmt -w .` y `go vet ./...`.
+1. Ejecuta `go fmt ./...` y `go vet ./...`.
 2. Ejecuta `go build ./...`; un cambio de estilo que rompe la compilación no es un cambio de estilo.
 3. Si el proyecto tiene `golangci-lint` configurado, ejecútalo. No lo añadas solo para cumplir esta skill.
 

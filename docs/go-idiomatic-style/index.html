@@ -458,7 +458,7 @@
         <div class="flow-step"><code>paso 3</code><strong>Nombrar</strong><p>Paquetes de una palabra, exportados en PascalCase, receptores cortos, constantes en MixedCaps y nombres por ámbito.</p></div>
         <div class="flow-step"><code>paso 4</code><strong>Diseñar</strong><p>Funciones con una responsabilidad, interfaces pequeñas en el consumidor, retornos concretos y datos con semántica explícita.</p></div>
         <div class="flow-step"><code>paso 5</code><strong>Implementar</strong><p>Camino normal y guard clauses primero; sin <code>init()</code> con efectos; dependencia nueva con su motivo en el diff.</p></div>
-        <div class="flow-step"><code>paso 6</code><strong>Formatear y compilar</strong><p><code>gofmt -w .</code>, <code>go vet ./...</code> y <code>go build ./...</code>. Un cambio de estilo que rompe la compilación no es un cambio de estilo.</p></div>
+        <div class="flow-step"><code>paso 6</code><strong>Formatear y compilar</strong><p><code>go fmt ./...</code>, <code>go vet ./...</code> y <code>go build ./...</code>. Un cambio de estilo que rompe la compilación no es un cambio de estilo.</p></div>
         <div class="flow-step"><code>paso 7</code><strong>Revisar el diff</strong><p>Sin abstracciones ni dependencias no pedidas, sin reformatear código ajeno, sin mezclar refactorización y comportamiento.</p></div>
       </div>
 
@@ -525,11 +525,11 @@
       <p class="sub">Lo que se pregunta antes de usar la skill por primera vez.</p>
 
       <div class="qa"><h3>¿Es una guía de estilo propia?</h3><p>No. Toma las decisiones del lenguaje y de la comunidad, y las ordena para que una CLI pequeña se mantenga legible. Donde el proyecto ya tiene una regla escrita, manda la del proyecto.</p></div>
-      <div class="qa"><h3>¿Cuántas capas debe tener una CLI?</h3><p>Las que necesite. Una CLI pequeña puede vivir en <code>cmd/</code> y un paquete de aplicación. <code>internal/</code> y <code>pkg/</code> se añaden cuando existe una necesidad concreta, no por anticipación.</p></div>
+      <div class="qa"><h3>¿Cuántas capas debe tener una CLI?</h3><p>Las que necesite. Una CLI pequeña puede vivir en un solo paquete; <code>cmd/</code> e <code>internal/</code> se añaden cuando existe una necesidad concreta, no por anticipación.</p></div>
       <div class="qa"><h3>¿Puntero o valor?</h3><p>Se elige por semántica: mutación, ausencia con <code>nil</code>, tamaño o identidad. No por una intuición sobre la pila o el montón.</p></div>
       <div class="qa"><h3>¿Se pueden usar genéricos?</h3><p>Cuando eliminan duplicación real y el tipo se entiende. No como envoltorio preventivo ni para imitar una biblioteca. La misma regla que una interfaz: sin dos usos reales, no existe.</p></div>
       <div class="qa"><h3>¿Qué hago con un <code>else</code> después de un <code>return</code>?</h3><p>Se elimina. El flujo normal va sin anidar: errores y casos especiales primero, retorno temprano, caso feliz sin indentación.</p></div>
-      <div class="qa"><h3>¿La skill ejecuta linters?</h3><p>Ejecuta <code>gofmt</code>, <code>go vet</code> y <code>go build</code>. <code>golangci-lint</code> solo si el proyecto ya lo tiene configurado; no se añade para cumplir esta skill.</p></div>
+      <div class="qa"><h3>¿La skill ejecuta linters?</h3><p>Ejecuta <code>go fmt</code>, <code>go vet</code> y <code>go build</code>. <code>golangci-lint</code> solo si el proyecto ya lo tiene configurado; no se añade para cumplir esta skill.</p></div>
     </section>
 
     <section id="diagramas" class="section">

@@ -21,7 +21,7 @@ La forma canónica es:
 - Un flag tiene un solo significado en toda la CLI. No reutilices `--force` para cosas distintas.
 - Los booleanos no llevan valor: `--json`, no `--json=true`.
 - Los valores sensibles no se pasan por flag. Usa entorno, archivo con permisos restringidos o `stdin`.
-- `--help` y `--version` existen en la raíz y en cada comando; `-h` es alias de `--help` cuando no colisiona.
+- `--help` existe en la raíz y en cada comando; `--version`, en la raíz. `-h` es alias de `--help` cuando no colisiona.
 - La precedencia es: flag > variable de entorno > archivo de configuración > valor por defecto. Si dos fuentes discrepan y la elección importa, dilo en `stderr` o falla; no elijas en silencio.
 - Toda variable de entorno usa un prefijo estable del binario y aparece en la ayuda.
 
