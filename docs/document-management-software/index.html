@@ -3,10 +3,10 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="document-management-software — guía completa de la skill: inventario y responsabilidad de cada artefacto documental, grados de certeza por afirmación, reglas de redacción, auditoría de solo lectura, verificación de cierre y el script doc-inventory.py.">
+<meta name="description" content="Entrada a la skill document-management-software: qué hace, cuándo se activa, los siete pasos, las preguntas de la primera conversación y dónde vive cada regla. Las reglas están en SKILL.md y en las referencias, no copiadas en esta página.">
 <meta name="color-scheme" content="light dark">
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%231e40af'/%3E%3Cpath d='M11 7h7l4 4v14H11z' fill='none' stroke='%23ffffff' stroke-width='2.2' stroke-linejoin='round'/%3E%3Cpath d='M18 7v4h4' fill='none' stroke='%23ffffff' stroke-width='2.2' stroke-linejoin='round'/%3E%3Cpath d='M14 17h6M14 21h4' fill='none' stroke='%23ffffff' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E">
-<title>document-management-software — Documentación con fuente de verdad</title>
+<title>document-management-software — Documentación de software con fuente de verdad</title>
 <script>
 (function () {
   try {
@@ -243,6 +243,18 @@
     font-variant-numeric: tabular-nums;
   }
   h2.title { margin: 0; font-size: clamp(22px, 3vw, 28px); letter-spacing: -.02em; }
+  .chip-repo {
+    margin-left: auto;
+    flex: none;
+    font-size: 11.5px;
+    font-weight: 700;
+    letter-spacing: .03em;
+    color: var(--muted);
+    border: 1px dashed color-mix(in srgb, var(--muted) 45%, transparent);
+    border-radius: 999px;
+    padding: 3px 10px;
+    white-space: nowrap;
+  }
   .section > p.sub { margin: 6px 0 24px; color: var(--muted); max-width: 74ch; }
   h3 { margin: 30px 0 10px; font-size: 17px; letter-spacing: -.01em; }
 
@@ -508,16 +520,13 @@
 <section class="hero" id="top">
   <div class="hero-inner">
     <span class="pill"><span class="dot" aria-hidden="true"></span>una skill · siete pasos · cada afirmación con su fuente</span>
-    <h1>Documentación con <span class="grad">fuente de verdad</span></h1>
-    <p class="lead">Esta skill no produce documentos: decide cuáles merecen existir, elige la intervención más pequeña que resuelve el problema, escribe solo lo que una fuente sostiene y comprueba que lo afirmado sigue siendo cierto. Inventario determinista antes de escribir, certeza por afirmación y auditoría de solo lectura al cerrar.</p>
+    <h1>Documentación de software con <span class="grad">fuente de verdad</span></h1>
+    <p class="lead">La skill <code>document-management-software</code> gestiona la documentación de un proyecto de software. No escribe nada antes de leer cómo está el proyecto: cada afirmación sale del código, de los tests, de la configuración o de una decisión explícita, y lo que no tiene fuente se queda como pregunta abierta. Si un dato ya está documentado, lo enlaza; si está mal, lo corrige; crea un documento solo cuando ese conocimiento no tiene dónde vivir.</p>
     <div class="hero-actions">
-      <a class="btn btn-primary" href="#que-es">Qué es esta skill</a>
-      <a class="btn btn-ghost" href="#certeza">La certeza de una afirmación</a>
+      <a class="btn btn-primary" href="#que-hace">Qué hace</a>
+      <a class="btn btn-ghost" href="#uso">Cómo se usa</a>
+      <a class="btn btn-ghost" href="#reglas">Dónde están las reglas</a>
       <a class="btn btn-ghost" href="#diagramas">Los diagramas</a>
-    </div>
-    <div class="status-strip" role="status">
-      <span class="status-mark" aria-hidden="true">OK</span>
-      <div><strong>Todo lo que hay aquí sale del paquete instalado</strong><span>Las reglas, tablas, límites, plantillas y salidas de comandos de esta página están copiados de <code>SKILL.md</code>, de las cuatro referencias y de <code>scripts/doc-inventory.py</code>. Si algo no está en el paquete, no se presenta como regla.</span></div>
     </div>
   </div>
 </section>
@@ -525,368 +534,89 @@
 <div class="layout">
   <nav class="toc" aria-label="Índice de la página">
     <h2>En esta página</h2>
-    <a href="#que-es">1. Qué es esta skill</a>
-    <a href="#problema">2. El problema que resuelve</a>
-    <a href="#invariantes">3. Las diez invariantes</a>
-    <a href="#procedimiento">4. El procedimiento en siete pasos</a>
-    <a href="#inventario">5. Inventario: qué merece existir</a>
-    <a href="#certeza">6. La certeza de una afirmación</a>
-    <a href="#redaccion">7. Reglas de redacción</a>
-    <a href="#auditoria">8. Auditoría de solo lectura</a>
-    <a href="#verificacion">9. Verificación de cierre</a>
-    <a href="#ficheros">10. Los ficheros del paquete</a>
-    <a href="#en-este-repositorio">11. Cómo se usa aquí</a>
-    <a href="#limites">12. Errores y límites</a>
-    <a href="#preguntas">13. Preguntas cortas</a>
-    <a href="#diagramas">14. Los diagramas</a>
+    <a href="#que-hace">1. Qué hace</a>
+    <a href="#cuando">2. Cuándo se activa</a>
+    <a href="#uso">3. Cómo se usa</a>
+    <a href="#paquete">4. Qué contiene el paquete</a>
+    <a href="#reglas">5. Dónde están las reglas</a>
+    <a href="#preguntas">6. Preguntas cortas</a>
+    <a href="#diagramas">7. Los diagramas</a>
   </nav>
 
   <main>
-    <section id="que-es" class="section">
-      <div class="section-head"><span class="section-num">1</span><h2 class="title">Qué es esta skill</h2></div>
-      <p class="sub">Un procedimiento documental, no un generador de texto. Su resultado es una decisión —qué se escribe, dónde vive y qué se elimina— sostenida por evidencia y verificada al cerrar.</p>
-
-      <p>La documentación de un proyecto de software se degrada de tres maneras previsibles: afirma cosas que nadie comprobó, repite el mismo dato en dos sitios que después divergen, y sigue describiendo un estado que el código ya abandonó. La skill ataca las tres en el mismo orden en que aparecen: primero inventaría lo que existe, después fija el grado de certeza de cada afirmación y solo entonces escribe la intervención mínima.</p>
-
-      <div class="grid cols-2">
-        <div class="card">
-          <div class="card-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg></div>
-          <h3>Lo que decide</h3>
-          <p>Si un artefacto nuevo hace falta, qué responsabilidad tendría y si el conocimiento cabe en uno que ya existe. La creación es la última opción de la escala, no la primera.</p>
-          <p>Cuando el proyecto ya documenta su convención —carpeta <code>docs/</code>, ADR, formato de CHANGELOG— la respeta aunque no sea la que usaría.</p>
-        </div>
-        <div class="card">
-          <div class="card-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 11l3 3L22 4"></path><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path></svg></div>
-          <h3>Lo que exige</h3>
-          <p>Cada afirmación material con su fuente y su grado: confirmada, inferencia, propuesta, desconocida, contradictoria u obsoleta.</p>
-          <p>Al cerrar, el inventario se repite y cada afirmación modificada se contrasta antes de dar nada por terminado.</p>
-        </div>
-      </div>
+    <section id="que-hace" class="section">
+      <div class="section-head"><span class="section-num">1</span><h2 class="title">Qué hace</h2></div>
+      <p class="sub">Ataca los tres modos en que la documentación de un proyecto deja de ser verdad: afirma cosas que nadie comprobó, repite un dato en dos sitios que después divergen, y describe un estado que el código ya abandonó.</p>
 
       <div class="table-wrap wrap-cells">
         <table>
-          <thead><tr><th>Cuándo aplica</th><th>Cuándo no</th></tr></thead>
+          <thead><tr><th>Situación</th><th>Qué hace la skill</th></tr></thead>
           <tbody>
-            <tr><td>Crear, revisar, actualizar o auditar README, PRD, SDD, arquitectura, ADR, API, instalación, operación o runbooks.</td><td>Contenido comercial, artículos o material de marketing.</td></tr>
+            <tr><td>Hay que documentar algo que ya funciona.</td><td>Lee código, tests y configuración antes de escribir, y copia de ahí los nombres, las rutas, los valores y los comandos.</td></tr>
+            <tr><td>El mismo dato está en dos documentos.</td><td>Uno queda como fuente canónica y el otro lo enlaza. Dos representaciones que pueden divergir no se mantienen a mano.</td></tr>
+            <tr><td>El README describe algo que el código ya no hace.</td><td>Corrige la afirmación o la marca como histórica con su motivo. No la completa con generalidades.</td></tr>
+            <tr><td>Falta un documento.</td><td>Mira primero si el contenido cabe en uno existente sin degradar su responsabilidad. Crear es la última opción, no la primera.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="note">
+        <p><strong>Lo que no hace.</strong> No escribe contenido comercial ni material de marketing, no reescribe tests ni contratos que ya se pueden ejecutar, y no cierra una intervención sin mostrar la comprobación que la respalda.</p>
+      </div>
+    </section>
+
+    <section id="cuando" class="section">
+      <div class="section-head"><span class="section-num">2</span><h2 class="title">Cuándo se activa</h2></div>
+      <p class="sub">La columna izquierda dispara la skill; la derecha está escrita en su descripción para que no se active donde no aporta.</p>
+
+      <div class="table-wrap wrap-cells">
+        <table>
+          <thead><tr><th>Se activa para</th><th>No se activa para</th></tr></thead>
+          <tbody>
+            <tr><td>Crear, actualizar o revisar <code>README.md</code>, guía de contribución, PRD, SDD, arquitectura, ADR, API, instalación, operación, runbooks, notas de release, documentación de features —guías y documentos de trabajo en curso, como los de <code>odd/tasks/</code>— u otra documentación técnica del proyecto.</td><td>Contenido comercial, artículos o material de marketing.</td></tr>
             <tr><td>Detectar documentación obsoleta, contradictoria o duplicada.</td><td>Documentación de producto no técnica.</td></tr>
-            <tr><td>Decidir si un artefacto documental merece existir.</td><td>La descripción de una skill de agente, que tiene su propia skill.</td></tr>
+            <tr><td>Decidir si un artefacto documental merece existir.</td><td>Describir una skill de agente: eso tiene su propia skill.</td></tr>
             <tr><td>Consolidar conocimiento repartido sin fuente canónica.</td><td>Sustituir tests, contratos ejecutables, comentarios de código o mensajes de commit.</td></tr>
           </tbody>
         </table>
       </div>
-      <p>Los disparadores negativos están dentro de la <code>description</code> y son lo que evita que la skill se active para escribir un artículo o para reescribir un test.</p>
     </section>
 
-    <section id="problema" class="section">
-      <div class="section-head"><span class="section-num">2</span><h2 class="title">El problema que resuelve</h2></div>
-      <p class="sub">Cuatro defectos con la misma causa: escribir antes de saber. La skill los hace difíciles por construcción, no por buena voluntad.</p>
-
-      <div class="grid cols-2">
-        <div class="card">
-          <h3>Relleno de plantilla</h3>
-          <p>Una sección vacía se completa con generalidades porque el documento «debe» tenerla. El resultado parece completo y no aporta nada verificable.</p>
-          <p><strong>Lo impide:</strong> una sección sin información verificable se elimina, no se rellena.</p>
-        </div>
-        <div class="card">
-          <h3>Dos fuentes de verdad</h3>
-          <p>El mismo dato vive en dos documentos sin referencia entre ellos. Nadie sabe cuál es el vigente y ambos acaban siendo falsos.</p>
-          <p><strong>Lo impide:</strong> antes de añadir información se comprueba si ya está documentada y dónde corresponde que viva.</p>
-        </div>
-      </div>
-
-      <div class="grid cols-2">
-        <div class="card">
-          <h3>Documentación caducada</h3>
-          <p>Un README antiguo describe una función que el código ya no implementa. Quien lo lee construye sobre una realidad que no existe.</p>
-          <p><strong>Lo impide:</strong> el estado implementado se contrasta con código, tests y configuración antes de escribirlo en presente.</p>
-        </div>
-        <div class="card">
-          <h3>Inferencia disfrazada de hecho</h3>
-          <p>Una conclusión razonable se redacta como afirmación directa. Nadie la vuelve a comprobar porque parece sustentada.</p>
-          <p><strong>Lo impide:</strong> la clasificación de certeza ocurre antes de redactar, y lo no sustentado baja de grado en lugar de completarse.</p>
-        </div>
-      </div>
-
-      <div class="note">
-        <p><strong>El coste no es el texto: es la confianza.</strong> Una afirmación falsa en un runbook se ejecuta en producción. Una contradicción no resuelta obliga a reabrir una decisión que ya estaba tomada. Por eso la skill prefiere menos documentación correcta a más documentación plausible.</p>
-      </div>
-    </section>
-
-    <section id="invariantes" class="section">
-      <div class="section-head"><span class="section-num">3</span><h2 class="title">Las diez invariantes</h2></div>
-      <p class="sub">No son recomendaciones de estilo. Cada una existe porque su ausencia produce un defecto concreto.</p>
-
-      <ul class="plain">
-        <li><strong>No se empieza a escribir.</strong> Ninguna redacción es válida sin delimitar el encargo y localizar las fuentes disponibles.</li>
-        <li><strong>No se convierte una suposición plausible en un hecho documental.</strong> Toda afirmación material debe poder rastrearse hasta una fuente concreta.</li>
-        <li><strong>Una afirmación material tiene una sola fuente canónica.</strong> Antes de escribir se comprueba si ya está documentada y dónde corresponde que viva.</li>
-        <li><strong>La documentación es proporcional</strong> al riesgo, a la audiencia y al coste de reconstruir el conocimiento. Un documento que nadie consulta y nada evita es un defecto.</li>
-        <li><strong>Actualizar prevalece sobre duplicar;</strong> corregir prevalece sobre ampliar; no crear prevalece sobre corregir cuando lo existente ya es correcto.</li>
-        <li><strong>Estado implementado e intención futura son afirmaciones distintas</strong> y no se mezclan en el mismo párrafo sin señalarlo.</li>
-        <li><strong>La política documental del repositorio prevalece</strong> sobre cualquier estructura genérica.</li>
-        <li><strong>No se destruye conocimiento válido para simplificar.</strong> Antes de eliminar, se determina qué información quedaría sin representación.</li>
-        <li><strong>No se declara terminada una intervención documental</strong> sin ejecutar la verificación del paso 6 y mostrar su resultado.</li>
-        <li><strong>Ante una contradicción no se resuelve con redacción ambigua:</strong> se hace visible y se pide decisión si el alcance no permite resolverla.</li>
-      </ul>
-
-      <div class="note">
-        <p><strong>Las tres que más se incumplen.</strong> La primera (escribir antes de leer), la segunda (inferencia como hecho) y la novena (cerrar sin verificar). Comparten causa: tratar la documentación como una tarea de redacción y no como una afirmación que alguien va a usar para decidir o ejecutar.</p>
-      </div>
-    </section>
-
-    <section id="procedimiento" class="section">
-      <div class="section-head"><span class="section-num">4</span><h2 class="title">El procedimiento en siete pasos</h2></div>
-      <p class="sub">Secuencia obligatoria. La profundidad se adapta al encargo; el orden no.</p>
+    <section id="uso" class="section">
+      <div class="section-head"><span class="section-num">3</span><h2 class="title">Cómo se usa</h2></div>
+      <p class="sub">Un encargo, siete pasos. El orden no cambia; lo que cambia con el tamaño del encargo es la profundidad de cada paso.</p>
 
       <div class="flow">
-        <div class="flow-step"><code>paso 1</code><strong>Delimitar</strong><p>Qué operación se pide —crear, actualizar, auditar o responder—, para quién, con qué fuente y si se describe el estado actual o una intención.</p></div>
-        <div class="flow-step"><code>paso 2</code><strong>Inventariar</strong><p>Ejecutar <code>doc-inventory.py</code>, asignar responsabilidad a cada artefacto y resumir qué está cubierto, qué falta y qué está cubierto dos veces.</p></div>
-        <div class="flow-step"><code>paso 3</code><strong>Fijar la certeza</strong><p>Clasificar cada afirmación antes de redactarla y explorar de forma dirigida las fuentes necesarias.</p></div>
-        <div class="flow-step"><code>paso 4</code><strong>Elegir la intervención mínima</strong><p>Una sola acción de una escala de siete, justificada por escrito si afecta a más de un documento.</p></div>
-        <div class="flow-step"><code>paso 5</code><strong>Redactar</strong><p>Terminología del proyecto, rutas y comandos exactos, marcas explícitas para propuesta e inferencia, y ninguna sección vacía.</p></div>
-        <div class="flow-step"><code>paso 6</code><strong>Verificar</strong><p>Repetir el inventario, recorrer la lista de comprobación y contrastar cada afirmación modificada contra su fuente.</p></div>
-        <div class="flow-step"><code>paso 7</code><strong>Cerrar con evidencia</strong><p>Cinco campos rellenados con evidencia; lo que no se puede sustentar se enumera como pendiente con la pregunta que lo desbloquea.</p></div>
+        <div class="flow-step"><code>paso 1</code><strong>Delimitar</strong><p>Qué se pide —crear, actualizar, auditar o responder—, para quién se escribe y qué fuente responde de cada afirmación.</p></div>
+        <div class="flow-step"><code>paso 2</code><strong>Inventariar</strong><p>Ejecutar el script, asignar a cada documento su responsabilidad y ver qué está cubierto, qué falta y qué está cubierto dos veces.</p></div>
+        <div class="flow-step"><code>paso 3</code><strong>Fijar la certeza</strong><p>Clasificar cada afirmación antes de redactarla: confirmada, inferencia, propuesta, desconocida, contradictoria u obsoleta.</p></div>
+        <div class="flow-step"><code>paso 4</code><strong>Elegir la intervención mínima</strong><p>Una sola acción: nada, corregir, reordenar, deduplicar, ampliar, enlazar o crear.</p></div>
+        <div class="flow-step"><code>paso 5</code><strong>Redactar</strong><p>Con la terminología del proyecto, los valores copiados de la fuente y lo propuesto separado de lo implementado.</p></div>
+        <div class="flow-step"><code>paso 6</code><strong>Verificar</strong><p>Repetir el inventario y contrastar cada afirmación modificada contra su fuente.</p></div>
+        <div class="flow-step"><code>paso 7</code><strong>Cerrar con evidencia</strong><p>Cinco líneas: intervención, artefactos, verificación, afirmaciones sin sustento y pendientes.</p></div>
       </div>
 
-      <div class="table-wrap wrap-cells">
-        <table>
-          <thead><tr><th>Paso</th><th>Qué lo detiene</th><th>Qué se hace entonces</th></tr></thead>
-          <tbody>
-            <tr><td>1 · Delimitar</td><td>Falta una fuente imprescindible o el encargo mezcla intención y estado.</td><td>Una sola pregunta concreta y detenerse. No interrogar para rellenar una plantilla.</td></tr>
-            <tr><td>2 · Inventariar</td><td>El script sale con 3: hay hallazgos reales.</td><td>Tratarlos como entrada del paso 4 y decidir cuáles se corrigen y cuáles se reportan.</td></tr>
-            <tr><td>3 · Certeza</td><td>Dos fuentes reclaman la misma responsabilidad.</td><td>No redactar un término medio: exponer ambas y pedir decisión.</td></tr>
-            <tr><td>4 · Intervención</td><td>La intervención detectada es un refactor documental masivo.</td><td>Informar del coste y del riesgo de revisión antes de ejecutarlo.</td></tr>
-            <tr><td>5 · Redactar</td><td>Una sección no aporta información verificable.</td><td>Eliminarla en lugar de rellenarla con generalidades.</td></tr>
-            <tr><td>6 · Verificar</td><td>Un enlace nuevo roto o un encabezado duplicado nuevo.</td><td>Es una regresión de este cambio: se corrige, no se documenta como excepción.</td></tr>
-            <tr><td>7 · Cerrar</td><td>Un campo del cierre no se puede rellenar con evidencia.</td><td>Ese campo es el hallazgo, no una omisión de forma.</td></tr>
-          </tbody>
-        </table>
-      </div>
-    </section>
-
-    <section id="inventario" class="section">
-      <div class="section-head"><span class="section-num">5</span><h2 class="title">Inventario: qué artefacto merece existir</h2></div>
-      <p class="sub">Cada documento responde a una pregunta. Si dos responden a la misma, uno sobra o debe pasar a ser una referencia del otro.</p>
-
-      <div class="table-wrap wrap-cells">
-        <table>
-          <thead><tr><th>Artefacto</th><th>Responde a</th><th>Merece existir cuando</th></tr></thead>
-          <tbody>
-            <tr><td><code>README.md</code></td><td>Qué es el proyecto y cómo empezar.</td><td>Alguien va a ejecutar, instalar o modificar el repositorio.</td></tr>
-            <tr><td><code>CONTRIBUTING.md</code></td><td>Cómo se integra trabajo.</td><td>Hay más de un colaborador o una política que no es evidente.</td></tr>
-            <tr><td>PRD</td><td>Qué problema se resuelve y para quién.</td><td>Hay decisiones de producto que no se deducen del código.</td></tr>
-            <tr><td>SDD / arquitectura</td><td>Cómo está estructurado el sistema y por qué.</td><td>La estructura no es evidente leyendo un único módulo.</td></tr>
-            <tr><td>ADR</td><td>Por qué se tomó una decisión y qué se descartó.</td><td>Reabrirla cuesta trabajo y su contexto no es evidente.</td></tr>
-            <tr><td>API / contratos</td><td>Qué expone el sistema, con qué tipos y errores.</td><td>Existe un contrato que otros consumen.</td></tr>
-            <tr><td>Operación / runbook</td><td>Qué hacer en producción.</td><td>Hay procedimientos que se ejecutan con presión y sin margen de error.</td></tr>
-            <tr><td>Guía de feature</td><td>Qué se va a construir y en qué estado está.</td><td>El trabajo dura varias sesiones o lo retoma otra persona.</td></tr>
-            <tr><td><code>CHANGELOG.md</code></td><td>Qué cambió para quien consume el proyecto.</td><td>El proyecto se publica o se integra en otros.</td></tr>
-          </tbody>
-        </table>
-      </div>
-
-      <h3>La escala de decisión</h3>
-      <ul class="plain">
-        <li><strong>Formular la pregunta</strong> que el nuevo artefacto respondería, antes de crear nada.</li>
-        <li><strong>Si ya tiene respuesta correcta:</strong> no se crea nada, se enlaza.</li>
-        <li><strong>Si la tiene incorrecta o incompleta:</strong> se actualiza en lugar de crear.</li>
-        <li><strong>Si está repartida sin fuente canónica:</strong> se consolida antes de añadir otro documento.</li>
-        <li><strong>Solo si no tiene sitio donde vivir:</strong> se crea el artefacto mínimo con esa responsabilidad.</li>
-      </ul>
-
-      <h3>El inventario es un comando, no una lectura</h3>
-      <p>El paso 2 no se hace «mirando la carpeta». Se ejecuta un script que devuelve siempre la misma forma y los mismos hallazgos:</p>
       <div class="code"><pre><code>python3 scripts/doc-inventory.py --root &lt;directorio&gt; [--glob "*.md"] [--json]</code></pre></div>
 
-      <div class="table-wrap wrap-cells">
-        <table>
-          <thead><tr><th>Salida</th><th>Significado</th><th>Qué se hace</th></tr></thead>
-          <tbody>
-            <tr><td><span class="sev sev-ok">0</span></td><td>Inventario completo sin hallazgos.</td><td>Se continúa con el inventario como línea base.</td></tr>
-            <tr><td><span class="sev sev-warn">3</span></td><td>Hay hallazgos: enlaces relativos rotos, documentos sin H1, documentos sin contenido o encabezados H2 repetidos entre documentos.</td><td>Es entrada del paso 4: se decide cuáles se corrigen ahora y cuáles se reportan.</td></tr>
-            <tr><td><span class="sev sev-error">2</span></td><td>Error de uso: la ruta no existe, no es un directorio o el patrón incluye separadores de ruta.</td><td>Se corrige el argumento. No se sustituye el script por una exploración manual.</td></tr>
-          </tbody>
-        </table>
-      </div>
-
-      <div class="note">
-        <p><strong>Por qué un script y no una revisión a ojo.</strong> Un modelo que revisa un árbol de documentación enumera distinto cada vez: omite un fichero, olvida un enlace, cuenta dos veces un encabezado. El script no decide nada —no dice si un duplicado es correcto— pero garantiza que la lista de candidatos es la misma en cada ejecución y que su código de salida se puede citar como evidencia.</p>
-      </div>
+      <div class="qa"><h3>El script sale con 0</h3><p>Inventario completo sin hallazgos. Esa lista es la línea base antes de tocar nada.</p></div>
+      <div class="qa"><h3>El script sale con 3</h3><p>Hay hallazgos: enlaces relativos rotos, documentos sin título, documentos vacíos o encabezados repetidos entre documentos. Es una salida esperada. Para cada uno se decide si se corrige en este encargo o se reporta con evidencia.</p></div>
+      <div class="qa"><h3>El script sale con 2</h3><p>Error de uso: la ruta no existe, no es un directorio o el patrón incluye separadores. Se corrige el argumento; no se sustituye el script por una revisión a ojo.</p></div>
+      <div class="qa"><h3>Falta una fuente imprescindible</h3><p>Se formula una sola pregunta concreta y se detiene el trabajo ahí. No se rellena el hueco con una suposición plausible.</p></div>
+      <div class="qa"><h3>Dos fuentes se contradicen</h3><p>Se exponen las dos y se pide decisión. Si la documentación es la especificación vigente, a veces lo que hay que arreglar es el software, no el texto.</p></div>
+      <div class="qa"><h3>Cómo se cierra</h3><p><code>Intervención</code>, <code>Artefactos</code>, <code>Verificación</code> con su código de salida, <code>Afirmaciones no sustentadas</code> y <code>Pendiente</code>. Un campo que no se puede rellenar con evidencia no se disfraza: ese campo es el hallazgo.</p></div>
     </section>
 
-    <section id="certeza" class="section">
-      <div class="section-head"><span class="section-num">6</span><h2 class="title">La certeza de una afirmación</h2></div>
-      <p class="sub">Antes de redactar, cada afirmación material recibe un grado. La clasificación no se imprime en todos los documentos: se hace visible cuando afecta a una decisión, a un riesgo o a la implementación.</p>
-
-      <div class="table-wrap wrap-cells">
-        <table>
-          <thead><tr><th>Grado</th><th>Cómo se redacta</th><th>Acción obligatoria</th></tr></thead>
-          <tbody>
-            <tr><td><strong>CONFIRMADO</strong></td><td>Afirmación directa, sin matices.</td><td>Citar la fuente en la verificación de cierre.</td></tr>
-            <tr><td><strong>INFERENCIA</strong></td><td>«Se infiere de…», «La implementación sugiere…».</td><td>Señalar qué la sustenta y qué falta para confirmarla.</td></tr>
-            <tr><td><strong>PROPUESTA</strong></td><td>«Se propone…», «Queda abierto…».</td><td>Separarla del estado actual en una sección propia.</td></tr>
-            <tr><td><strong>UNKNOWN</strong></td><td>«No determinado en este alcance».</td><td>Enumerarla como pendiente con la pregunta que la desbloquea.</td></tr>
-            <tr><td><strong>CONTRADICCIÓN</strong></td><td>«La fuente A afirma X; la fuente B afirma Y».</td><td>No elegir por cuenta propia: reportar y pedir decisión.</td></tr>
-            <tr><td><strong>OBSOLETO</strong></td><td>Eliminar o marcar como histórico con su motivo.</td><td>Comprobar antes que no sea la única representación del conocimiento.</td></tr>
-          </tbody>
-        </table>
-      </div>
-
-      <h3>Qué confirma cada fuente y qué no</h3>
-      <div class="table-wrap wrap-cells">
-        <table>
-          <thead><tr><th>Fuente</th><th>Confirma</th><th>No confirma</th></tr></thead>
-          <tbody>
-            <tr><td>Código</td><td>Comportamiento implementado, nombres, rutas, valores por defecto.</td><td>Intención del producto ni comportamiento deseado.</td></tr>
-            <tr><td>Tests</td><td>Comportamiento que el proyecto considera obligatorio.</td><td>Comportamiento no cubierto ni decisiones de diseño.</td></tr>
-            <tr><td>Configuración y esquemas</td><td>Contratos, variables, tipos, límites.</td><td>Comportamiento en tiempo de ejecución.</td></tr>
-            <tr><td>Historial Git</td><td>Qué cambió, cuándo y en qué contexto.</td><td>Que lo documentado siga vigente.</td></tr>
-            <tr><td>Documentación existente</td><td>Intención declarada por el proyecto.</td><td>Que se corresponda con el estado implementado.</td></tr>
-            <tr><td>Decisión explícita de la persona</td><td>Requisito o política adoptada.</td><td>Detalles técnicos no decididos.</td></tr>
-            <tr><td>Documentación externa oficial</td><td>Comportamiento de la dependencia en la versión consultada.</td><td>Cómo la usa o la configura este proyecto.</td></tr>
-          </tbody>
-        </table>
-      </div>
-
-      <h3>El mismo dato, mal y bien</h3>
-      <div class="code"><pre><code># Mal: dos afirmaciones, una de ellas no sustentada
-La API admite paginación por cursor y devuelve 50 registros por defecto.
-
-# Bien: el hecho con su fuente, y el hueco declarado
-La implementación devuelve 50 registros por defecto (src/api/list.ts:42).
-No se determinó si existe paginación por cursor: no aparece en el código
-revisado ni en la especificación.</code></pre></div>
-
-      <div class="code"><pre><code># Mal: una propuesta redactada como estado
-Los usuarios podrán exportar en PDF en la próxima versión.
-
-# Bien: intención separada del estado implementado
-Propuesta: exportación en PDF. No está implementada ni decidida;
-queda pendiente de aprobación.</code></pre></div>
-
-      <div class="note">
-        <p><strong>Una contradicción no se resuelve redactando.</strong> Si dos fuentes tienen responsabilidad sobre la misma afirmación, el resultado es una exposición con las dos fuentes y una pregunta. Si la contradicción es entre documentación e implementación, y la documentación es la especificación vigente, el arreglo puede corresponder al software y no al texto: por eso la skill no actualiza en ese caso sin autorización.</p>
-      </div>
-    </section>
-
-    <section id="redaccion" class="section">
-      <div class="section-head"><span class="section-num">7</span><h2 class="title">Reglas de redacción</h2></div>
-      <p class="sub">Escribir para quien mantiene, no para impresionar. Cinco reglas y una consecuencia: eliminar antes de añadir.</p>
-
-      <ul class="plain">
-        <li><strong>Proporcionalidad:</strong> la extensión responde a complejidad real, audiencia, riesgo y coste de reconstruir el conocimiento. Un proyecto pequeño puede necesitar muy poca documentación.</li>
-        <li><strong>DRY documental:</strong> cada conocimiento importante tiene una fuente canónica y el resto la referencia. La repetición breve es aceptable cuando no crea dos verdades que puedan divergir.</li>
-        <li><strong>Terminología idéntica:</strong> el término que ya usa el proyecto, sin alternar sinónimos. Un sinónimo nuevo en documentación se convierte en una entidad nueva para quien lee.</li>
-        <li><strong>Estado e intención separados:</strong> lo implementado en presente y sustentado; lo decidido y pendiente marcado; lo propuesto marcado; lo descartado conservado como histórico con su motivo.</li>
-        <li><strong>Exactitud operativa:</strong> comandos, rutas, nombres y valores copiados de la fuente. No se inventan ejemplos que puedan confundirse con valores reales.</li>
-      </ul>
-
-      <h3>El DRY no es dogmático</h3>
-      <p>Antes de escribir se responden cuatro preguntas: ¿ya está documentado?, ¿dónde debería vivir canónicamente?, ¿necesita repetirse aquí o basta un enlace?, y si se repite, ¿existe riesgo real de divergencia futura? Lo que nunca es aceptable es mantener a mano una segunda representación completa de un contrato que ya se genera o se ejecuta.</p>
-
-      <div class="table-wrap wrap-cells">
-        <table>
-          <thead><tr><th>Señal de sobre-documentación</th><th>Señal de sub-documentación</th></tr></thead>
-          <tbody>
-            <tr><td>Secciones de plantilla vacías o con generalidades.</td><td>Conocimiento crítico que solo existe en la cabeza de una persona.</td></tr>
-            <tr><td>El mismo dato en dos documentos sin referencia entre ellos.</td><td>Decisiones que se reabren porque nadie registró el porqué.</td></tr>
-            <tr><td>Documentos que describen el estado obsoleto junto a la fuente vigente.</td><td>Procedimientos operativos que se reconstruyen cada vez.</td></tr>
-            <tr><td>Un documento por tarea trivial.</td><td>Instalación que solo funciona siguiendo pasos no escritos.</td></tr>
-          </tbody>
-        </table>
-      </div>
-
-      <div class="note">
-        <p><strong>Preservar el porqué.</strong> Cuando una decisión no es evidente y su contexto evita repetir una investigación o un error, se conservan cinco datos concisos: problema, restricciones, decisión, razón y consecuencias. Lo que no se hace es convertir cada cambio trivial en una decisión arquitectónica.</p>
-      </div>
-    </section>
-
-    <section id="auditoria" class="section">
-      <div class="section-head"><span class="section-num">8</span><h2 class="title">Auditoría de solo lectura</h2></div>
-      <p class="sub">Auditar no es corregir estilo. Es localizar lo que puede inducir a error y ordenarlo por impacto, sin tocar nada hasta que exista un encargo explícito.</p>
-
-      <h3>Qué se busca, por orden de impacto</h3>
-      <ul class="plain">
-        <li>Afirmaciones sin soporte verificable.</li>
-        <li>Documentación obsoleta que contradice el estado implementado.</li>
-        <li>Contradicciones entre fuentes con la misma responsabilidad.</li>
-        <li>Conocimiento importante ausente: lo que se reconstruye cada vez.</li>
-        <li>Duplicación: el mismo dato en dos documentos sin referencia.</li>
-        <li>Documentos sin responsabilidad clara o con responsabilidad solapada.</li>
-        <li>Mezcla de intención, implementación y propuesta sin señalarlo.</li>
-        <li>Enlaces relativos rotos y referencias a rutas inexistentes.</li>
-        <li>Instrucciones imposibles de ejecutar o de verificar.</li>
-        <li>Contexto decisional perdido en decisiones que se reabren.</li>
-      </ul>
-
-      <h3>El veredicto va por clases, no en bloque</h3>
-      <div class="table-wrap wrap-cells">
-        <table>
-          <thead><tr><th>Clase</th><th>Valores posibles</th></tr></thead>
-          <tbody>
-            <tr><td>Cobertura de la responsabilidad</td><td>CUBIERTA · PARCIAL · AUSENTE</td></tr>
-            <tr><td>Correspondencia con el software</td><td>CONFIRMADA · DIVERGENTE · NO VERIFICABLE</td></tr>
-            <tr><td>Consistencia interna</td><td>CONSISTENTE · CONTRADICTORIA</td></tr>
-            <tr><td>Vigencia</td><td>VIGENTE · OBSOLETA · HISTÓRICA</td></tr>
-          </tbody>
-        </table>
-      </div>
-      <p>Una falta de verificación no es un incumplimiento: es un límite del alcance, y se declara como tal. Confundir ambos produce informes que acusan al proyecto de defectos que solo son huecos de la revisión.</p>
-
-      <h3>Falsos positivos que no se ignoran, se deciden</h3>
-      <div class="table-wrap wrap-cells">
-        <table>
-          <thead><tr><th>Hallazgo del script</th><th>Cuándo es correcto</th></tr></thead>
-          <tbody>
-            <tr><td>Encabezado repetido entre dos documentos</td><td>Dos documentos cubren la misma sección con audiencias distintas. Se decide explícitamente, no se ignora.</td></tr>
-            <tr><td>Enlace relativo roto a una ruta generada</td><td>El repositorio documenta ese paso de generación previo a compilar.</td></tr>
-            <tr><td>Afirmación sin fuente</td><td>Es una decisión de la persona no registrada: se pregunta antes de borrarla.</td></tr>
-          </tbody>
-        </table>
-      </div>
-    </section>
-
-    <section id="verificacion" class="section">
-      <div class="section-head"><span class="section-num">9</span><h2 class="title">Verificación de cierre</h2></div>
-      <p class="sub">El paso 6 no es una relectura. Es una lista de comprobaciones con un resultado que se muestra.</p>
-
-      <div class="table-wrap wrap-cells">
-        <table>
-          <thead><tr><th>Comprobación</th><th>Cómo se hace</th><th>Qué la invalida</th></tr></thead>
-          <tbody>
-            <tr><td>Inventario posterior</td><td><code>doc-inventory.py --root &lt;ruta&gt;</code> después del cambio.</td><td>Un enlace nuevo roto o un encabezado duplicado nuevo.</td></tr>
-            <tr><td>Sustento por afirmación</td><td>Contraste de cada afirmación modificada contra su fuente.</td><td>Una afirmación que no se sostiene en el alcance disponible.</td></tr>
-            <tr><td>Contenido eliminado</td><td>Comparación del contenido anterior con el nuevo.</td><td>Haber borrado la única representación de un conocimiento válido.</td></tr>
-            <tr><td>Terminología</td><td>Contraste con los términos que ya usa el proyecto.</td><td>Un sinónimo nuevo sin justificación.</td></tr>
-            <tr><td>Comandos y rutas</td><td>Verificación de que existen en el estado actual.</td><td>Documentar un comando no confirmado como si estuviera disponible.</td></tr>
-            <tr><td>Coherencia interna</td><td>Ejemplos frente a la explicación que los acompaña.</td><td>Un ejemplo que contradice el texto.</td></tr>
-          </tbody>
-        </table>
-      </div>
-
-      <h3>El cierre son cinco líneas, no un párrafo</h3>
-      <div class="code"><pre><code>Intervención: &lt;ninguna | corrección | actualización | creación | auditoría&gt;
-Artefactos: &lt;rutas relativas tocadas, o "ninguno"&gt;
-Verificación: &lt;comando ejecutado y su código de salida&gt;
-Afirmaciones no sustentadas: &lt;lista, o "ninguna"&gt;
-Pendiente: &lt;qué falta y qué pregunta lo desbloquea, o "nada"&gt;</code></pre></div>
-
-      <div class="note">
-        <p><strong>Si falla una comprobación, el resultado no es «terminado».</strong> Es INCOMPLETO o NO VERIFICADO, con la condición que falta nombrada. La misma regla vale para un campo del cierre que no se puede rellenar: ese campo vacío es el hallazgo.</p>
-      </div>
-    </section>
-
-    <section id="ficheros" class="section">
-      <div class="section-head"><span class="section-num">10</span><h2 class="title">Los ficheros del paquete</h2></div>
-      <p class="sub">Ocho ficheros, un solo nivel de profundidad en cada carpeta y ninguna documentación para personas dentro del paquete. Esta página vive fuera precisamente por eso.</p>
+    <section id="paquete" class="section">
+      <div class="section-head"><span class="section-num">4</span><h2 class="title">Qué contiene el paquete</h2></div>
+      <p class="sub">Ocho ficheros. El agente lee <code>SKILL.md</code> al activarse y abre el resto solo cuando el paso en curso lo pide, así que la skill es estricta sin consumir contexto en cada conversación.</p>
 
       <div class="code"><pre><code>document-management-software/
-├── SKILL.md                        # obligatorio: 96 líneas, siete pasos
+├── SKILL.md                        # el contrato: invariantes, pasos, formato de cierre
 ├── references/
-│   ├── document-inventory.md       # responsabilidad por artefacto
-│   ├── evidence-and-claims.md      # grados de certeza y fuentes
-│   ├── authoring-rules.md          # proporcionalidad, DRY, terminología
-│   └── audit-checklist.md          # auditoría y verificación de cierre
+│   ├── document-inventory.md       # qué documento merece existir y por qué
+│   ├── evidence-and-claims.md      # grados de certeza y qué confirma cada fuente
+│   ├── authoring-rules.md          # proporcionalidad, DRY documental, terminología
+│   └── audit-checklist.md          # auditoría de solo lectura y cierre
 ├── assets/
 │   ├── documentation-plan-template.md
 │   └── audit-report-template.md
@@ -895,119 +625,79 @@ Pendiente: &lt;qué falta y qué pregunta lo desbloquea, o "nada"&gt;</code></pr
 
       <div class="table-wrap wrap-cells">
         <table>
-          <thead><tr><th>Fichero</th><th>Se lee</th><th>Qué aporta</th></tr></thead>
+          <thead><tr><th>Fichero</th><th>Cuándo lo abre el agente</th></tr></thead>
           <tbody>
-            <tr><td><code>SKILL.md</code></td><td>Siempre, al disparar la skill.</td><td>Diez invariantes, siete pasos, criterios de parada, gestión de errores y formato de cierre.</td></tr>
-            <tr><td><code>references/document-inventory.md</code></td><td>Paso 2, al decidir si un artefacto hace falta.</td><td>Responsabilidad de cada tipo de documento y señales de exceso o defecto.</td></tr>
-            <tr><td><code>references/evidence-and-claims.md</code></td><td>Paso 3, cuando una afirmación no está sustentada a la vista.</td><td>Grados de certeza, verificación por tipo de fuente, tratamiento de contradicciones.</td></tr>
-            <tr><td><code>references/authoring-rules.md</code></td><td>Paso 5, antes de escribir o reescribir.</td><td>Proporcionalidad, DRY documental, terminología, estado frente a intención.</td></tr>
-            <tr><td><code>references/audit-checklist.md</code></td><td>Paso 6, al verificar o auditar.</td><td>Hallazgos por impacto, veredicto por clases y lista de cierre.</td></tr>
-            <tr><td><code>assets/documentation-plan-template.md</code></td><td>Paso 4, si el encargo toca más de un documento.</td><td>Encargo, estado actual, intervención propuesta, afirmaciones por decidir.</td></tr>
-            <tr><td><code>assets/audit-report-template.md</code></td><td>Paso 7, en auditorías o con hallazgos abiertos.</td><td>Alcance, veredicto por clases, hallazgos con impacto y pendientes.</td></tr>
-            <tr><td><code>scripts/doc-inventory.py</code></td><td>Pasos 2 y 6, siempre.</td><td>Inventario, enlaces rotos, documentos sin título o sin contenido, encabezados repetidos.</td></tr>
+            <tr><td><code>SKILL.md</code></td><td>Siempre, al disparar la skill.</td></tr>
+            <tr><td><code>references/document-inventory.md</code></td><td>Paso 2, al decidir si hace falta un artefacto.</td></tr>
+            <tr><td><code>references/evidence-and-claims.md</code></td><td>Paso 3, cuando una afirmación no está sustentada a la vista.</td></tr>
+            <tr><td><code>references/authoring-rules.md</code></td><td>Paso 5, antes de escribir o reescribir contenido.</td></tr>
+            <tr><td><code>references/audit-checklist.md</code></td><td>Paso 6, al verificar o al auditar sin modificar.</td></tr>
+            <tr><td><code>assets/documentation-plan-template.md</code></td><td>Paso 4, si el encargo toca más de un documento.</td></tr>
+            <tr><td><code>assets/audit-report-template.md</code></td><td>Paso 7, en auditorías o cuando quedan hallazgos abiertos.</td></tr>
+            <tr><td><code>scripts/doc-inventory.py</code></td><td>Pasos 2 y 6, siempre.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="reglas" class="section">
+      <div class="section-head"><span class="section-num">5</span><h2 class="title">Dónde están las reglas</h2></div>
+      <p class="sub">Las reglas viven en los ficheros del paquete, no en esta página. Aquí no se copian: se indica cuál responde a cada pregunta, para que solo haya una fuente que mantener.</p>
+
+      <div class="table-wrap wrap-cells">
+        <table>
+          <thead><tr><th>Pregunta</th><th>Se responde en</th></tr></thead>
+          <tbody>
+            <tr><td>Qué no se puede saltar y en qué orden.</td><td><code>SKILL.md</code></td></tr>
+            <tr><td>Qué documento merece existir y de qué conocimiento es responsable cada uno.</td><td><code>references/document-inventory.md</code></td></tr>
+            <tr><td>Qué grado tiene una afirmación y qué confirma o no confirma cada fuente.</td><td><code>references/evidence-and-claims.md</code></td></tr>
+            <tr><td>Cómo se escribe para no engañar: extensión, repetición, terminología, estado frente a intención.</td><td><code>references/authoring-rules.md</code></td></tr>
+            <tr><td>Qué busca una auditoría, cómo se emite el veredicto y qué se comprueba al cerrar.</td><td><code>references/audit-checklist.md</code></td></tr>
+            <tr><td>Cómo se presenta el trabajo a media hacer o el resultado de una auditoría.</td><td><code>assets/documentation-plan-template.md</code>, <code>assets/audit-report-template.md</code></td></tr>
           </tbody>
         </table>
       </div>
 
       <div class="note">
-        <p><strong>Divulgación progresiva.</strong> El cuerpo principal navega y decide; los detalles viven en ficheros que el agente lee solo cuando la operación concreta los pide. Esa separación es lo que permite que la skill sea estricta sin consumir contexto en cada conversación.</p>
+        <p><strong>Si esta página y el paquete no coinciden, manda el paquete.</strong> Es lo que el agente ejecuta. Esta página no añade normas.</p>
       </div>
-    </section>
-
-    <section id="en-este-repositorio" class="section">
-      <div class="section-head"><span class="section-num">11</span><h2 class="title">Cómo se usa aquí</h2></div>
-      <p class="sub">La skill se aplicó a su propio paquete antes de publicarlo. Estos son los comandos que se ejecutaron y lo que devolvieron, sin editar.</p>
-
-      <h3>Metadatos</h3>
-      <div class="code"><pre><code>$ python3 .skills/skill-creator/scripts/validate-metadata.py \
-    --name "document-management-software" --description "…"
-SUCCESS: Metadata is valid and optimized for discovery.
-# código de salida: 0 · descripción de 838 caracteres sobre 1.024</code></pre></div>
-
-      <h3>Inventario del paquete</h3>
-      <div class="code"><pre><code>$ python3 src/document-management-software/scripts/doc-inventory.py \
-    --root src/document-management-software
-Inventario de 7 documentos en …/src/document-management-software
-
-Hallazgos
-Ninguno.
-# código de salida: 0 · SKILL.md con 7 enlaces relativos, todos resueltos</code></pre></div>
-
-      <h3>Lo que encontró en el resto del repositorio</h3>
-      <div class="code"><pre><code>$ python3 src/document-management-software/scripts/doc-inventory.py --root src
-# código de salida: 3
-- sin H1: git-flow-management/assets/plan-template.md
-- sin H1: git-flow-management/assets/result-template.md
-- encabezado repetido: "hotfix" en git-flow-operations.md, releases-and-versioning.md
-- encabezado repetido: "release" en git-flow-operations.md, releases-and-versioning.md</code></pre></div>
-      <p>Los cuatro hallazgos son de otra skill y quedaron reportados, no corregidos: no formaban parte del encargo. Ese es el comportamiento que la skill prescribe — se reporta con evidencia y se deja la decisión a quien corresponda.</p>
-
-      <div class="status-strip" role="status">
-        <span class="status-mark" aria-hidden="true">OK</span>
-        <div><strong>Dos defectos se corrigieron gracias a la propia verificación</strong><span>La sección de referencias de <code>SKILL.md</code> usaba rutas en backticks, que el script no puede comprobar; se convirtieron en enlaces reales y pasaron a verificarse. Y dos encabezados genéricos —«Invariantes obligatorias» y «Resultado final»— colisionaban con los de <code>git-flow-management</code>; se titularon por dominio. Sin el inventario, ninguno de los dos se habría visto.</span></div>
-      </div>
-    </section>
-
-    <section id="limites" class="section">
-      <div class="section-head"><span class="section-num">12</span><h2 class="title">Errores y límites</h2></div>
-      <p class="sub">Qué hace la skill cuando el encargo no encaja en el camino previsto.</p>
-
-      <div class="qa"><h3>El script sale con 2</h3><p>Es un error de uso: la ruta no existe, no es un directorio o el patrón incluye separadores. Se corrige el argumento. No se sustituye el script por una exploración manual del árbol, porque entonces la evidencia deja de ser reproducible.</p></div>
-      <div class="qa"><h3>El script sale con 3</h3><p>Hay hallazgos reales. Se tratan como entrada del paso 4: para cada uno se decide si se corrige en este encargo o se reporta. Ignorarlos convierte la verificación en un trámite.</p></div>
-      <div class="qa"><h3>La fuente contradice la documentación existente</h3><p>Primero se determina qué fuente tiene responsabilidad sobre esa afirmación. Si ambas la reclaman, se reporta la contradicción y no se elige por cuenta propia. Si la documentación es la especificación vigente, el arreglo puede corresponder al software.</p></div>
-      <div class="qa"><h3>El repositorio no documenta convención documental</h3><p>Se aplica la estructura mínima justificada por el contenido y no se importa una plantilla completa. Proponer un cambio de convención es un encargo aparte.</p></div>
-      <div class="qa"><h3>Se pide documentar algo que aún no existe en el software</h3><p>Se redacta como propuesta explícita, nunca como estado actual. La distinción entre intención e implementación es una invariante, no un matiz de estilo.</p></div>
-      <div class="qa"><h3>No se puede consultar la versión usada de una dependencia</h3><p>No se le atribuye comportamiento a esa versión: se declara la limitación. Una fuente externa sin versión identificable no sustenta una afirmación.</p></div>
-      <div class="qa"><h3>La intervención detectada es un refactor documental masivo</h3><p>Se informa del coste y del riesgo de revisión antes de ejecutarlo. La documentación se protege igual que el código: un cambio que nadie puede revisar no es una mejora.</p></div>
     </section>
 
     <section id="preguntas" class="section">
-      <div class="section-head"><span class="section-num">13</span><h2 class="title">Preguntas cortas</h2></div>
-      <p class="sub">Las dudas que aparecen en la primera conversación con la skill.</p>
+      <div class="section-head"><span class="section-num">6</span><h2 class="title">Preguntas cortas</h2></div>
+      <p class="sub">Lo que casi todo el mundo pregunta en la primera conversación.</p>
 
-      <div class="qa"><h3>¿Escribe la documentación o solo la revisa?</h3><p>Las dos cosas, según el encargo: crear, actualizar, auditar sin modificar o responder una pregunta sobre el estado documental. La auditoría es de solo lectura y no toca artefactos sin un encargo explícito.</p></div>
-      <div class="qa"><h3>¿Siempre crea un documento nuevo cuando falta información?</h3><p>No. La creación es la última opción de la escala: nada, corregir, actualizar, consolidar, referenciar y solo entonces crear. Si el conocimiento cabe en un artefacto existente sin degradar su responsabilidad, no se crea otro.</p></div>
-      <div class="qa"><h3>¿Qué diferencia hay entre inferencia y propuesta?</h3><p>La inferencia es una conclusión derivada de evidencia existente; la propuesta es un diseño que nadie ha adoptado todavía. La primera se confirma o se degrada; la segunda se aprueba o se descarta. Confundirlas convierte una idea en un hecho.</p></div>
-      <div class="qa"><h3>¿Se puede pedir que documente sin leer el código?</h3><p>Se puede, pero el resultado serán propuestas y huecos declarados, no estado implementado. Si el encargo es describir el comportamiento actual, la lectura de fuentes es parte del trabajo.</p></div>
-      <div class="qa"><h3>¿Por qué no basta con el código como documentación?</h3><p>Porque el código expresa el estado implementado y no la intención, ni las restricciones, ni por qué se descartaron alternativas. Y porque quien necesita operar el sistema no lee el código para saber qué hacer en una incidencia.</p></div>
-      <div class="qa"><h3>¿Qué pasa si el proyecto ya tiene su propia estructura documental?</h3><p>Se respeta. La invariante séptima es explícita: la política documental del repositorio prevalece sobre cualquier estructura genérica. Proponer otra cosa es un encargo aparte y explícito.</p></div>
-      <div class="qa"><h3>¿Sirve para documentar una dependencia externa?</h3><p>Sí, con límites: se prioriza la documentación oficial, se identifica la versión consultada y se documenta cómo y por qué la usa el proyecto; no se copia su documentación entera.</p></div>
-      <div class="qa"><h3>¿El cierre es obligatorio aunque el cambio sea de una línea?</h3><p>Sí, con tamaño proporcional: cinco líneas donde «Artefactos» y «Verificación» pueden ser «ninguno» y el código de salida de un solo comando. Lo que no se puede es declarar terminado sin ninguna comprobación.</p></div>
-      <div class="qa"><h3>¿Sustituye a los tests o a los contratos ejecutables?</h3><p>No, y lo dicen sus disparadores negativos. Un contrato que se puede ejecutar se documenta enlazándolo, no reescribiéndolo a mano; dos representaciones completas del mismo contrato divergen siempre.</p></div>
+      <div class="qa"><h3>¿Qué diferencia hay entre una inferencia y una propuesta?</h3><p>La inferencia es una conclusión sacada de evidencia que ya existe: se confirma o se baja de grado. La propuesta es un diseño que nadie ha adoptado todavía: se aprueba o se descarta. Confundirlas convierte una idea en un hecho, y eso es lo que luego alguien ejecuta en producción.</p></div>
+      <div class="qa"><h3>¿Se puede pedir que documente sin leer el código?</h3><p>Se puede, y sale otra cosa: propuestas y huecos declarados, no el estado implementado. Si lo que se quiere es describir el comportamiento actual, leer las fuentes es parte del trabajo, no un extra.</p></div>
+      <div class="qa"><h3>¿Por qué no basta el código como documentación?</h3><p>Porque el código dice cómo está, no la intención, ni las restricciones, ni por qué se descartaron las alternativas. Y porque quien tiene que operar una incidencia no lee el código para saber qué hacer.</p></div>
+      <div class="qa"><h3>¿Y si el proyecto ya tiene su propia estructura documental?</h3><p>Se respeta tal cual, aunque a la skill le parecería mejor otra. Proponer un cambio de convención es un encargo aparte y explícito. Esta misma página se rige por esa regla: es la convención de SKILLS-AGP, no una norma de la skill.</p></div>
+      <div class="qa"><h3>¿Sirve para documentar una dependencia externa?</h3><p>Sí, con límites: se prioriza la documentación oficial, se identifica la versión consultada y se escribe cómo y por qué la usa este proyecto. Copiar su documentación entera crea una segunda fuente que nadie va a mantener.</p></div>
+      <div class="qa"><h3>¿El cierre es obligatorio aunque el cambio sea de una línea?</h3><p>Sí, con tamaño proporcional: cinco líneas donde «Artefactos» y «Verificación» pueden ser un comando o «ninguno». Lo que no se admite es declarar terminado algo sin ninguna comprobación detrás.</p></div>
     </section>
 
     <section id="diagramas" class="section">
-      <div class="section-head"><span class="section-num">14</span><h2 class="title">Los diagramas</h2></div>
-      <p class="sub">Las dos vistas del mismo procedimiento: el recorrido del encargo al cierre verificado, y las piezas que sostienen la skill.</p>
+      <div class="section-head"><span class="section-num">7</span><h2 class="title">Los diagramas</h2><span class="chip-repo">de este repositorio</span></div>
+      <p class="sub">Dos vistas del mismo procedimiento: el recorrido del encargo al cierre verificado, y las piezas que sostienen la skill.</p>
 
       <div class="grid cols-2">
         <a class="card card-link" href="flujo-de-trabajo.html">
           <div class="card-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h6v5H4zM14 13h6v5h-6z"></path><path d="M10 8.5h2a2 2 0 0 1 2 2v5"></path></svg></div>
           <h3>Flujo de trabajo</h3>
-          <p>Del encargo al cierre probado: qué se inventaría, en qué momento se fija la certeza, dónde se detiene el flujo ante una contradicción y qué se comprueba antes de dar un documento por terminado.</p>
+          <p>Qué se inventaría, en qué momento se fija la certeza, dónde se detiene el flujo ante una contradicción y qué se comprueba antes de dar un documento por terminado.</p>
           <span class="go">Abrir el diagrama →</span>
         </a>
         <a class="card card-link" href="arquitectura.html">
           <div class="card-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1.5"></rect><rect x="14" y="3" width="7" height="7" rx="1.5"></rect><rect x="3" y="14" width="7" height="7" rx="1.5"></rect><rect x="14" y="14" width="7" height="7" rx="1.5"></rect></svg></div>
           <h3>Arquitectura</h3>
-          <p>El paquete instalado, las puertas de la evidencia y la superficie sobre la que actúa: <code>SKILL.md</code>, las cuatro referencias, el repositorio leído y la documentación escrita.</p>
+          <p>El paquete, las puertas de la evidencia y la superficie sobre la que actúa: <code>SKILL.md</code>, las cuatro referencias, el repositorio leído y la documentación escrita.</p>
           <span class="go">Abrir el diagrama →</span>
         </a>
       </div>
 
-      <p>Los dos son navegables: se puede cambiar el tema, alternar el estilo visual, trazar una ruta entre dos nodos, buscar por etiqueta y exportar a SVG, PNG, WebM o tarjeta para compartir.</p>
-
-      <div class="code"><pre><code># requiere archify 3.2.0 (github.com/tt-a1i/archify, tag v3.2.0)
-node &lt;ruta-a-archify&gt;/archify/bin/archify.mjs deliver workflow \
-  docs/document-management-software/flujo-de-trabajo.json \
-  docs/document-management-software/flujo-de-trabajo.html --quality showcase
-
-node &lt;ruta-a-archify&gt;/archify/bin/archify.mjs deliver architecture \
-  docs/document-management-software/arquitectura.json \
-  docs/document-management-software/arquitectura.html --quality showcase</code></pre></div>
+      <p>Cada diagrama se abre como página suelta: archify 3.2.0 no enlaza desde el artefacto a una página local, así que se vuelve con el botón atrás del navegador o con el índice de arriba.</p>
 
       <div class="note">
-        <p><strong>Cómo se generan.</strong> Los dos son artefactos de <em>archify</em> 3.2.0: un candidato JSON describe el diagrama y el renderizador produce un HTML autónomo con temas, movimiento y exportación. Los candidatos están al lado de cada página y la CLI escribe su recibo <code>.delivery.json</code> con los <code>sha256</code> del spec y del artefacto. La entrega es reproducible: el mismo spec devuelve el mismo HTML.</p>
+        <p><strong>Convenio de este repositorio, no mandato de la skill.</strong> <code>docs/&lt;skill&gt;/index.html</code>, los dos diagramas y sus recibos <code>.delivery.json</code> son cómo SKILLS-AGP documenta sus skills. Los genera archify 3.2.0 desde el <code>.json</code> que está junto a cada HTML; el comando y la comprobación del recibo están en la sección Documentación del <code>README.md</code>. Otro repositorio documenta la skill como le parezca: la invariante 7 dice que la política documental del repositorio prevalece, y esta página se somete a la de este.</p>
       </div>
     </section>
   </main>
