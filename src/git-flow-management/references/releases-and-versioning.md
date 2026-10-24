@@ -20,4 +20,4 @@ El recorrido de ramas —crear, integrar, probar contención y proponer borrado�
 - La etiqueta y la publicación: se crean solo si están en el plan aprobado.
 - El nombre esperado de la rama: `release/<version>` y `hotfix/<id>-<slug>`.
 
-Si falta alguna de esas tres decisiones, se pregunta antes de integrar: una release sin versión fijada no se puede cerrar. No hay una segunda lista de pasos en este fichero a la que mantener sincronizada la anterior.
+No hay una segunda lista de pasos en este fichero a la que mantener sincronizada la anterior.

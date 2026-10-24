@@ -4,6 +4,13 @@ Repositorio personal de skills para agentes, versionado para tener el mismo ento
 
 La especificación de [agentskills.io](https://agentskills.io/) es la guía y la referencia estricta de este repositorio. La estructura de directorios, los metadatos, la divulgación progresiva y los scripts de cada skill se contrastan contra ella, no contra una convención propia.
 
+## De dónde viene
+
+Este repositorio se inspira y se basa en dos fuentes externas:
+
+- [github.com/agentskills](https://github.com/agentskills), la organización que mantiene la especificación de Agent Skills y sus guías de creación, que son la referencia estricta del párrafo anterior.
+- [github.com/mgechev/skills-best-practices](https://github.com/mgechev/skills-best-practices), de donde procede la skill de terceros `skill-creator` —fijada a una revisión en la sección Skills en uso— y el modelo de empaquetado que siguen las skills propias: un `SKILL.md` corto con el procedimiento, `references/` que se cargan justo a tiempo, `assets/` para plantillas y `scripts/` para lo determinista.
+
 ## Estructura
 
 | Ruta | Qué contiene |
@@ -40,6 +47,8 @@ Skills de terceros fijadas a una versión concreta, para que todas las máquinas
 Procedimiento para crear skills nuevas con la especificación agentskills.io: estructura de directorios, redacción de instrucciones procedimentales, optimización de metadatos para que la skill se descubra y una lista de comprobación. Incluye plantilla, checklist y un validador de metadatos.
 
 Ruta: [`.skills/skill-creator/SKILL.md`](.skills/skill-creator/SKILL.md). Se usa al crear cualquier skill nueva en `src/`.
+
+Procedencia: [`mgechev/skills-best-practices`](https://github.com/mgechev/skills-best-practices/tree/main/skill), directorio `skill/`, fijada en el commit [`a0bfa56`](https://github.com/mgechev/skills-best-practices/commit/a0bfa56bbcd676383f6ca57bb7e344d0856bc38e) del 2026-07-27. Los cuatro ficheros de la copia son idénticos byte a byte a esa revisión. Actualizarla es sustituir el directorio por otra revisión y cambiar aquí el commit fijado; la fijación se comprueba con `git diff` contra esa revisión, no leyendo esta página.
 
 Documentación: [`docs/skill-creator/index.html`](docs/skill-creator/index.html).
 

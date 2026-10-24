@@ -38,7 +38,7 @@ No mezcles los cuatro registros en un mismo párrafo sin señalarlo.
 
 Un documento describe el artefacto, no el trabajo que lo produjo. Deja fuera:
 
-- Ramas, commits, etiquetas, hashes y `sha256` de artefactos de la propia entrega: Git ya los contiene y el documento tiene que sobrevivirlos.
+- Ramas, commits, etiquetas, hashes y `sha256` de artefactos de la propia entrega: Git ya los contiene y el documento tiene que sobrevivirlos. No es lo mismo la fijación de un tercero: el repositorio de origen y el commit al que está fijada una copia vendida son su contrato de reproducibilidad y van escritos.
 - Narraciones de proceso: «se corrigió», «quedó reportado, no corregido», «se reentregó», «antes decía».
 - Autores y fechas de la intervención, salvo que el formato del documento lo exija (notas de release, registro de cambios, ADR con su estado).
 

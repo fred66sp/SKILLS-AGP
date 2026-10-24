@@ -20,7 +20,7 @@ En todos los casos, el commit sigue el protocolo de confirmación de la skill: r
 2. Limita cambios a estabilización, versión, notas y correcciones aprobadas.
 3. Fija el número de versión, dónde lo declara el proyecto y su entrada de changelog según [releases y versionado](releases-and-versioning.md).
 4. Valida la preparación antes de integrar.
-5. Integra en `main`; crea etiqueta y publicación solo si están en el plan aprobado; integra el resultado en `develop`.
+5. Integra en `main` mediante el mecanismo de revisión previsto; crea etiqueta y publicación solo si están en el plan aprobado; integra el resultado en `develop`.
 6. Prueba que `main` y `develop` contienen el resultado.
 7. Propón el borrado de la rama de release y pide confirmación.
 
@@ -29,7 +29,7 @@ En todos los casos, el commit sigue el protocolo de confirmación de la skill: r
 1. Crea `hotfix/<id>-<slug>` desde `main` para una corrección urgente, y verifica la ascendencia antes de trabajar.
 2. Mantén el parche mínimo y validado.
 3. Fija la versión y su entrada de changelog según [releases y versionado](releases-and-versioning.md).
-4. Integra en `main`; crea etiqueta y publicación solo si fue aprobada.
+4. Integra en `main` mediante el mecanismo de revisión previsto; crea etiqueta y publicación solo si fue aprobada.
 5. Integra el resultado exacto en `develop`.
 6. Prueba que ambas ramas contienen la corrección.
 7. Propón el borrado de la rama de hotfix y pide confirmación.
