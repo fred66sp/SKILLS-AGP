@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="skill-creator — guía completa de la skill: metadatos validados por script, estructura del directorio, redacción procedimental en imperativo, divulgación progresiva, scripts deterministas, composición y checklist final.">
+<meta name="description" content="Entrada a la skill skill-creator: qué hace, cuándo se activa, cómo se validan los metadatos, qué contiene el paquete de cuatro ficheros, dónde vive cada regla, las preguntas de la primera conversación y los dos diagramas. Las reglas están en SKILL.md, en la checklist, en la plantilla y en scripts/validate-metadata.py, no copiadas en esta página.">
 <meta name="color-scheme" content="light dark">
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%236d28d9'/%3E%3Cpath d='M18.2 8.4l5.4 5.4-9.1 9.1-5.4-5.4z' fill='none' stroke='%23ffffff' stroke-width='2' stroke-linejoin='round'/%3E%3Cpath d='M8.6 23.4l-.9 1.9 1.9-.9' fill='none' stroke='%23ffffff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
 <title>skill-creator — Skills que se descubren y se ejecutan</title>
@@ -243,6 +243,18 @@
     font-variant-numeric: tabular-nums;
   }
   h2.title { margin: 0; font-size: clamp(22px, 3vw, 28px); letter-spacing: -.02em; }
+  .chip-repo {
+    margin-left: auto;
+    flex: none;
+    font-size: 11.5px;
+    font-weight: 700;
+    letter-spacing: .03em;
+    color: var(--muted);
+    border: 1px dashed color-mix(in srgb, var(--muted) 45%, transparent);
+    border-radius: 999px;
+    padding: 3px 10px;
+    white-space: nowrap;
+  }
   .section > p.sub { margin: 6px 0 24px; color: var(--muted); max-width: 74ch; }
   h3 { margin: 30px 0 10px; font-size: 17px; letter-spacing: -.01em; }
 
@@ -378,35 +390,6 @@
   .note p { margin: 0; }
   .note p + p { margin-top: 8px; }
 
-  .status-strip {
-    display: flex;
-    align-items: flex-start;
-    gap: 12px;
-    max-width: 720px;
-    margin-top: 28px;
-    padding: 14px 16px;
-    border: 1px solid color-mix(in srgb, var(--ok) 42%, var(--border));
-    border-radius: var(--radius-sm);
-    background: color-mix(in srgb, var(--ok) 8%, var(--bg-elev));
-  }
-  .status-mark {
-    flex: 0 0 auto;
-    display: grid;
-    place-items: center;
-    width: 30px;
-    height: 30px;
-    border-radius: 9px;
-    background: color-mix(in srgb, var(--ok) 18%, transparent);
-    color: var(--ok-text);
-    font-size: 10px;
-    font-weight: 800;
-    letter-spacing: .04em;
-  }
-  .status-strip strong { display: block; font-size: 14px; }
-  .status-strip span:not(.status-mark) { display: block; margin-top: 2px; color: var(--muted); font-size: 13px; }
-  .status-strip--prep { border-color: color-mix(in srgb, var(--warn) 42%, var(--border)); background: color-mix(in srgb, var(--warn) 8%, var(--bg-elev)); }
-  .status-strip--prep .status-mark { background: color-mix(in srgb, var(--warn) 20%, transparent); color: var(--warn-text); }
-
   .flow { display: grid; grid-template-columns: 1fr; gap: 12px; }
   @media (min-width: 640px) { .flow { grid-template-columns: repeat(2, 1fr); } }
   .flow-step {
@@ -507,17 +490,14 @@
 
 <section class="hero" id="top">
   <div class="hero-inner">
-    <span class="pill"><span class="dot" aria-hidden="true"></span>una skill · seis pasos · metadatos que se validan o no pasan</span>
+    <span class="pill"><span class="dot" aria-hidden="true"></span>una skill de terceros · cuatro ficheros · metadatos que pasan el validador o no pasan</span>
     <h1>Skills que se descubren y se <span class="grad">ejecutan</span></h1>
-    <p class="lead">Esta skill no escribe prosa sobre cómo hacer skills: produce el directorio que un agente puede descubrir por sus metadatos, cargar por partes y ejecutar sin adivinar. Metadatos validados por un script, instrucciones en imperativo, contexto en <code>references/</code> que solo se abre cuando toca y scripts deterministas para lo frágil.</p>
+    <p class="lead">La skill <code>skill-creator</code> produce el directorio de una skill nueva con una forma concreta: metadatos que un validador acepta o rechaza, un <code>SKILL.md</code> corto escrito en imperativo y tres carpetas cuyo contenido se abre solo cuando la operación lo pide. El paquete es de terceros y está fijado a una versión: esta página describe lo que hace y remite a sus ficheros para las reglas.</p>
     <div class="hero-actions">
-      <a class="btn btn-primary" href="#que-es">Qué es esta skill</a>
-      <a class="btn btn-ghost" href="#validar">Validar los metadatos</a>
+      <a class="btn btn-primary" href="#que-hace">Qué hace</a>
+      <a class="btn btn-ghost" href="#uso">Cómo se usa</a>
+      <a class="btn btn-ghost" href="#reglas">Dónde están las reglas</a>
       <a class="btn btn-ghost" href="#diagramas">Los diagramas</a>
-    </div>
-    <div class="status-strip" role="status">
-      <span class="status-mark" aria-hidden="true">OK</span>
-      <div><strong>Todo lo que hay aquí sale del paquete instalado</strong><span>Las reglas, tablas, límites, plantillas y salidas de comandos de esta página están copiados de <code>SKILL.md</code>, de <code>references/checklist.md</code>, de <code>assets/SKILL.template.md</code> y de <code>scripts/validate-metadata.py</code>. Si algo no está en el paquete, no se presenta como regla.</span></div>
     </div>
   </div>
 </section>
@@ -525,103 +505,66 @@
 <div class="layout">
   <nav class="toc" aria-label="Índice de la página">
     <h2>En esta página</h2>
-    <a href="#que-es">1. Qué es esta skill</a>
-    <a href="#metadatos">2. Metadatos: nombre y descripción</a>
-    <a href="#validar">3. Validar antes de seguir</a>
-    <a href="#estructura">4. Estructura del directorio</a>
-    <a href="#redactar">5. Redactar SKILL.md</a>
-    <a href="#scripts">6. Scripts deterministas</a>
-    <a href="#composicion">7. Composición de skills</a>
-    <a href="#checklist">8. Validación final y checklist</a>
-    <a href="#errores">9. Errores y autocorrección</a>
-    <a href="#ejemplo">10. Un encargo completo</a>
-    <a href="#guia">11. La guía del repositorio</a>
-    <a href="#ficheros">12. Los ficheros del paquete</a>
-    <a href="#preguntas">13. Preguntas cortas</a>
-    <a href="#en-este-repositorio">14. Cómo se usa aquí</a>
-    <a href="#diagramas">15. Los diagramas</a>
+    <a href="#que-hace">1. Qué hace</a>
+    <a href="#cuando">2. Cuándo se activa</a>
+    <a href="#uso">3. Cómo se usa</a>
+    <a href="#paquete">4. Qué contiene el paquete</a>
+    <a href="#reglas">5. Dónde están las reglas</a>
+    <a href="#preguntas">6. Preguntas cortas</a>
+    <a href="#diagramas">7. Los diagramas</a>
   </nav>
 
   <main>
-    <section id="que-es" class="section">
-      <div class="section-head"><span class="section-num">1</span><h2 class="title">Qué es esta skill</h2></div>
-      <p class="sub">Un procedimiento de autoría, no una guía de estilo. Su resultado es un directorio con una forma concreta: metadatos que pasan un validador, un <code>SKILL.md</code> corto y tres carpetas cuyo contenido se carga justo a tiempo.</p>
-
-      <p>La especificación de <a href="https://agentskills.io/">agentskills.io</a> es la guía y la referencia estricta de este repositorio: la estructura de directorios, los metadatos, la divulgación progresiva y los scripts de cada skill se contrastan contra ella, no contra una convención propia. La skill la aplica junto al principio de <strong>divulgación progresiva</strong>: el cuerpo principal navega y decide; los detalles viven en ficheros que el agente lee solo cuando la operación concreta los pide. Esa separación es lo que permite que una skill sea estricta sin consumir contexto en cada conversación.</p>
-
-      <div class="grid cols-2">
-        <div class="card">
-          <div class="card-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg></div>
-          <h3>El cerebro: <code>SKILL.md</code></h3>
-          <p>Frontmatter con <code>name</code> y <code>description</code>, y un procedimiento numerado en imperativo. Es el único fichero que el agente ve antes de disparar la skill y el que decide qué se lee después.</p>
-          <p>Sus campos y su forma salen de la especificación de <a href="https://agentskills.io/">agentskills.io</a>, que es la referencia estricta del repositorio.</p>
-          <p>Se mantiene por debajo de 500 líneas: si crece, el detalle se mueve fuera.</p>
-        </div>
-        <div class="card">
-          <div class="card-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4v4a4 4 0 0 1-4 4H9l-5 5V7z"></path></svg></div>
-          <h3>El contexto: tres carpetas</h3>
-          <p><code>scripts/</code> para lo determinista, <code>references/</code> para el contexto plano y <code>assets/</code> para plantillas y ficheros estáticos. Un solo nivel de profundidad en las tres.</p>
-          <p>No se cargan solas: el <code>SKILL.md</code> ordena cuándo leer cada una.</p>
-        </div>
-      </div>
-
-      <h3>El procedimiento, en seis pasos</h3>
-      <div class="flow">
-        <div class="flow-step"><code>paso 1</code><strong>Metadatos y validación</strong><p>Elegir <code>name</code> y <code>description</code>, y ejecutar el validador hasta que salga con código 0.</p></div>
-        <div class="flow-step"><code>paso 2</code><strong>Estructura del directorio</strong><p>Crear la raíz con el nombre validado y las tres carpetas estándar. Sin ficheros para personas.</p></div>
-        <div class="flow-step"><code>paso 3</code><strong>Redactar <code>SKILL.md</code></strong><p>Partir de la plantilla, escribir en imperativo y mover el contexto voluminoso a <code>references/</code>.</p></div>
-        <div class="flow-step"><code>paso 4</code><strong>Scripts deterministas</strong><p>Convertir en CLI de un solo propósito lo que es frágil o repetitivo, con errores legibles.</p></div>
-        <div class="flow-step"><code>paso 5</code><strong>Composición (opcional)</strong><p>Solo si la skill es compleja: una skill enrutadora que deriva a otras según la condición.</p></div>
-        <div class="flow-step"><code>paso 6</code><strong>Validación final</strong><p>Buscar huecos de alucinación, comprobar rutas relativas y pasar la checklist completa.</p></div>
-      </div>
+    <section id="que-hace" class="section">
+      <div class="section-head"><span class="section-num">1</span><h2 class="title">Qué hace</h2></div>
+      <p class="sub">Convierte un encargo de autoría en un directorio que un agente puede descubrir por sus metadatos, cargar por partes y ejecutar sin adivinar. El procedimiento completo vive en <code>SKILL.md</code>; aquí está el resultado que produce y lo que deja fuera.</p>
 
       <div class="table-wrap wrap-cells">
         <table>
-          <thead><tr><th>Cuándo aplica</th><th>Cuándo no</th></tr></thead>
+          <thead><tr><th>Situación</th><th>Qué hace la skill</th></tr></thead>
+          <tbody>
+            <tr><td>Hay que crear una skill nueva de agente.</td><td>Elige un <code>name</code> y redacta una <code>description</code> en tercera persona, con disparadores positivos y negativos.</td></tr>
+            <tr><td>Los metadatos están escritos y hay que saber si sirven.</td><td>Ejecuta el validador y no sigue al directorio hasta que termina con código 0.</td></tr>
+            <tr><td>Hay que redactar las instrucciones que el agente va a ejecutar.</td><td>Las escribe en imperativo y tercera persona, numeradas y cronológicas, con cada decisión explícita y un término por concepto.</td></tr>
+            <tr><td>El cuerpo de la skill crece o el contexto se hincha.</td><td>Mueve el esquema, la plantilla o el conjunto de reglas a <code>references/</code> o a <code>assets/</code>, deja el cuerpo bajo 500 líneas y ordena leer ese fichero solo cuando toca.</td></tr>
+            <tr><td>Una comprobación es frágil o repetitiva: una expresión regular, un análisis complejo, código repetitivo.</td><td>La empaqueta como CLI de un solo propósito en <code>scripts/</code>, con el éxito por stdout y el error por stderr.</td></tr>
+            <tr><td>El borrador está terminado.</td><td>Busca huecos donde el agente tendría que suponer algo y recorre la checklist de <code>references/checklist.md</code>.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="note">
+        <p><strong>Una skill de terceros, fijada a una versión.</strong> El paquete vive en <code>.skills/skill-creator/</code> y no es de autoría propia: se usa tal como está y, cuando toca actualizar, se sustituye entero; no se edita en este repositorio. Esta página describe lo que hay y no propone cambios de redacción ni extensiones del paquete.</p>
+      </div>
+
+      <div class="note">
+        <p><strong>Lo que no hace.</strong> Su disparador es crear directorios de skill nuevos: no mantiene los que ya existen, no escribe documentación general, no envuelve código de librería que no es para un agente y no produce <code>README.md</code>.</p>
+      </div>
+    </section>
+
+    <section id="cuando" class="section">
+      <div class="section-head"><span class="section-num">2</span><h2 class="title">Cuándo se activa</h2></div>
+      <p class="sub">Las dos columnas están en la <code>description</code> del frontmatter. Los disparadores negativos no son cortesía: son lo que evita que la skill se active en la conversación equivocada.</p>
+
+      <div class="table-wrap wrap-cells">
+        <table>
+          <thead><tr><th>Se activa para</th><th>No se activa para</th></tr></thead>
           <tbody>
             <tr><td>Crear directorios de skill nuevos.</td><td>Documentación general.</td></tr>
             <tr><td>Redactar instrucciones procedimentales.</td><td>Código de librería que no es para un agente.</td></tr>
-            <tr><td>Optimizar metadatos para que la skill se descubra.</td><td>Ficheros <code>README.md</code> u otra documentación para personas.</td></tr>
+            <tr><td>Optimizar los metadatos para que la skill se descubra.</td><td>Ficheros <code>README.md</code> u otra documentación para personas.</td></tr>
           </tbody>
         </table>
       </div>
-      <p>Los disparadores negativos no son cortesía: son parte de la <code>description</code> y son lo que evita que la skill se active en la conversación equivocada.</p>
-    </section>
-
-    <section id="metadatos" class="section">
-      <div class="section-head"><span class="section-num">2</span><h2 class="title">Metadatos: nombre y descripción</h2></div>
-      <p class="sub">El <code>name</code> y la <code>description</code> del frontmatter son los únicos campos que el agente ve antes de disparar la skill. Si no están optimizados para el descubrimiento, la skill es invisible por muy buenas que sean sus instrucciones.</p>
-
-      <div class="table-wrap wrap-cells">
-        <table>
-          <thead><tr><th>Campo</th><th>Regla</th><th>Por qué</th></tr></thead>
-          <tbody>
-            <tr><td><code>name</code></td><td>Entre 1 y 64 caracteres. Solo minúsculas, números y guiones simples: sin guiones consecutivos y sin guion al principio ni al final.</td><td>Es un identificador, no un título.</td></tr>
-            <tr><td><code>name</code></td><td>Debe coincidir exactamente con el nombre del directorio padre: <code>name: angular-testing</code> vive en <code>angular-testing/SKILL.md</code>.</td><td>El enrutamiento y la ruta tienen que decir lo mismo.</td></tr>
-            <tr><td><code>description</code></td><td>Máximo 1.024 caracteres.</td><td>Es el texto que decide si la skill se activa o no.</td></tr>
-            <tr><td><code>description</code></td><td>En tercera persona, con disparadores positivos («Use when…») y negativos («Don't use for…»).</td><td>Los positivos la encienden donde debe; los negativos la apagan donde no.</td></tr>
-          </tbody>
-        </table>
-      </div>
-
-      <h3>El mismo campo, mal y bien</h3>
-      <div class="code"><pre><code># Mal: no dice qué hace, ni cuándo, ni cuándo no
-description: React skills.
-
-# Bien: capacidad, disparadores positivos y negativos
-description: Creates and builds React components using Tailwind CSS. Use when the
-  user wants to update component styles or UI logic. Don't use it for Vue, Svelte,
-  or vanilla CSS projects.</code></pre></div>
-      <p>La descripción mala se dispara en cualquier conversación o en ninguna. La buena acota el disparo con la misma precisión con la que un buen <code>SKILL.md</code> acota los pasos.</p>
 
       <div class="note">
-        <p><strong>La tercera persona no es un formalismo.</strong> El validador trata las palabras de primera y segunda persona como un fallo: una descripción que dice «I help you…» describe una conversación, no una capacidad, y el agente que enruta no está dentro de esa conversación.</p>
+        <p><strong>La descripción decide.</strong> Es el único texto que el agente ve antes de disparar la skill, y por eso el procedimiento empieza por ella: nombre y descripción primero, validador después.</p>
       </div>
     </section>
 
-    <section id="validar" class="section">
-      <div class="section-head"><span class="section-num">3</span><h2 class="title">Validar antes de seguir</h2></div>
-      <p class="sub">El paso 1 no termina con una decisión, termina con un código de salida 0. Mientras el validador falle, no se crea la estructura: se corrige el metadato y se vuelve a ejecutar.</p>
+    <section id="uso" class="section">
+      <div class="section-head"><span class="section-num">3</span><h2 class="title">Cómo se usa</h2></div>
+      <p class="sub">El procedimiento son seis pasos —metadatos, directorio, <code>SKILL.md</code>, scripts, composición opcional y auditoría final— más una sección de errores. Esta página no los copia: copia la única puerta automática del recorrido, el validador de metadatos, y el significado de lo que imprime. La ruta está escrita como la escribe el <code>SKILL.md</code>, relativa a la carpeta de la skill; desde la raíz del repositorio el fichero está en <code>.skills/skill-creator/scripts/validate-metadata.py</code>.</p>
 
       <div class="code"><pre><code>python3 scripts/validate-metadata.py --name "[name]" --description "[description]"</code></pre></div>
 
@@ -629,372 +572,103 @@ description: Creates and builds React components using Tailwind CSS. Use when th
         <table>
           <thead><tr><th>Argumento</th><th>Obligatorio</th><th>Qué comprueba</th></tr></thead>
           <tbody>
-            <tr><td><code>--name</code></td><td>Sí</td><td>Longitud de 1 a 64 y el patrón <code>^[a-z0-9]+(-[a-z0-9]+)*$</code>.</td></tr>
-            <tr><td><code>--description</code></td><td>No</td><td>Longitud máxima de 1.024 caracteres y ausencia de palabras en primera o segunda persona.</td></tr>
+            <tr><td><code>--name</code></td><td>Sí</td><td>De 1 a 64 caracteres y el patrón <code>^[a-z0-9]+(-[a-z0-9]+)*$</code>.</td></tr>
+            <tr><td><code>--description</code></td><td>No: su valor por defecto es vacío</td><td>Máximo 1.024 caracteres y ausencia de palabras en primera o segunda persona.</td></tr>
           </tbody>
         </table>
       </div>
 
-      <h3>Las tres salidas, tal como se producen</h3>
-      <div class="code"><pre><code>$ python scripts/validate-metadata.py --name "skill-creator" \
-    --description "Authors and structures professional-grade agent skills following the agentskills.io spec."
-SUCCESS: Metadata is valid and optimized for discovery.
-# código de salida: 0</code></pre></div>
-
-      <div class="code"><pre><code>$ python scripts/validate-metadata.py --name "Skill_Creator" --description "Authors skills."
-NAME ERROR: 'Skill_Creator' contains invalid characters. Use only lowercase letters, numbers, and single hyphens. No consecutive hyphens, and cannot start/end with a hyphen.
-# código de salida: 1</code></pre></div>
-
-      <div class="code"><pre><code>$ python scripts/validate-metadata.py --name "skill-creator" \
-    --description "I help you create skills for your agent."
-STYLE WARNING: Description contains first/second person terms: {'i', 'you', 'your'}. Use third-person imperative (e.g., 'Creates...', 'Updates...').
-# código de salida: 1</code></pre></div>
-
+      <h3>Qué significa cada salida</h3>
       <div class="table-wrap wrap-cells">
         <table>
-          <thead><tr><th>Salida</th><th>Qué significa</th><th>Qué se hace</th></tr></thead>
+          <thead><tr><th>Salida</th><th>Qué imprime</th><th>Qué significa</th></tr></thead>
           <tbody>
-            <tr><td><span class="sev sev-ok">0</span></td><td>Los metadatos son válidos y están optimizados para el descubrimiento.</td><td>Se continúa al paso 2.</td></tr>
-            <tr><td><span class="sev sev-error">1</span></td><td>Hay al menos un error. El prefijo del mensaje dice de qué tipo: <code>NAME ERROR</code>, <code>DESCRIPTION ERROR</code> o <code>STYLE WARNING</code>.</td><td>Se identifica el error concreto, se reescribe el campo y se vuelve a ejecutar hasta obtener 0.</td></tr>
+            <tr><td><span class="sev sev-ok">0</span></td><td><code>SUCCESS: Metadata is valid and optimized for discovery.</code> por stdout.</td><td>Los metadatos pasan las comprobaciones del script. El procedimiento continúa con el directorio.</td></tr>
+            <tr><td><span class="sev sev-error">1</span></td><td>Uno o más mensajes por stderr, cada uno con su prefijo: <code>NAME ERROR:</code>, <code>DESCRIPTION ERROR:</code> o <code>STYLE WARNING:</code>.</td><td>Al menos una comprobación falla. Se reescribe el campo que el mensaje nombra y se vuelve a ejecutar hasta obtener 0.</td></tr>
           </tbody>
         </table>
       </div>
 
       <div class="note">
-        <p><strong>Dos detalles que conviene conocer antes de usarlo.</strong> <code>STYLE WARNING</code> se comporta como un error: sale con código 1 y bloquea el paso. Y la comprobación de estilo es una heurística por palabras completas —<code>i</code>, <code>me</code>, <code>my</code>, <code>we</code>, <code>our</code>, <code>you</code>, <code>your</code>—, así que describe lo que detecta, no todo lo que un revisor humano vería.</p>
-        <p>El script tampoco obliga a pasar <code>--description</code>: con el valor por defecto vacío devuelve éxito. La longitud se comprueba sobre el texto que recibe.</p>
+        <p><strong>Tres detalles del validador, dichos como son.</strong> <code>STYLE WARNING</code> no es un aviso: termina con código 1 igual que los errores, y el apartado de errores de <code>SKILL.md</code> lo nombra <code>STYLE ERROR</code> mientras el script imprime <code>STYLE WARNING</code>. La comprobación de estilo es una heurística por palabras completas —<code>i</code>, <code>me</code>, <code>my</code>, <code>we</code>, <code>our</code>, <code>you</code>, <code>your</code>—, así que detecta lo que su lista cubre, no todo lo que un revisor vería. Y sin <code>--description</code> el script recibe una cadena vacía y devuelve éxito: la longitud se comprueba sobre el texto que le llega.</p>
       </div>
+
+      <div class="qa"><h3>El error no se rodea</h3><p>El <code>SKILL.md</code> pide autocorregir el metadato con lo que dice <code>stderr</code> y repetir hasta que el script termine bien. No hay una segunda vía documentada dentro del procedimiento: mientras el validador falle, no se crea la estructura.</p></div>
     </section>
 
-    <section id="estructura" class="section">
-      <div class="section-head"><span class="section-num">4</span><h2 class="title">Estructura del directorio</h2></div>
-      <p class="sub">Con el nombre ya validado, la estructura no se improvisa: cuatro entradas, ni una más, y el contenido de las tres carpetas siempre a un nivel de profundidad.</p>
+    <section id="paquete" class="section">
+      <div class="section-head"><span class="section-num">4</span><h2 class="title">Qué contiene el paquete</h2></div>
+      <p class="sub">Cuatro ficheros y ninguna documentación para personas: el paquete se carga en la ventana de contexto del agente, así que lo que no se ejecuta no tiene sitio dentro.</p>
 
-      <div class="code"><pre><code>distintivo-visual/
-├── SKILL.md              # obligatorio: metadatos + procedimiento
-├── scripts/              # CLIs minúsculas y lógica determinista
-├── references/           # contexto plano: esquemas, documentación de API
-└── assets/               # plantillas de salida, esquemas JSON, ficheros estáticos</code></pre></div>
-
-      <div class="table-wrap wrap-cells">
-        <table>
-          <thead><tr><th>Carpeta</th><th>Para qué</th><th>Condición</th></tr></thead>
-          <tbody>
-            <tr><td><code>scripts/</code></td><td>Herramientas CLI minúsculas y lógica determinista.</td><td>Un solo propósito por script; nada de código de librería.</td></tr>
-            <tr><td><code>references/</code></td><td>Contexto plano: esquemas, documentación de API, conjuntos de reglas.</td><td>Un nivel de profundidad y enlazado desde <code>SKILL.md</code>.</td></tr>
-            <tr><td><code>assets/</code></td><td>Plantillas de salida, esquemas JSON y ficheros estáticos.</td><td>Se copian o se leen, no se interpretan.</td></tr>
-          </tbody>
-        </table>
-      </div>
-
-      <h3>Las cuatro condiciones que se comprueban</h3>
-      <ul class="plain">
-        <li><strong>Un solo nivel:</strong> <code>references/schema.md</code> sí; <code>references/db/v1/schema.md</code> no.</li>
-        <li><strong>Solo tres carpetas estándar:</strong> <code>scripts/</code>, <code>references/</code> y <code>assets/</code>.</li>
-        <li><strong>Ningún fichero para personas:</strong> <code>README.md</code>, <code>CHANGELOG.md</code> o <code>INSTALLATION_GUIDE.md</code> no tienen sitio dentro de la skill.</li>
-        <li><strong>Barras inclinadas:</strong> todas las rutas que aparecen en <code>SKILL.md</code> son relativas y usan <code>/</code>, sea cual sea el sistema operativo.</li>
-      </ul>
-
-      <div class="note">
-        <p><strong>Por qué se prohíbe la documentación dentro.</strong> Una skill se carga en la ventana de contexto del agente; un <code>README.md</code> dentro del paquete es contexto que se paga y no se usa. La documentación del proyecto va fuera del paquete, en <code>docs/</code>, donde no consume nada. Esta misma página vive ahí.</p>
-      </div>
-    </section>
-
-    <section id="redactar" class="section">
-      <div class="section-head"><span class="section-num">5</span><h2 class="title">Redactar SKILL.md</h2></div>
-      <p class="sub">Se copia la estructura de la plantilla, no se describe. El texto se escribe para un agente: secuencia cronológica, decisiones explícitas y términos idénticos de principio a fin.</p>
-
-      <h3>La plantilla, tal como está en <code>assets/SKILL.template.md</code></h3>
-      <div class="code"><pre><code>---
-name: [skill-name]
-description: [Action-oriented capability description in the third person. Max 1,024 characters. Include positive triggers. Do not use for [explicit negative triggers].]
----
-
-# [Skill Title]
-
-## Procedures
-
-**Step 1: [Action Phase]**
-1. [Third-person imperative instruction, e.g., "Extract the query parameters..."]
-2. [Instruction referencing an asset, e.g., "Read `assets/template.json` to structure the final output."]
-
-**Step 2: [Action Phase]**
-1. [Decision tree/conditional logic, e.g., "If source maps are required, run `scripts/build.sh`. Otherwise, skip to Step 3."]
-2. [Instruction requiring JiT loading, e.g., "Read `references/auth-flow.md` to map the specific error codes."]
-3. Execute `python scripts/[script-name].py` to [perform deterministic action].
-
-## Error Handling
-* If `scripts/[script-name].py` fails due to [specific edge case], execute [recovery step].
-* If [condition B occurs], read `references/[troubleshooting-file].md`.</code></pre></div>
-
-      <h3>Las cinco reglas de redacción</h3>
-      <div class="role-grid">
-        <div class="role-block">
-          <span class="role-label">voz</span>
-          <h3>Imperativo, tercera persona</h3>
-          <p>Órdenes directas: «Extract the text», «Run the build». Ni «Voy a extraer» ni «Deberías extraer».</p>
-        </div>
-        <div class="role-block">
-          <span class="role-label">orden</span>
-          <h3>Secuencia numerada</h3>
-          <p>El flujo es cronológico y estricto. Cada árbol de decisión se escribe completo, con la condición y el salto.</p>
-        </div>
-        <div class="role-block">
-          <span class="role-label">forma</span>
-          <h3>Plantillas, no descripciones</h3>
-          <p>Si la salida tiene estructura, la plantilla va en <code>assets/</code> y se ordena copiarla en lugar de describirla con párrafos.</p>
-        </div>
-        <div class="role-block">
-          <span class="role-label">lenguaje</span>
-          <h3>Terminología idéntica</h3>
-          <p>Un término por concepto, y el más propio del dominio: en Angular, «template» y no «html», «markup» o «view».</p>
-        </div>
-      </div>
-
-      <h3>Divulgación progresiva</h3>
-      <ul class="plain">
-        <li>El <code>SKILL.md</code> principal se queda por debajo de <strong>500 líneas</strong>.</li>
-        <li>Un esquema grande, un conjunto de reglas complejo o contexto voluminoso se mueve a un fichero plano de <code>references/</code>.</li>
-        <li>El agente recibe la orden de leerlo solo cuando hace falta, no antes: eso es la carga justo a tiempo.</li>
-      </ul>
-      <div class="code"><pre><code>Read references/api-spec.md to identify the correct endpoint.</code></pre></div>
-      <p>La instrucción de carga es parte del contrato: sin ella, el fichero existe y nadie lo abre.</p>
-    </section>
-
-    <section id="scripts" class="section">
-      <div class="section-head"><span class="section-num">6</span><h2 class="title">Scripts deterministas</h2></div>
-      <p class="sub">Lo que no debe variar no se le pide al modelo: se empaqueta como un CLI minúsculo que devuelve éxito o fallo con un mensaje que el agente puede usar para corregirse.</p>
-
-      <div class="table-wrap wrap-cells">
-        <table>
-          <thead><tr><th>Qué se delega</th><th>Cómo se diseña</th></tr></thead>
-          <tbody>
-            <tr><td>Tareas frágiles: expresiones regulares, análisis complejo, código repetitivo.</td><td>Un script de un solo propósito en <code>scripts/</code>, con argumentos explícitos.</td></tr>
-            <tr><td>Comunicación del resultado.</td><td><code>stdout</code> para el éxito, <code>stderr</code> para el fallo, con mensajes descriptivos y legibles.</td></tr>
-            <tr><td>Errores que el agente debe poder corregir solo.</td><td>Mensajes que digan qué campo falla y qué forma se esperaba, sin intervención de la persona.</td></tr>
-            <tr><td>Lógica de librería de larga vida.</td><td>Fuera: pertenece a las CLI estándar del repositorio, no al paquete de la skill.</td></tr>
-          </tbody>
-        </table>
-      </div>
-
-      <p>El validador de metadatos de esta propia skill es el modelo: declara sus argumentos, imprime el éxito por <code>stdout</code>, imprime cada error con un prefijo estable por <code>stderr</code> y devuelve código 1 cuando hay algo que corregir.</p>
-
-      <div class="note">
-        <p><strong>La prueba de que un script está bien escrito</strong> es que el agente pueda autocorregirse con su salida. Si un mensaje de error obliga a abrir el código fuente para entenderlo, el script no está terminado: está escrito para una persona que lo depura.</p>
-      </div>
-    </section>
-
-    <section id="composicion" class="section">
-      <div class="section-head"><span class="section-num">7</span><h2 class="title">Composición de skills</h2></div>
-      <p class="sub">El paso 5 es opcional y solo aplica a skills complejas. En lugar de un cuerpo que lo hace todo, una skill de alto nivel que deriva a otras según la condición.</p>
-
-      <ul class="plain">
-        <li>Se crea una skill enrutadora de alto nivel.</li>
-        <li>Sus disparadores condicionales apuntan a otras carpetas de skill concretas.</li>
-        <li>La derivación se escribe como una orden, no como una sugerencia: «To build the client, see [path to client-build skill]».</li>
-      </ul>
-
-      <p>Si la skill no es compleja, este paso se salta. Añadir una capa de enrutado a un procedimiento de tres pasos solo añade una lectura más.</p>
-    </section>
-
-    <section id="checklist" class="section">
-      <div class="section-head"><span class="section-num">8</span><h2 class="title">Validación final y checklist</h2></div>
-      <p class="sub">El paso 6 es una auditoría, no una relectura: se buscan los puntos donde el agente se vería obligado a adivinar y se contrasta el resultado con la checklist completa.</p>
-
-      <h3>Las tres comprobaciones del paso 6</h3>
-      <ul class="plain">
-        <li><strong>Huecos de alucinación:</strong> cualquier punto donde el agente tenga que suponer un paso, una ruta o un formato.</li>
-        <li><strong>Rutas:</strong> todas relativas y con barras inclinadas.</li>
-        <li><strong>Contraste final:</strong> el resultado se compara con <code>references/checklist.md</code>.</li>
-      </ul>
-
-      <h3>Las 19 comprobaciones, por bloque</h3>
-      <div class="table-wrap wrap-cells">
-        <table>
-          <thead><tr><th>Bloque</th><th>Comprobación</th><th>Qué se exige</th></tr></thead>
-          <tbody>
-            <tr><td>1. Metadatos y descubrimiento</td><td>Nomenclatura</td><td>1-64 caracteres, minúsculas, números y guiones simples.</td></tr>
-            <tr><td>1. Metadatos y descubrimiento</td><td>Coincidencia con el directorio</td><td>El <code>name</code> es exactamente el nombre de la carpeta padre.</td></tr>
-            <tr><td>1. Metadatos y descubrimiento</td><td>Longitud de la descripción</td><td>Menos de 1.024 caracteres.</td></tr>
-            <tr><td>1. Metadatos y descubrimiento</td><td>Disparadores</td><td>Incluye casos de uso («Use when…») y disparadores negativos («Don't use for…»).</td></tr>
-            <tr><td>1. Metadatos y descubrimiento</td><td>Tono en tercera persona</td><td>Sin «I», «me», «my», «you» ni «your».</td></tr>
-            <tr><td>2. Estructura y rutas</td><td>Jerarquía plana</td><td>Todo el contenido de <code>scripts/</code>, <code>references/</code> y <code>assets/</code> a un nivel exacto.</td></tr>
-            <tr><td>2. Estructura y rutas</td><td>Carpetas estándar</td><td>Solo <code>scripts/</code>, <code>references/</code> y <code>assets/</code>.</td></tr>
-            <tr><td>2. Estructura y rutas</td><td>Sin documentación humana</td><td>Ningún <code>README.md</code>, <code>CHANGELOG.md</code> ni <code>INSTALLATION_GUIDE.md</code>.</td></tr>
-            <tr><td>2. Estructura y rutas</td><td>Barras inclinadas</td><td>Todas las rutas de <code>SKILL.md</code> con <code>/</code>, sea cual sea el sistema.</td></tr>
-            <tr><td>3. Lógica e instrucciones</td><td>Contexto ligero</td><td><code>SKILL.md</code> por debajo de 500 líneas.</td></tr>
-            <tr><td>3. Lógica e instrucciones</td><td>Modo imperativo</td><td>Órdenes directas: «Extract», «Run», «Validate».</td></tr>
-            <tr><td>3. Lógica e instrucciones</td><td>Pasos deterministas</td><td>Flujo numerado y cronológico, con árboles de decisión explícitos.</td></tr>
-            <tr><td>3. Lógica e instrucciones</td><td>Divulgación progresiva</td><td>Esquemas, plantillas y reglas extensas en <code>references/</code> o <code>assets/</code>, leídos solo cuando toca.</td></tr>
-            <tr><td>3. Lógica e instrucciones</td><td>Terminología concreta</td><td>Términos propios del dominio, usados de forma coherente.</td></tr>
-            <tr><td>4. Scripts y determinismo</td><td>Diseño CLI</td><td>Scripts con argumentos, no bloques de código embebidos.</td></tr>
-            <tr><td>4. Scripts y determinismo</td><td>Bucle de retorno</td><td><code>stdout</code> descriptivo para el éxito y <code>stderr</code> para el fallo, para que el agente se corrija.</td></tr>
-            <tr><td>4. Scripts y determinismo</td><td>Sin código de librería</td><td>Un solo propósito; la lógica compleja va a la CLI estándar del repositorio o a herramientas externas.</td></tr>
-            <tr><td>5. Gestión de errores</td><td>Casos límite</td><td>Una sección «Error Handling» que cubra estados de fallo y configuraciones ausentes.</td></tr>
-            <tr><td>5. Gestión de errores</td><td>Validación</td><td>Un paso que ejecute los scripts de validación cuando apliquen.</td></tr>
-          </tbody>
-        </table>
-      </div>
-      <p>La checklist no admite matices: <strong>todas las casillas deben marcarse como «Pass»</strong> antes de dar la skill por desplegable.</p>
-    </section>
-
-    <section id="errores" class="section">
-      <div class="section-head"><span class="section-num">9</span><h2 class="title">Errores y autocorrección</h2></div>
-      <p class="sub">La skill nombra dos fallos y su salida. No hay un tercero documentado: si aparece algo distinto, no está cubierto por el procedimiento.</p>
-
-      <div class="qa"><h3>Falla el validador de metadatos</h3><p>Primero se identifica el error concreto por su prefijo —por ejemplo <code>STYLE ERROR</code>— y después se reescribe el campo eliminando los pronombres de primera y segunda persona. No se cambia el nombre del campo ni se desactiva la comprobación: se corrige el texto y se vuelve a ejecutar.</p></div>
-      <div class="qa"><h3>El borrador se hincha de contexto</h3><p>Si el <code>SKILL.md</code> supera las 500 líneas, se extrae el bloque procedimental más grande y se mueve a un fichero de <code>references/</code>. Lo que se queda en el cuerpo principal es la orden de leerlo cuando toque.</p></div>
-
-      <div class="note">
-        <p><strong>Por qué solo dos.</strong> Un procedimiento que enumera todos los errores posibles promete una cobertura que no tiene. Estos dos son los que el propio ciclo detecta —el validador y el contador de líneas—, y son los únicos sobre los que la skill afirma una conducta.</p>
-      </div>
-    </section>
-
-    <section id="ejemplo" class="section">
-      <div class="section-head"><span class="section-num">10</span><h2 class="title">Un encargo completo</h2></div>
-      <p class="sub">El mismo recorrido de los seis pasos, con una skill concreta. Es una ilustración del procedimiento, no una regla nueva: cada decisión se apoya en un paso ya descrito.</p>
-
-      <div class="table-wrap wrap-cells">
-        <table>
-          <thead><tr><th>Paso</th><th>Qué se hace</th><th>Evidencia</th></tr></thead>
-          <tbody>
-            <tr><td>1</td><td>Nombrar la skill <code>angular-testing</code> y redactar la descripción con disparadores positivos y negativos.</td><td>El validador sale con código 0.</td></tr>
-            <tr><td>2</td><td>Crear <code>angular-testing/</code> con <code>scripts/</code>, <code>references/</code> y <code>assets/</code>.</td><td>Cuatro entradas, sin <code>README.md</code>.</td></tr>
-            <tr><td>3</td><td>Copiar la estructura de la plantilla y escribir los pasos en imperativo.</td><td><code>SKILL.md</code> por debajo de 500 líneas.</td></tr>
-            <tr><td>4</td><td>Mover a un script la comprobación repetitiva de configuración de tests.</td><td>CLI con argumentos y errores legibles.</td></tr>
-            <tr><td>5</td><td>Saltar la composición: la skill no necesita enrutar a otras.</td><td>Sin capa intermedia.</td></tr>
-            <tr><td>6</td><td>Recorrer la checklist de las 19 comprobaciones.</td><td>Todas en «Pass».</td></tr>
-          </tbody>
-        </table>
-      </div>
-
-      <h3>Paso 1: metadatos y validación</h3>
-      <div class="code"><pre><code>---
-name: angular-testing
-description: Writes and runs Angular component tests with TestBed and Jasmine. Use when
-  the user wants to add unit tests to a component, fix a failing spec, or configure the
-  test environment. Don't use for end-to-end Playwright suites or React testing.
----</code></pre></div>
-      <div class="code"><pre><code>$ python scripts/validate-metadata.py --name "angular-testing" \
-    --description "Writes and runs Angular component tests with TestBed and Jasmine. Use when the user wants to add unit tests to a component, fix a failing spec, or configure the test environment. Don't use for end-to-end Playwright suites or React testing."
-SUCCESS: Metadata is valid and optimized for discovery.
-# código de salida: 0</code></pre></div>
-
-      <h3>Paso 2: estructura</h3>
-      <div class="code"><pre><code>angular-testing/
-├── SKILL.md
-├── scripts/
-│   └── check-test-setup.py
+      <div class="code"><pre><code>skill-creator/
+├── SKILL.md                       # los seis pasos y la gestión de errores
 ├── references/
-│   └── jasmine-matchers.md
-└── assets/
-    └── spec.template.ts</code></pre></div>
-
-      <h3>Paso 3: el esqueleto de <code>SKILL.md</code></h3>
-      <div class="code"><pre><code># Angular Component Testing
-
-## Procedures
-
-**Step 1: Inspect the test setup**
-1. Read `references/jasmine-matchers.md` only if the spec uses a matcher that is not standard.
-2. Execute `python scripts/check-test-setup.py` to confirm the runner and the test target.
-
-**Step 2: Write the spec**
-1. If the component has no spec, copy the structure of `assets/spec.template.ts`.
-2. Otherwise, extend the existing spec instead of creating a second one.
-
-## Error Handling
-* If `scripts/check-test-setup.py` fails because the test target is missing, report the missing configuration and stop.</code></pre></div>
-
-      <p>El esqueleto copia la forma de la plantilla: frontmatter ya validado, pasos numerados, decisión explícita en el paso 2 y una sección de errores con su recuperación.</p>
-    </section>
-
-    <section id="guia" class="section">
-      <div class="section-head"><span class="section-num">11</span><h2 class="title">La guía del repositorio</h2></div>
-      <p class="sub">Esta página condensa la skill y la hace navegable. La guía de buenas prácticas explica el razonamiento que hay detrás y cómo validar una skill con un LLM antes de darla por buena.</p>
-
-      <p>La guía cubre la estructura de directorios, la optimización del frontmatter, la divulgación progresiva, la redacción procedimental, los scripts deterministas y la composición. Además propone tres pruebas de validación que la skill no ejecuta por sí sola: pedir a un LLM que genere disparadores y no disparadores a partir de la descripción, simular la ejecución de la skill paso a paso para encontrar bloqueos, y encargar a un revisor implacable preguntas de casos límite.</p>
-
-      <div class="grid cols-2">
-        <a class="card card-link" href="../best-practices-create-skills/README.md">
-          <div class="card-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path><path d="M9 7h7M9 11h7"></path></svg></div>
-          <h3>Buenas prácticas para crear skills</h3>
-          <p>La guía completa: estructura, frontmatter, divulgación progresiva, instrucciones procedimentales, scripts y validación con LLM.</p>
-          <span class="go">Abrir la guía →</span>
-        </a>
-        <a class="card card-link" href="../../.skills/skill-creator/SKILL.md">
-          <div class="card-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><path d="M14 2v6h6M9 13h6M9 17h6"></path></svg></div>
-          <h3>El contrato: <code>SKILL.md</code></h3>
-          <p>El cuerpo normativo de la skill: los seis pasos y la gestión de errores, tal como se ejecutan.</p>
-          <span class="go">Abrir el contrato →</span>
-        </a>
-      </div>
-    </section>
-
-    <section id="ficheros" class="section">
-      <div class="section-head"><span class="section-num">12</span><h2 class="title">Los ficheros del paquete</h2></div>
-      <p class="sub">Cuatro ficheros. Dos se leen siempre y dos solo cuando el paso concreto los pide: esa es toda la superficie de la skill.</p>
+│   └── checklist.md               # la auditoría final, en cinco bloques
+├── assets/
+│   └── SKILL.template.md          # la forma del cuerpo: frontmatter, pasos, errores
+└── scripts/
+    └── validate-metadata.py       # nombre y descripción, con códigos de salida</code></pre></div>
 
       <div class="table-wrap wrap-cells">
         <table>
-          <thead><tr><th>Fichero</th><th>Cuándo se lee</th><th>Qué aporta</th></tr></thead>
+          <thead><tr><th>Fichero</th><th>Cuándo lo abre el agente</th><th>Qué aporta</th></tr></thead>
           <tbody>
-            <tr><td><code>SKILL.md</code></td><td>Siempre: es el punto de entrada.</td><td>Metadatos y procedimiento de seis pasos, con la gestión de errores.</td></tr>
-            <tr><td><code>references/checklist.md</code></td><td>Al final, en el paso 6.</td><td>Las 19 comprobaciones en cinco bloques que deben marcarse como «Pass».</td></tr>
-            <tr><td><code>assets/SKILL.template.md</code></td><td>Al empezar a redactar, en el paso 3.</td><td>La estructura del cuerpo: frontmatter, pasos numerados y errores.</td></tr>
-            <tr><td><code>scripts/validate-metadata.py</code></td><td>En el paso 1, antes de crear la estructura.</td><td>Validación del nombre y de la descripción con códigos de salida y mensajes autocorregibles.</td></tr>
+            <tr><td><code>SKILL.md</code></td><td>Siempre: es el punto de entrada.</td><td>Los metadatos, los seis pasos numerados y las dos ramas de la gestión de errores.</td></tr>
+            <tr><td><code>references/checklist.md</code></td><td>Al final, en el paso 6.</td><td>La auditoría en cinco bloques; todas las casillas en «Pass» antes de dar la skill por desplegable.</td></tr>
+            <tr><td><code>assets/SKILL.template.md</code></td><td>Al empezar a redactar, en el paso 3.</td><td>La forma del cuerpo que se copia: frontmatter, pasos numerados y sección de errores.</td></tr>
+            <tr><td><code>scripts/validate-metadata.py</code></td><td>En el paso 1, antes de crear el directorio.</td><td>La validación del nombre y de la descripción, con códigos de salida y mensajes que sirven para autocorregir.</td></tr>
           </tbody>
         </table>
       </div>
 
       <div class="note">
-        <p><strong>Esta página no consume contexto.</strong> Vive en <code>docs/skill-creator/</code>, fuera del directorio de la skill, y <code>SKILL.md</code> no la referencia: la skill solo carga lo que enlaza. Documentar en detalle no la hace más lenta ni más cara.</p>
+        <p><strong>Esta página no consume contexto.</strong> Vive en <code>docs/skill-creator/</code>, fuera del directorio de la skill, y <code>SKILL.md</code> no la enlaza: la skill solo carga lo que enlaza. Documentar aquí no la hace más lenta ni más cara.</p>
+      </div>
+    </section>
+
+    <section id="reglas" class="section">
+      <div class="section-head"><span class="section-num">5</span><h2 class="title">Dónde están las reglas</h2></div>
+      <p class="sub">Las reglas viven en los cuatro ficheros del paquete y en la especificación externa contra la que se contrastan, no en esta página. Aquí se indica qué responde a cada pregunta.</p>
+
+      <div class="table-wrap wrap-cells">
+        <table>
+          <thead><tr><th>Pregunta</th><th>Se responde en</th></tr></thead>
+          <tbody>
+            <tr><td>Qué es obligatorio, en qué orden se trabaja y qué se hace cuando algo falla.</td><td><code>SKILL.md</code></td></tr>
+            <tr><td>Qué forma tiene el cuerpo de un <code>SKILL.md</code> y qué se copia de la plantilla.</td><td><code>assets/SKILL.template.md</code></td></tr>
+            <tr><td>Qué se revisa antes de declarar la skill desplegable.</td><td><code>references/checklist.md</code></td></tr>
+            <tr><td>Cómo se comprueba que un nombre y una descripción se aceptan.</td><td><code>scripts/validate-metadata.py</code></td></tr>
+            <tr><td>Cuál es la norma de estructura, metadatos, divulgación progresiva y scripts contra la que se contrasta todo.</td><td><a href="https://agentskills.io/">agentskills.io</a></td></tr>
+            <tr><td>Cómo se razona cada regla y qué pruebas de validación con un modelo añade este repositorio.</td><td><code>docs/best-practices-create-skills/README.md</code></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p><span class="chip-repo">de este repositorio</span> La guía <a href="../best-practices-create-skills/README.md">docs/best-practices-create-skills/README.md</a> no es parte del paquete: es un artefacto de SKILLS-AGP que resume la especificación y añade pruebas de validación con un modelo. Lo que la skill ejecuta es el paquete; la guía explica el porqué.</p>
+
+      <div class="note">
+        <p><strong>La especificación externa manda sobre todos.</strong> El <code>README.md</code> de este repositorio declara <a href="https://agentskills.io/">agentskills.io</a> como guía y referencia estricta: no es una convención propia que esta página pueda suavizar.</p>
+      </div>
+
+      <div class="note">
+        <p><strong>Si esta página y el paquete no coinciden, manda el paquete.</strong> Es lo que el agente ejecuta. Esta página no añade normas ni suaviza las que existen.</p>
       </div>
     </section>
 
     <section id="preguntas" class="section">
-      <div class="section-head"><span class="section-num">13</span><h2 class="title">Preguntas cortas</h2></div>
-      <p class="sub">Las dudas que aparecen al crear la primera skill, con la respuesta que da el procedimiento.</p>
+      <div class="section-head"><span class="section-num">6</span><h2 class="title">Preguntas cortas</h2></div>
+      <p class="sub">Lo que no se resuelve leyendo las secciones anteriores.</p>
 
-      <div class="qa"><h3>¿Por qué el <code>name</code> tiene que ser igual que la carpeta?</h3><p>Porque el nombre es el identificador con el que se enruta la skill y la carpeta es el sitio donde vive. Si no coinciden, la ruta del fichero y los metadatos dicen cosas distintas.</p></div>
-      <div class="qa"><h3>¿Puedo saltarme el validador?</h3><p>No dentro del procedimiento: el paso 1 exige ejecutarlo y corregir hasta que devuelva 0. Es la única puerta automática que separa los metadatos válidos de los que solo parecen razonables.</p></div>
-      <div class="qa"><h3>El validador dice <code>STYLE WARNING</code> y sale con 1. ¿Es un aviso?</h3><p>No. Aunque el mensaje diga «warning», devuelve código 1 y bloquea el paso: hay que reescribir la descripción sin pronombres de primera o segunda persona.</p></div>
-      <div class="qa"><h3>¿De verdad hay un límite de 500 líneas?</h3><p>Sí, y es una condición de la checklist. Al superarlo, el bloque procedimental más grande se mueve a <code>references/</code> y el cuerpo principal conserva la orden de leerlo.</p></div>
-      <div class="qa"><h3>¿Puedo crear una cuarta carpeta si mi skill lo necesita?</h3><p>La estructura estándar son tres: <code>scripts/</code>, <code>references/</code> y <code>assets/</code>. Añadir otra es una decisión de diseño que la skill no contempla; si el contenido no encaja en ninguna, el problema está en la forma de la skill, no en la lista de carpetas.</p></div>
-      <div class="qa"><h3>¿Un <code>README.md</code> dentro de la skill, aunque sea corto?</h3><p>No. La lista de ficheros para personas que no deben existir incluye <code>README.md</code>, <code>CHANGELOG.md</code> e <code>INSTALLATION_GUIDE.md</code>. La documentación va fuera del paquete.</p></div>
-      <div class="qa"><h3>¿Puedo poner un esquema grande dentro de <code>SKILL.md</code>?</h3><p>Puedes, pero es exactamente lo que la divulgación progresiva evita: el esquema pertenece a <code>references/</code> o <code>assets/</code>, y en el cuerpo queda solo la instrucción de leerlo cuando haga falta.</p></div>
-      <div class="qa"><h3>¿Los scripts pueden ser código de librería reutilizable?</h3><p>No. Son CLIs de un solo propósito. La lógica de librería de larga vida pertenece a las CLI estándar del repositorio.</p></div>
-      <div class="qa"><h3>¿Cómo sabe el agente cuándo abrir una referencia?</h3><p>Porque el <code>SKILL.md</code> se lo ordena explícitamente, nombrando el fichero y la situación. Los recursos no se cargan solos: la carga justo a tiempo es una instrucción, no una expectativa.</p></div>
-      <div class="qa"><h3>¿Cuándo uso la composición?</h3><p>Solo si la skill es compleja y necesita derivar a otras. Es un paso opcional; para un procedimiento corto, añadir una skill enrutadora es una lectura de más.</p></div>
-      <div class="qa"><h3>¿Qué hago si mi skill no es para un agente?</h3><p>No uses esta skill. Sus disparadores negativos excluyen la documentación general y el código de librería que no es para un agente.</p></div>
-      <div class="qa"><h3>¿La checklist se puede pasar a medias?</h3><p>No: todas las casillas deben estar en «Pass» antes de considerar la skill desplegable. Una casilla sin marcar es un defecto, no una deuda pendiente.</p></div>
-    </section>
-
-    <section id="en-este-repositorio" class="section">
-      <div class="section-head"><span class="section-num">14</span><h2 class="title">Cómo se usa en este repositorio</h2></div>
-      <p class="sub">El paquete no es de autoría propia: está fijado en <code>.skills/</code> y se usa tal cual, sin editarlo, cuando hace falta crear una skill nueva en <code>src/</code>.</p>
-
-      <div class="table-wrap wrap-cells">
-        <table>
-          <thead><tr><th>Ruta</th><th>Qué es</th><th>Qué implica</th></tr></thead>
-          <tbody>
-            <tr><td><code>.skills/skill-creator/</code></td><td>La skill de terceros, fijada a una versión concreta.</td><td>No se edita aquí: se actualiza sustituyéndola.</td></tr>
-            <tr><td><code>src/&lt;skill&gt;/</code></td><td>Las skills propias del repositorio.</td><td>Contienen solo lo que el agente necesita para ejecutarlas.</td></tr>
-            <tr><td><code>docs/&lt;skill&gt;/</code></td><td>La documentación de cada skill.</td><td>Vive fuera del paquete, así que no consume contexto.</td></tr>
-          </tbody>
-        </table>
-      </div>
-
-      <p>La regla de empaquetado del repositorio coincide con la del paso 2: dentro de <code>src/&lt;skill&gt;/</code> no se crean <code>README.md</code>, <code>CHANGELOG.md</code> ni guías de instalación. La documentación del proyecto vive en <code>docs/</code> y en la raíz.</p>
-
-      <div class="note">
-        <p><strong>Contrato completo y política.</strong> La estructura del repositorio está descrita en el <a href="../../README.md">README</a>, y la política de ramas, commits e integración en <a href="../../CONTRIBUTING.md">CONTRIBUTING.md</a>. Esta página documenta la skill, no el flujo del repositorio.</p>
-      </div>
+      <div class="qa"><h3>¿Por qué el <code>name</code> tiene que coincidir con la carpeta?</h3><p>Porque el nombre es el identificador con el que se enruta la skill y la carpeta es el sitio donde vive: <code>name: angular-testing</code> vive en <code>angular-testing/SKILL.md</code>. Si no coinciden, la ruta y los metadatos dicen cosas distintas.</p></div>
+      <div class="qa"><h3>¿Sirve una cuarta carpeta si mi skill la necesita?</h3><p>La estructura estándar son tres: <code>scripts/</code>, <code>references/</code> y <code>assets/</code>, y la checklist exige que sean esas. Si el contenido no encaja en ninguna, el problema está en la forma de la skill.</p></div>
+      <div class="qa"><h3>¿Un <code>README.md</code> dentro de la skill, aunque sea corto?</h3><p>No: el paso que monta el directorio prohíbe los ficheros para personas, y la checklist nombra <code>README.md</code> y <code>CHANGELOG.md</code> entre los que no pueden estar. La documentación va fuera del paquete, en <code>docs/</code>, donde no consume contexto.</p></div>
+      <div class="qa"><h3>¿Hace falta una skill enrutadora?</h3><p>Solo si la skill es compleja. La composición es un paso opcional: una skill de alto nivel que deriva a otras según la condición. Para un procedimiento corto, añadir esa capa es una lectura de más.</p></div>
+      <div class="qa"><h3>¿Los scripts pueden ser código de librería reutilizable?</h3><p>No: son CLIs de un solo propósito que reciben argumentos. La lógica de librería de larga vida pertenece a las CLI estándar del repositorio, no al paquete de la skill.</p></div>
     </section>
 
     <section id="diagramas" class="section">
-      <div class="section-head"><span class="section-num">15</span><h2 class="title">Los diagramas</h2></div>
-      <p class="sub">Las dos vistas del mismo procedimiento: el recorrido del encargo al directorio validado, y las piezas que sostienen la skill.</p>
+      <div class="section-head"><span class="section-num">7</span><h2 class="title">Los diagramas</h2><span class="chip-repo">de este repositorio</span></div>
+      <p class="sub">Dos vistas del mismo procedimiento: el recorrido del encargo al directorio validado, y las piezas que sostienen la skill.</p>
 
       <div class="grid cols-2">
         <a class="card card-link" href="flujo-de-trabajo.html">
@@ -1006,24 +680,15 @@ SUCCESS: Metadata is valid and optimized for discovery.
         <a class="card card-link" href="arquitectura.html">
           <div class="card-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1.5"></rect><rect x="14" y="3" width="7" height="7" rx="1.5"></rect><rect x="3" y="14" width="7" height="7" rx="1.5"></rect><rect x="14" y="14" width="7" height="7" rx="1.5"></rect></svg></div>
           <h3>Arquitectura</h3>
-          <p>El paquete instalado, las puertas de validación y la superficie que la skill escribe: <code>SKILL.md</code>, las tres carpetas y el validador, con las fronteras que no cruza sola.</p>
+          <p>El paquete, las puertas de validación y la superficie sobre la que actúa: <code>SKILL.md</code>, las tres carpetas y el validador, con las fronteras que no cruza sola.</p>
           <span class="go">Abrir el diagrama →</span>
         </a>
       </div>
 
-      <p>Los dos son navegables: se puede cambiar el tema, alternar el estilo visual, trazar una ruta entre dos nodos, buscar por etiqueta y exportar a SVG, PNG, WebM o tarjeta para compartir.</p>
-
-      <div class="code"><pre><code># requiere archify 3.2.0 (github.com/tt-a1i/archify, tag v3.2.0)
-node &lt;ruta-a-archify&gt;/archify/bin/archify.mjs deliver workflow \
-  docs/skill-creator/flujo-de-trabajo.json \
-  docs/skill-creator/flujo-de-trabajo.html --quality showcase
-
-node &lt;ruta-a-archify&gt;/archify/bin/archify.mjs deliver architecture \
-  docs/skill-creator/arquitectura.json \
-  docs/skill-creator/arquitectura.html --quality showcase</code></pre></div>
+      <p>Cada diagrama se abre como página suelta: archify 3.2.0 no enlaza desde el artefacto a una página local, así que se vuelve con el botón atrás del navegador o con el índice de arriba.</p>
 
       <div class="note">
-        <p><strong>Cómo se generan.</strong> Los dos son artefactos de <em>archify</em> 3.2.0: un candidato JSON describe el diagrama y el renderizador produce un HTML autónomo con temas, movimiento y exportación. Los candidatos —<code>flujo-de-trabajo.json</code> y <code>arquitectura.json</code>— están al lado de cada página, así que se corrigen y se vuelven a entregar con la CLI de archify 3.2.0, que escribe su recibo <code>.delivery.json</code> junto al HTML con los <code>sha256</code> del spec y del artefacto. La entrega es reproducible: el mismo spec devuelve el mismo HTML.</p>
+        <p><strong>Convenio de este repositorio, no mandato de la skill.</strong> <code>docs/&lt;skill&gt;/index.html</code>, los dos diagramas de archify y sus recibos <code>.delivery.json</code> son cómo SKILLS-AGP documenta sus skills. Los genera archify 3.2.0 desde el <code>.json</code> que está junto a cada HTML; el comando y la comprobación del recibo están en la sección Documentación del <code>README.md</code>. La skill no pide esta página ni ningún diagrama: otro repositorio documenta lo que quiera.</p>
       </div>
     </section>
   </main>
@@ -1034,7 +699,6 @@ node &lt;ruta-a-archify&gt;/archify/bin/archify.mjs deliver architecture \
   <span><a href="#top">Volver arriba</a> · <a href="../../.skills/skill-creator/SKILL.md">SKILL.md</a> · <a href="flujo-de-trabajo.html">Flujo</a> · <a href="arquitectura.html">Arquitectura</a></span>
   <span>Página estática: no envía datos ni carga recursos externos · <code>docs/skill-creator/index.html</code></span>
 </footer>
-
 
 <script>
 (function () {
