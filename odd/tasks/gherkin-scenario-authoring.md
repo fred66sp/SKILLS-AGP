@@ -1,4 +1,7 @@
 # gherkin-scenario-authoring
+> **Estado:** la skill y su documentación en `docs/gherkin-scenario-authoring/` fueron eliminadas del
+> repositorio, con el comprobador `tools/check-feature.py` que compartía con la revisora. Este documento
+> queda como registro de aquel encargo: sus rutas ya no existen.
 
 Skill de autoría de `.feature` en `src/gherkin-scenario-authoring/`, su documentación en `docs/gherkin-scenario-authoring/`, y la extracción del comprobador a `tools/check-feature.py` para que ambas skills compartan una sola copia. Dos ramas cortas desde `main`: `refactor/shared-gherkin-checker` para la extracción y `feature/gherkin-scenario-authoring` para la skill.
 

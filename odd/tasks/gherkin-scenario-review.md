@@ -1,4 +1,7 @@
 # gherkin-scenario-review
+> **Estado:** la skill, su documentación en `docs/gherkin-scenario-review/` y el comprobador compartido
+> `tools/check-feature.py` fueron eliminados del repositorio. Este documento queda como registro de aquel
+> encargo; sus rutas ya no existen y no son una descripción del estado actual.
 
 Skill de revisión de escenarios Gherkin ya escritos, en `src/gherkin-scenario-review/`, y su documentación en
 `docs/gherkin-scenario-review/`. Ruta grande: rama corta `feature/gherkin-scenario-review` desde `main`, commits por
@@ -29,7 +32,7 @@ S8. El script acepta palabras clave en inglés (`Given/When/Then/And/But`) y en 
 
 S9. Comprobaciones deterministas exigidas al script, cada hallazgo con la regla que viola y la línea: orden estricto `Dado → Cuando → Entonces` (un `Dado` después de `Cuando`/`Entonces` es violación); presencia de al menos un `Entonces`; más de un par `Cuando`/`Entonces` en un escenario (regla 2); número de pasos de un escenario por encima de 9 (longitud de un dígito, regla 1); vocabulario de interacción de bajo nivel (`clic`, `click`, `botón`, `button`, `teclea`, `escribe`, `wait`, `espera`, `scroll`, `navega a la URL`) (regla 1); `Scenario Outline` con más filas de `Examples` que el umbral declarado y filas que solo difieren en un campo de la misma clase (regla 3); mezcla de primera y tercera persona en los pasos de un mismo escenario (regla 4); paso sin sujeto o sin verbo (regla 4). Los umbrales y patrones que sean heurística se declaran en el propio `--help` del script y en la referencia que los explica.
 
-S10. El informe usa la [plantilla de informe](../../src/gherkin-scenario-review/assets/review-report-template.md) con veredicto por escenario y estado final del archivo en un vocabulario cerrado: `APTO`, `APTO CON RESERVAS`, `NO APTO`. Cada hallazgo cita regla, número de línea y una reescritura propuesta; ningún hallazgo se declara sin la evidencia de línea que lo sustenta.
+S10. El informe usa la la plantilla de informe `assets/review-report-template.md` con veredicto por escenario y estado final del archivo en un vocabulario cerrado: `APTO`, `APTO CON RESERVAS`, `NO APTO`. Cada hallazgo cita regla, número de línea y una reescritura propuesta; ningún hallazgo se declara sin la evidencia de línea que lo sustenta.
 
 S11. Evidencia obligatoria antes de declarar terminada la entrega: `validate-metadata.py` en `SUCCESS`; `check-feature.py` ejecutado sobre los dos fixtures del paquete (uno `APTO`, otro con violaciones conocidas) mostrando salida y códigos; prueba del script en orden RED → GREEN; `doc-inventory.py` sobre `src/gherkin-scenario-review` y sobre `docs/gherkin-scenario-review` con enlaces resueltos; los dos diagramas `archify` validados con `provenance: current`; y la simulación de ejecución de la skill contra un encargo de revisión realista, sin huecos donde el agente tenga que adivinar.
 

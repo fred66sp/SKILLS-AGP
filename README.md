@@ -10,7 +10,6 @@ La especificación de [agentskills.io](https://agentskills.io/) es la guía y la
 |---|---|
 | `src/<skill>/` | Una skill por carpeta: `SKILL.md`, `references/`, `assets/`, `scripts/` |
 | `docs/` | Guías y diagramas del repositorio |
-| `tools/` | CLIs compartidas por más de una skill, ejecutadas desde la raíz del repositorio |
 | `.skills/` | Skills de terceros fijadas a una versión, y enrutadores que hacen descubribles a las skills propias |
 | `README.md` | Este fichero |
 | `CONTRIBUTING.md` | Política de ramas, commits e integración |
@@ -31,18 +30,6 @@ Contrato completo: [`src/git-flow-management/SKILL.md`](src/git-flow-management/
 Gestiona la documentación de un proyecto de software como conocimiento verificable: inventaría los artefactos existentes, decide la intervención mínima, clasifica la certeza de cada afirmación antes de redactarla y demuestra con comprobaciones que lo documentado sigue siendo cierto. Cubre README, PRD, SDD, arquitectura, ADR, API, instalación, operación, runbooks y documentación de features. Incluye el script `scripts/doc-inventory.py`, que detecta enlaces relativos rotos, documentos sin título, documentos sin contenido y encabezados duplicados.
 
 Contrato completo: [`src/document-management-software/SKILL.md`](src/document-management-software/SKILL.md).
-
-### `gherkin-scenario-review`
-
-Revisa archivos `.feature` ya escritos contra las cuatro reglas de buen Gherkin: legibilidad sin contexto, un comportamiento por escenario, un ejemplo por clase de equivalencia y lenguaje consistente en tercera persona. Es una skill de revisión: no descubre comportamientos, no escribe escenarios ni automatiza, y no devuelve un veredicto de calidad sin la línea que lo sustenta. Separa el hecho medible de la estimación del criterio: seis comprobaciones son deterministas y cinco son candidatos que el revisor confirma o refuta. Usa la CLI compartida `tools/check-feature.py` (solo stdlib, Gherkin en inglés y en español, `# language: es`), con once códigos, umbrales `--max-steps` y `--max-outline-rows`, y salidas `0`, `3` y `2`; una referencia por stack (JS/TS, Python, Java, .NET y Go) para juzgar si un paso es automatizable y a qué capa pertenece; y dos fixtures propios como ejemplo de nivel y evidencia del script.
-
-Contrato completo: [`src/gherkin-scenario-review/SKILL.md`](src/gherkin-scenario-review/SKILL.md).
-
-### `gherkin-scenario-authoring`
-
-Descubre comportamientos y escribe archivos `.feature` bajo esas mismas cuatro reglas. Antes del primer escenario produce el mapa de reglas, ejemplos y preguntas abiertas, y no redacta mientras una pregunta pueda cambiar el comportamiento; al terminar no entrega el archivo si `python tools/check-feature.py --path <archivo>` no sale con código 0. Declara el idioma con `# language:` explícito, escribe en tercera persona con frases sujeto-predicado y mantiene los ejemplos en dominio de desarrollo de software. Incluye plantilla de `.feature` —que cumple su propia puerta, sale con 0 hallazgos—, plantilla del mapa con el vocabulario cerrado `MAPA LISTO | MAPA INCOMPLETO`, y tres referencias de descubrimiento, redacción y traspaso. No califica su propio trabajo: el veredicto `APTO`, `APTO CON RESERVAS` o `NO APTO` lo emite `gherkin-scenario-review`, que sigue siendo independiente.
-
-Contrato completo: [`src/gherkin-scenario-authoring/SKILL.md`](src/gherkin-scenario-authoring/SKILL.md).
 
 ## Skills en uso
 
@@ -86,12 +73,6 @@ La carpeta se registra como origen de skills en `.pi/settings.json` con `"skills
 - `docs/skill-creator/index.html` — página principal de la skill `skill-creator`.
 - `docs/skill-creator/flujo-de-trabajo.html` — diagrama del flujo, del encargo al directorio validado.
 - `docs/skill-creator/arquitectura.html` — diagrama del paquete, las puertas de validación y el directorio producido.
-- `docs/gherkin-scenario-review/index.html` — página principal de la skill `gherkin-scenario-review`.
-- `docs/gherkin-scenario-review/flujo-de-trabajo.html` — diagrama del flujo, del encargo al informe con veredicto cerrado.
-- `docs/gherkin-scenario-review/arquitectura.html` — diagrama del paquete, la frontera con Git y con SDD, y las referencias por stack.
-- `docs/gherkin-scenario-authoring/index.html` — página principal de la skill `gherkin-scenario-authoring`.
-- `docs/gherkin-scenario-authoring/flujo-de-trabajo.html` — diagrama del flujo, del encargo al mapa, a la redacción y a la puerta del comprobador.
-- `docs/gherkin-scenario-authoring/arquitectura.html` — diagrama del paquete con sus cuatro fronteras: la CLI compartida, la revisora, el SDD y el archivo producido.
 
 Los diagramas son artefactos de [archify](https://github.com/tt-a1i/archify) 3.2.0. Cada uno tiene su especificación (`*.json`) y su recibo de entrega (`*.delivery.json`) con el `sha256` del HTML y del spec. Para regenerarlos hace falta archify 3.2.0; el comando es el mismo en todas las carpetas de `docs/<skill>/`. En este equipo la copia local vive en `.pi/vendor/archify`, que no está versionada porque `.pi/` es estado de cada máquina, y su binario es `.pi/vendor/archify/archify/bin/archify.mjs`:
 
