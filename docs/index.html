@@ -529,7 +529,104 @@
     margin: 20px 0 0;
 }.note strong {color: var(--text);
 }.note p {margin: 0;
-}.struct {display: grid;
+}.skill-anatomy {position: relative; overflow: hidden; margin: 0 0 26px;
+    padding: clamp(18px, 3vw, 32px);
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius);
+    background:
+      radial-gradient(52% 58% at 8% 0%, color-mix(in srgb, var(--accent) 16%, transparent), transparent 70%),
+      radial-gradient(48% 54% at 96% 6%, color-mix(in srgb, var(--accent-2) 14%, transparent), transparent 70%),
+      radial-gradient(46% 50% at 78% 100%, color-mix(in srgb, var(--accent-4) 12%, transparent), transparent 72%),
+      radial-gradient(circle at 1px 1px, var(--border) 1px, transparent 0) 0 0 / 20px 20px,
+      var(--bg-elev);
+}.skill-anatomy::before {content: "";
+    position: absolute; inset: 0 0 auto; height: 3px;
+    background: linear-gradient(90deg, var(--accent), var(--accent-2) 42%, var(--accent-4) 74%, #c2410c);
+}.skill-anatomy figcaption {margin-bottom: 28px;
+}.skill-anatomy h3 {margin: 0; font-size: clamp(19px, 2.5vw, 24px); letter-spacing: -.02em;
+}.skill-anatomy p {margin: 6px 0 0; color: var(--muted); font-size: 14px;
+}.anatomy-label {display: block;
+    margin-bottom: 8px;
+    color: var(--accent);
+    font-size: 11px; font-weight: 750; letter-spacing: .09em; text-transform: uppercase;
+}.anatomy-entry {display: flex; flex-direction: column; align-items: center; gap: 6px;
+    width: fit-content; max-width: 100%; margin: 0 auto; text-align: center;
+    padding: 18px 24px;
+    border: 1px solid color-mix(in srgb, var(--accent-2) 38%, var(--border));
+    background: linear-gradient(168deg, color-mix(in srgb, var(--accent-2) 9%, var(--bg-elev)), var(--bg-elev) 60%);
+    border-radius: var(--radius-sm); box-shadow: var(--shadow);
+}.skill-anatomy code {overflow-wrap: anywhere;
+}.anatomy-entry code {color: var(--text); font-size: 14px; font-weight: 650;
+}.anatomy-entry p {margin: 0;
+}.anatomy-link {display: grid; justify-items: center;
+    color: var(--muted); font-size: 12px; padding: 26px 0;
+    background: linear-gradient(var(--accent-2), var(--accent)) center / 2px 100% no-repeat;
+}.anatomy-link span {padding: 3px 10px; background: var(--bg-elev); border: 1px solid var(--border); border-radius: 20px;
+}.anatomy-link::after {content: ""; width: 8px; height: 8px; margin-bottom: -23px;
+    border-right: 2px solid var(--accent); border-bottom: 2px solid var(--accent); transform: rotate(45deg);
+}.anatomy-package {padding: clamp(16px, 2.5vw, 24px);
+    border: 1px dashed color-mix(in srgb, var(--accent) 55%, var(--border));
+    background: linear-gradient(180deg, color-mix(in srgb, var(--accent) 9%, var(--bg-elev)), color-mix(in srgb, var(--accent) 3%, var(--bg-elev)) 68%);
+    border-radius: var(--radius); text-align: center;
+}.anatomy-package h4 {margin: 0; font-size: 17px;
+}.anatomy-core {position: relative; max-width: 460px; margin: 20px auto 0; padding: 22px;
+    border: 2px solid transparent; border-radius: 14px;
+    background:
+      linear-gradient(160deg, color-mix(in srgb, var(--accent) 11%, var(--bg-elev)), var(--bg-elev) 58%) padding-box,
+      linear-gradient(135deg, var(--accent), var(--accent-2) 58%, var(--accent-4)) border-box;
+    box-shadow: var(--shadow);
+}.anatomy-core strong {font-family: var(--mono); font-size: 21px; letter-spacing: -.02em;
+}.anatomy-resources {display: grid; grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 24px; margin: 0; padding-top: 28px; position: relative;
+}.anatomy-resources::before {content: ""; position: absolute; height: 28px;
+    width: 2px; background: linear-gradient(var(--accent), var(--accent-3)); top: -28px; left: calc(50% - 1px);
+}.anatomy-resources div {--node: var(--accent-3); min-width: 0; position: relative; padding: 18px 12px;
+    border: 1px solid color-mix(in srgb, var(--node) 42%, var(--border)); border-radius: var(--radius-sm);
+    background: linear-gradient(172deg, color-mix(in srgb, var(--node) 10%, var(--bg-elev)), var(--bg-elev) 64%);
+}.anatomy-resources div:nth-child(2) {--node: var(--accent-2);
+}.anatomy-resources div:nth-child(3) {--node: var(--accent-4);
+}.anatomy-resources div::before {content: ""; position: absolute; height: 28px;
+    width: 2px; background: linear-gradient(var(--accent), var(--accent-3)); top: -29px; left: calc(50% - 1px);
+}.anatomy-resources::after {content: ""; position: absolute; top: 0; height: 2px;
+    left: calc((100% - 48px) / 6); right: calc((100% - 48px) / 6);
+    background: linear-gradient(90deg, var(--accent-3), var(--accent) 50%, var(--accent-4));
+}.anatomy-optional {position: relative; z-index: 1; margin: 0 !important;
+    padding: 16px 0 28px;
+    background: linear-gradient(var(--accent-3), var(--accent), var(--accent-4)) center / 2px 100% no-repeat;
+}.anatomy-optional span {display: inline-block; padding: 3px 10px;
+    border: 1px solid color-mix(in srgb, var(--accent) 34%, var(--border));
+    border-radius: 20px;
+    background: linear-gradient(120deg, color-mix(in srgb, var(--accent) 12%, var(--bg-elev)), var(--bg-elev));
+}.anatomy-icon {display: block; width: 28px; height: 28px; margin: 0 auto 12px;
+    padding: 7px; box-sizing: content-box; border-radius: 11px;
+    color: #ffffff; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round;
+    background: linear-gradient(135deg, var(--accent-2), var(--accent-3));
+    box-shadow: 0 7px 18px -9px color-mix(in srgb, var(--accent-2) 85%, transparent);
+}.anatomy-core .anatomy-icon {width: 30px; height: 30px; padding: 8px; border-radius: 14px;
+    background: linear-gradient(135deg, var(--accent), var(--accent-2) 55%, var(--accent-4));
+    box-shadow: 0 8px 22px -10px color-mix(in srgb, var(--accent-2) 80%, transparent);
+}.anatomy-resources .anatomy-icon {
+    background: linear-gradient(135deg, var(--node), color-mix(in srgb, var(--node) 45%, var(--accent-2)));
+    box-shadow: 0 7px 18px -9px color-mix(in srgb, var(--node) 85%, transparent);
+}.anatomy-resources dt {font-weight: 750; font-size: 14px;
+}.anatomy-resources dd {margin: 7px 0 0; color: var(--muted); font-size: 13px; line-height: 1.55;
+}.anatomy-outside {display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 16px;
+    margin-top: 18px; padding-top: 18px;
+    border: 1px solid color-mix(in srgb, var(--accent-4) 30%, var(--border-strong));
+    border-left: 3px solid var(--accent-4);
+    padding: 16px 18px; border-radius: var(--radius-sm);
+    background: linear-gradient(110deg, color-mix(in srgb, var(--accent-4) 9%, var(--bg-elev)), var(--bg-elev) 62%);
+}.anatomy-outside p {margin: 0;
+}@media (max-width: 619px){.anatomy-resources {grid-template-columns: 1fr; gap: 18px; padding: 0 0 0 20px; text-align: left;
+}.anatomy-resources::after {top: -28px; bottom: 0; height: auto; left: 0; right: auto;
+    background: none; border-left: 2px solid var(--accent-3);
+}.anatomy-resources::before {left: 0; top: -24px; width: 50%; height: 24px;
+    background: none; border-right: 2px solid var(--accent-3); border-bottom: 2px solid var(--accent-3);
+}.anatomy-resources div::before {width: 20px; height: 2px; top: 36px; left: -21px;
+}.anatomy-resources .anatomy-icon {margin-left: 0;
+}.anatomy-optional {padding-bottom: 24px;
+}
+  }.struct {display: grid;
     grid-template-columns: 1fr;
     gap: 12px;
 }@media (min-width: 620px){.struct {grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -989,10 +1086,56 @@
     <div class="section-head"><span class="section-num" style="--num:#7c3aed">3</span><h2 class="title">Cómo se organiza</h2></div>
     <p class="sub">Una responsabilidad por carpeta: los paquetes ejecutables en <code>src/</code>, la documentación en <code>docs/</code>, los enrutadores en <code>.skills/</code> y la validación en <code>scripts/</code>.</p>
 
+    <figure class="skill-anatomy" aria-labelledby="anatomy-title">
+      <figcaption>
+        <span class="anatomy-label">Anatomía de una skill propia</span>
+        <h3 id="anatomy-title">Un contrato en el centro. El detalle, bajo demanda.</h3>
+        <p>El enrutador lleva al paquete canónico; el contrato indica qué recursos hacen falta para cada tarea.</p>
+      </figcaption>
+
+      <div class="anatomy-entry">
+        <svg class="anatomy-icon" viewBox="0 0 40 40" aria-hidden="true"><rect x="5" y="6" width="30" height="28" rx="5"></rect><path d="M5 14h30M11 10h1m4 0h1M13 23h14m-5-5 5 5-5 5"></path></svg>
+        <code>.skills/&lt;skill&gt;/SKILL.md</code>
+        <p>Enrutador · permite descubrir la skill, sin copiar sus reglas.</p>
+      </div>
+      <div class="anatomy-link"><span>Remite al contrato completo</span></div>
+
+      <div class="anatomy-package">
+        <span class="anatomy-label">Paquete canónico · para el agente</span>
+        <h4><code>src/&lt;skill&gt;/</code></h4>
+        <div class="anatomy-core">
+          <svg class="anatomy-icon" viewBox="0 0 40 40" aria-hidden="true"><path d="M10 4h14l7 7v25H10zM24 4v8h7M15 19h11M15 24h11M15 29h7"></path></svg>
+          <strong>SKILL.md</strong>
+          <p>Metadatos y procedimiento: cuándo se activa, qué hace, sus límites y cómo se verifica. Es la fuente de verdad.</p>
+        </div>
+        <p class="anatomy-optional"><span>Recursos opcionales · solo cuando hacen falta</span></p>
+        <dl class="anatomy-resources">
+          <div>
+            <dt><svg class="anatomy-icon" viewBox="0 0 40 40" aria-hidden="true"><path d="M20 10C15 6 9 6 4 8v25c5-2 11-2 16 2 5-4 11-4 16-2V8c-5-2-11-2-16 2v25M9 14l6 1M9 20l6 1M25 15l6-1M25 21l6-1"></path></svg><code>references/</code></dt>
+            <dd>Detalle especializado que se lee justo cuando el contrato lo pide.</dd>
+          </div>
+          <div>
+            <dt><svg class="anatomy-icon" viewBox="0 0 40 40" aria-hidden="true"><path d="M4 12V7h12l4 5h16v23H4zM4 17h32M12 29l6-7 4 4 4-3 5 6"></path></svg><code>assets/</code></dt>
+            <dd>Plantillas y recursos que se usan para producir la entrega.</dd>
+          </div>
+          <div>
+            <dt><svg class="anatomy-icon" viewBox="0 0 40 40" aria-hidden="true"><rect x="4" y="6" width="32" height="28" rx="4"></rect><path d="m11 16 6 5-6 5M22 26h7"></path></svg><code>scripts/</code></dt>
+            <dd>Operaciones deterministas que se ejecutan en lugar de repetirlas a mano.</dd>
+          </div>
+        </dl>
+      </div>
+
+      <div class="anatomy-outside">
+        <strong><code>docs/&lt;skill&gt;/</code></strong>
+        <p>Fuera del paquete · documentación para personas, no otra copia del contrato.</p>
+      </div>
+      <p>Mapa común, no árbol obligatorio. <a href="../README.md#estructura">Consultar la estructura del repositorio</a>.</p>
+    </figure>
+
     <div class="struct">
       <div class="struct-item">
         <span class="path">src/&lt;skill&gt;/</span>
-        <p>El paquete canónico: <code>SKILL.md</code>, <code>references/</code>, <code>assets/</code> y <code>scripts/</code>. Solo lo que el agente necesita para ejecutar la skill.</p>
+        <p>El contrato <code>SKILL.md</code> y los recursos opcionales que necesita la skill. La infografía muestra cómo se relacionan; el paquete no incluye documentación humana.</p>
       </div>
       <div class="struct-item">
         <span class="path">docs/</span>
