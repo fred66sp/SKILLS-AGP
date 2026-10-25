@@ -38,20 +38,6 @@ Un item se cierra como se cierran los cambios del repositorio: `python scripts/c
 - **Dependencias:** verificar en verde requiere `push`, que es una operación aparte con su propia confirmación.
 - **Revisado:** 2026-10-25
 
-### PBI-04 — CHANGELOG con las versiones publicadas
-
-- **Tipo:** documentación · **Prioridad:** Should · **Tamaño:** M · **Estado:** listo
-- **Evidencia:** cada versión publicada tiene su etiqueta `<skill>/v<versión>` y `CHANGELOG.md` solo tiene `## [Unreleased]`; `CONTRIBUTING.md:98` declara ese fichero como historial del repositorio.
-- **Resultado esperado:** cada versión publicada tiene su sección y el historial no se lee como un bloque único sin fechas.
-- **Aceptación:**
-  - una sección `## [<versión>] - <fecha>` por etiqueta, reconstruida desde `git show <skill>/v<versión>`.
-  - `[Unreleased]` conserva solo lo que todavía no tiene versión asignada.
-  - `check-repo.py` emite `[changelog]` cuando una etiqueta no tiene sección ni una excepción declarada.
-  - el caso está cubierto en `scripts/test-check-repo.py` y la suite pasa.
-  - repositorio actual: `python scripts/check-repo.py` → `0 errores`.
-- **Dependencias:** toca `scripts/check-repo.py` igual que PBI-01; van en secuencia, no en la misma rama.
-- **Revisado:** 2026-10-25
-
 ## Sin refinar
 
 ### PBI-05 — Garantías de la documentación HTML

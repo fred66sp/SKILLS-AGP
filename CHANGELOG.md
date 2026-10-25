@@ -1,10 +1,10 @@
 # Changelog
 
-Todos los cambios relevantes de este repositorio se documentan aquí.
+Todos los cambios relevantes de este repositorio se documentan aquí, lo más reciente primero.
 
-El formato sigue [Keep a Changelog 1.1.0](https://keepachangelog.com/es-ES/1.1.0/) y el versionado sigue [Semantic Versioning 2.0.0](https://semver.org/lang/es/).
+Las categorías —Añadido, Corregido, Modificado— vienen de [Keep a Changelog 1.1.0](https://keepachangelog.com/es-ES/1.1.0/). El fichero no tiene secciones de versión: el versionado es por skill, con [Semantic Versioning 2.0.0](https://semver.org/lang/es/), y qué cambió entre dos versiones de una skill lo responde el historial de Git.
 
-## [Unreleased]
+## Historial
 
 ### Añadido
 
@@ -62,6 +62,7 @@ El formato sigue [Keep a Changelog 1.1.0](https://keepachangelog.com/es-ES/1.1.0
 
 ### Modificado
 
+- `CHANGELOG.md`: todo el fichero se titula `Historial` en vez de `[Unreleased]`, que afirmaba un estado de publicación que el versionado por skill no puede sostener. Conserva las categorías de Keep a Changelog y declara que qué cambió entre dos versiones de una skill lo responde el historial de Git. `CONTRIBUTING.md` describe el fichero con la misma regla.
 - `README.md`: enlaces al catálogo y a la guía de autoría en HTML.
 - `docs/prd-cartographer/index.html`: favicon y marca de cabecera con un compás azul, para no compartir icono con `document-management-software`.
 - Diagramas de `docs/`: todos se ajustan al ancho disponible, igual que el flujo de `prd-cartographer`. El checkout local de Archify, en `archify/` e ignorado por Git, emite `data-reader-fit="width-first"` para los lienzos automáticos de flujo y arquitectura, y su plantilla y `viewer.css` dejan el mínimo móvil en `0` en vez de `720 px`. Los diagramas se regeneran con ese renderizador y los recibos de entrega se recalculan con los bytes y el `sha256` resultantes.
