@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "971df300-ec69-4b22-af81-a870a8057def",
+  "status": "current",
+  "command": "deliver",
+  "type": "architecture",
+  "input": "C:\\SKILLS-AGP\\docs\\web-interface-visual-design\\arquitectura.json",
+  "output": "C:\\SKILLS-AGP\\docs\\web-interface-visual-design\\arquitectura.html",
+  "specification": {
+    "sha256": "1627805fb623b920b2b177f1ed7b6750230ea7d214a40cc42cfc441da5ed1edb",
+    "bytes": 4066
+  },
+  "artifact": {
+    "sha256": "7c3b1addc48b6dce194e8f57934ab138c3bbd6bde27a1a0b1bf3d2f502bec754",
+    "bytes": 830242
+  }
+}

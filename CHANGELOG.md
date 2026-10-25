@@ -8,6 +8,8 @@ El formato sigue [Keep a Changelog 1.1.0](https://keepachangelog.com/es-ES/1.1.0
 
 ### Añadido
 
+- Skill `web-interface-visual-design` y su enrutador: dirección visual, componentes web, responsive y accesibilidad, con referencias de SVG, iconografía e infografías y escenarios de aceptación manual. Exige inspeccionar el resultado renderizado y declarar los límites de verificación y fidelidad. Documentación HTML con diagramas de flujo de trabajo y arquitectura, enlazada desde el README y el catálogo.
+
 - Punto de entrada y catálogo en `docs/index.html`: las skills del repositorio con su página y su contrato, la identidad visual de cada favicon, la puerta de verificación y una tarjeta destacada de la guía de autoría.
 - Versión HTML de la guía de autoría en `docs/best-practices-create-skills/index.html`: estructura, frontmatter, divulgación progresiva, instrucciones, scripts, composición y validación, con los prompts de validación copiables.
 - Validación local y CI ligera: `scripts/check-repo.py` comprueba metadatos, estructura, enrutadores, enlaces Markdown, recibos de los diagramas y sintaxis de los scripts; `scripts/test-check-repo.py` prueba las detecciones con repositorios temporales; `.github/workflows/validate.yml` ejecuta la validación y las pruebas de los scripts en cada push y pull request.

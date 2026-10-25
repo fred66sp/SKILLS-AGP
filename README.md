@@ -117,6 +117,16 @@ Cada skill posee una materia y las demás la referencian: el contrato de la CLI 
 - **CLI mínima:** un `main.go` con el cableado y una función `run` testeable. El contrato de `go-cli-ai-first` se aplica completo y no se crean `cmd/`, `internal/` ni `pkg/` por anticipación.
 - **CLI con varios comandos:** `cmd/<binario>/main.go`, `internal/cli` e `internal/app`. La estructura se justifica por el tamaño, no por la plantilla, y el contrato de la CLI no cambia.
 
+### `web-interface-visual-design`
+
+Diseña, implementa y revisa la calidad visual de interfaces web sin imponer un framework ni sustituir el sistema de diseño existente. Cubre composición, tipografía, color, responsive, accesibilidad, SVG, iconografía e infografías. Exige inspeccionar el resultado renderizado cuando hay herramientas disponibles y distingue esa evidencia de compilar o validar XML. Reconoce los límites de fidelidad del SVG y no inventa datos para completar una composición.
+
+Contrato completo: [`src/web-interface-visual-design/SKILL.md`](src/web-interface-visual-design/SKILL.md). Sus referencias especializan los recursos visuales y definen escenarios de aceptación manual para interfaz, SVG e infografía, sin añadir una suite de CI.
+
+Documentación: [`docs/web-interface-visual-design/index.html`](docs/web-interface-visual-design/index.html), con diagramas de flujo de trabajo y arquitectura.
+
+La calidad visual pertenece a esta skill; arquitectura, lenguaje, lógica de negocio, seguridad y pruebas funcionales conservan sus contratos especializados. En una revisión sin autorización de cambios, solo informa de hallazgos.
+
 ## Skills en uso
 
 Skills de terceros fijadas a una versión concreta, para que todas las máquinas trabajen con lo mismo. No son de autoría propia: no se editan aquí, se actualizan sustituyéndolas.
@@ -146,6 +156,7 @@ Documentación: [`docs/skill-creator/index.html`](docs/skill-creator/index.html)
 | [`.skills/go-testing-and-verification/SKILL.md`](.skills/go-testing-and-verification/SKILL.md) | [`src/go-testing-and-verification/SKILL.md`](src/go-testing-and-verification/SKILL.md) |
 | [`.skills/typescript-idiomatic-style/SKILL.md`](.skills/typescript-idiomatic-style/SKILL.md) | [`src/typescript-idiomatic-style/SKILL.md`](src/typescript-idiomatic-style/SKILL.md) |
 | [`.skills/typescript-testing-and-verification/SKILL.md`](.skills/typescript-testing-and-verification/SKILL.md) | [`src/typescript-testing-and-verification/SKILL.md`](src/typescript-testing-and-verification/SKILL.md) |
+| [`.skills/web-interface-visual-design/SKILL.md`](.skills/web-interface-visual-design/SKILL.md) | [`src/web-interface-visual-design/SKILL.md`](src/web-interface-visual-design/SKILL.md) |
 
 `python scripts/check-repo.py` comprueba que cada enrutador resuelve su contrato desde su propio directorio, que el nombre del enrutador y el del contrato coinciden y que no hay enrutadores huérfanos ni skills canónicas sin enrutador.
 
@@ -218,6 +229,9 @@ Cada skill declara su versión independiente en `metadata.version`; el procedimi
 - `docs/typescript-testing-and-verification/index.html` — página principal de la skill `typescript-testing-and-verification`.
 - `docs/typescript-testing-and-verification/flujo-de-trabajo.html` — diagrama del flujo, del mapa de riesgos al cierre con evidencia.
 - `docs/typescript-testing-and-verification/arquitectura.html` — diagrama del paquete, las fronteras validadas y la puerta.
+- `docs/web-interface-visual-design/index.html` — página de entrada a la skill de diseño visual web.
+- `docs/web-interface-visual-design/flujo-de-trabajo.html` — diagrama de la inspección, implementación y verificación visual.
+- `docs/web-interface-visual-design/arquitectura.html` — diagrama del contrato, sus referencias y la evidencia renderizada.
 
 Los diagramas son artefactos de [archify](https://github.com/tt-a1i/archify) 3.2.0. Cada uno tiene su especificación (`*.json`) y su recibo de entrega (`*.delivery.json`) con el `sha256` del HTML y del spec. Para regenerarlos hace falta archify 3.2.0 y el checkout local en `archify/`, ignorado por Git, con los ajustes de ancho descritos en `archify/LOCAL-PATCH.md`; el comando es el mismo en todas las carpetas de `docs/<skill>/`:
 

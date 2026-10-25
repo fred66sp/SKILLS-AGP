@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Qué hace web-interface-visual-design, cuándo usarla, su procedimiento, referencias y diagramas. El contrato vive en SKILL.md; esta página orienta sin duplicarlo.">
+<meta name="color-scheme" content="light dark">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%231e40af'/%3E%3Cpath d='M12 10l-4 6 4 6M20 10l4 6-4 6' fill='none' stroke='%23ffffff' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+<title>web-interface-visual-design — Diseñar para comunicar</title>
+<script>
+(function () {
+  try {
+    var p = JSON.parse(localStorage.getItem("web-interface-visual-design:prefs") || "{}");
+    var t = p.theme === "light" || p.theme === "dark" ? p.theme : (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+    document.documentElement.setAttribute("data-theme", t);
+  } catch (e) { document.documentElement.setAttribute("data-theme", "light"); }
+})();
+</script>
+<style>
+  :root { --bg:#f8fafc; --bg-elev:#ffffff; --bg-soft:#f1f5f9; --text:#0f172a; --muted:#5f6b80; --border:#e2e8f0; --border-strong:#cbd5e1; --accent:#1e40af; --accent-2:#2563eb; --accent-3:#c026d3; --accent-soft:rgba(30,64,175,.10); --shadow:0 1px 2px rgba(15,23,42,.05),0 8px 24px -12px rgba(15,23,42,.18); --radius:16px; --radius-sm:10px; --font:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif; --mono:"JetBrains Mono",ui-monospace,"SF Mono","Fira Code",Menlo,Consolas,monospace; }
+  :root[data-theme="dark"] { --bg:#0a0f1c; --bg-elev:#111827; --bg-soft:#1f2937; --text:#e5e7eb; --muted:#94a3b8; --border:#334155; --border-strong:#475569; --accent:#60a5fa; --accent-2:#60a5fa; --accent-3:#22d3ee; --accent-soft:rgba(96,165,250,.14); --shadow:0 1px 2px rgba(0,0,0,.4),0 12px 32px -18px rgba(0,0,0,.8); }
+  * { box-sizing:border-box; }
+  html { scroll-behavior:smooth; scroll-padding-top:100px; }
+  body { margin:0; font-family:var(--font); background:var(--bg); color:var(--text); line-height:1.65; -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility; }
+  a { color:var(--accent); text-decoration:none; }
+  a:hover { text-decoration:underline; text-underline-offset:3px; }
+  :focus-visible { outline:3px solid var(--accent); outline-offset:4px; }
+  code,pre { font-family:var(--mono); }
+  p code,li code,td code { background:var(--bg-soft); border:1px solid var(--border); border-radius:6px; padding:.08em .42em; font-size:.88em; overflow-wrap:anywhere; }
+  .skip-link { position:fixed; top:8px; left:16px; z-index:100; padding:8px 16px; background:var(--bg-elev); transform:translateY(-150%); }
+  .skip-link:focus { transform:none; }
+  .topbar { position:sticky; top:0; z-index:50; display:flex; align-items:center; gap:16px; padding:12px clamp(16px,4vw,40px); background:color-mix(in srgb,var(--bg) 92%,transparent); backdrop-filter:saturate(180%) blur(14px); border-bottom:1px solid var(--border); }
+  .brand { display:flex; align-items:center; gap:10px; color:var(--text); min-width:0; }
+  .brand:hover { text-decoration:none; }
+  .brand-mark { display:block; width:34px; height:34px; flex:none; border-radius:10px; box-shadow:var(--shadow); overflow:hidden; }
+  .brand-mark svg { width:100%; height:100%; display:block; }
+  .brand-name { font-weight:700; letter-spacing:-.02em; font-size:15px; overflow-wrap:anywhere; line-height:1.4; }
+  .brand-name small { display:block; font-weight:500; color:var(--muted); font-size:11px; letter-spacing:.04em; text-transform:uppercase; }
+  .topbar-spacer { flex:1; }
+  .icon-btn { display:inline-flex; align-items:center; justify-content:center; gap:7px; min-height:36px; padding:0 12px; border:1px solid var(--border-strong); border-radius:10px; background:var(--bg-elev); color:var(--text); font:inherit; font-size:13px; font-weight:600; cursor:pointer; flex:none; }
+  .icon-btn:hover { border-color:var(--accent); }
+  .icon-btn svg { width:16px; height:16px; }
+  :root[data-theme="light"] .icon-sun, :root[data-theme="dark"] .icon-moon { display:none; }
+  .hero { position:relative; overflow:hidden; padding:clamp(48px,9vw,104px) clamp(16px,4vw,40px) clamp(40px,6vw,72px); border-bottom:1px solid var(--border); }
+  .hero::before { content:""; position:absolute; inset:-40% -10% auto -10%; height:420px; background:radial-gradient(60% 60% at 22% 30%,color-mix(in srgb,var(--accent) 26%,transparent),transparent 70%),radial-gradient(50% 50% at 70% 6%,color-mix(in srgb,var(--accent-2) 22%,transparent),transparent 70%),radial-gradient(42% 42% at 92% 26%,color-mix(in srgb,var(--accent-3) 20%,transparent),transparent 70%); filter:blur(6px); pointer-events:none; }
+  .hero-inner { position:relative; max-width:1080px; margin:0 auto; }
+  .pill { display:inline-flex; padding:5px 12px; border:1px solid var(--border-strong); border-radius:999px; background:var(--bg-elev); color:var(--muted); font-size:12.5px; font-weight:600; }
+  .hero h1 { margin:22px 0 0; font-size:clamp(34px,6vw,62px); line-height:1.04; letter-spacing:-.035em; font-weight:800; }
+  .grad { color:var(--accent); }
+  .hero p.lead { margin:20px 0 0; max-width:660px; font-size:clamp(16px,2.2vw,19px); color:var(--muted); }
+  .hero-actions { display:flex; flex-wrap:wrap; gap:12px; margin-top:30px; }
+  .btn { display:inline-flex; align-items:center; padding:11px 18px; border-radius:var(--radius-sm); font-weight:650; font-size:14.5px; border:1px solid transparent; transition:transform .12s,border-color .15s; }
+  .btn:hover { text-decoration:none; transform:translateY(-1px); }
+  .btn-primary { background:#1e40af; color:#ffffff; box-shadow:var(--shadow); }
+  .btn-ghost { background:var(--bg-elev); border-color:var(--border-strong); color:var(--text); }
+  .layout { max-width:1180px; margin:0 auto; padding:clamp(32px,5vw,60px) clamp(16px,4vw,40px) 80px; display:grid; grid-template-columns:minmax(0,1fr); gap:48px; }
+  .toc { display:none; }
+  @media (min-width:1020px) { .layout { grid-template-columns:214px minmax(0,1fr); gap:56px; } .toc { display:block; position:sticky; top:100px; align-self:start; } .toc h2 { font-size:11px; text-transform:uppercase; letter-spacing:.1em; color:var(--muted); margin:0 0 12px; } .toc a { display:block; padding:7px 12px; border-left:2px solid var(--border); color:var(--muted); font-size:14px; font-weight:550; } .toc a:hover { color:var(--text); text-decoration:none; border-left-color:var(--accent); } }
+  main { min-width:0; }
+  section { scroll-margin-top:100px; }
+  section + section { margin-top:64px; }
+  .section-head { display:flex; align-items:center; gap:12px; margin-bottom:8px; }
+  .section-num { display:grid; place-items:center; width:30px; height:30px; flex:none; border-radius:9px; background:var(--accent-soft); color:var(--accent); font-size:13px; font-weight:800; }
+  h2.title { margin:0; font-size:clamp(22px,3vw,28px); letter-spacing:-.02em; line-height:1.3; }
+  .section > p.sub { margin:6px 0 24px; color:var(--muted); max-width:74ch; }
+  h3 { margin:30px 0 10px; font-size:17px; letter-spacing:-.01em; }
+  .grid,.flow { display:grid; gap:16px; }
+  @media (min-width:640px) { .grid.cols-2,.flow { grid-template-columns:repeat(2,minmax(0,1fr)); } }
+  .card { background:var(--bg-elev); border:1px solid var(--border); border-radius:var(--radius); padding:20px; box-shadow:var(--shadow); }
+  .card h3 { margin:0 0 6px; font-size:15px; }
+  .card p { margin:0; color:var(--muted); font-size:14px; }
+  .table-wrap { overflow-x:auto; border:1px solid var(--border); border-radius:var(--radius); background:var(--bg-elev); box-shadow:var(--shadow); }
+  table { width:100%; border-collapse:collapse; font-size:14px; }
+  thead th { text-align:left; padding:12px 16px; background:var(--bg-soft); color:var(--muted); font-size:11.5px; letter-spacing:.06em; text-transform:uppercase; border-bottom:1px solid var(--border); }
+  tbody td { padding:11px 16px; border-bottom:1px solid var(--border); vertical-align:top; overflow-wrap:anywhere; }
+  tbody tr:last-child td { border-bottom:0; }
+  tbody tr:hover { background:color-mix(in srgb,var(--accent) 3%,transparent); }
+  td code { font-size:12.8px; }
+  @media (max-width:640px) { table { font-size:13.5px; } thead th,tbody td { padding:9px 12px; } }
+  .code { margin:14px 0; }
+  .code pre { margin:0; padding:16px 18px; background:#0a0f1c; color:#e5e7eb; border:1px solid #1f2937; border-radius:var(--radius); overflow-x:auto; font-size:13.2px; line-height:1.6; box-shadow:var(--shadow); }
+  .note { padding:14px 16px; border-left:1px solid var(--accent); border-radius:0 var(--radius-sm) var(--radius-sm) 0; background:var(--accent-soft); font-size:14px; margin:16px 0; }
+  .note p { margin:0; }
+  .flow-step { padding:16px; border:1px solid var(--border); border-radius:var(--radius-sm); background:var(--bg-elev); }
+  .flow-step > code { color:var(--accent); font-weight:700; }
+  .flow-step strong { display:block; margin-top:10px; font-size:15px; }
+  .flow-step p { margin:5px 0 0; color:var(--muted); font-size:13.5px; }
+  a.card-link { display:block; color:inherit; transition:border-color .15s,transform .12s; }
+  a.card-link:hover { text-decoration:none; border-color:var(--accent); transform:translateY(-1px); }
+  .go { display:inline-block; margin-top:12px; color:var(--accent); font-weight:650; font-size:13.5px; }
+  .qa { border-bottom:1px solid var(--border); padding:18px 0; }
+  .qa:last-child { border-bottom:0; }
+  .qa h3 { margin:0 0 6px; font-size:15.5px; }
+  .qa p { margin:0; color:var(--muted); font-size:14px; }
+  .footer { border-top:1px solid var(--border); padding:28px clamp(16px,4vw,40px); color:var(--muted); font-size:13.5px; display:flex; flex-wrap:wrap; gap:10px 20px; align-items:center; justify-content:space-between; max-width:1180px; margin:0 auto; overflow-wrap:anywhere; }
+  ::selection { background:color-mix(in srgb,var(--accent) 30%,transparent); }
+  @media (prefers-reduced-motion:reduce) { *,*::before,*::after { scroll-behavior:auto !important; transition:none !important; animation:none !important; } }
+</style>
+</head>
+<body>
+<a class="skip-link" href="#contenido">Saltar al contenido</a>
+<header class="topbar">
+  <a class="brand" href="#top">
+    <span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 32 32"><rect width="32" height="32" rx="8" fill="#1e40af"/><path d="M12 10l-4 6 4 6M20 10l4 6-4 6" fill="none" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+    <span class="brand-name">web-interface-visual-design<small>interfaces y comunicación visual</small></span>
+  </a>
+  <span class="topbar-spacer"></span>
+  <button class="icon-btn" id="theme-toggle" type="button" aria-label="Cambiar a tema oscuro">
+    <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+    <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+    <span>Tema</span>
+  </button>
+</header>
+<section class="hero" id="top" aria-labelledby="titulo">
+  <div class="hero-inner">
+    <span class="pill">contexto primero · sistema existente · resultado renderizado</span>
+    <h1 id="titulo">Diseñar para <span class="grad">comunicar</span></h1>
+    <p class="lead">La skill <code>web-interface-visual-design</code> diseña, implementa y revisa interfaces web y recursos gráficos. Organiza composición, tipografía, color y jerarquía sin imponer otra identidad. El resultado se inspecciona en su contexto de uso: un build correcto no demuestra calidad visual.</p>
+    <div class="hero-actions">
+      <a class="btn btn-primary" href="#que-hace">Qué hace</a>
+      <a class="btn btn-ghost" href="#uso">Cómo se usa</a>
+      <a class="btn btn-ghost" href="#reglas">Dónde están las reglas</a>
+      <a class="btn btn-ghost" href="#diagramas">Los diagramas</a>
+    </div>
+  </div>
+</section>
+<div class="layout">
+  <nav class="toc" aria-label="Índice de la página">
+    <h2>En esta página</h2>
+    <a href="#que-hace">1. Qué hace</a>
+    <a href="#cuando">2. Cuándo se activa</a>
+    <a href="#uso">3. Cómo se usa</a>
+    <a href="#paquete">4. Qué contiene el paquete</a>
+    <a href="#reglas">5. Dónde están las reglas</a>
+    <a href="#preguntas">6. Preguntas cortas</a>
+    <a href="#diagramas">7. Los diagramas</a>
+  </nav>
+  <main id="contenido" tabindex="-1">
+    <section id="que-hace" class="section">
+      <div class="section-head"><span class="section-num">1</span><h2 class="title">Qué hace</h2></div>
+      <p class="sub">Convierte una tarea y su contenido real en una presentación comprensible. Conserva lo que funciona y prioriza los defectos que impiden entender o actuar.</p>
+      <div class="table-wrap"><table>
+        <thead><tr><th scope="col">Situación</th><th scope="col">Qué hace la skill</th></tr></thead>
+        <tbody>
+          <tr><td>Una página, panel o componente necesita diseño.</td><td>Identifica audiencia, tarea, densidad y sistema existente antes de fijar una dirección visual breve.</td></tr>
+          <tr><td>El contenido cuesta leer o escanear.</td><td>Revisa agrupación, retícula, alineación, tipografía y contraste con el contenido real.</td></tr>
+          <tr><td>Hace falta un icono, SVG o ilustración.</td><td>Elige categoría y formato por función y fidelidad; comprueba el recurso a su tamaño de uso.</td></tr>
+          <tr><td>Hay que explicar un proceso o relaciones.</td><td>Representa solo los nodos, datos y conexiones de la fuente, con lectura y equivalente textual claros.</td></tr>
+          <tr><td>La presentación falla en móvil o en un estado.</td><td>Adapta composición y orden de lectura; comprueba temas, estados, teclado y render final.</td></tr>
+        </tbody>
+      </table></div>
+      <div class="note"><p><strong>No sustituye otros contratos.</strong> Arquitectura, programación idiomática, seguridad y pruebas funcionales mantienen su responsabilidad. Una captura no demuestra que esas partes funcionen.</p></div>
+    </section>
+    <section id="cuando" class="section">
+      <div class="section-head"><span class="section-num">2</span><h2 class="title">Cuándo se activa</h2></div>
+      <p class="sub">Se usa cuando el encargo afecta a la calidad visual y comunicativa, no como paso obligatorio de cualquier cambio web.</p>
+      <div class="grid cols-2">
+        <div class="card"><h3>Úsala para</h3><p>Diseñar o mejorar páginas, dashboards y componentes; revisar composición, color, tipografía e iconografía; crear SVG, infografías y diagramas; corregir presentación responsive.</p></div>
+        <div class="card"><h3>No la uses para</h3><p>Backend, bases de datos, lógica de negocio o pruebas puramente funcionales. Tampoco autoriza un rediseño de marca ni cambios fuera del alcance acordado.</p></div>
+      </div>
+      <div class="note"><p><strong>Revisar no implica editar.</strong> Si el encargo es una revisión sin implementación, informa de los defectos observados sin modificar archivos.</p></div>
+    </section>
+    <section id="uso" class="section">
+      <div class="section-head"><span class="section-num">3</span><h2 class="title">Cómo se usa</h2></div>
+      <p class="sub">Indica la ruta o componente, la tarea de su audiencia y qué puede cambiar. Aporta el contenido y los recursos autorizados disponibles. Por ejemplo: «Revisa la jerarquía de este panel en móvil; conserva marca y comportamiento; informa antes de editar».</p>
+      <div class="flow">
+        <div class="flow-step"><code>fase A</code><strong>Inspeccionar el contexto</strong><p>Examina interfaz y render existente, stack, tokens, contenido, estados y herramientas. Separa defectos observables de preferencias.</p></div>
+        <div class="flow-step"><code>fase B</code><strong>Fijar la dirección</strong><p>Resume objetivo, foco, retícula, tipografía, paleta y adaptación. Conserva la identidad y pregunta si falta una decisión relevante.</p></div>
+        <div class="flow-step"><code>fase C</code><strong>Implementar lo coherente</strong><p>Reutiliza el sistema presente. Construye semántica, foco y contraste junto con la composición; consulta los criterios de recursos antes de dibujar.</p></div>
+        <div class="flow-step"><code>fase D</code><strong>Renderizar, inspeccionar y corregir</strong><p>Abre las imágenes finales, recorre móvil, tableta y escritorio, comprueba teclado y estados. Tras corregir, vuelve a renderizar.</p></div>
+        <div class="flow-step"><code>fase E</code><strong>Entregar con evidencia y límites</strong><p>Separa estructura, función y resultado visual. Indica qué se conservó, capturas inspeccionadas y defectos o comprobaciones pendientes.</p></div>
+      </div>
+      <div class="note"><p><strong>Sin imágenes inspeccionadas: «validación visual pendiente».</strong> Generar una captura no es verla. Si existe un defecto visual observado sin resolver, no se cierra la validación visual aunque pasen los tests.</p></div>
+    </section>
+    <section id="paquete" class="section">
+      <div class="section-head"><span class="section-num">4</span><h2 class="title">Qué contiene el paquete</h2></div>
+      <p class="sub">Contrato y referencias con responsabilidades distintas. No requiere un framework ni añade herramientas de ejecución propias.</p>
+      <div class="code"><pre><code>web-interface-visual-design/
+├── SKILL.md
+└── references/
+    ├── visual-assets.md
+    └── visual-acceptance.md</code></pre></div>
+      <div class="table-wrap"><table>
+        <thead><tr><th scope="col">Fichero</th><th scope="col">Responsabilidad y momento de lectura</th></tr></thead>
+        <tbody>
+          <tr><td><a href="../../src/web-interface-visual-design/SKILL.md"><code>SKILL.md</code></a></td><td>Al activarse: alcance, fases A–E, accesibilidad, evidencia, errores y criterio de cierre.</td></tr>
+          <tr><td><a href="../../src/web-interface-visual-design/references/visual-assets.md"><code>references/visual-assets.md</code></a></td><td>En la fase C, antes de seleccionar, crear o revisar recursos: categorías, formatos, SVG, iconografía y diagramas.</td></tr>
+          <tr><td><a href="../../src/web-interface-visual-design/references/visual-acceptance.md"><code>references/visual-acceptance.md</code></a></td><td>Al evaluar o cambiar la skill: protocolo y escenarios manuales de interfaz, ilustración SVG e infografía de proceso.</td></tr>
+        </tbody>
+      </table></div>
+      <div class="note"><p><strong>Documentación fuera del paquete.</strong> Esta página y los diagramas viven en <code>docs/</code>. Orientan al lector; no constituyen otro contrato ni una suite de pruebas.</p></div>
+    </section>
+    <section id="reglas" class="section">
+      <div class="section-head"><span class="section-num">5</span><h2 class="title">Dónde están las reglas</h2></div>
+      <p class="sub">Consulta la fuente correspondiente. Esta página resume el recorrido, sin mantener una copia íntegra de las normas.</p>
+      <div class="table-wrap"><table>
+        <thead><tr><th scope="col">Pregunta</th><th scope="col">Fuente de verdad</th></tr></thead>
+        <tbody>
+          <tr><td>¿Qué se conserva, qué se puede cambiar y cuándo se pregunta?</td><td><a href="../../src/web-interface-visual-design/SKILL.md">SKILL.md</a> · Responsabilidad y límites; fases A y B.</td></tr>
+          <tr><td>¿Cómo se decide composición, responsive y accesibilidad?</td><td><a href="../../src/web-interface-visual-design/SKILL.md">SKILL.md</a> · Fases B y C.</td></tr>
+          <tr><td>¿SVG, icono, ilustración o diagrama? ¿Cómo se revisan?</td><td><a href="../../src/web-interface-visual-design/references/visual-assets.md">visual-assets.md</a> · Categorías, construcción e integración.</td></tr>
+          <tr><td>¿Qué evidencia permite cerrar y qué queda pendiente?</td><td><a href="../../src/web-interface-visual-design/SKILL.md">SKILL.md</a> · Fases D y E; gestión de errores.</td></tr>
+          <tr><td>¿Cómo se evalúa la propia skill sin confundir intención con mejora?</td><td><a href="../../src/web-interface-visual-design/references/visual-acceptance.md">visual-acceptance.md</a> · Protocolo, rúbricas y límites de comparación.</td></tr>
+        </tbody>
+      </table></div>
+      <div class="note"><p><strong>Si hay discrepancia, manda el paquete.</strong> El contrato y sus referencias determinan el comportamiento, no esta presentación.</p></div>
+    </section>
+    <section id="preguntas" class="section">
+      <div class="section-head"><span class="section-num">6</span><h2 class="title">Preguntas cortas</h2></div>
+      <p class="sub">Límites prácticos antes del primer encargo.</p>
+      <div class="qa"><h3>¿Impone una estética o un framework?</h3><p>No. Trabaja sobre el stack y el sistema existentes. Una mejora debe seguir siendo reconocible como parte del proyecto.</p></div>
+      <div class="qa"><h3>¿Siempre usa SVG?</h3><p>No. El formato depende de función, fidelidad y edición. Si el SVG solicitado no alcanza la fidelidad necesaria, explica el límite y pide aprobación antes de sustituirlo.</p></div>
+      <div class="qa"><h3>¿Instala un navegador para comprobarlo?</h3><p>Primero comprueba las herramientas disponibles. No promete capturas ni instala dependencias sin necesidad y permisos; declara lo que no pudo inspeccionar.</p></div>
+      <div class="qa"><h3>¿Una captura demuestra accesibilidad?</h3><p>No. Teclado, foco, semántica, contraste y reflow requieren comprobaciones propias. La evidencia visual se registra por separado.</p></div>
+      <div class="qa"><h3>¿Hay que ejecutar las tres demos en cada tarea?</h3><p>No. Los escenarios de aceptación sirven para evaluar o cambiar la skill, no para convertir cada interfaz en una suite de CI.</p></div>
+      <div class="qa"><h3>¿Está demostrada su mejora visual?</h3><p>Esta documentación no lo demuestra. La referencia propone encargos y una comparación controlada; un escenario preparado no es una prueba ejecutada ni una muestra permite generalizar.</p></div>
+    </section>
+    <section id="diagramas" class="section">
+      <div class="section-head"><span class="section-num">7</span><h2 class="title">Los diagramas</h2></div>
+      <p class="sub">Dos vistas complementarias del contrato: el recorrido de trabajo y la relación entre responsabilidades, referencias y evidencia.</p>
+      <div class="grid cols-2">
+        <a class="card card-link" href="flujo-de-trabajo.html"><h3>Flujo de trabajo</h3><p>De la inspección y dirección visual a la implementación, el render, la corrección y la entrega con límites explícitos.</p><span class="go">Abrir el diagrama →</span></a>
+        <a class="card card-link" href="arquitectura.html"><h3>Arquitectura</h3><p>Cómo se relacionan el contrato, los criterios de recursos, la aceptación práctica y el proyecto sobre el que se trabaja.</p><span class="go">Abrir el diagrama →</span></a>
+      </div>
+      <div class="note"><p><strong>Documentación del repositorio.</strong> Los diagramas explican la skill; no son recursos que esta deba generar en cada encargo ni evidencia de su utilidad visual.</p></div>
+      <p class="sub">En pantallas pequeñas, la vista general reduce las etiquetas. Usa el buscador de nodos del visor para consultar su detalle, o amplía y desplaza el diagrama.</p>
+    </section>
+  </main>
+</div>
+<footer class="footer">
+  <span><code>web-interface-visual-design</code> · documento en español</span>
+  <span><a href="../index.html">Catálogo</a> · <a href="../../src/web-interface-visual-design/SKILL.md">SKILL.md</a> · <a href="flujo-de-trabajo.html">Flujo</a> · <a href="arquitectura.html">Arquitectura</a> · <a href="#top">Volver arriba</a></span>
+  <span>Página estática: no envía datos ni carga recursos externos.</span>
+</footer>
+<script>
+(function () {
+  var toggle = document.getElementById("theme-toggle");
+  function updateLabel() {
+    toggle.setAttribute("aria-label", document.documentElement.getAttribute("data-theme") === "dark" ? "Cambiar a tema claro" : "Cambiar a tema oscuro");
+  }
+  updateLabel();
+  toggle.addEventListener("click", function () {
+    var theme = document.documentElement.getAttribute("data-theme") === "dark" ? "light" : "dark";
+    document.documentElement.setAttribute("data-theme", theme);
+    updateLabel();
+    try { localStorage.setItem("web-interface-visual-design:prefs", JSON.stringify({ theme: theme })); } catch (e) { /* El tema sigue funcionando sin almacenamiento. */ }
+  });
+})();
+</script>
+</body>
+</html>

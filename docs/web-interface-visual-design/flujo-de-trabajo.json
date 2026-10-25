@@ -1,0 +1,48 @@
+{
+  "schema_version": 2,
+  "diagram_type": "workflow",
+  "meta": {
+    "title": "Flujo de trabajo de web-interface-visual-design",
+    "subtitle": "De la interfaz existente a una entrega con evidencia: conservar el sistema visual, componer, implementar e inspeccionar el resultado real.",
+    "locale": "es",
+    "output": "docs/web-interface-visual-design/flujo-de-trabajo.html",
+    "visual_preset": "signal-flow",
+    "quality_profile": "showcase"
+  },
+  "lanes": [
+    {"id": "principal", "label": "Del contexto a la evidencia"},
+    {"id": "limites", "label": "Correcciones y límites", "variant": "exception"}
+  ],
+  "phases": [
+    {"id": "a", "label": "A · Inspección", "fromCol": 0, "toCol": 0},
+    {"id": "b", "label": "B · Dirección visual", "fromCol": 1, "toCol": 1, "variant": "emphasis"},
+    {"id": "c", "label": "C · Implementación", "fromCol": 2, "toCol": 2},
+    {"id": "d", "label": "D · Verificación", "fromCol": 3, "toCol": 3, "variant": "security"},
+    {"id": "e", "label": "E · Entrega", "fromCol": 4, "toCol": 4}
+  ],
+  "mainPath": ["inspeccion", "direccion", "implementa", "render", "entrega"],
+  "nodes": [
+    {"id": "inspeccion", "lane": "principal", "col": 0, "type": "backend", "label": "Inspeccionar", "sublabel": "encargo · marca · stack", "tag": "conservar lo válido"},
+    {"id": "direccion", "lane": "principal", "col": 1, "type": "backend", "label": "Definir composición", "sublabel": "jerarquía · color · tipografía", "tag": "sin estética impuesta"},
+    {"id": "implementa", "lane": "principal", "col": 2, "type": "backend", "label": "Construir y adaptar", "sublabel": "componentes · SVG · diagramas", "tag": "responsive y accesible"},
+    {"id": "render", "lane": "principal", "col": 3, "type": "security", "label": "Inspeccionar el render", "sublabel": "tamaños · temas · estados", "tag": "ver la imagen real"},
+    {"id": "corrige", "lane": "limites", "col": 2, "type": "backend", "label": "Corregir defectos", "sublabel": "ubicación · efecto · ajuste", "tag": "volver a renderizar"},
+    {"id": "pendiente", "lane": "limites", "col": 4, "type": "security", "label": "Validación visual pendiente", "sublabel": "sin render o imagen accesible", "tag": "no afirmar lo no visto", "icon": "stop"},
+    {"id": "entrega", "lane": "principal", "col": 4, "type": "frontend", "label": "Entregar con evidencia", "sublabel": "cambios · decisiones · límites", "icon": "success"}
+  ],
+  "edges": [
+    {"id": "orienta", "from": "inspeccion", "to": "direccion", "label": "contexto", "role": "main"},
+    {"id": "construye", "from": "direccion", "to": "implementa", "label": "reutilizar", "role": "main"},
+    {"id": "observa", "from": "implementa", "to": "render", "label": "comprobar", "role": "main", "variant": "emphasis"},
+    {"id": "acepta", "from": "render", "to": "entrega", "label": "sin defectos pendientes", "role": "main", "variant": "emphasis"},
+    {"id": "defectos", "from": "render", "to": "corrige", "label": "defecto observado", "role": "return", "variant": "security"},
+    {"id": "itera", "from": "corrige", "to": "implementa", "label": "ajuste mínimo", "role": "return", "variant": "dashed"},
+    {"id": "sin-render", "from": "render", "to": "pendiente", "label": "sin acceso al render", "variant": "security"},
+    {"id": "limite", "from": "pendiente", "to": "entrega", "label": "declarar lo pendiente", "variant": "dashed"}
+  ],
+  "cards": [
+    {"dot": "cyan", "title": "Dirección sin rediseño arbitrario", "items": ["El sistema de diseño y la marca existentes delimitan lo que puede cambiar", "La composición responde a la tarea, la audiencia y la densidad de información", "Los recursos gráficos se eligen por función y fidelidad, no por preferencia por SVG"]},
+    {"dot": "rose", "title": "La puerta visual no es el build", "items": ["XML válido o código que compila solo demuestra estructura o sintaxis", "El agente inspecciona imágenes renderizadas, no únicamente DOM y medidas", "Los defectos observados requieren corrección y una nueva inspección del resultado"]},
+    {"dot": "emerald", "title": "Cierre trazable", "items": ["La validación estructural, funcional y visual se informa por separado", "Cada evidencia identifica tamaño, tema, estado y limitaciones de la captura", "Sin acceso al render se declara validación visual pendiente; no se afirma calidad demostrada"]}
+  ]
+}
