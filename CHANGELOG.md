@@ -8,6 +8,8 @@ El formato sigue [Keep a Changelog 1.1.0](https://keepachangelog.com/es-ES/1.1.0
 
 ### Añadido
 
+- Puerta de catálogo en `scripts/check-repo.py`: cada skill de `src/` debe tener su página `docs/<skill>/index.html`, un enlace desde `docs/index.html` y una referencia en `README.md`. Los tres defectos se informan con el prefijo `[catalogo]` y nombran la ruta, y sus casos están cubiertos en `scripts/test-check-repo.py`.
+
 - `BACKLOG.md`: lista única y priorizada del trabajo pendiente, adaptada de la práctica de producto de Atlassian a este repositorio, con evidencia, prioridad, tamaño, dependencias y criterio de aceptación ejecutable por item. Incluye cuatro items listos, uno sin refinar y una sección de descartados con su motivo. Enlazado desde `README.md` y `CONTRIBUTING.md`.
 
 - Skill `web-interface-visual-design` y su enrutador: dirección visual, componentes web, responsive y accesibilidad, con referencias de SVG, iconografía e infografías y escenarios de aceptación manual. Exige inspeccionar el resultado renderizado y declarar los límites de verificación y fidelidad. Documentación HTML con diagramas de flujo de trabajo y arquitectura, enlazada desde el README y el catálogo.

@@ -14,6 +14,8 @@ Comprueba:
   su especificación y su HTML, y que la especificación esté en LF;
 - que cada skill canónica declare una versión SemVer en `metadata.version` y
   que no contradiga sus etiquetas `<skill>/v<versión>` publicadas;
+- que cada skill de `src/` tenga su página en `docs/`, un enlace en
+  `docs/index.html` y una referencia en `README.md`;
 - que los scripts Python compilen y los scripts de shell tengan sintaxis
   válida cuando `bash` está disponible.
 
@@ -217,6 +219,43 @@ def check_router(router_md, name, canonical_md, errors):
             )
 
 
+def check_catalog(root, src_names, errors):
+    docs = root / "docs"
+    catalog = docs / "index.html"
+    readme = root / "README.md"
+
+    if catalog.is_file():
+        catalog_text = read(catalog)
+    else:
+        catalog_text = ""
+        errors.append(
+            f"[catalogo] {catalog.relative_to(root).as_posix()}: falta el catálogo de skills"
+        )
+
+    if readme.is_file():
+        readme_text = read(readme)
+    else:
+        readme_text = ""
+        errors.append(
+            f"[catalogo] {readme.relative_to(root).as_posix()}: falta el README del repositorio"
+        )
+
+    for name in src_names:
+        page = docs / name / "index.html"
+        route = page.relative_to(root).as_posix()
+        if not page.is_file():
+            errors.append(f"[catalogo] {route}: falta la página de la skill '{name}'")
+            continue
+        if catalog.is_file() and f"{name}/index.html" not in catalog_text:
+            errors.append(
+                f"[catalogo] {catalog.relative_to(root).as_posix()}: no enlaza '{route}'"
+            )
+        if f"src/{name}/SKILL.md" not in readme_text:
+            errors.append(
+                f"[catalogo] {readme.relative_to(root).as_posix()}: no referencia 'src/{name}/SKILL.md'"
+            )
+
+
 def check_skills(root, errors, notes):
     src_root, skills_root = root / "src", root / ".skills"
     src_names = sorted(path.name for path in src_root.iterdir() if path.is_dir()) if src_root.is_dir() else []
@@ -258,6 +297,7 @@ def check_skills(root, errors, notes):
             check_metadata(router_md, name, errors)
 
     check_published_versions(root, src_names, errors, notes)
+    check_catalog(root, src_names, errors)
 
 
 def check_receipts(root, errors):

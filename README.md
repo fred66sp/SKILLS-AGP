@@ -191,7 +191,7 @@ python src/go-testing-and-verification/scripts/test-verify-go.py
 python src/typescript-testing-and-verification/scripts/test-verify-ts.py
 ```
 
-`check-repo.py` valida metadatos, estructura, enrutadores, enlaces Markdown, recibos de los diagramas, versiones y etiquetas de skills, y sintaxis de los scripts. Las pruebas unitarias se ejecutan aparte para que un fallo indique qué script falló. La CI (`.github/workflows/validate.yml`) ejecuta los mismos comandos en cada push y pull request.
+`check-repo.py` valida metadatos, estructura, enrutadores, enlaces Markdown, recibos de los diagramas, versiones y etiquetas de skills, la página de cada skill en `docs/` con su enlace en el catálogo y su referencia en este README, y sintaxis de los scripts. Las pruebas unitarias se ejecutan aparte para que un fallo indique qué script falló. La CI (`.github/workflows/validate.yml`) ejecuta los mismos comandos en cada push y pull request.
 
 Cada skill declara su versión independiente en `metadata.version`; el procedimiento para incrementarla, validarla, publicarla y recuperarla está en [`CONTRIBUTING.md`](CONTRIBUTING.md#versiones-de-las-skills).
 

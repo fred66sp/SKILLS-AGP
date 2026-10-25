@@ -25,20 +25,6 @@ Un item se cierra como se cierran los cambios del repositorio: `python scripts/c
 
 ## Listo para trabajar
 
-### PBI-01 — Que una skill no entre sin documentación
-
-- **Tipo:** puerta · **Prioridad:** Must · **Tamaño:** S · **Estado:** listo
-- **Evidencia:** `scripts/check-repo.py:220` valida metadatos, versión y enrutador, pero no consulta `docs/`. La skill `web-interface-visual-design` entró en un [commit sin documentación](https://github.com/fred66sp/SKILLS-AGP/commit/d63e457) y su página llegó en un [commit posterior](https://github.com/fred66sp/SKILLS-AGP/commit/2dc80ff): nada impedía cerrar el primero.
-- **Resultado esperado:** una skill nueva sin página, sin tarjeta en el catálogo o sin mención en el README no pasa la puerta.
-- **Aceptación:**
-  - skill de prueba sin `docs/<skill>/index.html` → `check-repo.py` devuelve 1 error con prefijo `[catalogo]` que nombra la ruta.
-  - skill con página pero sin enlace desde `docs/index.html` → error `[catalogo]`.
-  - skill sin referencia en `README.md` → error `[catalogo]`.
-  - los casos de skill sin página, sin enlace y sin mención están cubiertos en `scripts/test-check-repo.py`, y `python scripts/test-check-repo.py` pasa.
-  - repositorio actual: `python scripts/check-repo.py` → `0 errores`.
-- **Dependencias:** ninguna.
-- **Revisado:** 2026-10-25
-
 ### PBI-02 — Declarar el fin de línea dentro del repositorio
 
 - **Tipo:** deuda · **Prioridad:** Must · **Tamaño:** S · **Estado:** listo
@@ -89,7 +75,7 @@ Un item se cierra como se cierran los cambios del repositorio: `python scripts/c
 - **Falta para estar listo:**
   - decidir si los enlaces y anclas internas de las páginas se validan con un parser, que añade una dependencia, o con el mismo criterio que `check-repo.py` usa para Markdown.
   - resolver la regeneración: el ajuste vive en `archify/LOCAL-PATCH.md`, que no está en el repositorio porque `/archify/` está ignorado; o se versiona el ajuste, o se fija la versión de Archify sin parche.
-- **Dependencias:** PBI-01, porque comparte la puerta de `scripts/check-repo.py`.
+- **Dependencias:** ninguna. La puerta de `scripts/check-repo.py` ya incluye el catálogo y la página de cada skill.
 - **Revisado:** 2026-10-25
 
 ## Descartado

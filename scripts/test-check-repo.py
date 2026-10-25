@@ -35,6 +35,12 @@ def make_repo(root, router_ref="../../src/demo/SKILL.md", router_name="demo", sr
         f"# Enrutador de la skill de pruebas\n\n1. Lee `{router_ref}` completo.\n\n"
         f"Fuente canónica: `../../src/{src_name}/`.\n",
     )
+    write(
+        root / "README.md",
+        f"# Demo\n\nContrato completo: [`src/{src_name}/SKILL.md`](src/{src_name}/SKILL.md).\n",
+    )
+    write(root / "docs" / src_name / "index.html", "<!doctype html><html><body>demo</body></html>\n")
+    write(root / "docs" / "index.html", f'<a href="{src_name}/index.html">{src_name}</a>\n')
 
 
 class CheckRepoTest(unittest.TestCase):
@@ -83,6 +89,26 @@ class CheckRepoTest(unittest.TestCase):
         self.assertTrue(any("no es minúsculas" in item for item in errors))
         self.assertTrue(any("1025 caracteres" in item for item in errors))
 
+    def test_missing_docs_page_is_rejected(self):
+        make_repo(self.root)
+        page = self.root / "docs" / "demo" / "index.html"
+        page.unlink()
+        errors = self.errors()
+        self.assertEqual(len([item for item in errors if item.startswith("[catalogo]")]), 1)
+        self.assertTrue(any("docs/demo/index.html" in item for item in errors))
+
+    def test_missing_catalog_link_is_rejected(self):
+        make_repo(self.root)
+        write(self.root / "docs" / "index.html", '<a href="otra/index.html">otra</a>\n')
+        errors = self.errors()
+        self.assertTrue(any("no enlaza 'docs/demo/index.html'" in item for item in errors))
+
+    def test_missing_readme_reference_is_rejected(self):
+        make_repo(self.root)
+        write(self.root / "README.md", "# Demo\n")
+        errors = self.errors()
+        self.assertTrue(any("no referencia 'src/demo/SKILL.md'" in item for item in errors))
+
     def test_bad_receipt_is_rejected(self):
         make_repo(self.root)
         docs = self.root / "docs" / "demo"
@@ -103,7 +129,7 @@ class CheckRepoTest(unittest.TestCase):
         make_repo(self.root)
         docs = self.root / "docs" / "demo"
         spec, html = b"{}\r\n", b"<html></html>\n"
-        (docs).mkdir(parents=True)
+        (docs).mkdir(parents=True, exist_ok=True)
         (docs / "fig.json").write_bytes(spec)
         (docs / "fig.html").write_bytes(html)
         write(
