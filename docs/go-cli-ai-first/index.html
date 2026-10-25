@@ -101,7 +101,13 @@
 }.brand-name {font-weight: 700; letter-spacing: -.02em; font-size: 15px;
 }.brand-name small {display: block; font-weight: 500; color: var(--muted); font-size: 11px; letter-spacing: .04em; text-transform: uppercase;
 }.topbar-spacer {flex: 1;
-}.icon-btn {display: inline-flex;
+}.catalog-btn {text-decoration: none;
+}.catalog-btn:hover {color: var(--accent); border-color: var(--accent); text-decoration: none;
+}@media (max-width: 560px){.catalog-btn {width: 36px; padding: 0;
+}.catalog-btn span {display: none;
+}
+  }
+.icon-btn {display: inline-flex;
     align-items: center;
     justify-content: center;
     gap: 7px;
@@ -168,8 +174,10 @@
     font-size: 14.5px;
     border: 1px solid transparent;
     cursor: pointer;
+    white-space: nowrap;
     transition: transform .12s, box-shadow .2s, border-color .15s;
 }.btn:hover {text-decoration: none; transform: translateY(-1px);
+}.btn svg {width: 16px; height: 16px; flex: none;
 }.btn-primary {background: linear-gradient(135deg, var(--accent), var(--accent-2)); color: #fff; box-shadow: var(--shadow);
 }.btn-ghost {background: var(--bg-elev); border-color: var(--border-strong); color: var(--text);
 }.layout {max-width: 1180px;
@@ -336,6 +344,36 @@
     max-width: 1180px;
     margin: 0 auto;
 }.footer code {background: var(--bg-soft); border: 1px solid var(--border); border-radius: 6px; padding: 1px 6px;
+}.toc .toc-extra {margin-top: 18px; padding-top: 14px; border-top: 1px solid var(--border);
+}.toc .toc-extra a {color: var(--accent);
+}
+/* Botón flotante de vuelta arriba: mismo borde, sombra y acento que el
+     resto de controles; aparece solo cuando la cabecera ya no se ve. */
+  .to-top {position: fixed;
+    right: clamp(16px, 3vw, 28px);
+    bottom: clamp(16px, 3vw, 28px);
+    z-index: 60;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    padding: 0;
+    border: 1px solid var(--border-strong);
+    border-radius: 50%;
+    background: color-mix(in srgb, var(--bg-elev) 92%, transparent);
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+    color: var(--muted);
+    box-shadow: var(--shadow);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(10px);
+    transition: opacity .2s, transform .2s, visibility .2s, border-color .15s, color .15s;
+}.to-top.is-visible {opacity: 1; visibility: visible; transform: none;
+}.to-top:hover {color: var(--accent); border-color: var(--accent); text-decoration: none;
+}.to-top:focus-visible {outline: 2px solid var(--accent); outline-offset: 3px;
+}.to-top svg {width: 18px; height: 18px;
 }::selection {background: color-mix(in srgb, var(--accent) 30%, transparent);
 }@media (prefers-reduced-motion: reduce){* {scroll-behavior: auto !important; transition: none !important;
 } }.qa {border-bottom: 1px solid var(--border); padding: 18px 0;
@@ -369,6 +407,10 @@
     <span class="brand-name">go-cli-ai-first<small>contrato de CLI para agentes</small></span>
   </a>
   <span class="topbar-spacer"></span>
+  <a class="icon-btn catalog-btn" href="../index.html" aria-label="Volver al catálogo" title="Volver al catálogo">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5V6a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2z"></path><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H19"></path></svg>
+    <span>Catálogo</span>
+  </a>
   <button class="icon-btn" id="theme-toggle" type="button" aria-label="Cambiar a tema oscuro">
     <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"></path></svg>
     <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"></path></svg>
@@ -386,6 +428,10 @@
       <a class="btn btn-ghost" href="#uso">Cómo se usa</a>
       <a class="btn btn-ghost" href="#reglas">Dónde están las reglas</a>
       <a class="btn btn-ghost" href="#diagramas">Los diagramas</a>
+      <a class="btn btn-ghost" href="../index.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 19l-7-7 7-7"></path></svg>
+        Volver al catálogo
+      </a>
     </div>
   </div>
 </section>
@@ -400,6 +446,7 @@
     <a href="#reglas">5. Dónde están las reglas</a>
     <a href="#preguntas">6. Preguntas cortas</a>
     <a href="#diagramas">7. Los diagramas</a>
+    <div class="toc-extra"><a href="../index.html">Volver al catálogo</a></div>
   </nav>
 
   <main>
@@ -568,9 +615,15 @@
 
 <footer class="footer">
   <span><code>docs/go-cli-ai-first/</code> · skill <code>go-cli-ai-first</code> · documento en español</span>
-  <span><a href="#top">Volver arriba</a> · <a href="../../src/go-cli-ai-first/SKILL.md">SKILL.md</a> · <a href="flujo-de-trabajo.html">Flujo</a> · <a href="arquitectura.html">Arquitectura</a></span>
+  <span><a href="../index.html">Catálogo</a> · <a href="#top">Volver arriba</a> · <a href="../../src/go-cli-ai-first/SKILL.md">SKILL.md</a> · <a href="flujo-de-trabajo.html">Flujo</a> · <a href="arquitectura.html">Arquitectura</a></span>
   <span>Página estática: no envía datos ni carga recursos externos · <code>docs/go-cli-ai-first/index.html</code></span>
 </footer>
+
+<a class="to-top" id="to-top" href="#top" aria-label="Volver arriba" title="Volver arriba">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 15l6-6 6 6"></path></svg>
+</a>
+
+
 
 <script>
 (function () {
@@ -672,6 +725,16 @@
     }, { rootMargin: "-20% 0px -70% 0px", threshold: 0 });
     document.querySelectorAll("main section").forEach(function (s) { observer.observe(s); });
   }
+})();
+</script>
+<script>
+(function () {
+  "use strict";
+  var toTop = document.getElementById("to-top");
+  if (!toTop) { return; }
+  function update() { toTop.classList.toggle("is-visible", window.scrollY > 480); }
+  window.addEventListener("scroll", update, { passive: true });
+  update();
 })();
 </script>
 </body>
