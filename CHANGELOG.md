@@ -62,6 +62,7 @@ Las categorías —Añadido, Corregido, Modificado— vienen de [Keep a Changelo
 
 ### Modificado
 
+- Páginas de documentación en `docs/`: las páginas de skill enlazan al catálogo desde la barra, el hero, el índice y el pie, y todas las páginas incorporan un botón circular de vuelta arriba, sin texto y con chevrón, que aparece al desplazarse.
 - `CHANGELOG.md`: todo el fichero se titula `Historial` en vez de `[Unreleased]`, que afirmaba un estado de publicación que el versionado por skill no puede sostener. Conserva las categorías de Keep a Changelog y declara que qué cambió entre dos versiones de una skill lo responde el historial de Git. `CONTRIBUTING.md` describe el fichero con la misma regla.
 - `README.md`: enlaces al catálogo y a la guía de autoría en HTML.
 - `docs/prd-cartographer/index.html`: favicon y marca de cabecera con un compás azul, para no compartir icono con `document-management-software`.
