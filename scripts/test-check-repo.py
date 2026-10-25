@@ -19,8 +19,11 @@ def write(path, content):
     path.write_text(content, encoding="utf-8")
 
 
-def skill(name, description="Demo skill for tests."):
-    return f"---\nname: {name}\ndescription: \"{description}\"\n---\n\n# {name}\n"
+def skill(name, description="Demo skill for tests.", version="1.0.0"):
+    return (
+        f"---\nname: {name}\ndescription: \"{description}\"\n"
+        f"metadata:\n  version: \"{version}\"\n---\n\n# {name}\n"
+    )
 
 
 def make_repo(root, router_ref="../../src/demo/SKILL.md", router_name="demo", src_name="demo", meta_name=None):

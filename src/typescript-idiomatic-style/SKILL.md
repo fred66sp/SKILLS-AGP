@@ -1,6 +1,8 @@
 ---
 name: typescript-idiomatic-style
 description: "Diseña y escribe TypeScript idiomático y type-first para librerías, servicios y CLIs: tsconfig estricto, uniones discriminadas, tipos branded, type guards, genéricos, tipos condicionales y mapeados, operador satisfies, objetos const en lugar de enum, módulos y exports, referencias de proyecto solo cuando el build lo exige, y reglas de CLI con citty y @clack/prompts. Úsala cuando haya que crear, refactorizar o revisar tipos, APIs y código TypeScript, elegir estructura de módulos o dependencias, o construir una CLI de TypeScript. No la uses para validación de datos en runtime, pruebas ni gates de CI, que tienen su propia skill."
+metadata:
+  version: "0.1.0"
 ---
 
 # Estilo y diseño idiomático en TypeScript

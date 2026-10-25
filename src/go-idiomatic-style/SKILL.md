@@ -1,6 +1,8 @@
 ---
 name: go-idiomatic-style
 description: "Escribe y revisa Go idiomático para CLIs y servicios pequeños: formato con gofmt, nombres, paquetes, estructura mínima, funciones, datos, interfaces y dependencias; exige la solución más simple, biblioteca estándar primero, interfaces pequeñas definidas por el consumidor, retornos concretos y flujo con errores primero. Úsala cuando haya que crear código Go nuevo, refactorizar, elegir estructura de paquetes, nombres o dependencias, o revisar estilo y diseño. No la uses para el contrato de una CLI, la estrategia de errores, contextos, concurrencia, pruebas o linting, que tienen sus propias skills."
+metadata:
+  version: "1.0.0"
 ---
 
 # Estilo y diseño idiomático en Go

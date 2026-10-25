@@ -1,6 +1,8 @@
 ---
 name: go-cli-ai-first
 description: "Diseña, implementa y revisa CLIs en Go pensadas para agentes de IA y para personas: fija un contrato estable de comandos, flags, stdin/stdout/stderr, salida JSON, códigos de salida y errores machine-readable; exige modo no interactivo, `--dry-run`, confirmación explícita para operaciones destructivas, idempotencia, cancelación por señal y salida acotada. Úsala cuando haya que crear una CLI, añadir o cambiar comandos, flags o formato de salida, o auditar si una CLI existente es segura y automatizable. No la uses para diseño de producto, interfaces gráficas, APIs HTTP, arquitectura de microservicios, ni para reglas generales de estilo, errores o pruebas de Go, que tienen sus propias skills."
+metadata:
+  version: "1.0.0"
 ---
 
 # CLI Go para agentes

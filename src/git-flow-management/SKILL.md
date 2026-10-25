@@ -1,6 +1,8 @@
 ---
 name: git-flow-management
 description: "Gestiona y verifica operaciones Git con ceremonia proporcional al tamaño y al riesgo: permite el commit directo en main en tareas pequeñas y exige rama corta en las normales o complejas, conservando la política que el repositorio declare. Deja siempre los cambios preparados en el stage con un mensaje Conventional Commits en inglés y pide confirmación explícita antes de commitear, antes de borrar una rama ya integrada y antes de cualquier push. Úsala siempre que el agente vaya a realizar o planificar cualquier operación Git: ramas, commits, integraciones, releases, hotfixes, conflictos, publicación y recuperación. No la uses para operaciones ajenas a Git ni para migrar una política de ramas sin encargo explícito."
+metadata:
+  version: "1.0.0"
 ---
 
 # Gestión de Git con ceremonia proporcional

@@ -1,6 +1,8 @@
 ---
 name: prd-cartographer
 description: "Produce y revisa Product Requirements Documents (PRD) verificables y trazables: separa evidencia, decisiones, inferencias, hipótesis y desconocidos; exige métricas medibles, alcance con exclusiones y criterios de aceptación observables; y declara un estado de preparación explícito en lugar de un documento aparentemente completo. Úsala cuando haya que transformar una idea, una investigación, un concepto de producto o un encargo ambiguo en un PRD para producto, diseño, ingeniería y QA, o revisar y auditar un PRD existente. No la uses para diseño técnico, arquitectura de software, especificación de implementación, documentación técnica general, contenido comercial ni material de marketing."
+metadata:
+  version: "0.1.0"
 ---
 
 # PRD Cartographer

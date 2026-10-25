@@ -1,6 +1,8 @@
 ---
 name: go-errors-and-lifecycle
 description: "Diseña el contrato de errores y el ciclo de vida de un programa Go: clasifica errores, los envuelve con contexto, los inspecciona con errors.Is y errors.As, los traduce a códigos de salida y mensajes machine-readable, y propaga context, cancelación, timeouts, señales y cierre ordenado; exige que toda goroutine tenga propietario, terminación, propagación y espera. Úsala cuando haya que definir o revisar errores, mapearlos a códigos de salida, añadir context o cancelación, manejar señales, introducir concurrencia o cerrar un proceso con limpieza. No la uses para el contrato de la CLI, estilo general ni pruebas, que tienen sus propias skills."
+metadata:
+  version: "1.0.0"
 ---
 
 # Errores y ciclo de vida en Go

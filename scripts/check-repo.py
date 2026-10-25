@@ -12,6 +12,8 @@ Comprueba:
 - que los enlaces Markdown relativos del repositorio resuelvan;
 - que los recibos de `docs/` coincidan con el `sha256` y los bytes reales de
   su especificación y su HTML, y que la especificación esté en LF;
+- que cada skill canónica declare una versión SemVer en `metadata.version` y
+  que no contradiga sus etiquetas `<skill>/v<versión>` publicadas;
 - que los scripts Python compilen y los scripts de shell tengan sintaxis
   válida cuando `bash` está disponible.
 
@@ -30,6 +32,8 @@ import subprocess
 import sys
 from pathlib import Path
 from urllib.parse import unquote
+
+import skill_versions
 
 NAME_RE = re.compile(r"^[a-z0-9]+(-[a-z0-9]+)*$")
 SCHEME_RE = re.compile(r"^[A-Za-z][A-Za-z0-9+.\-]*:")
@@ -89,6 +93,58 @@ def check_metadata(skill_md, expected_name, errors):
         errors.append(
             f"[metadatos] {skill_md}: description tiene {len(description)} caracteres, debe tener entre 1 y 1024"
         )
+
+
+def check_version(skill_md, errors):
+    version = skill_versions.read_version(read(skill_md))
+    if version is None:
+        errors.append(f"[versiones] {skill_md}: falta metadata.version")
+    elif not skill_versions.is_version(version):
+        errors.append(
+            f"[versiones] {skill_md}: versión '{version}' no es SemVer MAJOR.MINOR.PATCH"
+        )
+
+
+def check_published_versions(root, src_names, errors, notes):
+    tags = skill_versions.git_tags(root)
+    if tags is None:
+        notes.append(
+            "[versiones] Git no disponible: no se pudieron comprobar las etiquetas publicadas"
+        )
+        return
+    if skill_versions.is_shallow(root):
+        notes.append(
+            "[versiones] clon superficial: las etiquetas publicadas pueden estar "
+            "incompletas; usa `fetch-depth: 0`"
+        )
+
+    by_skill, problems = skill_versions.skill_tags(tags)
+    for tag, problem in problems:
+        errors.append(f"[versiones] etiqueta '{tag}': {problem}")
+    for name in sorted(by_skill):
+        if name not in src_names:
+            errors.append(
+                f"[versiones] etiqueta '{name}/v...': la skill '{name}' no existe en src/"
+            )
+        elif len(by_skill[name]) != len(set(by_skill[name])):
+            errors.append(f"[versiones] {name}: etiqueta duplicada para la misma versión")
+
+    for name in src_names:
+        skill_md = root / "src" / name / "SKILL.md"
+        if not skill_md.is_file():
+            continue
+        declared = skill_versions.read_version(read(skill_md))
+        if not skill_versions.is_version(declared or ""):
+            continue
+        published = by_skill.get(name, [])
+        if not published:
+            continue
+        latest = max(published, key=skill_versions.version_key)
+        if skill_versions.version_key(declared) < skill_versions.version_key(latest):
+            errors.append(
+                f"[versiones] {skill_md}: la versión declarada {declared} es menor "
+                f"que la publicada {latest} ({name}/v{latest})"
+            )
 
 
 def prose_lines(text):
@@ -161,7 +217,7 @@ def check_router(router_md, name, canonical_md, errors):
             )
 
 
-def check_skills(root, errors):
+def check_skills(root, errors, notes):
     src_root, skills_root = root / "src", root / ".skills"
     src_names = sorted(path.name for path in src_root.iterdir() if path.is_dir()) if src_root.is_dir() else []
     router_names = sorted(path.name for path in skills_root.iterdir() if path.is_dir()) if skills_root.is_dir() else []
@@ -172,6 +228,7 @@ def check_skills(root, errors):
             errors.append(f"[estructura] {src_root / name}: falta SKILL.md")
             continue
         check_metadata(skill_md, name, errors)
+        check_version(skill_md, errors)
         for human in ("README.md", "CHANGELOG.md", "INSTALLATION.md"):
             if (src_root / name / human).exists():
                 errors.append(f"[estructura] {src_root / name / human}: documento humano dentro del paquete")
@@ -199,6 +256,8 @@ def check_skills(root, errors):
             )
         else:
             check_metadata(router_md, name, errors)
+
+    check_published_versions(root, src_names, errors, notes)
 
 
 def check_receipts(root, errors):
@@ -272,7 +331,7 @@ def check_scripts(root, errors, notes):
 def validate(root):
     root = Path(root).resolve()
     errors, notes = [], []
-    check_skills(root, errors)
+    check_skills(root, errors, notes)
     check_links(root, errors)
     check_receipts(root, errors)
     check_scripts(root, errors, notes)
