@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "13d5e501-678b-4a64-9cf8-f5bfeb910ef3",
+  "status": "current",
+  "command": "deliver",
+  "type": "workflow",
+  "input": "C:\\SKILLS-AGP\\docs\\web-interface-visual-design\\flujo-de-trabajo.json",
+  "output": "C:\\SKILLS-AGP\\docs\\web-interface-visual-design\\flujo-de-trabajo.html",
+  "specification": {
+    "sha256": "a4d0178eb8d050af445e150f9fa55164a673792538a2d8f2f0f31e7415afc5d3",
+    "bytes": 4388
+  },
+  "artifact": {
+    "sha256": "fbe5c40ad4ec485c84adf00514b4545cd7b323a4de6186a1ad66f426f272a0a5",
+    "bytes": 827034
+  }
+}

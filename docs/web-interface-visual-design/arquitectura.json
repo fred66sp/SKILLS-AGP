@@ -1,0 +1,41 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "Arquitectura de web-interface-visual-design",
+    "subtitle": "Descubrimiento, contrato y referencias bajo demanda: la skill orienta al agente sobre el proyecto, y el render inspeccionado aporta evidencia visual.",
+    "locale": "es",
+    "output": "docs/web-interface-visual-design/arquitectura.html",
+    "quality_profile": "showcase"
+  },
+  "components": [
+    {"id": "agente", "type": "external", "label": "Agente anfitrión", "sublabel": "recibe el encargo", "pos": [40, 80], "size": [160, 64]},
+    {"id": "router", "type": "frontend", "label": "Enrutador", "sublabel": ".skills/", "pos": [290, 80], "size": [180, 64]},
+    {"id": "contrato", "type": "frontend", "label": "SKILL.md", "sublabel": "procedimiento A–E", "pos": [560, 80], "size": [180, 64]},
+    {"id": "assets", "type": "database", "label": "visual-assets.md", "sublabel": "SVG · iconos · infografías", "pos": [830, 80], "size": [210, 64]},
+    {"id": "aceptacion", "type": "database", "label": "visual-acceptance.md", "sublabel": "evaluación de la skill", "pos": [1130, 80], "size": [210, 64]},
+    {"id": "proyecto", "type": "database", "label": "Proyecto existente", "sublabel": "stack · marca · tokens", "pos": [290, 340], "size": [180, 64]},
+    {"id": "interfaz", "type": "backend", "label": "Interfaz y recursos", "sublabel": "componentes · SVG · gráficos", "pos": [560, 340], "size": [180, 64]},
+    {"id": "render", "type": "security", "label": "Renderizado", "sublabel": "navegador o equivalente", "pos": [830, 340], "size": [210, 64]},
+    {"id": "evidencia", "type": "frontend", "label": "Evidencia inspeccionada", "sublabel": "observaciones y límites", "pos": [1130, 340], "size": [210, 64]}
+  ],
+  "boundaries": [
+    {"kind": "region", "label": "Paquete canónico en src/", "wraps": ["contrato", "assets", "aceptacion"]},
+    {"kind": "region", "label": "Trabajo sobre el proyecto", "wraps": ["proyecto", "interfaz", "render", "evidencia"]}
+  ],
+  "connections": [
+    {"id": "descubre", "from": "agente", "to": "router", "label": "descubre", "variant": "emphasis"},
+    {"id": "carga", "from": "router", "to": "contrato", "label": "lee completo", "variant": "emphasis"},
+    {"id": "especializa", "from": "contrato", "to": "assets", "label": "según recurso", "variant": "dashed"},
+    {"id": "evalua", "from": "contrato", "to": "aceptacion", "label": "al evaluar la skill", "variant": "dashed"},
+    {"id": "inspecciona", "from": "contrato", "to": "proyecto", "label": "inspecciona", "variant": "emphasis"},
+    {"id": "adapta", "from": "proyecto", "to": "interfaz", "label": "conserva y adapta", "variant": "emphasis"},
+    {"id": "muestra", "from": "interfaz", "to": "render", "label": "renderiza", "variant": "emphasis"},
+    {"id": "revisa", "from": "render", "to": "evidencia", "label": "el agente inspecciona", "variant": "emphasis"}
+  ],
+  "cards": [
+    {"dot": "cyan", "title": "Una fuente por responsabilidad", "items": ["El enrutador resuelve el contrato canónico sin copiar sus reglas", "SKILL.md contiene el procedimiento operativo y la versión declarada", "visual-assets.md especializa la elección, construcción e inspección de recursos", "visual-acceptance.md permite evaluar la skill con escenarios A, B y C"]},
+    {"dot": "rose", "title": "Lo que no pertenece a la skill", "items": ["No sustituye arquitectura de aplicaciones, lógica de negocio, seguridad ni pruebas funcionales", "No impone un framework o una identidad visual ajena al proyecto", "No incorpora un renderizador, una biblioteca de iconos ni scripts propios"]},
+    {"dot": "emerald", "title": "Evidencia, no apariencia de verificación", "items": ["El navegador representa el artefacto; el agente debe ver e inspeccionar el resultado", "La evaluación A/B/C es manual y no obliga a generar demos en cada proyecto", "La ausencia de render accesible se informa como limitación visual", "La fidelidad puede justificar un bitmap, pero el formato solicitado no se cambia sin aprobación"]}
+  ]
+}
