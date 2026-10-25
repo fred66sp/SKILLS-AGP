@@ -105,4 +105,5 @@ Crear un remoto, publicar o hacer `push` es una operación aparte, con su propio
 
 - `README.md`: qué es el repositorio y cómo se usa una skill.
 - `CHANGELOG.md`: historial, con formato Keep a Changelog 1.1.0 y versionado SemVer 2.0.0.
+- `BACKLOG.md`: trabajo pendiente priorizado; es la única lista de planificación del repositorio.
 - `docs/`: guías y diagramas generados, con sus especificaciones y recibos.
