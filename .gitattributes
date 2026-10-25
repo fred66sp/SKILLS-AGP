@@ -1,3 +1,7 @@
+# Todo texto viaja en LF desde el propio repositorio, sin depender de la
+# configuración de la máquina que clona.
+* text=auto eol=lf
+
 # La referencia dorada se compara byte a byte: no se le tocan los saltos de
 # línea, aunque el repositorio esté en Windows.
 testdata/golden/*.json -text

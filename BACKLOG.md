@@ -25,20 +25,6 @@ Un item se cierra como se cierran los cambios del repositorio: `python scripts/c
 
 ## Listo para trabajar
 
-### PBI-02 — Declarar el fin de línea dentro del repositorio
-
-- **Tipo:** deuda · **Prioridad:** Must · **Tamaño:** S · **Estado:** listo
-- **Evidencia:** `git check-attr -a docs/git-flow-management/arquitectura.json` devuelve `eol: lf`, pero ese atributo viene de `~/.config/git/attributes`, fuera del repositorio; el `.gitattributes` versionado solo fija `testdata/golden/*.json`. En una máquina sin esa configuración, un spec llega con CR, `scripts/check-repo.py:303` lo rechaza y el recibo deja de cuadrar.
-- **Resultado esperado:** cualquier clon recibe LF sin depender de configuración local.
-- **Aceptación:**
-  - `.gitattributes` declara `* text=auto eol=lf`.
-  - con la configuración global neutralizada (`GIT_CONFIG_GLOBAL` vacío) en un clon nuevo, `git ls-files --eol docs/*/*.json` muestra `w/lf`.
-  - `git ls-files --eol | Select-String 'w/crlf'` no devuelve nada en `docs/` ni en `src/`.
-  - `python scripts/check-repo.py` → `0 errores`.
-- **Antes de aplicarlo:** contar los ficheros que se reescribirían, para revisar ese diff aparte del cambio de atributos.
-- **Dependencias:** ninguna.
-- **Revisado:** 2026-10-25
-
 ### PBI-03 — Validar en los dos sistemas donde se trabaja
 
 - **Tipo:** CI · **Prioridad:** Should · **Tamaño:** M · **Estado:** listo

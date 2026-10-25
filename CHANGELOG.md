@@ -53,6 +53,8 @@ El formato sigue [Keep a Changelog 1.1.0](https://keepachangelog.com/es-ES/1.1.0
 
 ### Corregido
 
+- `.gitattributes`: todo el repositorio se guarda y se sirve en LF (`* text=auto eol=lf`), de modo que un clon recibe los specs como los compara `scripts/check-repo.py` sin depender de la configuración de atributos de la máquina. La excepción byte a byte de `testdata/golden/*.json` se mantiene declarada con `-text`.
+
 - Enrutadores de `.skills/`: las referencias al contrato usan `../../src/<skill>/SKILL.md`, relativas a la carpeta del enrutador. Pi resuelve las rutas relativas contra el directorio del `SKILL.md`, no contra el directorio de trabajo; con la ruta anterior el contrato no se localizaba al ejecutar Pi fuera de la raíz.
 - Skills de Go: `go-cli-ai-first` deja de imponer `cmd/` e `internal/` a cualquier CLI y deja la estructura mínima a `go-idiomatic-style`; `--version` queda en la raíz y `--help` en la raíz y en cada comando. Cada skill declara la materia que posee y las demás la referencian.
 - `verify-go.py`: los fallos de lanzamiento y permisos se devuelven como diagnóstico accionable en vez de traza; los timeouts conservan la salida capturada; la salida de los comandos se decodifica como UTF-8 con reemplazo. Texto, JSON y código de salida coinciden en los fallos.

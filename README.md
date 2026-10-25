@@ -24,6 +24,7 @@ Este repositorio se inspira y se basa en dos fuentes externas:
 | `CONTRIBUTING.md` | Política de ramas, commits e integración |
 | `CHANGELOG.md` | Historial de cambios |
 | `BACKLOG.md` | Trabajo pendiente priorizado: qué viene después, con su evidencia y su criterio de aceptación |
+| `.gitattributes` | Fin de línea del repositorio: todo texto en LF, sin depender de la máquina que clona |
 
 Queda fuera de git por ser estado local de cada máquina: `.atl/`, `.codegraph/`, `.pi/`, además de los secretos que cubre el `.gitignore`. Sí se versiona `.skills/`, porque contiene las skills de terceros que necesita el entorno de trabajo y los enrutadores de las skills propias de `src/`.
 
