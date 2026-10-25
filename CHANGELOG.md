@@ -41,6 +41,9 @@ El formato sigue [Keep a Changelog 1.1.0](https://keepachangelog.com/es-ES/1.1.0
 - Pruebas de `verify-ts.py` en `scripts/test-verify-ts.py`: detección de gestor, precedencia del campo declarado, lockfiles múltiples, script ausente, fallback local, timeout y consistencia texto/JSON.
 - Enrutadores de las skills `typescript-idiomatic-style` y `typescript-testing-and-verification` en `.skills/`: metadatos de disparo y lectura del contrato completo en `../../src/<skill>/SKILL.md`.
 - Registro de procedencia de las skills de TypeScript en `README.md`: las cuatro fuentes, su licencia declarada, el commit fijado de `cli-building` y la separación entre tipos, validación, pruebas y CLI.
+- Versionado independiente por skill: `metadata.version` en el frontmatter de cada `src/<skill>/SKILL.md`, etiquetas `<skill>/v<MAJOR.MINOR.PATCH>` y `scripts/version-skill.py` para listar, mostrar y preparar incrementos `patch`, `minor` y `major` con `--dry-run`, sin tocar Git.
+- Validación de versiones en `scripts/check-repo.py`: exige SemVer en todas las skills canónicas, rechaza etiquetas mal formadas o de skills desconocidas y una versión declarada menor que la publicada, y distingue versión publicada de versión en desarrollo.
+- Pruebas de `version-skill.py` y de la validación de versiones en `scripts/test-version-skill.py`: incrementos, SemVer, etiquetas, `--dry-run`, contenido preservado y ausencia de información Git.
 
 ### Corregido
 

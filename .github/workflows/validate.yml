@@ -12,6 +12,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - uses: actions/setup-python@v5
         with:
@@ -26,6 +28,9 @@ jobs:
 
       - name: Test the repository validator
         run: python3 scripts/test-check-repo.py
+
+      - name: Test skill versioning
+        run: python3 scripts/test-version-skill.py
 
       - name: Test the documentation inventory
         run: python3 src/document-management-software/scripts/test-doc-inventory.py

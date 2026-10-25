@@ -15,10 +15,10 @@ Este repositorio se inspira y se basa en dos fuentes externas:
 
 | Ruta | Qué contiene |
 |---|---|
-| `src/<skill>/` | Una skill por carpeta: `SKILL.md`, `references/`, `assets/`, `scripts/` |
+| `src/<skill>/` | Una skill por carpeta: `SKILL.md` con su versión, `references/`, `assets/`, `scripts/` |
 | `docs/` | Catálogo de skills, guías y diagramas del repositorio |
 | `.skills/` | Skills de terceros fijadas a una versión, y enrutadores que hacen descubribles a las skills propias |
-| `scripts/` | Validación local de estructura, rutas, recibos y pruebas de los scripts |
+| `scripts/` | Validación local de estructura, rutas, recibos, versiones y pruebas de los scripts |
 | `.github/workflows/` | CI que ejecuta la validación y las pruebas en cada push y pull request |
 | `README.md` | Este fichero |
 | `CONTRIBUTING.md` | Política de ramas, commits e integración |
@@ -173,12 +173,15 @@ La misma comprobación que ejecuta la CI se ejecuta en local:
 ```bash
 python scripts/check-repo.py
 python scripts/test-check-repo.py
+python scripts/test-version-skill.py
 python src/document-management-software/scripts/test-doc-inventory.py
 python src/go-testing-and-verification/scripts/test-verify-go.py
 python src/typescript-testing-and-verification/scripts/test-verify-ts.py
 ```
 
-`check-repo.py` valida metadatos, estructura, enrutadores, enlaces Markdown, recibos de los diagramas y sintaxis de los scripts. Las pruebas unitarias se ejecutan aparte para que un fallo indique qué script falló. La CI (`.github/workflows/validate.yml`) ejecuta los mismos comandos en cada push y pull request.
+`check-repo.py` valida metadatos, estructura, enrutadores, enlaces Markdown, recibos de los diagramas, versiones y etiquetas de skills, y sintaxis de los scripts. Las pruebas unitarias se ejecutan aparte para que un fallo indique qué script falló. La CI (`.github/workflows/validate.yml`) ejecuta los mismos comandos en cada push y pull request.
+
+Cada skill declara su versión independiente en `metadata.version`; el procedimiento para incrementarla, validarla, publicarla y recuperarla está en [`CONTRIBUTING.md`](CONTRIBUTING.md#versiones-de-las-skills).
 
 ## Documentación
 

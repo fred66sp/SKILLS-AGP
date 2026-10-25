@@ -1,6 +1,8 @@
 ---
 name: document-management-software
 description: "Gestiona la documentación de un proyecto de software como conocimiento verificable: decide qué artefactos merecen existir, los redacta desde evidencia, evita duplicar la fuente de verdad y demuestra con comprobaciones que lo afirmado sigue siendo cierto. Úsala cuando el agente vaya a crear, revisar, actualizar o auditar README, guías de contribución, PRD, SDD, arquitectura, ADR, API, instalación, operación, runbooks, notas de release, documentación de features u otra documentación técnica de un proyecto de software, y también cuando detecte documentación obsoleta, contradictoria o duplicada. No la uses para contenido comercial, artículos, material de marketing, documentación de producto no técnica, la descripción de una skill de agente, ni para sustituir tests, contratos ejecutables, comentarios de código o mensajes de commit."
+metadata:
+  version: "1.0.0"
 ---
 
 # Gestión documental de software

@@ -1,6 +1,8 @@
 ---
 name: typescript-testing-and-verification
 description: "Diseña y ejecuta la verificación de código TypeScript: validación de todo dato externo en la frontera con Zod 4 y tipos inferidos, comprobación de tipos con tsc --noEmit, pruebas unitarias y de integración, pruebas de extremo a extremo de CLIs, determinismo, errores legibles, variables de entorno al arranque y la puerta de typecheck, lint, test y build con scripts/verify-ts.py. Úsala cuando haya que escribir o revisar pruebas, validar entradas no confiables, comprobar una regresión o declarar un cambio terminado. No la uses para diseño de tipos, estilo general ni arquitectura de la CLI, que tienen su propia skill."
+metadata:
+  version: "0.1.0"
 ---
 
 # Validación y verificación en TypeScript
