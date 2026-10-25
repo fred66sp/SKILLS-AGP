@@ -40,6 +40,12 @@ def make_repo(root, version="1.0.0"):
         "# Enrutador de la skill de pruebas\n\n1. Lee `../../src/demo/SKILL.md` completo.\n\n"
         "Fuente canónica: `../../src/demo/`.\n",
     )
+    write(
+        root / "README.md",
+        "# Demo\n\nContrato completo: [`src/demo/SKILL.md`](src/demo/SKILL.md).\n",
+    )
+    write(root / "docs" / "demo" / "index.html", "<!doctype html><html><body>demo</body></html>\n")
+    write(root / "docs" / "index.html", '<a href="demo/index.html">demo</a>\n')
 
 
 def run_cli(root, *arguments):
