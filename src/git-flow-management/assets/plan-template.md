@@ -4,6 +4,7 @@
 
 - Repositorio:
 - Rama actual y commit:
+- Árbol de índice (`git write-tree`):
 - Tamaño de la tarea y motivo (pequeña / normal / compleja):
 - Política aplicable:
 - Árbol de trabajo:

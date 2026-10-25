@@ -16,9 +16,9 @@ La seguridad no debe convertir cada cambio en un trámite pesado. Una correcció
 3. La política Git documentada del repositorio prevalece sobre cualquier modelo genérico. Si el repositorio no declara política, aplica el modelo por defecto de esta skill: `main` como línea estable y ramas cortas de trabajo cuando la tarea lo justifique.
 4. Ningún commit se ejecuta sin confirmación explícita. Deja los cambios preparados en el stage, propón el mensaje exacto y pide confirmación antes de crear nada.
 5. No pidas confirmación con decisiones abiertas. Antes de commitear, comprueba que nada de lo que has encontrado va a obligar a tocar esos mismos ficheros después: hallazgos, huecos de alcance, documentación desincronizada, plantillas o políticas del repositorio incoherentes con el cambio. Lo que necesite una decisión del usuario se pregunta **antes** del commit; lo que puedas resolver con evidencia se resuelve **antes** del commit. Un commit que obliga a un commit de corrección inmediata es un fallo de preparación, no un paso más del trabajo.
-6. La confirmación no es global ni reutilizable. Cubre únicamente las etapas que enumera y el estado concreto que has mostrado. Una rama distinta, un conjunto de archivos distinto, un conflicto, un push nuevo o una discrepancia invalidan la confirmación.
+6. La confirmación no es global ni reutilizable. Cubre únicamente las etapas que enumera y el estado concreto que has mostrado. Una rama distinta, un conjunto de archivos distinto, un conflicto, un push nuevo o una discrepancia invalidan la confirmación. Antes de ejecutar el commit, revalida rama, `HEAD` y árbol de índice (`git write-tree`); si alguno cambió, detente y pide una confirmación nueva.
 7. Puedes presentar varias etapas en un mismo plan y recibir una sola confirmación conjunta, pero nunca aprovechar una confirmación previa para una etapa que no estaba en ella.
-8. No amplíes el alcance. No uses add global, no incluyas cambios ajenos, no incluyas no rastreados ni hagas amend salvo que el plan aprobado lo nombre expresamente.
+8. No amplíes el alcance. No uses add global, no incluyas cambios ajenos, no incluyas no rastreados ni hagas amend salvo que el plan aprobado lo nombre expresamente. Si el índice ya contiene cambios preparados, detente antes de `git add` salvo que coincidan exactamente con el alcance enumerado.
 9. No uses reset destructivo, clean, restauración desde otra revisión, borrado forzado de ramas, push forzado, borrado de etiquetas o ramas remotas, ni reescritura de historia salvo autorización específica para ese comando. Lee [recuperación y operaciones peligrosas](references/recovery-and-dangerous-operations.md).
 10. `develop`, cuando existe, es una rama protegida: nunca prepares trabajo normal sobre ella. `main` admite trabajo directo solo en tareas pequeñas y de riesgo contenido, siempre con stage revisado y confirmación posterior. En una tarea normal o compleja desde `main`, propón una rama corta de trabajo antes de modificar archivos.
 11. Cualquier operación remota —push, fetch para integrar, pull o creación de referencias remotas— requiere confirmación propia, aunque el commit ya esté hecho y confirmado.
@@ -111,7 +111,7 @@ Ningún commit se ejecuta sin confirmación previa, y ninguna confirmación se p
 
 4. Presenta antes de commitear: archivos preparados, mensaje exacto, validación realizada, cuántos commits propones, y **las decisiones abiertas**. Si esa lista no está vacía, no es una nota al pie: es una pregunta que se responde antes de commitear, y su respuesta entra en este mismo commit cuando cambie estos ficheros.
 5. Pide confirmación explícita para ese commit o para los commits coherentes de la tarea actual.
-6. Ejecuta exactamente el mensaje confirmado con `git commit -m`.
+6. Ejecuta exactamente el mensaje confirmado con `git commit -m` o, si el mensaje requiere un archivo, con `git commit -F <archivo>` en UTF-8 sin BOM.
 7. Verifica y muestra SHA, mensaje y archivos del commit.
 
 Si tras revisar el diff preparado descubres que el alcance debe cambiar, vuelve al paso 2 y pide una confirmación nueva. Un mensaje confirmado no se reescribe por conveniencia.

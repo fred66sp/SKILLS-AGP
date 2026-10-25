@@ -28,6 +28,7 @@ La comprobación de ascendencia puede ejecutarse con `scripts/verify-branch.sh <
 - El SHA existe.
 - El mensaje cumple el formato Conventional Commits, con descripción en inglés.
 - El diff coincide con los archivos aprobados.
+- La rama, `HEAD` y el árbol de índice coincidían con los mostrados en la confirmación.
 - La validación acordada ha terminado con el resultado declarado.
 - El árbol de trabajo queda en el estado anunciado, sin cambios ajenos arrastrados.
 

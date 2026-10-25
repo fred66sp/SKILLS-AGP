@@ -37,7 +37,7 @@ Tipos habituales: feat, fix, docs, chore, refactor, test, style, perf, ci, build
 ## Preparación segura
 
 1. Barrido previo: documentación, `CHANGELOG`, plantillas, referencias cruzadas, diagramas y políticas del repositorio que describan el comportamiento anterior. Se corrige antes, no después.
-2. Inspecciona cambios rastreados, no rastreados y ya preparados.
+2. Inspecciona cambios rastreados, no rastreados y ya preparados. Si el índice ya contiene cambios ajenos al plan, detente antes de preparar nada.
 3. Separa explícitamente lo que queda fuera del commit.
 4. Prepara únicamente rutas enumeradas.
 5. Revisa el diff preparado y muéstralo.
@@ -51,6 +51,7 @@ Sin confirmación no hay commit, ni siquiera en una tarea pequeña ni en una tar
 - Puedes presentar las etapas juntas —rama, stage, commit, integración, borrado de rama, push— y recibir una confirmación que las cubra.
 - Esa confirmación no se reaprovecha: otro conjunto de archivos, otra rama, un estado distinto o un push nuevo requieren confirmación nueva.
 - Si el usuario autoriza los commits coherentes de la tarea actual, no repitas la pregunta por cada uno de los previstos, siempre que el alcance no cambie.
+- Antes de ejecutar el commit, revalida rama, `HEAD` y árbol de índice (`git write-tree`). Si cualquiera difiere de lo mostrado, la confirmación queda invalidada.
 
 ## Integración y limpieza
 

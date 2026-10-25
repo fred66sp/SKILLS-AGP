@@ -17,7 +17,7 @@ Enumera por separado los archivos rastreados modificados, los archivos no rastre
 
 ## Comandos de preparación
 
-Prepara únicamente las rutas que el plan enumera y revisa el diff preparado antes de pedir confirmación:
+Prepara únicamente las rutas que el plan enumera y revisa el diff preparado antes de pedir confirmación. Si `git diff --cached --stat` ya muestra cambios antes de preparar, compáralos con las rutas del plan; si no coinciden exactamente, detente sin ejecutar `git add`:
 
 ~~~bash
 git add -- src/module.ts tests/module.test.ts
@@ -28,9 +28,12 @@ Evita preparar de forma global. `git add .` y `git add -A` exigen un plan que ex
 
 ## Commit confirmado
 
-Después de la confirmación explícita, ejecuta exactamente el mensaje aprobado:
+Después de la confirmación explícita, revalida rama, `HEAD` y árbol de índice. Si difieren de los mostrados al pedir la confirmación, detente. Si coinciden, ejecuta exactamente el mensaje aprobado:
 
 ~~~bash
+git rev-parse --abbrev-ref HEAD
+git rev-parse HEAD
+git write-tree
 git commit -m "feat(cli): add staged commit confirmation"
 ~~~
 
