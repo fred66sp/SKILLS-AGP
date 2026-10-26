@@ -8,6 +8,8 @@ Las categorías —Añadido, Corregido, Modificado— vienen de [Keep a Changelo
 
 ### Añadido
 
+- Skill `adr-software` y su enrutador: creación y mantenimiento de Architecture Decision Records con contrato de agente. Decide si una decisión merece un ADR, captura la intención sin interrogar, y redacta contexto, decisión, no-goals, alternativas, consecuencias y verificación con plantilla simple o MADR. Incluye `scripts/adr.py` con `new`, `status`, `bootstrap` y `check`, con `--dry-run` y `--json`, y `scripts/test-adr.py` con 28 pruebas. Documentación en `docs/adr-software/index.html`, con diagramas de flujo de trabajo y arquitectura, cada uno con su especificación y su recibo, enlazada desde el catálogo y el README.
+
 - Puerta de catálogo en `scripts/check-repo.py`: cada skill de `src/` debe tener su página `docs/<skill>/index.html`, un enlace desde `docs/index.html` y una referencia en `README.md`. Los tres defectos se informan con el prefijo `[catalogo]` y nombran la ruta, y sus casos están cubiertos en `scripts/test-check-repo.py`.
 
 - `BACKLOG.md`: lista única y priorizada del trabajo pendiente, adaptada de la práctica de producto de Atlassian a este repositorio, con evidencia, prioridad, tamaño, dependencias y criterio de aceptación ejecutable por item. Incluye cuatro items listos, uno sin refinar y una sección de descartados con su motivo. Enlazado desde `README.md` y `CONTRIBUTING.md`.

@@ -48,6 +48,12 @@ Convierte una idea, una investigación o un concepto de producto en un PRD verif
 
 Contrato completo: [`src/prd-cartographer/SKILL.md`](src/prd-cartographer/SKILL.md).
 
+### `adr-software`
+
+Crea y mantiene Architecture Decision Records con contrato de agente: decide si una decisión merece un ADR, captura la intención sin interrogar, y redacta contexto, decisión, no-goals, alternativas, consecuencias y verificación en plantilla simple o MADR. Una puerta determinista comprueba frontmatter, secciones, marcadores, índice, nombres y sustituciones bidireccionales. Cubre crear, revisar, aceptar, rechazar, deprecar, sustituir e indexar; no diseña la arquitectura ni sustituye al PRD.
+
+Contrato completo: [`src/adr-software/SKILL.md`](src/adr-software/SKILL.md).
+
 ### `go-cli-ai-first`
 
 Fija el contrato de una CLI en Go antes de implementarla, con el agente como consumidor principal: comandos y flags estables, `stdout` para el resultado y `stderr` para el diagnóstico, salida JSON con sobre de éxito y de error, códigos de salida acotados, modo no interactivo, `--dry-run`, `--yes` para operaciones destructivas, idempotencia, salida limitada, cancelación por señal y ayuda como mecanismo de descubrimiento. Incluye una ficha de comando y una referencia con la gramática, el sobre JSON y las reglas de compatibilidad.
@@ -152,6 +158,7 @@ Documentación: [`docs/skill-creator/index.html`](docs/skill-creator/index.html)
 | [`.skills/document-management-software/SKILL.md`](.skills/document-management-software/SKILL.md) | [`src/document-management-software/SKILL.md`](src/document-management-software/SKILL.md) |
 | [`.skills/git-flow-management/SKILL.md`](.skills/git-flow-management/SKILL.md) | [`src/git-flow-management/SKILL.md`](src/git-flow-management/SKILL.md) |
 | [`.skills/prd-cartographer/SKILL.md`](.skills/prd-cartographer/SKILL.md) | [`src/prd-cartographer/SKILL.md`](src/prd-cartographer/SKILL.md) |
+| [`.skills/adr-software/SKILL.md`](.skills/adr-software/SKILL.md) | [`src/adr-software/SKILL.md`](src/adr-software/SKILL.md) |
 | [`.skills/go-cli-ai-first/SKILL.md`](.skills/go-cli-ai-first/SKILL.md) | [`src/go-cli-ai-first/SKILL.md`](src/go-cli-ai-first/SKILL.md) |
 | [`.skills/go-idiomatic-style/SKILL.md`](.skills/go-idiomatic-style/SKILL.md) | [`src/go-idiomatic-style/SKILL.md`](src/go-idiomatic-style/SKILL.md) |
 | [`.skills/go-errors-and-lifecycle/SKILL.md`](.skills/go-errors-and-lifecycle/SKILL.md) | [`src/go-errors-and-lifecycle/SKILL.md`](src/go-errors-and-lifecycle/SKILL.md) |
@@ -188,6 +195,7 @@ python scripts/check-repo.py
 python scripts/test-check-repo.py
 python scripts/test-version-skill.py
 python src/document-management-software/scripts/test-doc-inventory.py
+python src/adr-software/scripts/test-adr.py
 python src/go-testing-and-verification/scripts/test-verify-go.py
 python src/typescript-testing-and-verification/scripts/test-verify-ts.py
 ```
@@ -208,6 +216,9 @@ Cada skill declara su versión independiente en `metadata.version`; el procedimi
 - `docs/document-management-software/flujo-de-trabajo.html` — diagrama del flujo, del encargo al cierre verificado.
 - `docs/document-management-software/arquitectura.html` — diagrama del paquete, las puertas de la evidencia y la documentación que escribe.
 - `docs/prd-cartographer/index.html` — página principal de la skill `prd-cartographer`.
+- `docs/adr-software/index.html` — página principal de la skill `adr-software`.
+- `docs/adr-software/flujo-de-trabajo.html` — diagrama del flujo, del encargo al ADR revisado.
+- `docs/adr-software/arquitectura.html` — diagrama del paquete, la decisión y el registro.
 - `docs/prd-cartographer/flujo-de-trabajo.html` — diagrama del flujo, del encargo al PRD revisado.
 - `docs/prd-cartographer/arquitectura.html` — diagrama del paquete, la evidencia y la puerta de calidad.
 - `docs/go-cli-ai-first/index.html` — página principal de la skill `go-cli-ai-first`.

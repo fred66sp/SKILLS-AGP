@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "b715b7a3-e396-4ecf-99f4-a79dfabc11b2",
+  "status": "current",
+  "command": "deliver",
+  "type": "workflow",
+  "input": "/home/desarrollo/PROJECTS/SKILLS-AGP/docs/adr-software/flujo-de-trabajo.json",
+  "output": "/home/desarrollo/PROJECTS/SKILLS-AGP/docs/adr-software/flujo-de-trabajo.html",
+  "specification": {
+    "sha256": "4546fc55212b89319a2d44302ec9cb970d7739c46575228ab23cf8c88c030335",
+    "bytes": 7983
+  },
+  "artifact": {
+    "sha256": "167c2a6ea32012455868e3004d1888b083d90855a7b9fd194d974ce900564872",
+    "bytes": 840524
+  }
+}

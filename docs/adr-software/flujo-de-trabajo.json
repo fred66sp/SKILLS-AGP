@@ -1,0 +1,337 @@
+{
+  "schema_version": 2,
+  "diagram_type": "workflow",
+  "meta": {
+    "title": "Flujo de trabajo de ADR Software",
+    "subtitle": "Del encargo al ADR revisado: cuándo una decisión merece un registro, cómo se captura la intención, dónde se detiene el flujo y qué se comprueba antes de cerrar.",
+    "locale": "es",
+    "output": "docs/adr-software/flujo-de-trabajo.html",
+    "visual_preset": "signal-flow",
+    "quality_profile": "showcase"
+  },
+  "lanes": [
+    {
+      "id": "persona",
+      "label": "Persona y encargo"
+    },
+    {
+      "id": "skill",
+      "label": "La skill: decidir y redactar"
+    },
+    {
+      "id": "registro",
+      "label": "Registro de ADR"
+    },
+    {
+      "id": "control",
+      "label": "Puerta y paradas",
+      "variant": "exception"
+    }
+  ],
+  "phases": [
+    {
+      "id": "entrada",
+      "label": "Delimitar y comprobar",
+      "fromCol": 0,
+      "toCol": 1
+    },
+    {
+      "id": "juicio",
+      "label": "Intención y procedencia",
+      "fromCol": 2,
+      "toCol": 3,
+      "variant": "emphasis"
+    },
+    {
+      "id": "redaccion",
+      "label": "Redactar",
+      "fromCol": 4,
+      "toCol": 4
+    },
+    {
+      "id": "cierre",
+      "label": "Puerta, índice y cierre",
+      "fromCol": 5,
+      "toCol": 5,
+      "variant": "security"
+    }
+  ],
+  "groups": [
+    {
+      "id": "antes-de-redactar",
+      "label": "Sin decisión no hay ADR",
+      "lane": "skill",
+      "fromCol": 2,
+      "toCol": 3,
+      "variant": "emphasis"
+    },
+    {
+      "id": "prueba",
+      "label": "Evidencia mostrada",
+      "lane": "control",
+      "fromCol": 4,
+      "toCol": 5,
+      "variant": "security"
+    }
+  ],
+  "mainPath": [
+    "encargo",
+    "delimita",
+    "duplicados",
+    "intencion",
+    "procede",
+    "redacta",
+    "puerta",
+    "resultado"
+  ],
+  "nodes": [
+    {
+      "id": "encargo",
+      "lane": "persona",
+      "col": 0,
+      "type": "external",
+      "label": "Encargo de decisión",
+      "sublabel": "crear · revisar · sustituir",
+      "tag": "nada se escribe aún",
+      "icon": "start"
+    },
+    {
+      "id": "delimita",
+      "lane": "skill",
+      "col": 0,
+      "type": "backend",
+      "label": "Delimitar",
+      "sublabel": "operación y directorio",
+      "tag": "una decisión por ADR"
+    },
+    {
+      "id": "duplicados",
+      "lane": "skill",
+      "col": 1,
+      "type": "backend",
+      "label": "Comprobar duplicados",
+      "sublabel": "¿ya está decidido?",
+      "tag": "actualizar o sustituir"
+    },
+    {
+      "id": "intencion",
+      "lane": "skill",
+      "col": 2,
+      "type": "backend",
+      "label": "Capturar intención",
+      "sublabel": "una pregunta cada vez",
+      "tag": "sin inventar contexto"
+    },
+    {
+      "id": "procede",
+      "lane": "skill",
+      "col": 3,
+      "type": "backend",
+      "label": "¿Procede un ADR?",
+      "sublabel": "impacto y reversibilidad",
+      "tag": "lo trivial no se registra"
+    },
+    {
+      "id": "redacta",
+      "lane": "skill",
+      "col": 4,
+      "type": "backend",
+      "label": "Redactar",
+      "sublabel": "simple o MADR",
+      "tag": "alcance y no-goals"
+    },
+    {
+      "id": "existente",
+      "lane": "registro",
+      "col": 1,
+      "type": "database",
+      "label": "ADR vigente",
+      "sublabel": "cubre o contradice"
+    },
+    {
+      "id": "plantillas",
+      "lane": "registro",
+      "col": 4,
+      "type": "database",
+      "label": "Plantillas",
+      "sublabel": "simple · MADR · índice"
+    },
+    {
+      "id": "adr",
+      "lane": "registro",
+      "col": 5,
+      "type": "database",
+      "label": "ADR trazable",
+      "sublabel": "decisión y consecuencias"
+    },
+    {
+      "id": "no-procede",
+      "lane": "control",
+      "col": 3,
+      "type": "security",
+      "label": "No procede",
+      "sublabel": "trivial, reversible, local",
+      "tag": "se dice y no se crea",
+      "icon": "stop"
+    },
+    {
+      "id": "sin-decision",
+      "lane": "control",
+      "col": 2,
+      "type": "security",
+      "label": "Decisión no tomada",
+      "sublabel": "se redacta proposed",
+      "tag": "huecos visibles",
+      "icon": "stop"
+    },
+    {
+      "id": "puerta",
+      "lane": "control",
+      "col": 4,
+      "type": "security",
+      "label": "Puerta de revisión",
+      "sublabel": "adr.py check + gate",
+      "tag": "hallazgos declarados"
+    },
+    {
+      "id": "resultado",
+      "lane": "control",
+      "col": 5,
+      "type": "frontend",
+      "label": "Resultado",
+      "sublabel": "estado y pendientes",
+      "icon": "success"
+    }
+  ],
+  "edges": [
+    {
+      "id": "pide",
+      "from": "encargo",
+      "to": "delimita",
+      "label": "pide",
+      "variant": "emphasis",
+      "role": "main"
+    },
+    {
+      "id": "busca",
+      "from": "delimita",
+      "to": "duplicados",
+      "label": "busca",
+      "role": "main"
+    },
+    {
+      "id": "consulta",
+      "from": "delimita",
+      "to": "existente",
+      "label": "consulta",
+      "variant": "dashed",
+      "role": "branch"
+    },
+    {
+      "id": "nueva",
+      "from": "duplicados",
+      "to": "intencion",
+      "label": "no está cubierta",
+      "role": "main"
+    },
+    {
+      "id": "ya-existe",
+      "from": "duplicados",
+      "to": "existente",
+      "label": "ya existe",
+      "variant": "dashed",
+      "role": "return"
+    },
+    {
+      "id": "contexto",
+      "from": "intencion",
+      "to": "procede",
+      "label": "contexto suficiente",
+      "role": "main"
+    },
+    {
+      "id": "sin-decidir",
+      "from": "intencion",
+      "to": "sin-decision",
+      "label": "falta decidir",
+      "variant": "security",
+      "role": "return"
+    },
+    {
+      "id": "trivial",
+      "from": "procede",
+      "to": "no-procede",
+      "label": "trivial o local",
+      "variant": "security",
+      "role": "return"
+    },
+    {
+      "id": "merece",
+      "from": "procede",
+      "to": "redacta",
+      "label": "merece ADR",
+      "variant": "emphasis",
+      "role": "main"
+    },
+    {
+      "id": "copia",
+      "from": "redacta",
+      "to": "plantillas",
+      "label": "copia",
+      "variant": "dashed",
+      "role": "branch"
+    },
+    {
+      "id": "antes-de-aceptar",
+      "from": "redacta",
+      "to": "puerta",
+      "label": "antes de aceptar",
+      "role": "main"
+    },
+    {
+      "id": "registra",
+      "from": "puerta",
+      "to": "adr",
+      "label": "acepta y registra",
+      "variant": "emphasis",
+      "role": "main"
+    },
+    {
+      "id": "cierra",
+      "from": "puerta",
+      "to": "resultado",
+      "label": "hallazgos o cierre",
+      "variant": "emphasis",
+      "role": "main"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "Qué se decide antes de escribir",
+      "items": [
+        "Si ya hay un ADR vigente, se actualiza o se sustituye con enlace en ambos sentidos; no se duplica el registro",
+        "La entrevista hace una pregunta cada vez y solo sobre lo que falta; se detiene cuando puede redactarse sin inventar",
+        "Un ADR procede si la decisión es difícil de revertir, afecta a varios módulos o equipos, o tiene alternativas reales"
+      ]
+    },
+    {
+      "dot": "rose",
+      "title": "Dónde se detiene",
+      "items": [
+        "Sin decisión o motivo no se redacta un ADR completo: se entregan el contexto y las preguntas que faltan",
+        "Una restricción sin medida y un alcance sin no-goals no se aceptan como decisión",
+        "Una sustitución sin enlace de vuelta deja el registro incompleto y la puerta la rechaza"
+      ]
+    },
+    {
+      "dot": "emerald",
+      "title": "Qué se prueba al cerrar",
+      "items": [
+        "Frontmatter, fecha real, responsables, título, secciones y marcadores pendientes: adr.py check",
+        "El índice enlaza cada ADR y no contiene entradas rotas",
+        "La sustitución es bidireccional y el bloque de resultado declara operación, estado, hallazgos y pendientes"
+      ]
+    }
+  ]
+}

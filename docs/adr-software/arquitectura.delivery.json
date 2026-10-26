@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "edee7129-59c3-42ff-86fd-c5fc83d9a619",
+  "status": "current",
+  "command": "deliver",
+  "type": "architecture",
+  "input": "/home/desarrollo/PROJECTS/SKILLS-AGP/docs/adr-software/arquitectura.json",
+  "output": "/home/desarrollo/PROJECTS/SKILLS-AGP/docs/adr-software/arquitectura.html",
+  "specification": {
+    "sha256": "a010771535dd9f7edaeaf634fca73b884441046b07441d350d6b623841ecc04f",
+    "bytes": 6860
+  },
+  "artifact": {
+    "sha256": "8f834a33f3203c28cdb6b0e87b639eca9f4ead0216072926a32d2fd7dca342fc",
+    "bytes": 839600
+  }
+}
