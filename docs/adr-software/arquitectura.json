@@ -1,0 +1,327 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "Arquitectura de la skill adr-software",
+    "subtitle": "Qué piezas la componen, qué puertas impone y sobre qué superficie actúa: el paquete instalado, la decisión con sus consecuencias y el registro de ADR que se mantiene.",
+    "locale": "es",
+    "output": "docs/adr-software/arquitectura.html",
+    "quality_profile": "showcase"
+  },
+  "components": [
+    {
+      "id": "persona",
+      "type": "external",
+      "label": "Persona",
+      "sublabel": "decide y aprueba",
+      "icon": "person",
+      "pos": [
+        40,
+        80
+      ],
+      "size": [
+        130,
+        60
+      ]
+    },
+    {
+      "id": "agente",
+      "type": "external",
+      "label": "Agente anfitrión",
+      "sublabel": "Pi · Claude Code · Codex",
+      "pos": [
+        240,
+        80
+      ],
+      "size": [
+        170,
+        64
+      ]
+    },
+    {
+      "id": "skill",
+      "type": "frontend",
+      "label": "SKILL.md",
+      "sublabel": "invariantes y pasos",
+      "pos": [
+        480,
+        80
+      ],
+      "size": [
+        170,
+        64
+      ]
+    },
+    {
+      "id": "decision",
+      "type": "security",
+      "label": "Decisión",
+      "sublabel": "alcance · no-goals",
+      "icon": "decision",
+      "pos": [
+        740,
+        80
+      ],
+      "size": [
+        170,
+        64
+      ]
+    },
+    {
+      "id": "consecuencias",
+      "type": "security",
+      "label": "Consecuencias",
+      "sublabel": "tareas y riesgos",
+      "pos": [
+        1000,
+        80
+      ],
+      "size": [
+        170,
+        64
+      ]
+    },
+    {
+      "id": "refs",
+      "type": "database",
+      "label": "references/",
+      "sublabel": "convenciones · puerta · ejemplos",
+      "tag": "se leen cuando toca",
+      "pos": [
+        480,
+        280
+      ],
+      "size": [
+        170,
+        64
+      ]
+    },
+    {
+      "id": "assets",
+      "type": "database",
+      "label": "assets/",
+      "sublabel": "simple · MADR · índice",
+      "pos": [
+        480,
+        480
+      ],
+      "size": [
+        170,
+        64
+      ]
+    },
+    {
+      "id": "scripts",
+      "type": "backend",
+      "label": "scripts/adr.py",
+      "sublabel": "new · status · bootstrap · check",
+      "tag": "determinista",
+      "pos": [
+        240,
+        280
+      ],
+      "size": [
+        170,
+        64
+      ]
+    },
+    {
+      "id": "registro",
+      "type": "database",
+      "label": "Registro de ADR",
+      "sublabel": "índice y registros",
+      "pos": [
+        1000,
+        280
+      ],
+      "size": [
+        170,
+        64
+      ]
+    },
+    {
+      "id": "puerta",
+      "type": "security",
+      "label": "Puerta",
+      "sublabel": "check + revisión",
+      "tag": "hallazgos declarados",
+      "pos": [
+        1000,
+        460
+      ],
+      "size": [
+        170,
+        64
+      ]
+    },
+    {
+      "id": "sustituto",
+      "type": "database",
+      "label": "ADR sustituto",
+      "sublabel": "enlace bidireccional",
+      "pos": [
+        740,
+        460
+      ],
+      "size": [
+        170,
+        64
+      ]
+    }
+  ],
+  "boundaries": [
+    {
+      "kind": "region",
+      "label": "Contrato y recursos",
+      "wraps": [
+        "skill",
+        "refs",
+        "assets"
+      ]
+    },
+    {
+      "kind": "region",
+      "label": "Herramienta determinista",
+      "wraps": [
+        "scripts"
+      ]
+    },
+    {
+      "kind": "region",
+      "label": "Decisión y consecuencias",
+      "wraps": [
+        "decision",
+        "consecuencias"
+      ]
+    },
+    {
+      "kind": "security-group",
+      "label": "Registro, control y sustitución · fuera de la skill",
+      "wraps": [
+        "registro",
+        "puerta",
+        "sustituto"
+      ]
+    }
+  ],
+  "connections": [
+    {
+      "id": "encarga",
+      "from": "persona",
+      "to": "agente",
+      "label": "encarga",
+      "variant": "emphasis"
+    },
+    {
+      "id": "carga",
+      "from": "agente",
+      "to": "skill",
+      "label": "carga",
+      "variant": "emphasis"
+    },
+    {
+      "id": "exige",
+      "from": "skill",
+      "to": "decision",
+      "label": "exige concreción",
+      "variant": "emphasis"
+    },
+    {
+      "id": "decide",
+      "from": "decision",
+      "to": "consecuencias",
+      "label": "decide",
+      "variant": "emphasis"
+    },
+    {
+      "id": "consulta",
+      "from": "skill",
+      "to": "refs",
+      "label": "consulta",
+      "variant": "dashed"
+    },
+    {
+      "id": "copia",
+      "from": "skill",
+      "to": "assets",
+      "label": "copia la plantilla",
+      "variant": "dashed"
+    },
+    {
+      "id": "ejecuta",
+      "from": "skill",
+      "to": "scripts",
+      "label": "ejecuta",
+      "variant": "dashed"
+    },
+    {
+      "id": "redacta",
+      "from": "decision",
+      "to": "registro",
+      "label": "redacta"
+    },
+    {
+      "id": "sustenta",
+      "from": "consecuencias",
+      "to": "registro",
+      "label": "sustenta"
+    },
+    {
+      "id": "comprueba",
+      "from": "scripts",
+      "to": "puerta",
+      "label": "comprueba",
+      "variant": "dashed"
+    },
+    {
+      "id": "valida",
+      "from": "registro",
+      "to": "puerta",
+      "label": "valida",
+      "variant": "emphasis"
+    },
+    {
+      "id": "sustituye",
+      "from": "puerta",
+      "to": "sustituto",
+      "label": "si cambia la decisión",
+      "variant": "dashed"
+    },
+    {
+      "id": "vuelve",
+      "from": "sustituto",
+      "to": "registro",
+      "label": "enlaza de vuelta",
+      "variant": "emphasis"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "El paquete instalado",
+      "items": [
+        "SKILL.md es el cuerpo normativo: invariantes, pasos con criterio de parada y un cierre con evidencia",
+        "references/ se carga justo a tiempo: convenciones, puerta de revisión, variantes y ejemplos",
+        "assets/ fija las plantillas y scripts/ impone la comprobación determinista sin dependencias externas"
+      ]
+    },
+    {
+      "dot": "rose",
+      "title": "Las puertas del registro",
+      "items": [
+        "adr.py check valida frontmatter, fecha, responsables, título, secciones, marcadores, nombres, índice y enlaces",
+        "La revisión de contenido decide si un agente puede implementar la decisión sin preguntar",
+        "Una decisión sustituida se enlaza en ambos sentidos; la historia del ADR aceptado no se reescribe"
+      ]
+    },
+    {
+      "dot": "emerald",
+      "title": "Lo que la skill no hace",
+      "items": [
+        "No diseña la arquitectura ni sustituye un PRD o los requisitos de producto",
+        "No convierte una decisión trivial, reversible y local en un registro que hay que mantener",
+        "No presenta como aprobada una decisión que la persona no ha aprobado"
+      ]
+    }
+  ]
+}
