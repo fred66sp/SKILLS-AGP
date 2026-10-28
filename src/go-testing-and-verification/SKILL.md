@@ -2,7 +2,7 @@
 name: go-testing-and-verification
 description: "Diseña y ejecuta la verificación de código Go, con prioridad en CLIs: pruebas unitarias y de tabla, golden files deterministas, pruebas de extremo a extremo del binario, casos de error y cancelación, y la puerta gofmt, build, test, vet, race y lint. Úsala cuando haya que escribir o revisar pruebas, fijar el comportamiento de una CLI, comprobar una regresión o declarar un cambio terminado. No la uses para benchmarks de rendimiento, estrategia de errores, diseño de la CLI ni estilo general, que tienen sus propias skills."
 metadata:
-  version: "1.0.0"
+  version: "1.0.1"
 ---
 
 # Pruebas y verificación en Go
@@ -63,6 +63,8 @@ Esta skill posee las pruebas y la puerta de verificación. El contrato de la CLI
 4. Prueba la cancelación con un contexto cancelado y, si hay goroutines, con el detector de carreras.
 
 **Paso 6 — Ejecutar la puerta.**
+La puerta ejecuta código del proyecto (`go build`, `go test` y el linter): ejecútala solo sobre un proyecto confiable o dentro de un contenedor o usuario sin privilegios.
+
 1. Ejecuta `python src/go-testing-and-verification/scripts/verify-go.py --root .` (o `--race`, `--lint`).
 2. Si falla, corrige por categoría: formato, compilación, test, vet, race, lint. No silencies con `//nolint` sin justificación.
 3. Copia `assets/verification-report.md` y rellena cada campo con la salida real.

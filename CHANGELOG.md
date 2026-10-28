@@ -70,6 +70,8 @@ Las categorías —Añadido, Corregido, Modificado— vienen de [Keep a Changelo
 
 ### Modificado
 
+- Skills `go-testing-and-verification` (1.0.1), `typescript-testing-and-verification` (0.1.1) y `javascript-testing-and-verification` (0.1.1): el paso de la puerta advierte de que ejecuta código del proyecto (`go build`/`go test`, `npm run` y `node --check`) y de que solo debe usarse sobre un proyecto confiable o dentro de un contenedor o usuario sin privilegios.
+- `.github/workflows/validate.yml`: las acciones se fijan por SHA de commit con su versión en comentario. `.github/dependabot.yml` actualiza esas fijaciones semanalmente para `github-actions`.
 - Páginas de documentación en `docs/`: las páginas de skill enlazan al catálogo desde la barra, el hero, el índice y el pie, y todas las páginas incorporan un botón circular de vuelta arriba, sin texto y con chevrón, que aparece al desplazarse.
 - `CHANGELOG.md`: todo el fichero se titula `Historial` en vez de `[Unreleased]`, que afirmaba un estado de publicación que el versionado por skill no puede sostener. Conserva las categorías de Keep a Changelog y declara que qué cambió entre dos versiones de una skill lo responde el historial de Git. `CONTRIBUTING.md` describe el fichero con la misma regla.
 - `README.md`: enlaces al catálogo y a la guía de autoría en HTML.

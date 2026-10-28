@@ -2,7 +2,7 @@
 name: javascript-testing-and-verification
 description: "Demuestra el comportamiento del JavaScript vanilla sin añadir un framework: elige la capa de prueba más pequeña, escribe pruebas con node:test y node:assert/strict, prueba DOM y eventos en una página de navegador o con el entorno que el proyecto ya tenga, simula red, almacenamiento y reloj, prueba el proceso con argv, env y stdin controlados, y cierra con la puerta scripts/verify-js.py, que comprueba sintaxis, ejecuta el script test del proyecto o node --test e informa del baseline de Node. Úsala al escribir o revisar pruebas, validar una frontera no confiable, comprobar una regresión o declarar un cambio terminado. No la uses para estilo, módulos, diseño de DOM ni arquitectura, que son de javascript-idiomatic-style."
 metadata:
-  version: "0.1.0"
+  version: "0.1.1"
 ---
 
 # Pruebas y verificación en JavaScript
@@ -61,6 +61,8 @@ Esta skill posee la elección de capa, las pruebas, los dobles, el determinismo 
 4. Repite la suite dos veces para detectar dependencia de orden o de estado.
 
 **Paso 5 — Ejecutar la puerta.**
+La puerta ejecuta código del proyecto (`node --check` y los scripts del proyecto): ejecútala solo sobre un proyecto confiable o dentro de un contenedor o usuario sin privilegios.
+
 1. `python3 <skill>/scripts/verify-js.py --root <raíz>` para la sintaxis; añade `--test` y `--lint` cuando el proyecto los tenga.
 2. La puerta no sustituye al runner del proyecto: si hay script `test`, ese manda.
 3. Si `node` no está disponible o el proyecto no tiene `package.json`, la puerta lo dice; no lo interpretes como éxito.

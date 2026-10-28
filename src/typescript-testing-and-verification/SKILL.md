@@ -2,7 +2,7 @@
 name: typescript-testing-and-verification
 description: "Diseña y ejecuta la verificación de código TypeScript: validación de todo dato externo en la frontera con Zod 4 y tipos inferidos, comprobación de tipos con tsc --noEmit, pruebas unitarias y de integración, pruebas de extremo a extremo de CLIs, determinismo, errores legibles, variables de entorno al arranque y la puerta de typecheck, lint, test y build con scripts/verify-ts.py. Úsala cuando haya que escribir o revisar pruebas, validar entradas no confiables, comprobar una regresión o declarar un cambio terminado. No la uses para diseño de tipos, estilo general ni arquitectura de la CLI, que tienen su propia skill."
 metadata:
-  version: "0.1.0"
+  version: "0.1.1"
 ---
 
 # Validación y verificación en TypeScript
@@ -64,6 +64,8 @@ Esta skill posee la validación en la frontera, las pruebas y la puerta de verif
 5. Comprueba que un fallo no deja archivos parciales y que los secretos no aparecen en ningún canal.
 
 **Paso 5 — Ejecutar la puerta.**
+La puerta ejecuta los scripts del proyecto (`npm run`, `pnpm`, `yarn` o `bun`): ejecútala solo sobre un proyecto confiable o dentro de un contenedor o usuario sin privilegios.
+
 1. Ejecuta `python src/typescript-testing-and-verification/scripts/verify-ts.py --root . --test --lint --build` o el subconjunto que el proyecto soporte.
 2. Si falla, corrige por categoría: tipos, lint, test o build. No silencies con `@ts-ignore` ni desactives una regla sin justificación.
 3. Copia `assets/verification-report.md` y rellena cada campo con la salida real.
