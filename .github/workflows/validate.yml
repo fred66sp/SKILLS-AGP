@@ -44,5 +44,8 @@ jobs:
       - name: Test the JavaScript verification gate
         run: python3 src/javascript-testing-and-verification/scripts/test-verify-js.py
 
+      - name: Test the Python verification gate
+        run: python3 src/python-testing-and-verification/scripts/test-verify-python.py
+
       - name: Test the security scanner
         run: python3 src/security-engineering/scripts/test-security_scan.py

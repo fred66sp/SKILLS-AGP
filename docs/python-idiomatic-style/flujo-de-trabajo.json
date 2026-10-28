@@ -1,0 +1,298 @@
+{
+  "schema_version": 2,
+  "diagram_type": "workflow",
+  "meta": {
+    "title": "Flujo de trabajo de la skill python-idiomatic-style",
+    "subtitle": "Del encargo al diff revisado: modelar los estados, fijar las firmas, resolver el proyecto y la CLI, y comprobar el cambio con el comprobador de tipos.",
+    "locale": "es",
+    "output": "docs/python-idiomatic-style/flujo-de-trabajo.html",
+    "visual_preset": "signal-flow",
+    "quality_profile": "showcase"
+  },
+  "lanes": [
+    {
+      "id": "encargo",
+      "label": "Encargo y riesgo"
+    },
+    {
+      "id": "estilo",
+      "label": "La skill: modelar y escribir"
+    },
+    {
+      "id": "proyecto",
+      "label": "Proyecto y CLI"
+    },
+    {
+      "id": "control",
+      "label": "Parada y cierre",
+      "variant": "exception"
+    }
+  ],
+  "phases": [
+    {
+      "id": "modelar",
+      "label": "Modelar",
+      "fromCol": 0,
+      "toCol": 1
+    },
+    {
+      "id": "escribir",
+      "label": "Escribir",
+      "fromCol": 2,
+      "toCol": 3,
+      "variant": "emphasis"
+    },
+    {
+      "id": "proyecto",
+      "label": "Proyecto",
+      "fromCol": 4,
+      "toCol": 4
+    },
+    {
+      "id": "cerrar",
+      "label": "Diff revisado",
+      "fromCol": 5,
+      "toCol": 5,
+      "variant": "security"
+    }
+  ],
+  "groups": [
+    {
+      "id": "tipos",
+      "label": "Firmas y tipos",
+      "lane": "estilo",
+      "fromCol": 0,
+      "toCol": 1,
+      "variant": "emphasis"
+    },
+    {
+      "id": "comprobacion",
+      "label": "Comprobación del cambio",
+      "lane": "proyecto",
+      "fromCol": 4,
+      "toCol": 5,
+      "variant": "security"
+    }
+  ],
+  "mainPath": [
+    "cambio",
+    "modelo",
+    "firmas",
+    "recursos",
+    "proyecto",
+    "cli",
+    "comprobador",
+    "resultado"
+  ],
+  "nodes": [
+    {
+      "id": "cambio",
+      "lane": "encargo",
+      "col": 0,
+      "type": "external",
+      "label": "Encargo",
+      "sublabel": "módulo, paquete o CLI",
+      "tag": "leer antes de escribir",
+      "icon": "start"
+    },
+    {
+      "id": "riesgo",
+      "lane": "encargo",
+      "col": 1,
+      "type": "external",
+      "label": "Riesgos",
+      "sublabel": "datos · recurso · frontera",
+      "tag": "deciden el modelo"
+    },
+    {
+      "id": "modelo",
+      "lane": "estilo",
+      "col": 0,
+      "type": "backend",
+      "label": "Modelo",
+      "sublabel": "dataclass · Enum · Protocol",
+      "tag": "estados que no coexisten"
+    },
+    {
+      "id": "firmas",
+      "lane": "estilo",
+      "col": 1,
+      "type": "backend",
+      "label": "Firmas",
+      "sublabel": "parámetros y retorno",
+      "tag": "Any justificado"
+    },
+    {
+      "id": "recursos",
+      "lane": "estilo",
+      "col": 2,
+      "type": "security",
+      "label": "Errores y recursos",
+      "sublabel": "raise ... from · with",
+      "tag": "nada se pierde"
+    },
+    {
+      "id": "proyecto",
+      "lane": "proyecto",
+      "col": 3,
+      "type": "backend",
+      "label": "Proyecto",
+      "sublabel": "pyproject · layout · deps",
+      "tag": "una sola fuente"
+    },
+    {
+      "id": "cli",
+      "lane": "proyecto",
+      "col": 4,
+      "type": "backend",
+      "label": "CLI",
+      "sublabel": "argparse · salida · códigos",
+      "tag": "sin TTY y con --dry-run"
+    },
+    {
+      "id": "comprobador",
+      "lane": "proyecto",
+      "col": 5,
+      "type": "security",
+      "label": "Comprobador",
+      "sublabel": "mypy · pyright · ruff",
+      "tag": "se ejecuta, no se cita"
+    },
+    {
+      "id": "parada",
+      "lane": "control",
+      "col": 2,
+      "type": "security",
+      "label": "Parada",
+      "sublabel": "tipo roto o migración",
+      "tag": "no se silencia",
+      "icon": "stop"
+    },
+    {
+      "id": "resultado",
+      "lane": "control",
+      "col": 5,
+      "type": "frontend",
+      "label": "Resultado",
+      "sublabel": "completo o bloqueado",
+      "icon": "success"
+    }
+  ],
+  "edges": [
+    {
+      "id": "mapea",
+      "from": "cambio",
+      "to": "modelo",
+      "label": "modela",
+      "variant": "emphasis",
+      "role": "main"
+    },
+    {
+      "id": "marca-riesgo",
+      "from": "cambio",
+      "to": "riesgo",
+      "label": "marca",
+      "variant": "dashed",
+      "role": "branch"
+    },
+    {
+      "id": "declara",
+      "from": "modelo",
+      "to": "firmas",
+      "label": "declara",
+      "role": "main"
+    },
+    {
+      "id": "cierra",
+      "from": "firmas",
+      "to": "recursos",
+      "label": "cierra",
+      "variant": "emphasis",
+      "role": "main"
+    },
+    {
+      "id": "resuelve",
+      "from": "recursos",
+      "to": "proyecto",
+      "label": "resuelve",
+      "role": "main"
+    },
+    {
+      "id": "construye",
+      "from": "proyecto",
+      "to": "cli",
+      "label": "si hay CLI",
+      "role": "main"
+    },
+    {
+      "id": "comprueba",
+      "from": "cli",
+      "to": "comprobador",
+      "label": "comprueba",
+      "role": "main"
+    },
+    {
+      "id": "cierra-diff",
+      "from": "comprobador",
+      "to": "resultado",
+      "label": "diff revisado",
+      "variant": "emphasis",
+      "role": "main"
+    },
+    {
+      "id": "mutacion",
+      "from": "recursos",
+      "to": "parada",
+      "label": "mutación no declarada",
+      "variant": "security",
+      "role": "return"
+    },
+    {
+      "id": "tipo-roto",
+      "from": "comprobador",
+      "to": "parada",
+      "label": "tipo roto",
+      "variant": "security",
+      "role": "return",
+      "fromSide": "left",
+      "toSide": "right"
+    },
+    {
+      "id": "corrige",
+      "from": "parada",
+      "to": "firmas",
+      "label": "corrige el tipo",
+      "variant": "dashed",
+      "role": "return"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "El modelo decide el resto",
+      "items": [
+        "Valor inmutable con dataclass(frozen=True, slots=True); conjunto cerrado con Enum; diccionario externo con TypedDict; contrato del consumidor con Protocol",
+        "Identificadores y cantidades se anotan y no se mezclan con str desnudo en la API pública",
+        "El error base y sus causas se definen antes del camino feliz; raise ... from conserva la causa"
+      ]
+    },
+    {
+      "dot": "rose",
+      "title": "Dónde se detiene",
+      "items": [
+        "Un proyecto sin comprobador de tipos no se migra dentro de un cambio funcional: se propone aparte y se mide el coste",
+        "Un Any o un # type: ignore nuevo exige una razón escrita o se elimina",
+        "Un segundo gestor de paquetes o un segundo lockfile no se añade: se informa y se deja la decisión"
+      ]
+    },
+    {
+      "dot": "emerald",
+      "title": "Cómo se cierra",
+      "items": [
+        "ruff format --check y ruff check sobre el árbol, y mypy o pyright según lo que el proyecto declare",
+        "La CLI se comprueba con --help, --version, un flag inválido y una operación destructiva sin --yes",
+        "El resultado enumera módulos, decisiones de tipos, proyecto, CLI, comprobaciones y deuda declarada"
+      ]
+    }
+  ]
+}
