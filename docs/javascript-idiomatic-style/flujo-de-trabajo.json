@@ -1,0 +1,292 @@
+{
+  "schema_version": 2,
+  "diagram_type": "workflow",
+  "meta": {
+    "title": "Flujo de trabajo de la skill javascript-idiomatic-style",
+    "subtitle": "De la inspección del proyecto al diff revisado: cómo se fijan los dos baselines, dónde se separa lo compartido de lo que depende de la plataforma y qué se ejecuta antes de cerrar.",
+    "locale": "es",
+    "output": "docs/javascript-idiomatic-style/flujo-de-trabajo.html",
+    "visual_preset": "signal-flow",
+    "quality_profile": "showcase"
+  },
+  "lanes": [
+    {
+      "id": "encargo",
+      "label": "Encargo y convención"
+    },
+    {
+      "id": "skill",
+      "label": "La skill: decidir"
+    },
+    {
+      "id": "codigo",
+      "label": "Código y plataforma"
+    },
+    {
+      "id": "control",
+      "label": "Límite y cierre",
+      "variant": "exception"
+    }
+  ],
+  "phases": [
+    {
+      "id": "inspeccion",
+      "label": "Inspección",
+      "fromCol": 0,
+      "toCol": 1
+    },
+    {
+      "id": "baseline",
+      "label": "Baseline",
+      "fromCol": 2,
+      "toCol": 2,
+      "variant": "emphasis"
+    },
+    {
+      "id": "escritura",
+      "label": "Escritura",
+      "fromCol": 3,
+      "toCol": 4
+    },
+    {
+      "id": "revision",
+      "label": "Revisión",
+      "fromCol": 5,
+      "toCol": 5,
+      "variant": "security"
+    }
+  ],
+  "groups": [
+    {
+      "id": "decisiones",
+      "label": "Decisiones antes del código",
+      "lane": "skill",
+      "fromCol": 1,
+      "toCol": 3,
+      "variant": "emphasis"
+    },
+    {
+      "id": "comprobacion",
+      "label": "Comprobación del cambio",
+      "lane": "control",
+      "fromCol": 4,
+      "toCol": 5,
+      "variant": "security"
+    }
+  ],
+  "mainPath": [
+    "encargo",
+    "inspeccion",
+    "baseline",
+    "modelos",
+    "escritura",
+    "plataforma",
+    "comprueba",
+    "revisa",
+    "resultado"
+  ],
+  "nodes": [
+    {
+      "id": "encargo",
+      "lane": "encargo",
+      "col": 0,
+      "type": "external",
+      "label": "Encargo de JavaScript",
+      "sublabel": "navegador, Node o ambos",
+      "tag": "leer antes de escribir",
+      "icon": "start"
+    },
+    {
+      "id": "inspeccion",
+      "lane": "skill",
+      "col": 0,
+      "type": "backend",
+      "label": "Inspección",
+      "sublabel": "engines · browserslist",
+      "tag": "sin escribir aún"
+    },
+    {
+      "id": "baseline",
+      "lane": "skill",
+      "col": 1,
+      "type": "backend",
+      "label": "Fijar los dos baselines",
+      "sublabel": "intersección · adaptador",
+      "tag": "una edición no es una promesa"
+    },
+    {
+      "id": "modelos",
+      "lane": "skill",
+      "col": 2,
+      "type": "backend",
+      "label": "Modelar datos y estados",
+      "sublabel": "identificadores · errores",
+      "tag": "sin estados imposibles"
+    },
+    {
+      "id": "escritura",
+      "lane": "skill",
+      "col": 3,
+      "type": "backend",
+      "label": "Escribir",
+      "sublabel": "guardas · async · módulos",
+      "tag": "contratos antes que cuerpos"
+    },
+    {
+      "id": "plataforma",
+      "lane": "codigo",
+      "col": 4,
+      "type": "backend",
+      "label": "DOM o runtime de Node",
+      "sublabel": "una frontera, un adaptador",
+      "tag": "sin typeof en el dominio"
+    },
+    {
+      "id": "comprueba",
+      "lane": "codigo",
+      "col": 5,
+      "type": "backend",
+      "label": "node --check · linter",
+      "sublabel": "el motor real, al ejecutar",
+      "tag": "sin reglas desactivadas"
+    },
+    {
+      "id": "revisa",
+      "lane": "skill",
+      "col": 5,
+      "type": "security",
+      "label": "Revisión del diff",
+      "sublabel": "var · == · innerHTML · deuda",
+      "tag": "solo lo pedido"
+    },
+    {
+      "id": "parada",
+      "lane": "control",
+      "col": 0,
+      "type": "security",
+      "label": "Parada",
+      "sublabel": "TypeScript, framework o build",
+      "tag": "sin mezclar cambios",
+      "icon": "stop"
+    },
+    {
+      "id": "resultado",
+      "lane": "control",
+      "col": 5,
+      "type": "frontend",
+      "label": "Resultado",
+      "sublabel": "completo o con deuda",
+      "icon": "success"
+    }
+  ],
+  "edges": [
+    {
+      "id": "lee",
+      "from": "encargo",
+      "to": "inspeccion",
+      "label": "lee",
+      "variant": "emphasis",
+      "role": "main"
+    },
+    {
+      "id": "fija",
+      "from": "inspeccion",
+      "to": "baseline",
+      "label": "engines y browserslist",
+      "role": "main"
+    },
+    {
+      "id": "modela",
+      "from": "baseline",
+      "to": "modelos",
+      "label": "intersección",
+      "role": "main"
+    },
+    {
+      "id": "escribe",
+      "from": "modelos",
+      "to": "escritura",
+      "label": "código",
+      "role": "main"
+    },
+    {
+      "id": "reparte",
+      "from": "escritura",
+      "to": "plataforma",
+      "label": "reparte",
+      "variant": "emphasis",
+      "role": "main"
+    },
+    {
+      "id": "ejecuta",
+      "from": "plataforma",
+      "to": "comprueba",
+      "label": "ejecuta",
+      "role": "main"
+    },
+    {
+      "id": "revisa-diff",
+      "from": "comprueba",
+      "to": "revisa",
+      "label": "revisa",
+      "variant": "emphasis",
+      "role": "main"
+    },
+    {
+      "id": "cierra",
+      "from": "revisa",
+      "to": "resultado",
+      "label": "diff limpio",
+      "variant": "emphasis",
+      "role": "main"
+    },
+    {
+      "id": "fuera-de-baseline",
+      "from": "baseline",
+      "to": "parada",
+      "label": "feature no disponible",
+      "variant": "security",
+      "role": "return"
+    },
+    {
+      "id": "otra-materia",
+      "from": "inspeccion",
+      "to": "parada",
+      "label": "TypeScript o framework",
+      "variant": "security",
+      "role": "return"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "Qué se decide antes de escribir",
+      "items": [
+        "El baseline del navegador y el de Node se leen en engines, browserslist, .nvmrc y la matriz de CI; la convención escrita del proyecto prevalece",
+        "La intersección de los dos baselines decide qué puede compartirse; lo demás va detrás de un adaptador con nombre",
+        "Ningún módulo del dominio pregunta por typeof window: la detección vive en una sola pieza",
+        "Cada frontera de dato externo se marca y se deja para javascript-testing-and-verification"
+      ]
+    },
+    {
+      "dot": "rose",
+      "title": "Dónde se detiene",
+      "items": [
+        "Un proyecto TypeScript o con JSX no se convierte a JavaScript: pasa a las skills de TypeScript",
+        "Un framework de interfaz queda fuera del contrato; el lenguaje y los módulos sí se revisan",
+        "Una feature ausente en el motor más antiguo se sustituye o se pregunta; no se envuelve en un polyfill no pedido",
+        "Migrar de CJS a ESM o eliminar un bundler es un cambio aparte, con su coste"
+      ]
+    },
+    {
+      "dot": "emerald",
+      "title": "Cómo se demuestra el cierre",
+      "items": [
+        "node --check sobre cada archivo tocado y el linter del proyecto, sin desactivar reglas",
+        "El código de navegador se abre en el navegador; el de Node se ejecuta con los argumentos y variables reales",
+        "El diff se busca por var, ==, innerHTML, eval, new Function, document.write y process.exit(",
+        "El resultado declara objetivo, baselines, reparto de módulos, comprobaciones, pruebas y deuda"
+      ]
+    }
+  ]
+}

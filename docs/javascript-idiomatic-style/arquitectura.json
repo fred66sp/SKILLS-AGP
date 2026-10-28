@@ -1,0 +1,204 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "Arquitectura de la skill javascript-idiomatic-style",
+    "subtitle": "El paquete, los dos objetivos y el código: un baseline por plataforma, una intersección compartida y un adaptador que es la única pieza que sabe dónde corre.",
+    "locale": "es",
+    "output": "docs/javascript-idiomatic-style/arquitectura.html",
+    "quality_profile": "showcase"
+  },
+  "components": [
+    {
+      "id": "persona",
+      "type": "external",
+      "label": "Persona",
+      "sublabel": "encarga y revisa",
+      "icon": "person",
+      "pos": [40, 80],
+      "size": [140, 64]
+    },
+    {
+      "id": "agente",
+      "type": "external",
+      "label": "Agente anfitrión",
+      "sublabel": "carga la skill",
+      "pos": [260, 80],
+      "size": [150, 64]
+    },
+    {
+      "id": "skill",
+      "type": "frontend",
+      "label": "SKILL.md",
+      "sublabel": "invariantes y pasos",
+      "pos": [500, 80],
+      "size": [150, 64]
+    },
+    {
+      "id": "reglas",
+      "type": "database",
+      "label": "cinco referencias",
+      "sublabel": "lenguaje · async · DOM · Node · baseline",
+      "tag": "se abren si no es evidente",
+      "pos": [740, 80],
+      "size": [220, 64]
+    },
+    {
+      "id": "navegador",
+      "type": "database",
+      "label": "Baseline del navegador",
+      "sublabel": "browserslist · Baseline",
+      "pos": [260, 300],
+      "size": [170, 64]
+    },
+    {
+      "id": "compartido",
+      "type": "backend",
+      "label": "Intersección compartida",
+      "sublabel": "lenguaje · módulos · async",
+      "pos": [500, 300],
+      "size": [170, 64]
+    },
+    {
+      "id": "node",
+      "type": "database",
+      "label": "Baseline de Node",
+      "sublabel": "engines · .nvmrc · CI",
+      "pos": [740, 300],
+      "size": [170, 64]
+    },
+    {
+      "id": "adaptador",
+      "type": "security",
+      "label": "Adaptador de plataforma",
+      "sublabel": "una frontera, un nombre",
+      "tag": "el dominio no pregunta dónde corre",
+      "pos": [500, 420],
+      "size": [170, 64]
+    },
+    {
+      "id": "comprobacion",
+      "type": "security",
+      "label": "node --check · linter",
+      "sublabel": "el motor real",
+      "tag": "sin reglas desactivadas",
+      "pos": [960, 300],
+      "size": [180, 64]
+    }
+  ],
+  "boundaries": [
+    {
+      "kind": "region",
+      "label": "Paquete instalado",
+      "wraps": ["skill", "reglas"]
+    },
+    {
+      "kind": "region",
+      "label": "Trabajo sobre el proyecto",
+      "wraps": ["navegador", "compartido", "node", "adaptador", "comprobacion"]
+    }
+  ],
+  "connections": [
+    {
+      "id": "encarga",
+      "from": "persona",
+      "to": "agente",
+      "label": "encarga",
+      "variant": "emphasis"
+    },
+    {
+      "id": "carga",
+      "from": "agente",
+      "to": "skill",
+      "label": "carga",
+      "variant": "emphasis"
+    },
+    {
+      "id": "consulta",
+      "from": "skill",
+      "to": "reglas",
+      "label": "consulta",
+      "variant": "dashed"
+    },
+    {
+      "id": "fija-navegador",
+      "from": "skill",
+      "to": "navegador",
+      "label": "fija",
+      "variant": "emphasis"
+    },
+    {
+      "id": "fija-node",
+      "from": "skill",
+      "to": "node",
+      "label": "fija",
+      "variant": "emphasis"
+    },
+    {
+      "id": "interseca",
+      "from": "navegador",
+      "to": "compartido",
+      "label": "intersección",
+      "variant": "emphasis"
+    },
+    {
+      "id": "interseca-node",
+      "from": "node",
+      "to": "compartido",
+      "label": "intersección",
+      "variant": "emphasis"
+    },
+    {
+      "id": "aisla",
+      "from": "compartido",
+      "to": "adaptador",
+      "label": "delega",
+      "variant": "dashed"
+    },
+    {
+      "id": "comprueba",
+      "from": "compartido",
+      "to": "comprobacion",
+      "label": "comprueba",
+      "variant": "emphasis"
+    },
+    {
+      "id": "informa",
+      "from": "comprobacion",
+      "to": "agente",
+      "label": "diff y resultado"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "El paquete instalado",
+      "items": [
+        "SKILL.md fija los invariantes, el procedimiento y el bloque de resultado",
+        "language-rules.md reúne declaraciones, igualdad, números, objetos, iteración, clases y nombres",
+        "async-and-modules.md posee promesas, cancelación, event loop, ESM y CJS",
+        "browser-apis.md y node-apis.md separan el DOM del runtime; engine-baseline.md decide qué cabe en la intersección"
+      ]
+    },
+    {
+      "dot": "rose",
+      "title": "Las decisiones que se ven en el diff",
+      "items": [
+        "=== salvo == null; ?? en lugar de || para valores por defecto",
+        "Un solo adaptador de plataforma en vez de typeof disperso por el dominio",
+        "DOM construido con nodos y textContent; innerHTML con dato externo, prohibido",
+        "AbortSignal en toda operación que puede abandonarse y un consumidor para cada rechazo"
+      ]
+    },
+    {
+      "dot": "emerald",
+      "title": "Lo que la skill no hace",
+      "items": [
+        "No escribe ni ejecuta pruebas, dobles ni fixtures: esa materia es de javascript-testing-and-verification",
+        "No valida datos externos con una librería ni presupone un esquema",
+        "No convierte TypeScript a JavaScript ni entra en componentes de framework",
+        "No añade bundler, framework ni dependencias sin una necesidad y una decisión aparte"
+      ]
+    }
+  ]
+}

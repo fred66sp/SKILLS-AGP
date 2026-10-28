@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "502c5fa4-cfdf-4b40-88fc-aa994b1d21fb",
+  "status": "current",
+  "command": "deliver",
+  "type": "architecture",
+  "input": "/home/desarrollo/PROJECTS/SKILLS-AGP/docs/javascript-idiomatic-style/arquitectura.json",
+  "output": "/home/desarrollo/PROJECTS/SKILLS-AGP/docs/javascript-idiomatic-style/arquitectura.html",
+  "specification": {
+    "sha256": "561050e8c230901e2b2168478a1e5b92271d85df7b4431ed5f7146e4f68f87a9",
+    "bytes": 5512
+  },
+  "artifact": {
+    "sha256": "d504a417f17f0e879a739eb954dff1bd9b039a9c1189e6ddb94911a7ba1b19c4",
+    "bytes": 832774
+  }
+}

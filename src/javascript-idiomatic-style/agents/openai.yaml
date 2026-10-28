@@ -1,0 +1,13 @@
+interface:
+  display_name: Estilo JavaScript vanilla
+  short_description: JavaScript idiomático para navegador y Node
+  default_prompt: Usa $javascript-idiomatic-style para escribir o revisar JavaScript
+    vanilla con un baseline declarado, igualdad estricta, módulos coherentes y DOM
+    construido sin inyecciones.
+policy:
+  products:
+  - chatgpt
+  - codex
+  - api
+  - atlas
+  allow_implicit_invocation: true
