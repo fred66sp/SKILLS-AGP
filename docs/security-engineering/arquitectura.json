@@ -1,0 +1,381 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "Arquitectura de la skill security-engineering",
+    "subtitle": "Qué piezas la componen, qué superficie revisa y qué puerta exige antes de declarar un riesgo residual.",
+    "locale": "es",
+    "output": "docs/security-engineering/arquitectura.html",
+    "quality_profile": "showcase"
+  },
+  "components": [
+    {
+      "id": "persona",
+      "type": "external",
+      "label": "Persona",
+      "sublabel": "decide y acepta riesgo",
+      "icon": "person",
+      "pos": [
+        40,
+        80
+      ],
+      "size": [
+        130,
+        60
+      ]
+    },
+    {
+      "id": "agente",
+      "type": "external",
+      "label": "Agente anfitrión",
+      "sublabel": "Pi · Claude Code · Codex",
+      "pos": [
+        240,
+        80
+      ],
+      "size": [
+        170,
+        64
+      ]
+    },
+    {
+      "id": "skill",
+      "type": "frontend",
+      "label": "SKILL.md",
+      "sublabel": "invariantes y siete pasos",
+      "pos": [
+        480,
+        80
+      ],
+      "size": [
+        170,
+        64
+      ]
+    },
+    {
+      "id": "alcance",
+      "type": "security",
+      "label": "Alcance y activos",
+      "sublabel": "qué se protege",
+      "icon": "decision",
+      "pos": [
+        740,
+        80
+      ],
+      "size": [
+        170,
+        64
+      ]
+    },
+    {
+      "id": "amenaza",
+      "type": "security",
+      "label": "Modelo de amenazas",
+      "sublabel": "límites y abuso",
+      "pos": [
+        1000,
+        80
+      ],
+      "size": [
+        170,
+        64
+      ]
+    },
+    {
+      "id": "scanner",
+      "type": "backend",
+      "label": "security_scan.py",
+      "sublabel": "señales + 23 pruebas",
+      "tag": "determinista",
+      "pos": [
+        240,
+        260
+      ],
+      "size": [
+        170,
+        64
+      ]
+    },
+    {
+      "id": "refs",
+      "type": "database",
+      "label": "references/",
+      "sublabel": "amenaza · código · agentes · terceros",
+      "tag": "se leen cuando toca",
+      "pos": [
+        480,
+        260
+      ],
+      "size": [
+        170,
+        64
+      ]
+    },
+    {
+      "id": "superficie",
+      "type": "database",
+      "label": "Superficie revisada",
+      "sublabel": "código · agentes · terceros",
+      "pos": [
+        740,
+        260
+      ],
+      "size": [
+        170,
+        64
+      ]
+    },
+    {
+      "id": "hallazgos",
+      "type": "security",
+      "label": "Hallazgos",
+      "sublabel": "traza · severidad",
+      "tag": "con supuestos",
+      "pos": [
+        1000,
+        260
+      ],
+      "size": [
+        170,
+        64
+      ]
+    },
+    {
+      "id": "assets",
+      "type": "database",
+      "label": "assets/",
+      "sublabel": "modelo · informe",
+      "pos": [
+        480,
+        440
+      ],
+      "size": [
+        170,
+        64
+      ]
+    },
+    {
+      "id": "correccion",
+      "type": "frontend",
+      "label": "Corrección",
+      "sublabel": "una causa por cambio",
+      "pos": [
+        1000,
+        440
+      ],
+      "size": [
+        170,
+        64
+      ]
+    },
+    {
+      "id": "informe",
+      "type": "database",
+      "label": "Informe",
+      "sublabel": "riesgo residual",
+      "pos": [
+        1240,
+        440
+      ],
+      "size": [
+        170,
+        64
+      ]
+    },
+    {
+      "id": "puerta",
+      "type": "security",
+      "label": "Puerta",
+      "sublabel": "pruebas + escáner",
+      "tag": "evidencia mostrada",
+      "pos": [
+        1240,
+        620
+      ],
+      "size": [
+        170,
+        64
+      ]
+    },
+    {
+      "id": "no-verificado",
+      "type": "security",
+      "label": "No verificado",
+      "sublabel": "límite declarado",
+      "pos": [
+        1000,
+        620
+      ],
+      "size": [
+        170,
+        64
+      ]
+    }
+  ],
+  "boundaries": [
+    {
+      "kind": "region",
+      "label": "Contrato y recursos",
+      "wraps": [
+        "skill",
+        "refs",
+        "assets"
+      ]
+    },
+    {
+      "kind": "region",
+      "label": "Herramienta determinista",
+      "wraps": [
+        "scanner"
+      ]
+    },
+    {
+      "kind": "security-group",
+      "label": "Del análisis al cierre · fuera del paquete",
+      "wraps": [
+        "superficie",
+        "alcance",
+        "amenaza",
+        "hallazgos",
+        "correccion",
+        "informe",
+        "puerta",
+        "no-verificado"
+      ]
+    }
+  ],
+  "connections": [
+    {
+      "id": "encarga",
+      "from": "persona",
+      "to": "agente",
+      "label": "encarga",
+      "variant": "emphasis"
+    },
+    {
+      "id": "carga",
+      "from": "agente",
+      "to": "skill",
+      "label": "carga",
+      "variant": "emphasis"
+    },
+    {
+      "id": "exige",
+      "from": "skill",
+      "to": "alcance",
+      "label": "exige alcance",
+      "variant": "emphasis"
+    },
+    {
+      "id": "modela",
+      "from": "alcance",
+      "to": "amenaza",
+      "label": "modela",
+      "variant": "emphasis"
+    },
+    {
+      "id": "produce",
+      "from": "amenaza",
+      "to": "hallazgos",
+      "label": "produce",
+      "variant": "emphasis"
+    },
+    {
+      "id": "corrige",
+      "from": "hallazgos",
+      "to": "correccion",
+      "label": "corrige",
+      "variant": "emphasis"
+    },
+    {
+      "id": "registra",
+      "from": "correccion",
+      "to": "informe",
+      "label": "registra"
+    },
+    {
+      "id": "consulta",
+      "from": "skill",
+      "to": "refs",
+      "label": "consulta",
+      "variant": "dashed"
+    },
+    {
+      "id": "copia",
+      "from": "skill",
+      "to": "assets",
+      "label": "copia la plantilla",
+      "variant": "dashed"
+    },
+    {
+      "id": "ejecuta",
+      "from": "skill",
+      "to": "scanner",
+      "label": "ejecuta",
+      "variant": "dashed"
+    },
+    {
+      "id": "revisa",
+      "from": "skill",
+      "to": "superficie",
+      "label": "revisa",
+      "variant": "dashed"
+    },
+    {
+      "id": "alimenta",
+      "from": "superficie",
+      "to": "hallazgos",
+      "label": "alimenta"
+    },
+    {
+      "id": "senala",
+      "from": "scanner",
+      "to": "puerta",
+      "label": "señala",
+      "variant": "dashed"
+    },
+    {
+      "id": "cierra",
+      "from": "puerta",
+      "to": "informe",
+      "label": "cierra",
+      "variant": "emphasis"
+    },
+    {
+      "id": "declara",
+      "from": "puerta",
+      "to": "no-verificado",
+      "label": "declara el límite",
+      "variant": "dashed"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "El paquete instalado",
+      "items": [
+        "SKILL.md es el cuerpo normativo: invariantes, siete pasos, paradas y un cierre con evidencia",
+        "references/ se carga justo a tiempo: modelo de amenazas, código seguro, agentes y auditoría de terceros",
+        "assets/ fija el modelo y el informe; security_scan.py aporta la señal determinista sin dependencias externas"
+      ]
+    },
+    {
+      "dot": "rose",
+      "title": "La superficie que se revisa",
+      "items": [
+        "Código y configuración: fuente a sumidero por autorización, inyección, secretos, datos y límites",
+        "Agentes, LLM y MCP: herramientas, memoria, aprobaciones, salida, multiagente y coste",
+        "Skills y dependencias de terceros: procedencia, lectura completa, contraste, aislamiento y fijación"
+      ]
+    },
+    {
+      "dot": "emerald",
+      "title": "Lo que la skill no hace",
+      "items": [
+        "No certifica cumplimiento, no sustituye una revisión legal y no ejecuta pentesting ofensivo",
+        "No declara un sistema «seguro»: declara riesgo residual, supuestos y caducidad",
+        "No impone un arreglo que rompe el producto: presenta el compromiso y deja la decisión"
+      ]
+    }
+  ]
+}

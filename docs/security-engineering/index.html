@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Entrada a la skill security-engineering: qué hace, cuándo se activa, cómo se usa, qué contiene el paquete y dónde vive cada regla. Las reglas están en SKILL.md y en las referencias, no copiadas en esta página.">
+<meta name="color-scheme" content="light dark">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%239f1239'/%3E%3Cpath d='M16 6l8 3v7c0 5-3.4 8.3-8 10-4.6-1.7-8-5-8-10V9z' fill='none' stroke='%23ffffff' stroke-width='2.2' stroke-linejoin='round'/%3E%3Cpath d='m12.5 16 2.5 2.5 4.5-5' fill='none' stroke='%23ffffff' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+<title>security-engineering — seguridad con evidencia</title>
+<script>
+(function () {
+  try {
+    var p = JSON.parse(localStorage.getItem("security-engineering:prefs") || "{}");
+    var t = p.theme || (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+    document.documentElement.setAttribute("data-theme", t);
+  } catch (e) { document.documentElement.setAttribute("data-theme", "light"); }
+})();
+</script>
+<style>
+:root {
+  --bg: #f8fafc;
+  --bg-elev: #ffffff;
+  --bg-soft: #f1f5f9;
+  --text: #0f172a;
+  --muted: #5f6b80;
+  --border: #e2e8f0;
+  --border-strong: #cbd5e1;
+  --accent: #9f1239;
+  --accent-2: #be123c;
+  --accent-3: #b45309;
+  --accent-soft: rgba(159, 18, 57, .10);
+  --ok: #10b981;
+  --warn: #f59e0b;
+  --code-bg: #0a0f1c;
+  --code-text: #e5e7eb;
+  --code-border: #1f2937;
+  --shadow: 0 1px 2px rgba(15, 23, 42, .05), 0 8px 24px -12px rgba(15, 23, 42, .18);
+  --radius: 16px;
+  --radius-sm: 10px;
+  --font: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "SF Mono", "Fira Code", Menlo, Consolas, monospace;
+}
+:root[data-theme="dark"] {
+  --bg: #0a0f1c;
+  --bg-elev: #111827;
+  --bg-soft: #1f2937;
+  --text: #e5e7eb;
+  --muted: #94a3b8;
+  --border: #334155;
+  --border-strong: #475569;
+  --accent: #fda4af;
+  --accent-2: #fecdd3;
+  --accent-3: #fbbf24;
+  --accent-soft: rgba(253, 164, 175, .14);
+  --ok: #34d399;
+  --warn: #fbbf24;
+  --code-bg: #070b16;
+  --code-text: #e5e7eb;
+  --code-border: #1f2937;
+  --shadow: 0 1px 2px rgba(0, 0, 0, .4), 0 12px 32px -18px rgba(0, 0, 0, .8);
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; scroll-padding-top: 88px; }
+body {
+  margin: 0;
+  font-family: var(--font);
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; text-underline-offset: 3px; }
+code, pre, kbd { font-family: var(--mono); }
+.topbar {
+  position: sticky; top: 0; z-index: 50;
+  display: flex; align-items: center; gap: 12px;
+  padding: 12px clamp(16px, 4vw, 40px);
+  background: color-mix(in srgb, var(--bg) 82%, transparent);
+  -webkit-backdrop-filter: saturate(180%) blur(14px);
+  backdrop-filter: saturate(180%) blur(14px);
+  border-bottom: 1px solid var(--border);
+}
+.brand { display: flex; align-items: center; gap: 10px; color: var(--text); min-width: 0; }
+.brand:hover { text-decoration: none; }
+.brand-mark { width: 34px; height: 34px; border-radius: 10px; overflow: hidden; box-shadow: var(--shadow); flex: none; }
+.brand-mark svg { width: 100%; height: 100%; display: block; }
+.brand-name { font-weight: 700; letter-spacing: -.02em; font-size: 15px; min-width: 0; }
+.brand-name small { display: block; font-weight: 500; color: var(--muted); font-size: 11px; letter-spacing: .04em; text-transform: uppercase; }
+.topbar-spacer { flex: 1; }
+.icon-btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 7px;
+  height: 36px; padding: 0 12px;
+  border: 1px solid var(--border); border-radius: 10px;
+  background: var(--bg-elev); color: var(--text);
+  font: inherit; font-size: 13px; font-weight: 600;
+  cursor: pointer; white-space: nowrap;
+}
+.icon-btn:hover { border-color: var(--border-strong); }
+.icon-btn svg { width: 16px; height: 16px; }
+:root[data-theme="light"] .icon-sun { display: none; }
+:root[data-theme="dark"] .icon-moon { display: none; }
+.hero {
+  position: relative; overflow: hidden;
+  padding: clamp(48px, 9vw, 96px) clamp(16px, 4vw, 40px) clamp(40px, 6vw, 64px);
+  border-bottom: 1px solid var(--border);
+}
+.hero::before {
+  content: "";
+  position: absolute; inset: -40% -10% auto -10%; height: 420px;
+  background:
+    radial-gradient(60% 60% at 22% 30%, color-mix(in srgb, var(--accent) 22%, transparent), transparent 70%),
+    radial-gradient(50% 50% at 70% 6%, color-mix(in srgb, var(--accent-2) 18%, transparent), transparent 70%),
+    radial-gradient(42% 42% at 92% 26%, color-mix(in srgb, var(--accent-3) 16%, transparent), transparent 70%);
+  filter: blur(6px);
+  pointer-events: none;
+}
+.hero-inner { position: relative; max-width: 1080px; margin: 0 auto; }
+.pill {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 5px 12px;
+  border: 1px solid var(--border-strong); border-radius: 999px;
+  background: var(--bg-elev); color: var(--muted);
+  font-size: 12.5px; font-weight: 600;
+}
+.pill .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--ok); box-shadow: 0 0 0 3px color-mix(in srgb, var(--ok) 22%, transparent); }
+.hero h1 {
+  margin: 22px 0 0;
+  font-size: clamp(34px, 6vw, 62px);
+  line-height: 1.04; letter-spacing: -.035em; font-weight: 800;
+}
+.hero h1 .grad { color: var(--accent); }
+.hero p.lead { margin: 20px 0 0; max-width: 680px; font-size: clamp(16px, 2.2vw, 19px); color: var(--muted); }
+.hero-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 28px; }
+.btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 10px 16px;
+  border-radius: var(--radius-sm);
+  font-weight: 650; font-size: 14.5px;
+  border: 1px solid transparent; white-space: nowrap;
+}
+.btn:hover { text-decoration: none; }
+.btn-primary { background: var(--accent); color: #ffffff; }
+.btn-ghost { background: var(--bg-elev); color: var(--text); border-color: var(--border-strong); }
+.btn svg { width: 16px; height: 16px; flex: none; }
+.layout {
+  display: grid;
+  grid-template-columns: minmax(0, 240px) minmax(0, 1fr);
+  gap: clamp(24px, 4vw, 56px);
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: clamp(32px, 5vw, 56px) clamp(16px, 4vw, 40px);
+}
+.toc { position: sticky; top: 84px; align-self: start; }
+.toc h2 { margin: 0 0 12px; font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+.toc a { display: block; padding: 7px 0; color: var(--muted); font-size: 14px; border-left: 2px solid transparent; padding-left: 12px; }
+.toc a:hover { color: var(--accent); border-left-color: var(--accent); text-decoration: none; }
+.toc a.active { color: var(--accent); border-left-color: var(--accent); background: var(--accent-soft); border-radius: 0 8px 8px 0; }
+.toc-extra { margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--border); }
+main { min-width: 0; }
+.section { padding: 8px 0 44px; }
+.section + .section { border-top: 1px solid var(--border); padding-top: 40px; }
+.section-head { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.section-num {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 28px; height: 28px; border-radius: 8px;
+  background: var(--accent-soft); color: var(--accent);
+  font-size: 13px; font-weight: 800;
+}
+.title { margin: 0; font-size: clamp(22px, 3vw, 30px); letter-spacing: -.02em; }
+.sub { color: var(--muted); max-width: 760px; margin: 14px 0 22px; }
+.chip-repo {
+  margin-left: auto;
+  font-size: 11.5px; font-weight: 600; color: var(--muted);
+  border: 1px solid var(--border); border-radius: 999px; padding: 3px 10px;
+  background: var(--bg-elev);
+}
+.table-wrap { overflow-x: auto; border: 1px solid var(--border); border-radius: var(--radius); background: var(--bg-elev); box-shadow: var(--shadow); }
+.table-wrap + .note, .table-wrap + p { margin-top: 16px; }
+table { width: 100%; border-collapse: collapse; font-size: 14px; }
+thead th { text-align: left; padding: 12px 16px; background: var(--bg-soft); color: var(--muted); font-size: 11.5px; letter-spacing: .06em; text-transform: uppercase; border-bottom: 1px solid var(--border); white-space: nowrap; }
+tbody td { padding: 11px 16px; border-bottom: 1px solid var(--border); vertical-align: top; }
+tbody tr:last-child td { border-bottom: 0; }
+tbody tr:hover { background: color-mix(in srgb, var(--accent) 3%, transparent); }
+td code, th code { font-size: 12.8px; }
+@media (max-width: 640px) { table { font-size: 13.5px; } thead th, tbody td { padding: 9px 12px; } }
+.grid { display: grid; gap: 16px; }
+.grid + .grid, .grid + .note, .grid + h3 { margin-top: 24px; }
+.steps { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.step {
+  background: var(--bg-elev);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 16px 18px;
+}
+.step-num { display: block; font-family: var(--mono); font-size: 11px; letter-spacing: .06em; color: var(--accent); margin-bottom: 6px; }
+.step strong { display: block; margin-bottom: 4px; }
+.step p { margin: 0; color: var(--muted); font-size: 14px; }
+.card {
+  background: var(--bg-elev);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px;
+  box-shadow: var(--shadow);
+}
+.card h3 { margin: 0 0 6px; font-size: 15px; }
+.card p { margin: 0; color: var(--muted); font-size: 14px; }
+.card p + p { margin-top: 8px; }
+.card .card-ico {
+  display: grid; place-items: center;
+  width: 34px; height: 34px; margin-bottom: 12px;
+  border-radius: 9px;
+  background: var(--accent-soft); color: var(--accent);
+}
+.card .card-ico svg { width: 18px; height: 18px; }
+a.card-link { display: block; text-decoration: none; color: inherit; transition: border-color .15s, transform .12s; }
+a.card-link:hover { text-decoration: none; border-color: var(--accent); transform: translateY(-1px); }
+a.card-link:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+a.card-link .go { display: inline-block; margin-top: 12px; color: var(--accent); font-weight: 650; font-size: 13.5px; }
+.qa { border-bottom: 1px solid var(--border); padding: 18px 0; }
+.qa:last-child { border-bottom: 0; }
+.qa h3 { margin: 0 0 6px; font-size: 15.5px; }
+.qa p { margin: 0; color: var(--muted); font-size: 14px; }
+.qa p + p { margin-top: 8px; }
+@media (min-width: 640px) { .grid.cols-2 { grid-template-columns: 1fr 1fr; } }
+.note {
+  display: flex;
+  gap: 12px;
+  margin: 16px 0;
+  padding: 14px 16px;
+  border-left: 1px solid var(--accent);
+  background: var(--accent-soft);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  font-size: 14px;
+}
+.note strong { color: var(--text); }
+.note p { margin: 0; }
+.note p + p { margin-top: 8px; }
+.code { position: relative; margin: 14px 0; }
+.code pre {
+  margin: 0;
+  padding: 16px 52px 16px 18px;
+  background: var(--code-bg);
+  color: var(--code-text);
+  border: 1px solid var(--code-border);
+  border-radius: var(--radius);
+  overflow-x: auto;
+  font-size: 13.2px;
+  line-height: 1.6;
+  box-shadow: var(--shadow);
+}
+.code pre code { background: none; padding: 0; color: inherit; font-size: inherit; }
+.code .copy {
+  position: absolute;
+  top: 9px; right: 9px;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  height: 30px;
+  padding: 0 9px;
+  border: 1px solid var(--code-border);
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--code-bg) 60%, #ffffff 8%);
+  color: #c8d2e8;
+  font: inherit;
+  font-size: 11.5px;
+  font-weight: 600;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity .15s, border-color .15s;
+}
+.code:hover .copy, .code .copy:focus-visible { opacity: 1; }
+.code .copy:hover { border-color: #3b4c72; }
+@media (hover: none) { .code .copy { opacity: 1; } }
+.code .copy.copied { color: var(--ok); border-color: var(--ok); }
+.code .copy svg { width: 13px; height: 13px; }
+p code, li code, td code, th code, .note code {
+  background: var(--bg-soft);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: .08em .42em;
+  font-size: .88em;
+}
+ul.tight { margin: 12px 0; padding-left: 20px; }
+ul.tight li { margin: 6px 0; }
+.footer {
+  display: flex; flex-wrap: wrap; gap: 10px 24px;
+  justify-content: space-between;
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 28px clamp(16px, 4vw, 40px) 56px;
+  border-top: 1px solid var(--border);
+  color: var(--muted);
+  font-size: 13px;
+}
+.footer a { color: var(--muted); }
+.footer a:hover { color: var(--accent); }
+.footer code { background: var(--bg-soft); border: 1px solid var(--border); border-radius: 6px; padding: 1px 6px; }
+.to-top {
+  position: fixed; right: 18px; bottom: 18px;
+  width: 44px; height: 44px;
+  display: inline-flex; align-items: center; justify-content: center;
+  border-radius: 50%;
+  background: var(--bg-elev);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow);
+  color: var(--text);
+  opacity: 0; visibility: hidden; transform: translateY(8px);
+  transition: opacity .18s, transform .18s, visibility .18s;
+}
+.to-top.is-visible { opacity: 1; visibility: visible; transform: none; }
+.to-top svg { width: 20px; height: 20px; }
+@media (max-width: 900px) {
+  .layout { grid-template-columns: minmax(0, 1fr); }
+  .toc { position: static; order: -1; }
+  .toc a { display: inline-block; border-left: 0; padding: 4px 12px 4px 0; }
+  .toc a.active { background: none; border-radius: 0; }
+  .toc-extra { display: none; }
+}
+@media (max-width: 640px) {
+  .steps { grid-template-columns: minmax(0, 1fr); }
+  .chip-repo { margin-left: 0; }
+  .catalog-btn span { display: none; }
+  .catalog-btn { width: 36px; padding: 0; }
+}
+</style>
+</head>
+<body>
+<header class="topbar">
+  <a class="brand" href="#top">
+    <span class="brand-mark" aria-hidden="true">
+      <svg viewBox="0 0 32 32" role="presentation">
+        <rect width="32" height="32" fill="#9f1239"></rect>
+        <path d="M16 6l8 3v7c0 5-3.4 8.3-8 10-4.6-1.7-8-5-8-10V9z" fill="none" stroke="#ffffff" stroke-width="2.2" stroke-linejoin="round"></path>
+        <path d="m12.5 16 2.5 2.5 4.5-5" fill="none" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"></path>
+      </svg>
+    </span>
+    <span class="brand-name">security-engineering<small>seguridad con evidencia</small></span>
+  </a>
+  <span class="topbar-spacer"></span>
+  <a class="icon-btn catalog-btn" href="../index.html" aria-label="Volver al catálogo" title="Volver al catálogo">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5V6a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2z"></path><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H19"></path></svg>
+    <span>Catálogo</span>
+  </a>
+  <button class="icon-btn" id="theme-toggle" type="button" aria-label="Cambiar a tema oscuro">
+    <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"></path></svg>
+    <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"></path></svg>
+    <span>Tema</span>
+  </button>
+</header>
+
+<section class="hero" id="top">
+  <div class="hero-inner">
+    <span class="pill"><span class="dot" aria-hidden="true"></span>amenaza · mínimo privilegio · evidencia</span>
+    <h1>Seguridad que se puede <span class="grad">demostrar</span></h1>
+    <p class="lead">La skill <code>security-engineering</code> convierte un encargo de seguridad en un análisis acotado: activos, adversarios y límites de confianza; revisión de código y configuración; endurecimiento de agentes, LLM y MCP; auditoría de skills de terceros; corrección mínima y verificación con evidencia. No declara un sistema «seguro»: declara el riesgo residual.</p>
+    <div class="hero-actions">
+      <a class="btn btn-primary" href="#que-hace">Qué hace</a>
+      <a class="btn btn-ghost" href="#uso">Cómo se usa</a>
+      <a class="btn btn-ghost" href="#reglas">Dónde están las reglas</a>
+      <a class="btn btn-ghost" href="#escaner">El escáner</a>
+      <a class="btn btn-ghost" href="#diagramas">Los diagramas</a>
+      <a class="btn btn-ghost" href="../index.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 19l-7-7 7-7"></path></svg>
+        Volver al catálogo
+      </a>
+    </div>
+  </div>
+</section>
+
+<div class="layout">
+  <nav class="toc" aria-label="Índice de la página">
+    <h2>En esta página</h2>
+    <a href="#que-hace">1. Qué hace</a>
+    <a href="#cuando">2. Cuándo se activa</a>
+    <a href="#uso">3. Cómo se usa</a>
+    <a href="#paquete">4. Qué contiene el paquete</a>
+    <a href="#reglas">5. Dónde están las reglas</a>
+    <a href="#escaner">6. El escáner</a>
+    <a href="#preguntas">7. Preguntas cortas</a>
+    <a href="#diagramas">8. Los diagramas</a>
+    <div class="toc-extra"><a href="../index.html">Volver al catálogo</a></div>
+  </nav>
+
+  <main>
+    <section id="que-hace" class="section">
+      <div class="section-head"><span class="section-num">1</span><h2 class="title">Qué hace</h2></div>
+      <p class="sub">No reparte una lista de buenas prácticas: acota el riesgo, lo demuestra y lo cierra con una corrección y una prueba. Lo que no se puede demostrar se declara.</p>
+
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Situación</th><th>Qué hace la skill</th></tr></thead>
+          <tbody>
+            <tr><td>Hay que diseñar una función sensible.</td><td>Define activos, adversarios y límites antes de elegir controles; aplica mínimo privilegio y falla cerrado.</td></tr>
+            <tr><td>Hay que revisar código o configuración.</td><td>Recorre fuente → sumidero por autorización, inyección, secretos, criptografía, datos, ficheros, dependencias, errores y límites.</td></tr>
+            <tr><td>Hay un agente, LLM o servidor MCP.</td><td>Endurece herramientas, memoria, aprobaciones, salida, monitorización, multiagente y coste.</td></tr>
+            <tr><td>Hay que instalar una skill o dependencia.</td><td>Verifica procedencia, lee todo, contrasta lo declarado con lo que hace y decide con evidencia.</td></tr>
+            <tr><td>Hay que corregir un hallazgo.</td><td>Una causa por cambio, comportamiento conservado y una prueba que falla antes y pasa después.</td></tr>
+            <tr><td>Hay que declarar el resultado.</td><td>Ejecuta el escáner, rellena el informe y escribe el riesgo residual y lo no verificado.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="cuando" class="section">
+      <div class="section-head"><span class="section-num">2</span><h2 class="title">Cuándo se activa</h2></div>
+      <p class="sub">La descripción del contrato incluye disparadores positivos y exclusiones. Estos son los encargos que la activan y los que pertenecen a otra skill.</p>
+
+      <div class="grid cols-2">
+        <div class="card">
+          <h3>Se activa</h3>
+          <ul class="tight">
+            <li>Diseñar autenticación, autorización, pagos, subidas o cualquier frontera sensible.</li>
+            <li>Revisar la seguridad de un cambio, un módulo o un repositorio.</li>
+            <li>Auditar una skill, un plugin, un servidor MCP o una dependencia antes de usarla.</li>
+            <li>Investigar una exposición, un secreto filtrado o una ruta de abuso.</li>
+            <li>Preparar una puerta de seguridad o una matriz de pruebas adversariales.</li>
+            <li>Corregir un hallazgo y dejar su regresión.</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>No se activa</h3>
+          <ul class="tight">
+            <li>Certificación formal, auditoría legal o de privacidad.</li>
+            <li>Pentesting ofensivo o explotación de sistemas sin autorización.</li>
+            <li>Gestión de un incidente en curso: primero contiene y avisa; el análisis viene después.</li>
+            <li>Reglas de estilo o arquitectura del lenguaje, que tienen su propia skill.</li>
+            <li>Documentación general del proyecto, que pertenece a <code>document-management-software</code>.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section id="uso" class="section">
+      <div class="section-head"><span class="section-num">3</span><h2 class="title">Cómo se usa</h2></div>
+      <p class="sub">Siete pasos, del encargo al cierre. La divulgación progresiva hace que cada referencia se abra solo cuando el paso la pide; el paquete no se resume en esta página.</p>
+
+      <div class="steps">
+        <div class="step"><span class="step-num">01 · ALCANCE</span><strong>Delimitar</strong><p>Una operación, un alcance material, activos ordenados por daño y adversarios con su nivel de acceso.</p></div>
+        <div class="step"><span class="step-num">02 · AMENAZA</span><strong>Modelar</strong><p>Límites de confianza y casos de abuso con entrada, privilegio y efecto. Los supuestos se escriben.</p></div>
+        <div class="step"><span class="step-num">03 · CÓDIGO</span><strong>Revisar</strong><p>Fuente a sumidero, en el servidor y en el punto correcto. Configuración y despliegue incluidos.</p></div>
+        <div class="step"><span class="step-num">04 · AGENTES</span><strong>Endurecer</strong><p>Herramientas, inyección, memoria, aprobaciones, salida, multiagente y límites de coste.</p></div>
+        <div class="step"><span class="step-num">05 · TERCEROS</span><strong>Auditar</strong><p>Procedencia, lectura completa, contraste, escaneo, aislamiento, decisión y fijación.</p></div>
+        <div class="step"><span class="step-num">06 · CORREGIR</span><strong>Priorizar</strong><p>Severidad por explotabilidad e impacto; una causa por cambio y prueba de regresión.</p></div>
+        <div class="step"><span class="step-num">07 · CERRAR</span><strong>Demostrar</strong><p>Escáner, pruebas, informe y riesgo residual. Sin bloque de resultado no está terminado.</p></div>
+        <div class="step"><span class="step-num">PARADA</span><strong>Declarar</strong><p>Sin ruta de explotación es endurecimiento; sin alcance no hay auditoría; sin evidencia no hay cierre.</p></div>
+      </div>
+
+      <div class="note">
+        <p><strong>La regla que evita el teatro:</strong> un hallazgo exige una traza de entrada controlable a efecto sobre un activo. La categoría de la vulnerabilidad no decide la severidad; la ruta concreta y sus supuestos, sí.</p>
+      </div>
+    </section>
+
+    <section id="paquete" class="section">
+      <div class="section-head"><span class="section-num">4</span><h2 class="title">Qué contiene el paquete</h2></div>
+      <p class="sub">Un contrato corto, cuatro referencias especializadas, dos plantillas y una herramienta determinista. Nada de documentos humanos dentro del paquete.</p>
+
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Ruta</th><th>Qué aporta</th></tr></thead>
+          <tbody>
+            <tr><td><code>SKILL.md</code></td><td>Invariantes, procedimiento de siete pasos, paradas, bloque de resultado y enlaces a cada recurso.</td></tr>
+            <tr><td><code>references/threat-model.md</code></td><td>Activos, adversarios, límites, casos de abuso, rúbrica de severidad y caducidad del análisis.</td></tr>
+            <tr><td><code>references/secure-code.md</code></td><td>Revisión de autenticación, autorización, inyección, SSRF, frontend, secretos, criptografía, datos, ficheros, dependencias, errores, límites y despliegue.</td></tr>
+            <tr><td><code>references/agent-security.md</code></td><td>Mínimo privilegio, inyección de prompt, memoria, aprobaciones, salida, monitorización, multiagente, MCP y coste.</td></tr>
+            <tr><td><code>references/skill-audit.md</code></td><td>Procedencia, lectura completa, señales maliciosas, sandbox, decisión, fijación y límites de los escáneres.</td></tr>
+            <tr><td><code>assets/threat-model.md</code></td><td>Plantilla de una página para el modelo de amenazas.</td></tr>
+            <tr><td><code>assets/security-report.md</code></td><td>Informe con hallazgos, correcciones, evidencia, riesgo residual y caducidad.</td></tr>
+            <tr><td><code>scripts/security_scan.py</code></td><td>Escáner de señales con <code>--json</code>, <code>--min-severity</code>, supresión y códigos 0/1/2.</td></tr>
+            <tr><td><code>scripts/test-security_scan.py</code></td><td>23 pruebas de detección, supresión, filtrado, exclusión y salida JSON.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="reglas" class="section">
+      <div class="section-head"><span class="section-num">5</span><h2 class="title">Dónde están las reglas</h2></div>
+      <p class="sub">Esta página explica la skill; no la regula. La fuente de verdad es el contrato y, si hay contradicción, manda el paquete.</p>
+
+      <ul class="tight">
+        <li><strong>El contrato</strong> fija invariantes, pasos, paradas y cierre. Es lo que el agente lee completo antes de trabajar.</li>
+        <li><strong>Las referencias</strong> amplían una materia y declaran en su primera línea cuándo aplican. Se abren en el paso que las pide.</li>
+        <li><strong>Las plantillas</strong> fijan la forma del modelo de amenazas y del informe; no sustituyen el juicio.</li>
+        <li><strong>El escáner</strong> produce señales. Un hallazgo del escáner no es una vulnerabilidad confirmada y un resultado limpio no certifica nada.</li>
+      </ul>
+
+      <div class="note">
+        <p><strong>Precedencia.</strong> La seguridad no deroga las demás skills: el estilo y la arquitectura del lenguaje siguen en su contrato; las pruebas y la puerta, en el suyo. Cuando un arreglo de seguridad cambia el comportamiento, se presenta el compromiso y se decide; no se impone.</p>
+      </div>
+    </section>
+
+    <section id="escaner" class="section">
+      <div class="section-head"><span class="section-num">6</span><h2 class="title">El escáner</h2><span class="chip-repo">determinista y sin dependencias</span></div>
+      <p class="sub">Ordena la evidencia para que una persona o un agente la revisen. Detecta patrones conocidos, no intención; por eso se lee cada señal en contexto.</p>
+
+      <div class="code"><pre><code># Señales en un repositorio o en una skill
+python3 src/security-engineering/scripts/security_scan.py --root .
+
+# Solo lo que importa para una puerta
+python3 src/security-engineering/scripts/security_scan.py --root . --min-severity medium
+
+# Resultado para una máquina
+python3 src/security-engineering/scripts/security_scan.py --root . --min-severity medium --json</code></pre></div>
+
+      <div class="grid cols-2">
+        <div class="card">
+          <h3>Qué busca</h3>
+          <ul class="tight">
+            <li>Secretos con formato conocido y credenciales asignadas.</li>
+            <li>Instrucciones hostiles y directivas de ocultación.</li>
+            <li>Ejecución dinámica, shell y descarga ejecutada.</li>
+            <li>Hooks de instalación y cadenas de suministro.</li>
+            <li>TLS desactivado y CORS abierto.</li>
+            <li>Entorno enumerado con red, credenciales y persistencia.</li>
+            <li>Caracteres bidireccionales y blobs ofuscados.</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>Cómo se lee</h3>
+          <ul class="tight">
+            <li><code>0</code>: sin hallazgos con la severidad mínima.</li>
+            <li><code>1</code>: al menos un hallazgo.</li>
+            <li><code>2</code>: error de uso o de entorno.</li>
+            <li><code>security-scan: ignore</code> suprime la línea o la anterior; añadir el identificador suprime solo esa regla.</li>
+            <li><code>ignore-file</code> acota un fixture que contiene patrones a propósito.</li>
+            <li>Los valores de secretos se redactan en la salida.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="note">
+        <p><strong>Límite declarado:</strong> los patrones detectan lo conocido; un atacante puede evitarlos. El análisis estático no ve lo que solo ocurre en ejecución y un binario sin fuente no se puede auditar de verdad. La auditoría reduce riesgo; no lo elimina.</p>
+      </div>
+    </section>
+
+    <section id="preguntas" class="section">
+      <div class="section-head"><span class="section-num">7</span><h2 class="title">Preguntas cortas</h2></div>
+      <p class="sub">Lo que se pregunta antes de usar la skill por primera vez.</p>
+
+      <div class="qa"><h3>¿Sustituye a un pentest o a una certificación?</h3><p>No. Produce evidencia técnica y decisiones defendibles. Un pentest ofensivo, una certificación y una revisión legal son encargos distintos.</p></div>
+      <div class="qa"><h3>¿Basta con ejecutar el escáner?</h3><p>No. El escáner ordena señales; la revisión lee el código y demuestra la traza. Un resultado limpio no demuestra ausencia de vulnerabilidades.</p></div>
+      <div class="qa"><h3>¿Qué hago si un arreglo rompe el producto?</h3><p>Se detiene y se presenta el compromiso con su coste. La seguridad no impone una ruptura sin decisión; se documenta el riesgo aceptado.</p></div>
+      <div class="qa"><h3>¿Cómo se audita una skill de terceros?</h3><p>Procedencia, lectura completa, contraste entre lo declarado y lo que hace, escaneo, aislamiento, decisión y fijación. Una actualización se reaudita.</p></div>
+      <div class="qa"><h3>¿Qué pasa con los secretos encontrados?</h3><p>Se rotan. Borrarlos del fichero no los invalida si estuvieron expuestos, y el escáner no los imprime en la salida.</p></div>
+      <div class="qa"><h3>¿Cubre agentes y MCP?</h3><p>Sí: mínimo privilegio por herramienta, inyección de prompt, memoria, aprobaciones ligadas a la acción, salida validada, multiagente y límites de coste.</p></div>
+    </section>
+
+    <section id="diagramas" class="section">
+      <div class="section-head"><span class="section-num">8</span><h2 class="title">Los diagramas</h2><span class="chip-repo">de este repositorio</span></div>
+      <p class="sub">Dos vistas del mismo criterio: del encargo al riesgo residual, y las piezas que conectan el paquete, la superficie revisada y la puerta de evidencia.</p>
+
+      <div class="grid cols-2">
+        <a class="card card-link" href="flujo-de-trabajo.html">
+          <div class="card-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h6v5H4zM14 13h6v5h-6z"></path><path d="M10 8.5h2a2 2 0 0 1 2 2v5"></path></svg></div>
+          <h3>Flujo de trabajo</h3>
+          <p>Del encargo al cierre: cómo se acota el alcance, dónde se detiene el análisis, qué se revisa y qué evidencia se exige antes de declarar el riesgo residual.</p>
+          <span class="go">Abrir el diagrama →</span>
+        </a>
+        <a class="card card-link" href="arquitectura.html">
+          <div class="card-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1.5"></rect><rect x="14" y="3" width="7" height="7" rx="1.5"></rect><rect x="3" y="14" width="7" height="7" rx="1.5"></rect><rect x="14" y="14" width="7" height="7" rx="1.5"></rect></svg></div>
+          <h3>Arquitectura</h3>
+          <p>El paquete, la superficie revisada y la puerta: qué lee el agente, qué ejecuta el escáner y qué queda declarado como no verificado.</p>
+          <span class="go">Abrir el diagrama →</span>
+        </a>
+      </div>
+
+      <p>Cada diagrama se abre como página suelta: archify 3.2.0 no enlaza desde el artefacto a una página local, así que se vuelve con el botón atrás del navegador o con el índice de arriba.</p>
+
+      <div class="note">
+        <p><strong>Convenio de este repositorio, no mandato de la skill.</strong> Cada diagrama tiene su especificación <code>.json</code>, su HTML y su recibo <code>.delivery.json</code>; se generan con el checkout local de Archify y se validan con <code>archify check --require-provenance</code>. La página no copia su contenido.</p>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<footer class="footer">
+  <span><code>docs/security-engineering/</code> · skill <code>security-engineering</code> · documento en español</span>
+  <span><a href="../index.html">Catálogo</a> · <a href="#top">Volver arriba</a> · <a href="../../src/security-engineering/SKILL.md">SKILL.md</a> · <a href="../../.skills/security-engineering/SKILL.md">Enrutador</a> · <a href="flujo-de-trabajo.html">Flujo</a> · <a href="arquitectura.html">Arquitectura</a></span>
+  <span>Página estática: no envía datos ni carga recursos externos</span>
+</footer>
+
+<a class="to-top" id="to-top" href="#top" aria-label="Volver arriba" title="Volver arriba">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 15l6-6 6 6"></path></svg>
+</a>
+
+<script>
+(function () {
+  "use strict";
+  var root = document.documentElement;
+  var toggle = document.getElementById("theme-toggle");
+  var toTop = document.getElementById("to-top");
+
+  function store(theme) {
+    try { localStorage.setItem("security-engineering:prefs", JSON.stringify({ theme: theme })); } catch (e) {}
+  }
+  function label() {
+    var dark = root.getAttribute("data-theme") === "dark";
+    toggle.setAttribute("aria-label", dark ? "Cambiar a tema claro" : "Cambiar a tema oscuro");
+  }
+  label();
+  toggle.addEventListener("click", function () {
+    var next = root.getAttribute("data-theme") === "dark" ? "light" : "dark";
+    root.setAttribute("data-theme", next);
+    store(next);
+    label();
+  });
+
+  var COPY_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>';
+  var CHECK_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>';
+
+  document.querySelectorAll(".code").forEach(function (block) {
+    if (block.querySelector(".copy")) { return; }
+    var btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "copy";
+    btn.innerHTML = COPY_ICON + "<span>Copiar</span>";
+    btn.setAttribute("aria-label", "Copiar");
+    block.appendChild(btn);
+    btn.addEventListener("click", function () {
+      var code = block.querySelector("pre code") || block.querySelector("pre");
+      if (!code) { return; }
+      var done = function () {
+        btn.classList.add("copied");
+        btn.innerHTML = CHECK_ICON + "<span>Copiado</span>";
+        btn.setAttribute("aria-label", "Copiado");
+        window.setTimeout(function () {
+          btn.classList.remove("copied");
+          btn.innerHTML = COPY_ICON + "<span>Copiar</span>";
+          btn.setAttribute("aria-label", "Copiar");
+        }, 1600);
+      };
+      var text = code.textContent;
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(done, done);
+      } else {
+        var area = document.createElement("textarea");
+        area.value = text;
+        area.style.position = "fixed";
+        area.style.opacity = "0";
+        document.body.appendChild(area);
+        area.select();
+        try { document.execCommand("copy"); } catch (e) {}
+        document.body.removeChild(area);
+        done();
+      }
+    });
+  });
+
+  if ("IntersectionObserver" in window) {
+    var links = {};
+    document.querySelectorAll(".toc a").forEach(function (a) {
+      var href = a.getAttribute("href") || "";
+      if (href.charAt(0) !== "#") { return; }
+      links[href.slice(1)] = a;
+    });
+    var observer = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) {
+          Object.keys(links).forEach(function (id) { links[id].classList.remove("active"); });
+          if (links[entry.target.id]) { links[entry.target.id].classList.add("active"); }
+        }
+      });
+    }, { rootMargin: "-20% 0px -70% 0px", threshold: 0 });
+    document.querySelectorAll("main section").forEach(function (s) { observer.observe(s); });
+  }
+
+  function update() { toTop.classList.toggle("is-visible", window.scrollY > 480); }
+  window.addEventListener("scroll", update, { passive: true });
+  update();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "23d57d37-74a1-4ff0-9b67-c3a1d261a8b3",
+  "status": "current",
+  "command": "deliver",
+  "type": "architecture",
+  "input": "/home/desarrollo/PROJECTS/SKILLS-AGP/docs/security-engineering/arquitectura.json",
+  "output": "/home/desarrollo/PROJECTS/SKILLS-AGP/docs/security-engineering/arquitectura.html",
+  "specification": {
+    "sha256": "86356a134b71b3472c087ed77da7ac6000b923b6c3f5f4c71cecd872ab0a64a2",
+    "bytes": 7768
+  },
+  "artifact": {
+    "sha256": "42a3f747715f4087f051b289f8a469a1603e5cd5d58b7cc3158e7cb8fd2bcf9d",
+    "bytes": 845197
+  }
+}
