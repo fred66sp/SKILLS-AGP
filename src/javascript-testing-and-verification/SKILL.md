@@ -2,7 +2,7 @@
 name: javascript-testing-and-verification
 description: "Demuestra el comportamiento del JavaScript vanilla sin añadir un framework: elige la capa de prueba más pequeña, escribe pruebas con node:test y node:assert/strict, prueba DOM y eventos en una página de navegador o con el entorno que el proyecto ya tenga, simula red, almacenamiento y reloj, prueba el proceso con argv, env y stdin controlados, y cierra con la puerta scripts/verify-js.py, que comprueba sintaxis, ejecuta el script test del proyecto o node --test e informa del baseline de Node. Úsala al escribir o revisar pruebas, validar una frontera no confiable, comprobar una regresión o declarar un cambio terminado. No la uses para estilo, módulos, diseño de DOM ni arquitectura, que son de javascript-idiomatic-style."
 metadata:
-  version: "0.1.1"
+  version: "0.1.0"
 ---
 
 # Pruebas y verificación en JavaScript

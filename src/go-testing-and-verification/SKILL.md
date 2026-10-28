@@ -2,7 +2,7 @@
 name: go-testing-and-verification
 description: "Diseña y ejecuta la verificación de código Go, con prioridad en CLIs: pruebas unitarias y de tabla, golden files deterministas, pruebas de extremo a extremo del binario, casos de error y cancelación, y la puerta gofmt, build, test, vet, race y lint. Úsala cuando haya que escribir o revisar pruebas, fijar el comportamiento de una CLI, comprobar una regresión o declarar un cambio terminado. No la uses para benchmarks de rendimiento, estrategia de errores, diseño de la CLI ni estilo general, que tienen sus propias skills."
 metadata:
-  version: "1.0.1"
+  version: "1.0.0"
 ---
 
 # Pruebas y verificación en Go
