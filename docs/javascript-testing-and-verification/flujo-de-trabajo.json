@@ -1,0 +1,275 @@
+{
+  "schema_version": 2,
+  "diagram_type": "workflow",
+  "meta": {
+    "title": "Flujo de trabajo de la skill javascript-testing-and-verification",
+    "subtitle": "Del riesgo al informe ejecutado: cómo se elige la capa, dónde se aísla la frontera y qué se ejecuta antes de declarar un cambio terminado.",
+    "locale": "es",
+    "output": "docs/javascript-testing-and-verification/flujo-de-trabajo.html",
+    "visual_preset": "signal-flow",
+    "quality_profile": "showcase"
+  },
+  "lanes": [
+    {
+      "id": "encargo",
+      "label": "Encargo y convención"
+    },
+    {
+      "id": "skill",
+      "label": "La skill: decidir"
+    },
+    {
+      "id": "pruebas",
+      "label": "Prueba y ejecución"
+    },
+    {
+      "id": "control",
+      "label": "Límite y cierre",
+      "variant": "exception"
+    }
+  ],
+  "phases": [
+    {
+      "id": "riesgo",
+      "label": "Riesgo",
+      "fromCol": 0,
+      "toCol": 1
+    },
+    {
+      "id": "escritura",
+      "label": "Escritura",
+      "fromCol": 2,
+      "toCol": 3,
+      "variant": "emphasis"
+    },
+    {
+      "id": "ejecucion",
+      "label": "Ejecución",
+      "fromCol": 4,
+      "toCol": 4
+    },
+    {
+      "id": "cierre",
+      "label": "Cierre",
+      "fromCol": 5,
+      "toCol": 5,
+      "variant": "security"
+    }
+  ],
+  "groups": [
+    {
+      "id": "decisiones",
+      "label": "Decisiones antes del caso",
+      "lane": "skill",
+      "fromCol": 1,
+      "toCol": 2,
+      "variant": "emphasis"
+    },
+    {
+      "id": "comprobacion",
+      "label": "Evidencia ejecutada",
+      "lane": "control",
+      "fromCol": 4,
+      "toCol": 5,
+      "variant": "security"
+    }
+  ],
+  "mainPath": [
+    "encargo",
+    "riesgos",
+    "capa",
+    "casos",
+    "dobles",
+    "ejecuta",
+    "informe",
+    "resultado"
+  ],
+  "nodes": [
+    {
+      "id": "encargo",
+      "lane": "encargo",
+      "col": 0,
+      "type": "external",
+      "label": "Encargo de pruebas",
+      "sublabel": "regresión o cierre",
+      "tag": "qué observa el usuario",
+      "icon": "start"
+    },
+    {
+      "id": "riesgos",
+      "lane": "skill",
+      "col": 0,
+      "type": "backend",
+      "label": "Mapear riesgos",
+      "sublabel": "fronteras · datos · cancelación",
+      "tag": "sin escribir aún"
+    },
+    {
+      "id": "capa",
+      "lane": "skill",
+      "col": 1,
+      "type": "backend",
+      "label": "Elegir capa y runner",
+      "sublabel": "node:test · navegador · proyecto",
+      "tag": "la más pequeña"
+    },
+    {
+      "id": "casos",
+      "lane": "skill",
+      "col": 2,
+      "type": "backend",
+      "label": "Escribir el caso",
+      "sublabel": "una causa · mensaje legible",
+      "tag": "falla por la razón correcta"
+    },
+    {
+      "id": "dobles",
+      "lane": "pruebas",
+      "col": 3,
+      "type": "backend",
+      "label": "Aislar y estabilizar",
+      "sublabel": "red · reloj · almacenamiento",
+      "tag": "sin sleep"
+    },
+    {
+      "id": "ejecuta",
+      "lane": "pruebas",
+      "col": 4,
+      "type": "backend",
+      "label": "Ejecutar la puerta",
+      "sublabel": "node --check · --test · --lint",
+      "tag": "el runner del proyecto manda"
+    },
+    {
+      "id": "informe",
+      "lane": "skill",
+      "col": 5,
+      "type": "security",
+      "label": "Informe",
+      "sublabel": "comandos · resultado · límites",
+      "tag": "sin adjetivos"
+    },
+    {
+      "id": "parada",
+      "lane": "control",
+      "col": 0,
+      "type": "security",
+      "label": "Parada",
+      "sublabel": "sin runner o red real",
+      "tag": "no se añade la dependencia",
+      "icon": "stop"
+    },
+    {
+      "id": "resultado",
+      "lane": "control",
+      "col": 5,
+      "type": "frontend",
+      "label": "Resultado",
+      "sublabel": "verificado o incompleto",
+      "icon": "success"
+    }
+  ],
+  "edges": [
+    {
+      "id": "lee",
+      "from": "encargo",
+      "to": "riesgos",
+      "label": "lee",
+      "variant": "emphasis",
+      "role": "main"
+    },
+    {
+      "id": "elige",
+      "from": "riesgos",
+      "to": "capa",
+      "label": "elige",
+      "role": "main"
+    },
+    {
+      "id": "escribe",
+      "from": "capa",
+      "to": "casos",
+      "label": "caso mínimo",
+      "role": "main"
+    },
+    {
+      "id": "aisla",
+      "from": "casos",
+      "to": "dobles",
+      "label": "dobla la frontera",
+      "variant": "emphasis",
+      "role": "main"
+    },
+    {
+      "id": "ejecuta",
+      "from": "dobles",
+      "to": "ejecuta",
+      "label": "ejecuta",
+      "role": "main"
+    },
+    {
+      "id": "cierra",
+      "from": "ejecuta",
+      "to": "informe",
+      "label": "resultado",
+      "variant": "emphasis",
+      "role": "main"
+    },
+    {
+      "id": "entrega",
+      "from": "informe",
+      "to": "resultado",
+      "label": "evidencia",
+      "variant": "emphasis",
+      "role": "main"
+    },
+    {
+      "id": "sin-runner",
+      "from": "capa",
+      "to": "parada",
+      "label": "sin runner ni DOM",
+      "variant": "security",
+      "role": "return"
+    },
+    {
+      "id": "red-real",
+      "from": "casos",
+      "to": "parada",
+      "label": "red real",
+      "variant": "security",
+      "role": "return"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "Qué se decide antes del caso",
+      "items": [
+        "Se nombra el comportamiento observable y el fallo que la prueba detectaría; si no se puede nombrar, la prueba sobra",
+        "La capa más pequeña que pueda fallar por la causa temida: función pura, módulo, DOM, proceso o integración",
+        "Si el proyecto tiene runner, ese manda; no se añade un segundo para simplificar",
+        "Cada frontera no confiable se marca y se decide si se dobla o se valida"
+      ]
+    },
+    {
+      "dot": "rose",
+      "title": "Dónde se detiene",
+      "items": [
+        "Sin pruebas y sin encargo de escribirlas, se informa; no se inventa una suite",
+        "Una prueba que necesita red real se dobla o se declara imposible",
+        "Un DOM simulado que no existe no se añade por cuenta propia: se usa el navegador",
+        "Una prueba inestable se corrige o se elimina con motivo; no se omite"
+      ]
+    },
+    {
+      "dot": "emerald",
+      "title": "Cómo se demuestra el cierre",
+      "items": [
+        "verify-js.py comprueba sintaxis y, cuando se piden, el script test o node --test y el lint",
+        "La puerta informa de la versión de node frente a engines sin convertir la diferencia en fallo",
+        "stdout, stderr y código de salida se comprueban por separado en una CLI",
+        "El informe declara comandos, resultado y lo no verificado, incluido el navegador usado"
+      ]
+    }
+  ]
+}

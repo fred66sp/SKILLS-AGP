@@ -40,3 +40,6 @@ jobs:
 
       - name: Test the TypeScript verification gate
         run: python3 src/typescript-testing-and-verification/scripts/test-verify-ts.py
+
+      - name: Test the JavaScript verification gate
+        run: python3 src/javascript-testing-and-verification/scripts/test-verify-js.py

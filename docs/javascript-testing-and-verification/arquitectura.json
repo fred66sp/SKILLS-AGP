@@ -1,0 +1,186 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "Arquitectura de la skill javascript-testing-and-verification",
+    "subtitle": "El paquete, los dos entornos de prueba y la puerta: node:test para lógica y proceso, el navegador para el DOM, y una única salida hacia el informe.",
+    "locale": "es",
+    "output": "docs/javascript-testing-and-verification/arquitectura.html",
+    "quality_profile": "showcase"
+  },
+  "components": [
+    {
+      "id": "persona",
+      "type": "external",
+      "label": "Persona",
+      "sublabel": "encarga y revisa",
+      "icon": "person",
+      "pos": [40, 80],
+      "size": [140, 64]
+    },
+    {
+      "id": "agente",
+      "type": "external",
+      "label": "Agente anfitrión",
+      "sublabel": "carga la skill",
+      "pos": [260, 80],
+      "size": [150, 64]
+    },
+    {
+      "id": "skill",
+      "type": "frontend",
+      "label": "SKILL.md",
+      "sublabel": "invariantes y pasos",
+      "pos": [500, 80],
+      "size": [150, 64]
+    },
+    {
+      "id": "reglas",
+      "type": "database",
+      "label": "tres referencias",
+      "sublabel": "capas · Node · navegador",
+      "tag": "se abren si no es evidente",
+      "pos": [740, 80],
+      "size": [180, 64]
+    },
+    {
+      "id": "node",
+      "type": "backend",
+      "label": "node:test",
+      "sublabel": "lógica y proceso",
+      "pos": [260, 300],
+      "size": [160, 64]
+    },
+    {
+      "id": "navegador",
+      "type": "backend",
+      "label": "Runner de navegador",
+      "sublabel": "DOM y eventos",
+      "pos": [500, 300],
+      "size": [170, 64]
+    },
+    {
+      "id": "puerta",
+      "type": "security",
+      "label": "verify-js.py",
+      "sublabel": "sintaxis · test · lint",
+      "tag": "sin descargar nada",
+      "pos": [740, 300],
+      "size": [160, 64]
+    },
+    {
+      "id": "informe",
+      "type": "database",
+      "label": "Informe",
+      "sublabel": "comandos y resultado",
+      "pos": [960, 300],
+      "size": [170, 64]
+    }
+  ],
+  "boundaries": [
+    {
+      "kind": "region",
+      "label": "Paquete instalado",
+      "wraps": ["skill", "reglas"]
+    },
+    {
+      "kind": "region",
+      "label": "Trabajo sobre el proyecto",
+      "wraps": ["node", "navegador", "puerta", "informe"]
+    }
+  ],
+  "connections": [
+    {
+      "id": "encarga",
+      "from": "persona",
+      "to": "agente",
+      "label": "encarga",
+      "variant": "emphasis"
+    },
+    {
+      "id": "carga",
+      "from": "agente",
+      "to": "skill",
+      "label": "carga",
+      "variant": "emphasis"
+    },
+    {
+      "id": "consulta",
+      "from": "skill",
+      "to": "reglas",
+      "label": "consulta",
+      "variant": "dashed"
+    },
+    {
+      "id": "prueba-nodo",
+      "from": "skill",
+      "to": "node",
+      "label": "prueba",
+      "variant": "emphasis"
+    },
+    {
+      "id": "prueba-dom",
+      "from": "skill",
+      "to": "navegador",
+      "label": "prueba",
+      "variant": "emphasis"
+    },
+    {
+      "id": "comprueba",
+      "from": "node",
+      "to": "puerta",
+      "label": "comprueba"
+    },
+    {
+      "id": "comprueba-dom",
+      "from": "navegador",
+      "to": "puerta",
+      "label": "declara"
+    },
+    {
+      "id": "entrega",
+      "from": "puerta",
+      "to": "informe",
+      "label": "resultado",
+      "variant": "emphasis"
+    },
+    {
+      "id": "informa",
+      "from": "informe",
+      "to": "agente",
+      "label": "cierre"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "El paquete instalado",
+      "items": [
+        "SKILL.md fija invariantes, procedimiento, puerta y bloque de resultado",
+        "test-layers.md decide capa, descarte, determinismo y datos de prueba",
+        "node-tests.md posee node:test, aserciones, dobles, proceso y trampas",
+        "browser-tests.md posee el runner de página, eventos, red, almacenamiento y esperas; los assets aportan el runner y el informe"
+      ]
+    },
+    {
+      "dot": "rose",
+      "title": "Las decisiones que se ven en la evidencia",
+      "items": [
+        "node:test sin dependencias para lógica y proceso; el navegador para el DOM",
+        "El runner del proyecto manda cuando existe; la puerta ejecuta su script test",
+        "Red, reloj y azar sustituidos por dobles; ninguna espera por milisegundos",
+        "La puerta informa del baseline de Node y no descarga dependencias"
+      ]
+    },
+    {
+      "dot": "emerald",
+      "title": "Lo que la skill no hace",
+      "items": [
+        "No escribe la implementación ni impone estilo, módulos o forma del DOM",
+        "No añade Vitest, Jest ni jsdom para probar un módulo pequeño",
+        "No mide cobertura como objetivo ni compara snapshots sin salida determinista",
+        "No cubre TypeScript ni JSX: esas pruebas pertenecen a las skills de TypeScript"
+      ]
+    }
+  ]
+}

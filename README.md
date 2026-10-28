@@ -118,6 +118,30 @@ Cada skill posee una materia y la otra la referencia: el diseño de tipos, los m
 - **CLI de un solo fichero:** es válida. La estructura `cli/` solo se propone cuando el número de comandos o el tamaño la justifican.
 - **Proyecto sin `typecheck`:** la puerta ejecuta la copia local de TypeScript con `--noEmit`; si no existe, declara el bloqueo en lugar de descargar una versión distinta.
 
+### `javascript-idiomatic-style`
+
+Escribe y revisa JavaScript vanilla para navegador y Node: declara el baseline de cada objetivo antes de elegir sintaxis, prefiere la construcción que rechaza a la que convierte (`===`, `??`, `Number()`), modela la asincronía con rechazos observados y cancelación por `AbortSignal`, resuelve módulos ESM y CJS, construye DOM con nodos y `textContent`, y escribe CLI de Node con builtins y `parseArgs`. Un adaptador nombrado es la única pieza que sabe en qué plataforma corre el código; lo demás vive en la intersección de los dos baselines.
+
+Contrato completo: [`src/javascript-idiomatic-style/SKILL.md`](src/javascript-idiomatic-style/SKILL.md).
+
+### `javascript-testing-and-verification`
+
+Demuestra el comportamiento del JavaScript vanilla sin añadir un framework: elige la capa de prueba más pequeña, escribe casos con `node:test` y `node:assert/strict`, prueba DOM y eventos en una página de navegador o con el entorno que el proyecto ya tenga, simula red, almacenamiento y reloj, y comprueba el proceso con `argv`, `env` y `stdin` controlados. Incluye la puerta `scripts/verify-js.py`, que comprueba la sintaxis de todos los archivos con `node --check`, ejecuta el script `test` del proyecto o `node --test`, informa de la versión de Node frente a `engines` y devuelve texto o JSON.
+
+Contrato completo: [`src/javascript-testing-and-verification/SKILL.md`](src/javascript-testing-and-verification/SKILL.md).
+
+### Precedencia entre las skills de JavaScript
+
+Cada skill posee una materia y la otra la referencia: el lenguaje, los módulos, la asincronía, el DOM y el runtime son de `javascript-idiomatic-style`; la elección de capa, los dobles, las pruebas y la puerta son de `javascript-testing-and-verification`. La convención del proyecto gana sobre la preferencia de estilo cuando no contradice al lenguaje.
+
+- **Proyecto con runner propio:** no se añade otro. Vitest, Jest o `node:test` se usan tal como estén, y la puerta ejecuta el script `test` del proyecto.
+- **Código que solo corre en Node:** `node --test` y los builtins cubren el caso sin dependencias; no se añade un entorno DOM que no se usa.
+- **Prueba de DOM:** se abre la página de pruebas en un navegador real o se usa el entorno que el proyecto ya tenga; no se añade un DOM simulado para probar un módulo pequeño.
+
+### Precedencia entre JavaScript y TypeScript
+
+Por archivo, no por proyecto: `.ts` y `.tsx` son de las skills de TypeScript, incluida la validación en la frontera y el typecheck; `.js`, `.mjs` y `.cjs` sin tipos son de las skills de JavaScript. Un proyecto TypeScript con ficheros de configuración en `.js` conserva el typecheck como puerta y aplica a esos ficheros el contrato de JavaScript. Las reglas de lenguaje no se duplican: manda la skill del archivo que se está editando.
+
 ### Precedencia entre las skills de Go
 
 Cada skill posee una materia y las demás la referencian: el contrato de la CLI es de `go-cli-ai-first`; el estilo, la estructura de paquetes y las dependencias son de `go-idiomatic-style`; los errores, `context`, la concurrencia y el cierre son de `go-errors-and-lifecycle`; las pruebas y la puerta son de `go-testing-and-verification`. La convención del proyecto donde se trabaja gana sobre la preferencia de estilo cuando no contradice el contrato de la CLI.
@@ -198,6 +222,7 @@ python src/document-management-software/scripts/test-doc-inventory.py
 python src/adr-software/scripts/test-adr.py
 python src/go-testing-and-verification/scripts/test-verify-go.py
 python src/typescript-testing-and-verification/scripts/test-verify-ts.py
+python src/javascript-testing-and-verification/scripts/test-verify-js.py
 ```
 
 `check-repo.py` valida metadatos, estructura, enrutadores, enlaces Markdown, recibos de los diagramas, versiones y etiquetas de skills, la página de cada skill en `docs/` con su enlace en el catálogo y su referencia en este README, y sintaxis de los scripts. Las pruebas unitarias se ejecutan aparte para que un fallo indique qué script falló. La CI (`.github/workflows/validate.yml`) ejecuta los mismos comandos en cada push y pull request.
@@ -239,6 +264,12 @@ Cada skill declara su versión independiente en `metadata.version`; el procedimi
 - `docs/typescript-idiomatic-style/index.html` — página principal de la skill `typescript-idiomatic-style`.
 - `docs/typescript-idiomatic-style/flujo-de-trabajo.html` — diagrama del flujo, de la inspección al diff revisado.
 - `docs/typescript-idiomatic-style/arquitectura.html` — diagrama del paquete, el modelo de tipos y el proyecto.
+- `docs/javascript-idiomatic-style/index.html` — página principal de la skill `javascript-idiomatic-style`.
+- `docs/javascript-idiomatic-style/flujo-de-trabajo.html` — diagrama del flujo, de la inspección al diff revisado.
+- `docs/javascript-idiomatic-style/arquitectura.html` — diagrama del paquete, los dos baselines y la intersección compartida.
+- `docs/javascript-testing-and-verification/index.html` — página principal de la skill `javascript-testing-and-verification`.
+- `docs/javascript-testing-and-verification/flujo-de-trabajo.html` — diagrama del flujo, del riesgo al informe ejecutado.
+- `docs/javascript-testing-and-verification/arquitectura.html` — diagrama del paquete, los dos entornos de prueba y la puerta.
 - `docs/typescript-testing-and-verification/index.html` — página principal de la skill `typescript-testing-and-verification`.
 - `docs/typescript-testing-and-verification/flujo-de-trabajo.html` — diagrama del flujo, del mapa de riesgos al cierre con evidencia.
 - `docs/typescript-testing-and-verification/arquitectura.html` — diagrama del paquete, las fronteras validadas y la puerta.

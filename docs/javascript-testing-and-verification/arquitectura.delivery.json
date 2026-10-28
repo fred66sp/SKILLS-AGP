@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "934efeb4-fe85-4a93-a45b-37970b6cb432",
+  "status": "current",
+  "command": "deliver",
+  "type": "architecture",
+  "input": "/home/desarrollo/PROJECTS/SKILLS-AGP/docs/javascript-testing-and-verification/arquitectura.json",
+  "output": "/home/desarrollo/PROJECTS/SKILLS-AGP/docs/javascript-testing-and-verification/arquitectura.html",
+  "specification": {
+    "sha256": "9e51e2c7a8c2b1d83dbaccfaac7fb6049486f8957923ebb2883fcd69094ba39a",
+    "bytes": 4855
+  },
+  "artifact": {
+    "sha256": "bebc7fd55ea75e4cdc33efb44a43541e1f6aeef015041bbcad0f27c4f62ea940",
+    "bytes": 829401
+  }
+}
