@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Entrada a la skill javascript-testing-and-verification: qué hace, cuándo se activa, cómo se usa, qué contiene el paquete, dónde vive cada regla, las preguntas de la primera conversación y los dos diagramas. Las reglas están en SKILL.md y en las tres referencias, no copiadas en esta página.">
+<meta name="color-scheme" content="light dark">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%230e7490'/%3E%3Cpath d='M10 16l4 4 8-9' fill='none' stroke='%23ffffff' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+<title>javascript-testing-and-verification — Prueba lo que se ejecuta</title>
+<script>
+(function () {
+  try {
+    var p = JSON.parse(localStorage.getItem("javascript-testing-and-verification:prefs") || "{}");
+    var t = p.theme || (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+    document.documentElement.setAttribute("data-theme", t);
+  } catch (e) { document.documentElement.setAttribute("data-theme", "light"); }
+})();
+</script>
+<style>/* Identidad visual: verde de verificación (teal) con azul como segundo
+     acento. Donde el color lleva texto se usa la variante oscurecida,que
+     mantiene el contraste AA sobre el fondo claro. */
+  :root {--bg: #f8fafc;
+    --bg-elev: #ffffff;
+    --bg-soft: #f1f5f9;
+    --text: #0f172a;
+    --muted: #5f6b80;
+    --border: #e2e8f0;
+    --border-strong: #cbd5e1;
+    --accent: #0e7490;
+    --accent-2: #0891b2;
+    --accent-3: #b45309;
+    --accent-soft: rgba(14, 116, 144, .10);
+    --ok: #10b981;
+    --warn: #f59e0b;
+    --ok-text: #047857;
+    --warn-text: #b45309;
+    --error-text: #b91c1c;
+    --code-bg: #0a0f1c;
+    --code-text: #e5e7eb;
+    --code-border: #1f2937;
+    --shadow: 0 1px 2px rgba(15, 23, 42, .05), 0 8px 24px -12px rgba(15, 23, 42, .18);
+    --shadow-lg: 0 20px 60px -30px rgba(15, 23, 42, .35);
+    --radius: 16px;
+    --radius-sm: 10px;
+    /* No se descargan tipografías: si Inter o JetBrains Mono no están
+       instaladas, el navegador cae en la pila del sistema. */
+    --font: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    --mono: "JetBrains Mono", ui-monospace, "SF Mono", "Fira Code", Menlo, Consolas, monospace;
+}:root[data-theme="dark"] {--bg: #0a0f1c;
+    --bg-elev: #111827;
+    --bg-soft: #1f2937;
+    --text: #e5e7eb;
+    --muted: #94a3b8;
+    --border: #334155;
+    --border-strong: #475569;
+    --accent: #22d3ee;
+    --accent-2: #22d3ee;
+    --accent-3: #fbbf24;
+    --accent-soft: rgba(96, 165, 250, .14);
+    --ok: #34d399;
+    --warn: #fbbf24;
+    --ok-text: #34d399;
+    --warn-text: #fbbf24;
+    --error-text: #f87171;
+    --code-bg: #070b16;
+    --code-text: #e5e7eb;
+    --code-border: #1f2937;
+    --shadow: 0 1px 2px rgba(0, 0, 0, .4), 0 12px 32px -18px rgba(0, 0, 0, .8);
+    --shadow-lg: 0 24px 70px -34px rgba(0, 0, 0, .9);
+}* {box-sizing: border-box;
+}html {scroll-behavior: smooth; scroll-padding-top: 88px;
+}body {margin: 0;
+    font-family: var(--font);
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+}a {color: var(--accent); text-decoration: none;
+}a:hover {text-decoration: underline; text-underline-offset: 3px;
+}code,pre,kbd {font-family: var(--mono);
+}.topbar {position: sticky;
+    top: 0;
+    z-index: 50;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 12px clamp(16px, 4vw, 40px);
+    background: color-mix(in srgb, var(--bg) 82%, transparent);
+    -webkit-backdrop-filter: saturate(180%) blur(14px);
+    backdrop-filter: saturate(180%) blur(14px);
+    border-bottom: 1px solid var(--border);
+}.brand {display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--text);
+}.brand:hover {text-decoration: none;
+}.brand-mark {display: block;
+    width: 34px; height: 34px;
+    border-radius: 10px;
+    box-shadow: var(--shadow);
+    overflow: hidden;
+}.brand-mark svg {width: 100%; height: 100%; display: block;
+}.brand-name {font-weight: 700; letter-spacing: -.02em; font-size: 15px;
+}.brand-name small {display: block; font-weight: 500; color: var(--muted); font-size: 11px; letter-spacing: .04em; text-transform: uppercase;
+}.topbar-spacer {flex: 1;
+}.catalog-btn {text-decoration: none;
+}.catalog-btn:hover {color: var(--accent); border-color: var(--accent); text-decoration: none;
+}@media (max-width: 560px){.catalog-btn {width: 36px; padding: 0;
+}.catalog-btn span {display: none;
+}
+  }
+.icon-btn {display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    height: 36px;
+    padding: 0 12px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: var(--bg-elev);
+    color: var(--text);
+    font: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: border-color .15s, background .15s, transform .1s;
+}.icon-btn:hover {border-color: var(--border-strong);
+}.icon-btn:active {transform: translateY(1px);
+}.icon-btn svg {width: 16px; height: 16px;
+}:root[data-theme="light"] .icon-sun {display: none;
+}:root[data-theme="dark"] .icon-moon {display: none;
+}.hero {position: relative;
+    overflow: hidden;
+    padding: clamp(48px, 9vw, 104px) clamp(16px, 4vw, 40px) clamp(40px, 6vw, 72px);
+    border-bottom: 1px solid var(--border);
+}.hero::before {content: "";
+    position: absolute;
+    inset: -40% -10% auto -10%;
+    height: 420px;
+    background:
+      radial-gradient(60% 60% at 22% 30%, color-mix(in srgb, var(--accent) 26%, transparent), transparent 70%),
+      radial-gradient(50% 50% at 70% 6%, color-mix(in srgb, var(--accent-2) 22%, transparent), transparent 70%),
+      radial-gradient(42% 42% at 92% 26%, color-mix(in srgb, var(--accent-3) 20%, transparent), transparent 70%);
+    filter: blur(6px);
+    pointer-events: none;
+}.hero-inner {position: relative; max-width: 1080px; margin: 0 auto;
+}.pill {display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 5px 12px;
+    border: 1px solid var(--border-strong);
+    border-radius: 999px;
+    background: var(--bg-elev);
+    color: var(--muted);
+    font-size: 12.5px;
+    font-weight: 600;
+    letter-spacing: .01em;
+}.pill .dot {width: 7px; height: 7px; border-radius: 50%; background: var(--ok); box-shadow: 0 0 0 3px color-mix(in srgb, var(--ok) 22%, transparent);
+}.hero h1 {margin: 22px 0 0;
+    font-size: clamp(34px, 6vw, 62px);
+    line-height: 1.04;
+    letter-spacing: -.035em;
+    font-weight: 800;
+}.hero h1 .grad {color: var(--accent);
+}.hero p.lead {margin: 20px 0 0;
+    max-width: 660px;
+    font-size: clamp(16px, 2.2vw, 19px);
+    color: var(--muted);
+}.hero-actions {display: flex; flex-wrap: wrap; gap: 12px; margin-top: 30px;
+}.btn {display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 11px 18px;
+    border-radius: var(--radius-sm);
+    font-weight: 650;
+    font-size: 14.5px;
+    border: 1px solid transparent;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: transform .12s, box-shadow .2s, border-color .15s;
+}.btn:hover {text-decoration: none; transform: translateY(-1px);
+}.btn svg {width: 16px; height: 16px; flex: none;
+}.btn-primary {background: linear-gradient(135deg, var(--accent), var(--accent-2)); color: #fff; box-shadow: var(--shadow);
+}.btn-ghost {background: var(--bg-elev); border-color: var(--border-strong); color: var(--text);
+}.layout {max-width: 1180px;
+    margin: 0 auto;
+    padding: clamp(32px, 5vw, 60px) clamp(16px, 4vw, 40px) 80px;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 48px;
+}@media (min-width: 1020px){.layout {grid-template-columns: 214px minmax(0, 1fr); gap: 56px;
+}
+  }.toc {display: none;
+}@media (min-width: 1020px){.toc {display: block; position: sticky; top: 84px; align-self: start;
+}.toc h2 {font-size: 11px; text-transform: uppercase; letter-spacing: .1em; color: var(--muted); margin: 0 0 12px;
+}.toc a {display: block;
+      padding: 7px 12px;
+      border-left: 2px solid var(--border);
+      color: var(--muted);
+      font-size: 14px;
+      font-weight: 550;
+}.toc a:hover {color: var(--text); text-decoration: none;
+}.toc a.active {color: var(--accent); border-left-color: var(--accent); background: var(--accent-soft); border-radius: 0 8px 8px 0;
+}
+  }main {min-width: 0;
+}section {scroll-margin-top: 88px;
+}section + section {margin-top: 64px;
+}.section-head {display: flex; align-items: center; gap: 12px; margin-bottom: 8px;
+}.section-num {display: grid; place-items: center;
+    width: 30px; height: 30px;
+    border-radius: 9px;
+    background: var(--accent-soft);
+    color: var(--accent);
+    font-size: 13px;
+    font-weight: 800;
+    font-variant-numeric: tabular-nums;
+}h2.title {margin: 0; font-size: clamp(22px, 3vw, 28px); letter-spacing: -.02em;
+}.chip-repo {margin-left: auto;
+    flex: none;
+    font-size: 11.5px;
+    font-weight: 700;
+    letter-spacing: .03em;
+    color: var(--muted);
+    border: 1px dashed color-mix(in srgb, var(--muted) 45%, transparent);
+    border-radius: 999px;
+    padding: 3px 10px;
+    white-space: nowrap;
+}.section > p.sub {margin: 6px 0 24px; color: var(--muted); max-width: 74ch;
+}h3 {margin: 30px 0 10px; font-size: 17px; letter-spacing: -.01em;
+}.grid {display: grid; gap: 16px;
+}.grid + .grid,.grid + .note,.grid + h3 {margin-top: 24px;
+}@media (min-width: 640px){.grid.cols-2 {grid-template-columns: 1fr 1fr;
+} }.card {background: var(--bg-elev);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px;
+    box-shadow: var(--shadow);
+}.card h3 {margin: 0 0 6px; font-size: 15px;
+}.card p {margin: 0; color: var(--muted); font-size: 14px;
+}.card p + p {margin-top: 8px;
+}.card ul {margin: 8px 0 0; padding-left: 18px; color: var(--muted); font-size: 13.5px;
+}.card li + li {margin-top: 4px;
+}.card .card-ico {display: grid; place-items: center;
+    width: 34px; height: 34px; margin-bottom: 12px;
+    border-radius: 9px;
+    background: var(--accent-soft); color: var(--accent);
+}.card .card-ico svg {width: 18px; height: 18px;
+}.table-wrap {overflow-x: auto; border: 1px solid var(--border); border-radius: var(--radius); background: var(--bg-elev); box-shadow: var(--shadow);
+}.table-wrap + .note,.table-wrap + p {margin-top: 16px;
+}table {width: 100%; border-collapse: collapse; font-size: 14px;
+}thead th {text-align: left;
+    padding: 12px 16px;
+    background: var(--bg-soft);
+    color: var(--muted);
+    font-size: 11.5px;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    border-bottom: 1px solid var(--border);
+    white-space: nowrap;
+}tbody td {padding: 11px 16px; border-bottom: 1px solid var(--border); vertical-align: top;
+}tbody tr:last-child td {border-bottom: 0;
+}tbody tr:hover {background: color-mix(in srgb, var(--accent) 3%, transparent);
+}td code,th code {font-size: 12.8px;
+}tbody td:first-child {white-space: nowrap;
+}.table-wrap.wrap-cells td:first-child {white-space: normal;
+}.table-wrap.wrap-cells td code {overflow-wrap: anywhere;
+}/* En pantallas estrechas,la primera columna deja de ir en una sola línea:
+     con nowrap,los nombres largos se parten mal. */
+  @media (max-width: 640px) {table { font-size: 13.5px; }
+    thead th, tbody td { padding: 9px 12px; }
+    tbody td:first-child { white-space: normal; }
+}.code {position: relative; margin: 14px 0;
+}.code pre {margin: 0;
+    padding: 16px 52px 16px 18px;
+    background: var(--code-bg);
+    color: var(--code-text);
+    border: 1px solid var(--code-border);
+    border-radius: var(--radius);
+    overflow-x: auto;
+    font-size: 13.2px;
+    line-height: 1.6;
+    box-shadow: var(--shadow);
+}.code pre code {background: none; padding: 0; color: inherit; font-size: inherit;
+}.code .copy {position: absolute;
+    top: 9px; right: 9px;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    height: 30px;
+    padding: 0 9px;
+    border: 1px solid var(--code-border);
+    border-radius: 8px;
+    background: color-mix(in srgb, var(--code-bg) 60%, #ffffff 8%);
+    color: #c8d2e8;
+    font: inherit;
+    font-size: 11.5px;
+    font-weight: 600;
+    cursor: pointer;
+    opacity: 0;
+    transition: opacity .15s, border-color .15s;
+}.code:hover .copy,.code .copy:focus-visible {opacity: 1;
+}.code .copy:hover {border-color: #3b4c72;
+}@media (hover: none){.code .copy {opacity: 1;
+} }.code .copy.copied {color: var(--ok); border-color: var(--ok);
+}.code .copy svg {width: 13px; height: 13px;
+}p code,li code,td code {background: var(--bg-soft);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: .08em .42em;
+    font-size: .88em;
+}.note {display: flex;
+    gap: 12px;
+    padding: 14px 16px;
+    border-left: 1px solid var(--accent);
+    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+    background: var(--accent-soft);
+    font-size: 14px;
+    margin: 16px 0;
+}.note strong {color: var(--text);
+}.note p {margin: 0;
+}.note p + p {margin-top: 8px;
+}.flow {display: grid; grid-template-columns: 1fr; gap: 12px;
+}@media (min-width: 640px){.flow {grid-template-columns: repeat(2, 1fr);
+} }.flow-step {min-height: 142px;
+    padding: 16px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    background: var(--bg-elev);
+}.flow-step code {color: var(--accent); font-weight: 700;
+}.flow-step strong {display: block; margin-top: 10px; font-size: 15px;
+}.flow-step p {margin: 5px 0 0; color: var(--muted); font-size: 13.5px;
+}a.card-link {display: block; text-decoration: none; color: inherit; transition: border-color .15s, transform .12s;
+}a.card-link:hover {text-decoration: none; border-color: var(--accent); transform: translateY(-1px);
+}a.card-link:focus-visible {outline: 2px solid var(--accent); outline-offset: 3px;
+}a.card-link .go {display: inline-block; margin-top: 12px; color: var(--accent); font-weight: 650; font-size: 13.5px;
+}a.card-link .card-ico {transition: background .15s;
+}.footer {border-top: 1px solid var(--border);
+    padding: 28px clamp(16px, 4vw, 40px);
+    color: var(--muted);
+    font-size: 13.5px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px 20px;
+    align-items: center;
+    justify-content: space-between;
+    max-width: 1180px;
+    margin: 0 auto;
+}.footer code {background: var(--bg-soft); border: 1px solid var(--border); border-radius: 6px; padding: 1px 6px;
+}.toc .toc-extra {margin-top: 18px; padding-top: 14px; border-top: 1px solid var(--border);
+}.toc .toc-extra a {color: var(--accent);
+}
+/* Botón flotante de vuelta arriba: mismo borde, sombra y acento que el
+     resto de controles; aparece solo cuando la cabecera ya no se ve. */
+  .to-top {position: fixed;
+    right: clamp(16px, 3vw, 28px);
+    bottom: clamp(16px, 3vw, 28px);
+    z-index: 60;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    padding: 0;
+    border: 1px solid var(--border-strong);
+    border-radius: 50%;
+    background: color-mix(in srgb, var(--bg-elev) 92%, transparent);
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+    color: var(--muted);
+    box-shadow: var(--shadow);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(10px);
+    transition: opacity .2s, transform .2s, visibility .2s, border-color .15s, color .15s;
+}.to-top.is-visible {opacity: 1; visibility: visible; transform: none;
+}.to-top:hover {color: var(--accent); border-color: var(--accent); text-decoration: none;
+}.to-top:focus-visible {outline: 2px solid var(--accent); outline-offset: 3px;
+}.to-top svg {width: 18px; height: 18px;
+}::selection {background: color-mix(in srgb, var(--accent) 30%, transparent);
+}@media (prefers-reduced-motion: reduce){* {scroll-behavior: auto !important; transition: none !important;
+} }.qa {border-bottom: 1px solid var(--border); padding: 18px 0;
+}.qa:last-child {border-bottom: 0;
+}.qa h3 {margin: 0 0 6px; font-size: 15.5px;
+}.qa p {margin: 0; color: var(--muted); font-size: 14px;
+}.qa p + p {margin-top: 8px;
+}/* Una rejilla de pasos seguida de una tabla necesita el mismo aire que una
+     rejilla seguida de otra: sin esta regla la tabla queda pegada al último
+     paso,porque ni `.flow` ni `.table-wrap` traen margen propio. */
+  .flow + .table-wrap,.grid + .table-wrap {margin-top: 24px;
+}
+</style>
+</head>
+<body>
+<header class="topbar">
+  <a class="brand" href="#top">
+    <span class="brand-mark" aria-hidden="true">
+      <svg viewBox="0 0 32 32" role="presentation">
+        <defs>
+          <linearGradient id="brand-grad" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="#0e7490"></stop>
+            <stop offset="1" stop-color="#22d3ee"></stop>
+          </linearGradient>
+        </defs>
+        <rect width="32" height="32" fill="url(#brand-grad)"></rect>
+        <path d="M10 16l4 4 8-9" fill="none" stroke="#ffffff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"></path>
+      </svg>
+    </span>
+    <span class="brand-name">javascript-testing-and-verification<small>pruebas y puerta</small></span>
+  </a>
+  <span class="topbar-spacer"></span>
+  <a class="icon-btn catalog-btn" href="../index.html" aria-label="Volver al catálogo" title="Volver al catálogo">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5V6a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2z"></path><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H19"></path></svg>
+    <span>Catálogo</span>
+  </a>
+  <button class="icon-btn" id="theme-toggle" type="button" aria-label="Cambiar a tema oscuro">
+    <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"></path></svg>
+    <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"></path></svg>
+    <span>Tema</span>
+  </button>
+</header>
+
+<section class="hero" id="top">
+  <div class="hero-inner">
+    <span class="pill"><span class="dot" aria-hidden="true"></span>node:test · navegador real · sin dependencias añadidas</span>
+    <h1>Prueba lo que se ejecuta, no lo que <span class="grad">imaginas</span></h1>
+    <p class="lead">La skill <code>javascript-testing-and-verification</code> elige la capa más pequeña que demuestra el comportamiento: <code>node:test</code> para lógica y proceso, una página de navegador para el DOM. Sustituye red, reloj y aleatoriedad por dobles, y cierra con una puerta que comprueba sintaxis y ejecuta las pruebas del proyecto sin añadir un framework.</p>
+    <div class="hero-actions">
+      <a class="btn btn-primary" href="#que-hace">Qué hace</a>
+      <a class="btn btn-ghost" href="#uso">Cómo se usa</a>
+      <a class="btn btn-ghost" href="#reglas">Dónde están las reglas</a>
+      <a class="btn btn-ghost" href="#diagramas">Los diagramas</a>
+      <a class="btn btn-ghost" href="../index.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 19l-7-7 7-7"></path></svg>
+        Volver al catálogo
+      </a>
+    </div>
+  </div>
+</section>
+
+<div class="layout">
+  <nav class="toc" aria-label="Índice de la página">
+    <h2>En esta página</h2>
+    <a href="#que-hace">1. Qué hace</a>
+    <a href="#cuando">2. Cuándo se activa</a>
+    <a href="#uso">3. Cómo se usa</a>
+    <a href="#paquete">4. Qué contiene el paquete</a>
+    <a href="#reglas">5. Dónde están las reglas</a>
+    <a href="#preguntas">6. Preguntas cortas</a>
+    <a href="#diagramas">7. Los diagramas</a>
+    <div class="toc-extra"><a href="../index.html">Volver al catálogo</a></div>
+  </nav>
+
+  <main>
+    <section id="que-hace" class="section">
+      <div class="section-head"><span class="section-num">1</span><h2 class="title">Qué hace</h2></div>
+      <p class="sub">Convierte una sospecha en evidencia ejecutada: elige la capa, escribe el caso que falla por la causa correcta y deja una puerta que se puede repetir en otra máquina.</p>
+
+      <div class="table-wrap wrap-cells">
+        <table>
+          <thead><tr><th>Situación</th><th>Qué hace la skill</th></tr></thead>
+          <tbody>
+            <tr><td>Hay que probar lógica, cálculos o transformaciones.</td><td>Escribe casos con <code>node:test</code> y <code>node:assert/strict</code>, junto al módulo, sin dependencias.</td></tr>
+            <tr><td>El comportamiento vive en el DOM.</td><td>Usa una página de pruebas con nodos reales: texto, estado, eventos y foco.</td></tr>
+            <tr><td>La operación depende de la red, el reloj o el azar.</td><td>Sustituye la frontera por un doble controlado; espera eventos, nunca milisegundos.</td></tr>
+            <tr><td>El contrato es una CLI de Node.</td><td>Ejecuta el proceso con <code>argv</code>, <code>env</code> y <code>stdin</code> controlados y comprueba los tres canales por separado.</td></tr>
+            <tr><td>Aparece un defecto.</td><td>Primero la prueba que falla por su causa; después la corrección. La prueba queda como regresión.</td></tr>
+            <tr><td>Hay que declarar el cambio terminado.</td><td>Ejecuta <code>verify-js.py</code> y rellena el informe con lo ejecutado y lo que no.</td></tr>
+            <tr><td>El proyecto ya tiene Vitest, Jest o un script <code>test</code>.</td><td>Se usa ese runner y esa puerta; la skill no lo sustituye.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="note">
+        <p><strong>Lo que no hace.</strong> No escribe la implementación, no impone estilo ni decide la forma del DOM. El lenguaje, los módulos y el runtime son de <code>javascript-idiomatic-style</code>; la calidad visual, de <code>web-interface-visual-design</code>.</p>
+      </div>
+    </section>
+
+    <section id="cuando" class="section">
+      <div class="section-head"><span class="section-num">2</span><h2 class="title">Cuándo se activa</h2></div>
+      <p class="sub">La columna izquierda dispara la skill; la derecha está escrita en su descripción para que no se active donde no aporta.</p>
+
+      <div class="table-wrap wrap-cells">
+        <table>
+          <thead><tr><th>Se activa para</th><th>No se activa para</th></tr></thead>
+          <tbody>
+            <tr><td>Escribir o revisar pruebas de JavaScript vanilla.</td><td>Escribir el código que se prueba, su estilo o sus módulos.</td></tr>
+            <tr><td>Elegir entre <code>node:test</code>, navegador o el runner del proyecto.</td><td>Diseñar el DOM, los eventos o la accesibilidad de la interfaz.</td></tr>
+            <tr><td>Simular red, reloj, almacenamiento y azar.</td><td>Añadir un framework de pruebas o un DOM simulado que el proyecto no tiene.</td></tr>
+            <tr><td>Comprobar una regresión y dejarla cubierta.</td><td>Certificar cobertura como objetivo ni comparar métricas.</td></tr>
+            <tr><td>Ejecutar la puerta y cerrar con evidencia.</td><td>Probar TypeScript o JSX, que tienen sus propias skills.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="note">
+        <p><strong>El runner del proyecto gana.</strong> Si ya existe uno, la skill lo usa y la puerta ejecuta su script <code>test</code>. Añadir un segundo runner no aporta evidencia y duplica mantenimiento.</p>
+      </div>
+    </section>
+
+    <section id="uso" class="section">
+      <div class="section-head"><span class="section-num">3</span><h2 class="title">Cómo se usa</h2></div>
+      <p class="sub">Seis pasos. El riesgo se mapea antes de escribir, la capa se elige una vez y el cierre se demuestra con comandos.</p>
+
+      <div class="flow">
+        <div class="flow-step"><code>paso 1</code><strong>Mapear riesgos</strong><p>Qué observa el usuario, dónde entra dato no confiable, qué se destruye o se filtra y qué cambia a menudo.</p></div>
+        <div class="flow-step"><code>paso 2</code><strong>Elegir capa y runner</strong><p>Función pura con <code>node:test</code>, DOM en navegador, proceso ejecutado. Si hay runner, ese manda.</p></div>
+        <div class="flow-step"><code>paso 3</code><strong>Escribir el caso</strong><p>Una razón para fallar, un mensaje legible y los límites que importan: vacío, cero, <code>null</code>, error de red, cancelación.</p></div>
+        <div class="flow-step"><code>paso 4</code><strong>Aislar y estabilizar</strong><p>Dobles de red, reloj y almacenamiento; espera de eventos; limpieza de temporales y listeners.</p></div>
+        <div class="flow-step"><code>paso 5</code><strong>Ejecutar la puerta</strong><p><code>verify-js.py</code> con <code>--test</code> y <code>--lint</code> cuando existan. La puerta no sustituye al runner del proyecto.</p></div>
+        <div class="flow-step"><code>paso 6</code><strong>Cerrar con evidencia</strong><p>Informe con comandos, resultado y lo no verificado. Sin adjetivos.</p></div>
+      </div>
+
+      <div class="qa"><h3>¿Necesito instalar un framework de pruebas?</h3><p>No. <code>node --test</code> ejecuta archivos <code>*.test.js</code> con <code>node:test</code> y <code>node:assert/strict</code> sin dependencias. El navegador ya es el entorno del DOM.</p></div>
+      <div class="qa"><h3>¿Y si el proyecto usa Vitest o Jest?</h3><p>Se usa el que tenga. La puerta detecta el script <code>test</code> del proyecto y lo ejecuta con el gestor declarado; no descarga otro runner.</p></div>
+      <div class="qa"><h3>¿Cómo se prueba el DOM?</h3><p>Con la página de <code>assets/test-runner.html</code>, que registra casos y los ejecuta al cargar, o con el entorno que el proyecto ya tenga. No se añade un DOM simulado para un módulo pequeño.</p></div>
+      <div class="qa"><h3>¿Qué comprueba exactamente <code>verify-js.py</code>?</h3><p>Sintaxis con <code>node --check</code> en todos los <code>.js</code>, <code>.mjs</code> y <code>.cjs</code> del proyecto; con <code>--test</code>, el script <code>test</code> o <code>node --test</code>; con <code>--lint</code>, el script del proyecto. Informa de la versión de Node frente a <code>engines</code>.</p></div>
+      <div class="qa"><h3>¿La puerta falla si no hay pruebas?</h3><p>Solo si se pide <code>--test</code> y no hay script ni archivos de prueba. Sin <code>--test</code>, la ausencia de pruebas no es un fallo de sintaxis.</p></div>
+      <div class="qa"><h3>¿La cobertura es un objetivo?</h3><p>Es una señal. Un umbral se acepta si ya existía; no se impone dentro de un cambio funcional ni se escriben pruebas triviales para subirlo.</p></div>
+    </section>
+
+    <section id="paquete" class="section">
+      <div class="section-head"><span class="section-num">4</span><h2 class="title">Qué contiene el paquete</h2></div>
+      <p class="sub">El agente lee <code>SKILL.md</code> al activarse, abre la referencia de la capa elegida y ejecuta la puerta en lugar de reescribirla.</p>
+
+      <div class="code"><pre><code>javascript-testing-and-verification/
+├── SKILL.md                      # invariantes, procedimiento y bloque de cierre
+├── references/
+│   ├── test-layers.md            # riesgo, capas, determinismo y datos de prueba
+│   ├── node-tests.md             # node:test, aserciones, dobles, proceso y trampas
+│   └── browser-tests.md          # runner en página, eventos, red y esperas
+├── assets/
+│   ├── test-runner.html          # página de pruebas sin dependencias
+│   └── verification-report.md    # plantilla del cierre con comandos
+├── scripts/
+│   ├── verify-js.py              # puerta determinista
+│   └── test-verify-js.py         # pruebas de la puerta
+└── agents/
+    └── openai.yaml               # nombre visible e invocación implícita</code></pre></div>
+
+      <div class="table-wrap wrap-cells">
+        <table>
+          <thead><tr><th>Fichero</th><th>Cuándo lo abre el agente</th></tr></thead>
+          <tbody>
+            <tr><td><code>SKILL.md</code></td><td>Siempre, al disparar la skill.</td></tr>
+            <tr><td><code>references/test-layers.md</code></td><td>Pasos 1 y 2, al mapear riesgos y elegir capa.</td></tr>
+            <tr><td><code>references/node-tests.md</code></td><td>Paso 3, cuando la capa sea <code>node:test</code> o un proceso.</td></tr>
+            <tr><td><code>references/browser-tests.md</code></td><td>Paso 3, cuando la capa sea el navegador.</td></tr>
+            <tr><td><code>assets/test-runner.html</code></td><td>Al montar la página de pruebas del proyecto.</td></tr>
+            <tr><td><code>assets/verification-report.md</code></td><td>Paso 6, al cerrar el informe.</td></tr>
+            <tr><td><code>scripts/verify-js.py</code></td><td>Paso 5, siempre; no se reescribe su lógica.</td></tr>
+            <tr><td><code>agents/openai.yaml</code></td><td>Nunca durante el trabajo: declara el nombre visible y la política de invocación.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="note">
+        <p><strong>La puerta no descarga nada.</strong> Usa el <code>node</code> del PATH y el gestor de paquetes que el proyecto declare o su lockfile. Si falta <code>node</code>, devuelve error de entorno y no un falso éxito.</p>
+      </div>
+    </section>
+
+    <section id="reglas" class="section">
+      <div class="section-head"><span class="section-num">5</span><h2 class="title">Dónde están las reglas</h2></div>
+      <p class="sub">Las reglas viven en el paquete. Aquí no se copian: se indica qué fichero responde a cada pregunta.</p>
+
+      <div class="table-wrap wrap-cells">
+        <table>
+          <thead><tr><th>Pregunta</th><th>Se responde en</th></tr></thead>
+          <tbody>
+            <tr><td>Qué es obligatorio, en qué orden se trabaja y cómo se cierra.</td><td><code>SKILL.md</code></td></tr>
+            <tr><td>Qué capa demuestra cada cosa y cuándo no se escribe una prueba.</td><td><code>references/test-layers.md</code>, secciones 2 y 3.</td></tr>
+            <tr><td>Cómo se controlan reloj, red, azar y estado compartido.</td><td><code>references/test-layers.md</code>, sección 4.</td></tr>
+            <tr><td>Qué aserción usar y cómo se agrupa un archivo de pruebas.</td><td><code>references/node-tests.md</code>, secciones 2 y 3.</td></tr>
+            <tr><td>Cómo se dobla una frontera y cómo se prueba un proceso.</td><td><code>references/node-tests.md</code>, secciones 5 y 6.</td></tr>
+            <tr><td>Cómo se prueban nodos, eventos, red y almacenamiento en el navegador.</td><td><code>references/browser-tests.md</code>, secciones 2 a 4.</td></tr>
+            <tr><td>Qué se considera una espera estable y cuándo cambiar de capa.</td><td><code>references/browser-tests.md</code>, secciones 5 y 7.</td></tr>
+            <tr><td>Qué ejecuta la puerta, con qué opciones y qué códigos devuelve.</td><td><code>SKILL.md</code>, sección de la puerta, y <code>scripts/verify-js.py</code>.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="note">
+        <p><strong>Si esta página y el paquete no coinciden, manda el paquete.</strong> Es lo que el agente ejecuta. Esta página no añade normas ni suaviza las que existen.</p>
+      </div>
+    </section>
+
+    <section id="preguntas" class="section">
+      <div class="section-head"><span class="section-num">6</span><h2 class="title">Preguntas cortas</h2></div>
+      <p class="sub">Lo que se pregunta antes de usar la skill por primera vez.</p>
+
+      <div class="qa"><h3>¿Sustituye a Vitest o Jest?</h3><p>No. Si el proyecto ya los tiene, se usan. La skill aporta el criterio de capa, los dobles y la puerta; el runner es del proyecto.</p></div>
+      <div class="qa"><h3>¿Se puede probar DOM sin instalar nada?</h3><p>Sí: una página que carga el código, el runner y los casos, abierta en el navegador. Demuestra comportamiento del DOM, no CSS ni accesibilidad completa.</p></div>
+      <div class="qa"><h3>¿Qué pasa con TypeScript?</h3><p>Queda fuera: las pruebas de TypeScript y su typecheck pertenecen a <code>typescript-testing-and-verification</code>.</p></div>
+      <div class="qa"><h3>¿Cómo se prueba una CLI?</h3><p>Ejecutando el proceso con <code>process.execPath</code>, argumentos, entorno y entrada controlados; se comprueban <code>stdout</code>, <code>stderr</code> y código de salida por separado.</p></div>
+      <div class="qa"><h3>¿Qué hago con una prueba inestable?</h3><p>Se corrige o se elimina con motivo escrito. No se marca como omitida ni se le añade una espera mayor.</p></div>
+      <div class="qa"><h3>¿La puerta necesita <code>package.json</code>?</h3><p>Solo para <code>--test</code> y <code>--lint</code>. La comprobación de sintaxis funciona en una carpeta de scripts sin paquete.</p></div>
+    </section>
+
+    <section id="diagramas" class="section">
+      <div class="section-head"><span class="section-num">7</span><h2 class="title">Los diagramas</h2><span class="chip-repo">de este repositorio</span></div>
+      <p class="sub">Dos vistas del mismo criterio: del riesgo al informe ejecutado, y las piezas que conectan el paquete, los dos entornos de prueba y la puerta.</p>
+
+      <div class="grid cols-2">
+        <a class="card card-link" href="flujo-de-trabajo.html">
+          <div class="card-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h6v5H4zM14 13h6v5h-6z"></path><path d="M10 8.5h2a2 2 0 0 1 2 2v5"></path></svg></div>
+          <h3>Flujo de trabajo</h3>
+          <p>Del riesgo al informe: cómo se elige la capa, dónde se aísla la frontera y qué se ejecuta antes de declarar el cambio terminado.</p>
+          <span class="go">Abrir el diagrama →</span>
+        </a>
+        <a class="card card-link" href="arquitectura.html">
+          <div class="card-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1.5"></rect><rect x="14" y="3" width="7" height="7" rx="1.5"></rect><rect x="3" y="14" width="7" height="7" rx="1.5"></rect><rect x="14" y="14" width="7" height="7" rx="1.5"></rect></svg></div>
+          <h3>Arquitectura</h3>
+          <p>El paquete, <code>node:test</code>, la página de pruebas y la puerta: qué lee el agente, qué ejecuta y qué devuelve al informe.</p>
+          <span class="go">Abrir el diagrama →</span>
+        </a>
+      </div>
+
+      <p>Cada diagrama se abre como página suelta: archify no enlaza desde el artefacto a una página local, así que se vuelve con el botón atrás del navegador o con el índice de arriba.</p>
+
+      <div class="note">
+        <p><strong>Convenio de este repositorio, no mandato de la skill.</strong> <code>docs/&lt;skill&gt;/index.html</code>, los diagramas y sus recibos <code>.delivery.json</code> son cómo SKILLS-AGP documenta sus skills. Los genera archify desde el <code>.json</code> que está junto a cada HTML; el comando y la comprobación del recibo están en la sección Documentación del <code>README.md</code>.</p>
+      </div>
+    </section>
+  </main>
+</div>
+
+<footer class="footer">
+  <span><code>docs/javascript-testing-and-verification/</code> · skill <code>javascript-testing-and-verification</code> · documento en español</span>
+  <span><a href="../index.html">Catálogo</a> · <a href="#top">Volver arriba</a> · <a href="../../src/javascript-testing-and-verification/SKILL.md">SKILL.md</a> · <a href="flujo-de-trabajo.html">Flujo</a> · <a href="arquitectura.html">Arquitectura</a></span>
+  <span>Página estática: no envía datos ni carga recursos externos · <code>docs/javascript-testing-and-verification/index.html</code></span>
+</footer>
+
+<a class="to-top" id="to-top" href="#top" aria-label="Volver arriba" title="Volver arriba">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 15l6-6 6 6"></path></svg>
+</a>
+
+
+<script>
+(function () {
+  "use strict";
+  var toTop = document.getElementById("to-top");
+  if (!toTop) { return; }
+  function update() { toTop.classList.toggle("is-visible", window.scrollY > 480); }
+  window.addEventListener("scroll", update, { passive: true });
+  update();
+})();
+</script>
+</body>
+</html>

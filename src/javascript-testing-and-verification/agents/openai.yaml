@@ -1,0 +1,12 @@
+interface:
+  display_name: Verificación JavaScript
+  short_description: Pruebas y puerta para JavaScript vanilla
+  default_prompt: Usa $javascript-testing-and-verification para escribir pruebas
+    con node:test o el navegador, controlar red y reloj, y cerrar con verify-js.py.
+policy:
+  products:
+  - chatgpt
+  - codex
+  - api
+  - atlas
+  allow_implicit_invocation: true
