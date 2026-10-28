@@ -149,6 +149,18 @@ Cada skill posee una materia y las demás la referencian: el contrato de la CLI 
 - **CLI mínima:** un `main.go` con el cableado y una función `run` testeable. El contrato de `go-cli-ai-first` se aplica completo y no se crean `cmd/`, `internal/` ni `pkg/` por anticipación.
 - **CLI con varios comandos:** `cmd/<binario>/main.go`, `internal/cli` e `internal/app`. La estructura se justifica por el tamaño, no por la plantilla, y el contrato de la CLI no cambia.
 
+### `security-engineering`
+
+Convierte un encargo de seguridad en un análisis acotado y verificable: define activos, adversarios y límites de confianza antes de recomendar; revisa diseño, código y configuración de fuente a sumidero; endurece agentes, LLM y MCP con mínimo privilegio, separación de instrucciones y datos, aprobaciones ligadas a la acción, memoria validada y límites de coste; audita skills, extensiones y dependencias de terceros antes de usarlas; prioriza por explotabilidad e impacto; corrige una causa por cambio con prueba de regresión; y cierra con evidencia y riesgo residual. Incluye `scripts/security_scan.py`, un escáner determinista de señales con `--json`, `--min-severity`, supresión y códigos de salida acotados.
+
+Contrato completo: [`src/security-engineering/SKILL.md`](src/security-engineering/SKILL.md).
+
+Documentación: [`docs/security-engineering/index.html`](docs/security-engineering/index.html).
+
+### Precedencia de seguridad
+
+La seguridad posee el modelo de amenazas, la revisión, la auditoría de terceros y el cierre con evidencia. No sustituye a las demás skills: el contrato de la CLI sigue en `go-cli-ai-first`, el estilo y la arquitectura del lenguaje en su skill, las pruebas y sus puertas en la skill de verificación correspondiente, y la documentación en `document-management-software`. Cuando un arreglo de seguridad cambia el comportamiento, se presenta el compromiso y se decide; no se impone.
+
 ### `web-interface-visual-design`
 
 Diseña, implementa y revisa la calidad visual de interfaces web sin imponer un framework ni sustituir el sistema de diseño existente. Cubre composición, tipografía, color, responsive, accesibilidad, SVG, iconografía e infografías. Exige inspeccionar el resultado renderizado cuando hay herramientas disponibles y distingue esa evidencia de compilar o validar XML. Reconoce los límites de fidelidad del SVG y no inventa datos para completar una composición.
@@ -190,6 +202,7 @@ Documentación: [`docs/skill-creator/index.html`](docs/skill-creator/index.html)
 | [`.skills/typescript-idiomatic-style/SKILL.md`](.skills/typescript-idiomatic-style/SKILL.md) | [`src/typescript-idiomatic-style/SKILL.md`](src/typescript-idiomatic-style/SKILL.md) |
 | [`.skills/typescript-testing-and-verification/SKILL.md`](.skills/typescript-testing-and-verification/SKILL.md) | [`src/typescript-testing-and-verification/SKILL.md`](src/typescript-testing-and-verification/SKILL.md) |
 | [`.skills/web-interface-visual-design/SKILL.md`](.skills/web-interface-visual-design/SKILL.md) | [`src/web-interface-visual-design/SKILL.md`](src/web-interface-visual-design/SKILL.md) |
+| [`.skills/security-engineering/SKILL.md`](.skills/security-engineering/SKILL.md) | [`src/security-engineering/SKILL.md`](src/security-engineering/SKILL.md) |
 
 `python scripts/check-repo.py` comprueba que cada enrutador resuelve su contrato desde su propio directorio, que el nombre del enrutador y el del contrato coinciden y que no hay enrutadores huérfanos ni skills canónicas sin enrutador.
 
@@ -223,6 +236,7 @@ python src/adr-software/scripts/test-adr.py
 python src/go-testing-and-verification/scripts/test-verify-go.py
 python src/typescript-testing-and-verification/scripts/test-verify-ts.py
 python src/javascript-testing-and-verification/scripts/test-verify-js.py
+python src/security-engineering/scripts/test-security_scan.py
 ```
 
 `check-repo.py` valida metadatos, estructura, enrutadores, enlaces Markdown, recibos de los diagramas, versiones y etiquetas de skills, la página de cada skill en `docs/` con su enlace en el catálogo y su referencia en este README, y sintaxis de los scripts. Las pruebas unitarias se ejecutan aparte para que un fallo indique qué script falló. La CI (`.github/workflows/validate.yml`) ejecuta los mismos comandos en cada push y pull request.
@@ -276,6 +290,9 @@ Cada skill declara su versión independiente en `metadata.version`; el procedimi
 - `docs/web-interface-visual-design/index.html` — página de entrada a la skill de diseño visual web.
 - `docs/web-interface-visual-design/flujo-de-trabajo.html` — diagrama de la inspección, implementación y verificación visual.
 - `docs/web-interface-visual-design/arquitectura.html` — diagrama del contrato, sus referencias y la evidencia renderizada.
+- `docs/security-engineering/index.html` — página de entrada a la skill de seguridad, con el alcance, el procedimiento, el paquete y el escáner.
+- `docs/security-engineering/flujo-de-trabajo.html` — diagrama del flujo, del encargo al riesgo residual.
+- `docs/security-engineering/arquitectura.html` — diagrama del paquete, la superficie revisada y la puerta.
 
 Los diagramas son artefactos de [archify](https://github.com/tt-a1i/archify) 3.2.0. Cada uno tiene su especificación (`*.json`) y su recibo de entrega (`*.delivery.json`) con el `sha256` del HTML y del spec. Para regenerarlos hace falta archify 3.2.0 y el checkout local en `archify/`, ignorado por Git, con los ajustes de ancho descritos en `archify/LOCAL-PATCH.md`; el comando es el mismo en todas las carpetas de `docs/<skill>/`:
 

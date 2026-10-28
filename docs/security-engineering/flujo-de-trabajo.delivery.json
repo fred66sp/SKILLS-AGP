@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "89c4c5e0-a6d4-410c-a411-7151dfc96a07",
+  "status": "current",
+  "command": "deliver",
+  "type": "workflow",
+  "input": "/home/desarrollo/PROJECTS/SKILLS-AGP/docs/security-engineering/flujo-de-trabajo.json",
+  "output": "/home/desarrollo/PROJECTS/SKILLS-AGP/docs/security-engineering/flujo-de-trabajo.html",
+  "specification": {
+    "sha256": "9dcf8b2015cdde907d95bb6e208692edca4a35006c514372012764fff120f344",
+    "bytes": 8015
+  },
+  "artifact": {
+    "sha256": "8bacc7a1c618b859703131dfa9f8dd4c22af02798a311e591a2afe668f37d0fe",
+    "bytes": 841968
+  }
+}

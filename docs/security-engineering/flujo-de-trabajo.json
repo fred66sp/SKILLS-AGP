@@ -1,0 +1,338 @@
+{
+  "schema_version": 2,
+  "diagram_type": "workflow",
+  "meta": {
+    "title": "Flujo de trabajo de Security Engineering",
+    "subtitle": "Del encargo al riesgo residual: cómo se acota el análisis, dónde se detiene, qué se revisa y qué evidencia se exige antes de cerrar.",
+    "locale": "es",
+    "output": "docs/security-engineering/flujo-de-trabajo.html",
+    "visual_preset": "signal-flow",
+    "quality_profile": "showcase"
+  },
+  "lanes": [
+    {
+      "id": "encargo",
+      "label": "Persona y encargo"
+    },
+    {
+      "id": "analisis",
+      "label": "La skill: acotar y revisar"
+    },
+    {
+      "id": "correccion",
+      "label": "Corrección y verificación"
+    },
+    {
+      "id": "control",
+      "label": "Puertas y paradas",
+      "variant": "exception"
+    },
+    {
+      "id": "cierre",
+      "label": "Cierre declarado"
+    }
+  ],
+  "phases": [
+    {
+      "id": "delimitar",
+      "label": "Delimitar y modelar",
+      "fromCol": 0,
+      "toCol": 1
+    },
+    {
+      "id": "revisar",
+      "label": "Revisar superficie",
+      "fromCol": 2,
+      "toCol": 3,
+      "variant": "emphasis"
+    },
+    {
+      "id": "corregir",
+      "label": "Terceros y corrección",
+      "fromCol": 4,
+      "toCol": 4
+    },
+    {
+      "id": "cerrar",
+      "label": "Verificar y declarar",
+      "fromCol": 5,
+      "toCol": 5,
+      "variant": "security"
+    }
+  ],
+  "groups": [
+    {
+      "id": "sin-traza",
+      "label": "Sin traza no hay hallazgo",
+      "lane": "control",
+      "fromCol": 2,
+      "toCol": 3,
+      "variant": "emphasis"
+    },
+    {
+      "id": "evidencia",
+      "label": "Evidencia mostrada",
+      "lane": "control",
+      "fromCol": 4,
+      "toCol": 5,
+      "variant": "security"
+    }
+  ],
+  "mainPath": [
+    "encargo",
+    "alcance",
+    "amenaza",
+    "revisar",
+    "terceros",
+    "corregir",
+    "verificar",
+    "resultado"
+  ],
+  "nodes": [
+    {
+      "id": "encargo",
+      "lane": "encargo",
+      "col": 0,
+      "type": "external",
+      "label": "Encargo de seguridad",
+      "sublabel": "diseñar · revisar · auditar",
+      "tag": "nada se recomienda aún",
+      "icon": "start"
+    },
+    {
+      "id": "alcance",
+      "lane": "analisis",
+      "col": 0,
+      "type": "backend",
+      "label": "Delimitar",
+      "sublabel": "activos y adversarios",
+      "tag": "una operación"
+    },
+    {
+      "id": "amenaza",
+      "lane": "analisis",
+      "col": 1,
+      "type": "backend",
+      "label": "Modelar amenaza",
+      "sublabel": "límites y casos de abuso",
+      "tag": "supuestos escritos"
+    },
+    {
+      "id": "revisar",
+      "lane": "analisis",
+      "col": 2,
+      "type": "backend",
+      "label": "Revisar superficie",
+      "sublabel": "código · agentes · configuración",
+      "tag": "fuente → sumidero"
+    },
+    {
+      "id": "terceros",
+      "lane": "analisis",
+      "col": 3,
+      "type": "database",
+      "label": "Auditar terceros",
+      "sublabel": "procedencia y contraste",
+      "tag": "fijar la revisión"
+    },
+    {
+      "id": "corregir",
+      "lane": "correccion",
+      "col": 4,
+      "type": "backend",
+      "label": "Corregir",
+      "sublabel": "una causa por cambio",
+      "tag": "prueba primero"
+    },
+    {
+      "id": "verificar",
+      "lane": "correccion",
+      "col": 5,
+      "type": "backend",
+      "label": "Verificar",
+      "sublabel": "escáner y pruebas",
+      "tag": "comando mostrado"
+    },
+    {
+      "id": "resultado",
+      "lane": "cierre",
+      "col": 5,
+      "type": "frontend",
+      "label": "Resultado",
+      "sublabel": "riesgo residual",
+      "icon": "success"
+    },
+    {
+      "id": "sin-alcance",
+      "lane": "control",
+      "col": 0,
+      "type": "security",
+      "label": "Sin alcance",
+      "sublabel": "no se audita por inercia",
+      "tag": "se acota y se pregunta",
+      "icon": "stop"
+    },
+    {
+      "id": "sin-traza",
+      "lane": "control",
+      "col": 2,
+      "type": "security",
+      "label": "Sin traza",
+      "sublabel": "no es vulnerabilidad",
+      "tag": "es endurecimiento",
+      "icon": "stop"
+    },
+    {
+      "id": "no-instalar",
+      "lane": "control",
+      "col": 3,
+      "type": "security",
+      "label": "No instalar",
+      "sublabel": "código no inspeccionable",
+      "tag": "motivo declarado",
+      "icon": "stop"
+    },
+    {
+      "id": "rompe",
+      "lane": "control",
+      "col": 4,
+      "type": "security",
+      "label": "Rompe el producto",
+      "sublabel": "compromiso y coste",
+      "tag": "no se impone",
+      "icon": "stop"
+    },
+    {
+      "id": "sin-evidencia",
+      "lane": "control",
+      "col": 5,
+      "type": "security",
+      "label": "Sin evidencia",
+      "sublabel": "no se declara cerrado",
+      "tag": "límite visible",
+      "icon": "stop"
+    }
+  ],
+  "edges": [
+    {
+      "id": "pide",
+      "from": "encargo",
+      "to": "alcance",
+      "label": "pide",
+      "variant": "emphasis",
+      "role": "main"
+    },
+    {
+      "id": "modela",
+      "from": "alcance",
+      "to": "amenaza",
+      "label": "modela",
+      "role": "main"
+    },
+    {
+      "id": "revisa",
+      "from": "amenaza",
+      "to": "revisar",
+      "label": "revisa",
+      "role": "main"
+    },
+    {
+      "id": "audita",
+      "from": "revisar",
+      "to": "terceros",
+      "label": "audita",
+      "role": "main"
+    },
+    {
+      "id": "corrige",
+      "from": "terceros",
+      "to": "corregir",
+      "label": "corrige",
+      "role": "main"
+    },
+    {
+      "id": "prueba",
+      "from": "corregir",
+      "to": "verificar",
+      "label": "prueba",
+      "role": "main"
+    },
+    {
+      "id": "cierra",
+      "from": "verificar",
+      "to": "resultado",
+      "label": "cierra con evidencia",
+      "variant": "emphasis",
+      "role": "main"
+    },
+    {
+      "id": "sin-alcance-edge",
+      "from": "alcance",
+      "to": "sin-alcance",
+      "label": "falta el alcance",
+      "variant": "security",
+      "role": "return"
+    },
+    {
+      "id": "sin-traza-edge",
+      "from": "revisar",
+      "to": "sin-traza",
+      "label": "no hay ruta",
+      "variant": "security",
+      "role": "return"
+    },
+    {
+      "id": "no-instalar-edge",
+      "from": "terceros",
+      "to": "no-instalar",
+      "label": "no se puede leer",
+      "variant": "security",
+      "role": "return"
+    },
+    {
+      "id": "rompe-edge",
+      "from": "corregir",
+      "to": "rompe",
+      "label": "rompe comportamiento",
+      "variant": "security",
+      "role": "return"
+    },
+    {
+      "id": "sin-evidencia-edge",
+      "from": "verificar",
+      "to": "sin-evidencia",
+      "label": "no se ejecutó",
+      "variant": "security",
+      "role": "return"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "Qué se decide antes de tocar código",
+      "items": [
+        "Qué activo se protege y qué daño causa perderlo: datos, credenciales, dinero, integridad o disponibilidad",
+        "Quién ataca y con qué acceso empieza: anónimo, usuario, insider, dependencia o contenido externo",
+        "Qué límite de confianza se cruza y qué control existe en el receptor, no en el emisor"
+      ]
+    },
+    {
+      "dot": "rose",
+      "title": "Dónde se detiene",
+      "items": [
+        "Sin alcance no se audita el repositorio entero por inercia; se acota y se confirma",
+        "Sin traza de entrada a efecto no hay vulnerabilidad: se declara endurecimiento",
+        "Un código que no se puede leer no se instala; un arreglo que rompe el producto se presenta antes de aplicarse"
+      ]
+    },
+    {
+      "dot": "emerald",
+      "title": "Qué se prueba al cerrar",
+      "items": [
+        "El escáner sobre el alcance, con cada señal revisada en contexto; un resultado limpio no certifica nada",
+        "Las pruebas del proyecto y la regresión del hallazgo corregido, con comando y resultado visibles",
+        "El informe con riesgo residual, supuestos, caducidad y lo que quedó sin verificar"
+      ]
+    }
+  ]
+}
