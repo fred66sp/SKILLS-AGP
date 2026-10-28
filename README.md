@@ -25,8 +25,9 @@ Este repositorio se inspira y se basa en dos fuentes externas:
 | `CHANGELOG.md` | Historial de cambios |
 | `BACKLOG.md` | Trabajo pendiente priorizado: qué viene después, con su evidencia y su criterio de aceptación |
 | `.gitattributes` | Fin de línea del repositorio: todo texto en LF, sin depender de la máquina que clona |
+| `opencode.json` | Configuración compartida de OpenCode: los agentes y el modelo de cada uno |
 
-Queda fuera de git por ser estado local de cada máquina: `.atl/`, `.codegraph/`, `.pi/`, además de los secretos que cubre el `.gitignore`. Sí se versiona `.skills/`, porque contiene las skills de terceros que necesita el entorno de trabajo y los enrutadores de las skills propias de `src/`.
+Queda fuera de git por ser estado local de cada máquina: `.atl/`, `.codegraph/`, `.engram/`, `.pi/`, además de los secretos que cubre el `.gitignore`. Sí se versiona `.skills/`, porque contiene las skills de terceros que necesita el entorno de trabajo y los enrutadores de las skills propias de `src/`.
 
 ## Skills disponibles
 

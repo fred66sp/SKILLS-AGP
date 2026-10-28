@@ -1,0 +1,14 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "agent": {
+    "Planner": {
+      "model": "nan/glm5.3-flash"
+    },
+    "Worker": {
+      "model": "nan/deepseek-v4-flash"
+    },
+    "Reviewer": {
+      "model": "nan/glm5.3"
+    }
+  }
+}

@@ -107,4 +107,5 @@ Crear un remoto, publicar o hacer `push` es una operación aparte, con su propio
 - `CHANGELOG.md`: historial del repositorio, con las categorías de Keep a Changelog y sin secciones de versión; qué cambió entre dos versiones de una skill lo responde el historial de Git.
 - `BACKLOG.md`: trabajo pendiente priorizado; es la única lista de planificación del repositorio.
 - `.gitattributes`: fin de línea del repositorio. Todo texto viaja en LF (`* text=auto eol=lf`); lo que se compara byte a byte se declara con `-text`.
+- `opencode.json`: configuración compartida de OpenCode, con los agentes y el modelo de cada uno; el estado local de OpenCode vive en `.opencode/` y no se versiona.
 - `docs/`: guías y diagramas generados, con sus especificaciones y recibos.
