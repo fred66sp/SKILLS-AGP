@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "4fea9e19-986e-4577-9f52-8a91752bdd76",
+  "status": "current",
+  "command": "deliver",
+  "type": "architecture",
+  "input": "/home/desarrollo/PROJECTS/SKILLS-AGP/docs/python-testing-and-verification/arquitectura.json",
+  "output": "/home/desarrollo/PROJECTS/SKILLS-AGP/docs/python-testing-and-verification/arquitectura.html",
+  "specification": {
+    "sha256": "797a5760437981aafc7b4158acfba9f795740d1c8ce84352c096161399ecb837",
+    "bytes": 6436
+  },
+  "artifact": {
+    "sha256": "9de3414b501ffd6e99914ac0b633694eb363ab4198e843a0f9d09b8a41a6ba6b",
+    "bytes": 836496
+  }
+}

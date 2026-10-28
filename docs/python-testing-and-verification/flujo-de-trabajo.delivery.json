@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "3eaf92e5-d85a-49ba-a5c9-a8be46f5c2d4",
+  "status": "current",
+  "command": "deliver",
+  "type": "workflow",
+  "input": "/home/desarrollo/PROJECTS/SKILLS-AGP/docs/python-testing-and-verification/flujo-de-trabajo.json",
+  "output": "/home/desarrollo/PROJECTS/SKILLS-AGP/docs/python-testing-and-verification/flujo-de-trabajo.html",
+  "specification": {
+    "sha256": "4b7774048c182640f09993fb891ea755c4de26ff29252b24a9d82ebce1ef3902",
+    "bytes": 7155
+  },
+  "artifact": {
+    "sha256": "a3a631c4332642b4d592108239211698010f3195809e19c35c09282dd50bc4c6",
+    "bytes": 834219
+  }
+}

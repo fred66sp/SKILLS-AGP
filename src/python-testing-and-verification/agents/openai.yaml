@@ -1,0 +1,13 @@
+interface:
+  display_name: Pruebas y verificación Python
+  short_description: Pruebas por capas y puerta de verificación
+  default_prompt: Usa $python-testing-and-verification para cubrir el comportamiento
+    de un proyecto Python y cerrar el cambio con la puerta de verificación y su
+    evidencia.
+policy:
+  products:
+  - chatgpt
+  - codex
+  - api
+  - atlas
+  allow_implicit_invocation: true

@@ -1,0 +1,298 @@
+{
+  "schema_version": 2,
+  "diagram_type": "workflow",
+  "meta": {
+    "title": "Flujo de trabajo de la skill python-testing-and-verification",
+    "subtitle": "Del comportamiento observable a la evidencia ejecutada: elegir la capa, aislar la frontera, probar el proceso y pasar la puerta sin omitir lo no disponible.",
+    "locale": "es",
+    "output": "docs/python-testing-and-verification/flujo-de-trabajo.html",
+    "visual_preset": "signal-flow",
+    "quality_profile": "showcase"
+  },
+  "lanes": [
+    {
+      "id": "cambio",
+      "label": "Cambio y riesgo"
+    },
+    {
+      "id": "skill",
+      "label": "La skill: elegir y escribir"
+    },
+    {
+      "id": "evidencia",
+      "label": "Evidencia ejecutada"
+    },
+    {
+      "id": "control",
+      "label": "Parada y cierre",
+      "variant": "exception"
+    }
+  ],
+  "phases": [
+    {
+      "id": "mapear",
+      "label": "Mapear",
+      "fromCol": 0,
+      "toCol": 1
+    },
+    {
+      "id": "escribir",
+      "label": "Escribir",
+      "fromCol": 2,
+      "toCol": 3,
+      "variant": "emphasis"
+    },
+    {
+      "id": "ejecutar",
+      "label": "Ejecutar",
+      "fromCol": 4,
+      "toCol": 4
+    },
+    {
+      "id": "cerrar",
+      "label": "Cierre probado",
+      "fromCol": 5,
+      "toCol": 5,
+      "variant": "security"
+    }
+  ],
+  "groups": [
+    {
+      "id": "capas",
+      "label": "Elección de capa",
+      "lane": "skill",
+      "fromCol": 0,
+      "toCol": 1,
+      "variant": "emphasis"
+    },
+    {
+      "id": "puerta",
+      "label": "Puerta de verificación",
+      "lane": "evidencia",
+      "fromCol": 4,
+      "toCol": 5,
+      "variant": "security"
+    }
+  ],
+  "mainPath": [
+    "cambio",
+    "mapear",
+    "escribe",
+    "determinismo",
+    "frontera",
+    "puerta",
+    "informe",
+    "resultado"
+  ],
+  "nodes": [
+    {
+      "id": "cambio",
+      "lane": "cambio",
+      "col": 0,
+      "type": "external",
+      "label": "Cambio",
+      "sublabel": "comportamiento observable",
+      "tag": "no detalles internos",
+      "icon": "start"
+    },
+    {
+      "id": "riesgo",
+      "lane": "cambio",
+      "col": 1,
+      "type": "external",
+      "label": "Riesgos",
+      "sublabel": "datos · secretos · entorno",
+      "tag": "deciden la capa"
+    },
+    {
+      "id": "mapear",
+      "lane": "skill",
+      "col": 0,
+      "type": "backend",
+      "label": "Mapa de capas",
+      "sublabel": "unidad · módulo · proceso",
+      "tag": "la más pequeña"
+    },
+    {
+      "id": "escribe",
+      "lane": "skill",
+      "col": 1,
+      "type": "backend",
+      "label": "Pruebas",
+      "sublabel": "unittest · pytest",
+      "tag": "got antes que want"
+    },
+    {
+      "id": "determinismo",
+      "lane": "skill",
+      "col": 2,
+      "type": "security",
+      "label": "Determinismo",
+      "sublabel": "tmp_path · monkeypatch",
+      "tag": "sin red · sin sleep"
+    },
+    {
+      "id": "frontera",
+      "lane": "evidencia",
+      "col": 3,
+      "type": "security",
+      "label": "Frontera",
+      "sublabel": "dato validado en runtime",
+      "tag": "prueba el rechazo"
+    },
+    {
+      "id": "puerta",
+      "lane": "evidencia",
+      "col": 4,
+      "type": "security",
+      "label": "Puerta",
+      "sublabel": "compile · ruff · tipos · tests",
+      "tag": "se ejecuta, no se cita"
+    },
+    {
+      "id": "informe",
+      "lane": "evidencia",
+      "col": 5,
+      "type": "frontend",
+      "label": "Informe",
+      "sublabel": "comando y salida real",
+      "tag": "lo no verificado se declara"
+    },
+    {
+      "id": "parada",
+      "lane": "control",
+      "col": 2,
+      "type": "security",
+      "label": "Parada",
+      "sublabel": "test inestable o frontera",
+      "tag": "no se reintenta",
+      "icon": "stop"
+    },
+    {
+      "id": "resultado",
+      "lane": "control",
+      "col": 5,
+      "type": "frontend",
+      "label": "Resultado",
+      "sublabel": "completo o bloqueado",
+      "icon": "success"
+    }
+  ],
+  "edges": [
+    {
+      "id": "mapea",
+      "from": "cambio",
+      "to": "mapear",
+      "label": "mapea",
+      "variant": "emphasis",
+      "role": "main"
+    },
+    {
+      "id": "marca-riesgo",
+      "from": "cambio",
+      "to": "riesgo",
+      "label": "marca",
+      "variant": "dashed",
+      "role": "branch"
+    },
+    {
+      "id": "escribe-prueba",
+      "from": "mapear",
+      "to": "escribe",
+      "label": "escribe",
+      "role": "main"
+    },
+    {
+      "id": "fija",
+      "from": "escribe",
+      "to": "determinismo",
+      "label": "fija",
+      "variant": "emphasis",
+      "role": "main"
+    },
+    {
+      "id": "aisla",
+      "from": "determinismo",
+      "to": "frontera",
+      "label": "aísla",
+      "role": "main"
+    },
+    {
+      "id": "ejecuta",
+      "from": "frontera",
+      "to": "puerta",
+      "label": "ejecuta",
+      "role": "main"
+    },
+    {
+      "id": "documenta",
+      "from": "puerta",
+      "to": "informe",
+      "label": "resultado",
+      "role": "main"
+    },
+    {
+      "id": "cierra",
+      "from": "informe",
+      "to": "resultado",
+      "label": "evidencia",
+      "variant": "emphasis",
+      "role": "main"
+    },
+    {
+      "id": "inestable",
+      "from": "determinismo",
+      "to": "parada",
+      "label": "no determinista",
+      "variant": "security",
+      "role": "return"
+    },
+    {
+      "id": "regresion",
+      "from": "puerta",
+      "to": "parada",
+      "label": "falla",
+      "variant": "security",
+      "role": "return",
+      "fromSide": "left",
+      "toSide": "right"
+    },
+    {
+      "id": "corrige",
+      "from": "parada",
+      "to": "determinismo",
+      "label": "corrige la causa",
+      "variant": "dashed",
+      "role": "return"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "La capa la decide el comportamiento",
+      "items": [
+        "Unittest o pytest para lógica pura; parametriza cuando todos los casos comparten el mismo camino y separa funciones cuando el montaje cambia",
+        "Proceso para el contrato de la CLI: subprocess.run con sys.executable, stdout, stderr y código de salida por separado, sin asumir TTY",
+        "Integración solo cuando el contrato cruza una frontera real, como una base de datos o un servicio local marcado y ejecutado aparte"
+      ]
+    },
+    {
+      "dot": "rose",
+      "title": "Dónde se detiene",
+      "items": [
+        "Un test inestable no se reintenta hasta que pase: se elimina el no determinismo o se declara defecto",
+        "Un fallo del código no se convierte en una expectativa más laxa; se corrige el código",
+        "Una comprobación no disponible, como ruff, mypy o pytest, se declara; no se sustituye por otra y se presenta como equivalente"
+      ]
+    },
+    {
+      "dot": "emerald",
+      "title": "Cómo se cierra",
+      "items": [
+        "La puerta compila cada .py sin ejecutarlo y añade formato, lint, tipos y pruebas solo cuando se piden",
+        "El informe copia la salida real de cada comando; la cobertura es una señal, nunca un objetivo",
+        "El resultado enumera comportamientos cubiertos, capas, comandos y lo no verificado con su motivo"
+      ]
+    }
+  ]
+}

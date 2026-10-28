@@ -142,6 +142,36 @@ Cada skill posee una materia y la otra la referencia: el lenguaje, los módulos,
 
 Por archivo, no por proyecto: `.ts` y `.tsx` son de las skills de TypeScript, incluida la validación en la frontera y el typecheck; `.js`, `.mjs` y `.cjs` sin tipos son de las skills de JavaScript. Un proyecto TypeScript con ficheros de configuración en `.js` conserva el typecheck como puerta y aplica a esos ficheros el contrato de JavaScript. Las reglas de lenguaje no se duplican: manda la skill del archivo que se está editando.
 
+### `python-idiomatic-style`
+
+Escribe y revisa Python tipado e idiomático para librerías, servicios y CLIs: declara el intérprete y el empaquetado en un único `pyproject.toml`, modela valores con `dataclass(frozen=True, slots=True)`, `Enum`, `TypedDict` y `Protocol`, anota la API pública y justifica cada `Any`, propaga excepciones con causa y contexto, cierra todo recurso con `with`, evita el estado mutable compartido y ordena dependencias, layout y build. Incluye el contrato de una CLI con `argparse` o Typer: salida separada, códigos acotados, `--dry-run`, confirmación explícita y modo no interactivo.
+
+Contrato completo: [`src/python-idiomatic-style/SKILL.md`](src/python-idiomatic-style/SKILL.md).
+
+### `python-testing-and-verification`
+
+Demuestra el comportamiento de código Python con la capa más pequeña: `unittest` o pytest para lógica, fixtures y parametrización, `tmp_path`, `monkeypatch` y dobles de red, validación en runtime de cada frontera, pruebas de proceso para una CLI con `stdout`, `stderr` y código de salida separados, y propiedad solo si el proyecto ya usa Hypothesis. Incluye la puerta `scripts/verify-python.py`, que comprueba la sintaxis con `compile()` sin ejecutar código y, cuando se piden, ejecuta `ruff format --check`, `ruff check`, mypy o pyright y las pruebas del proyecto; informa de la versión de Python frente a `requires-python` y devuelve texto o JSON.
+
+Contrato completo: [`src/python-testing-and-verification/SKILL.md`](src/python-testing-and-verification/SKILL.md).
+
+Las skills de Python se apoyan en referencias públicas: la colección [`wdm0006/python-skills`](https://github.com/wdm0006/python-skills), publicada con licencia MIT y basada en la guía de mcginniscommawill.com; la skill [Python Best Practices](https://mcpmarket.com/es/tools/skills/python-best-practices-2) de cuioss, que fija PEP 8 y los estándares modernos del lenguaje; y la lista [The 10 Best Python AI Skills for Developers](https://aiskill.market/blog/best-python-ai-skills-developers) de AI Skill Market, usada como mapa de temas. No copian su texto: seleccionan y reorganizan las decisiones que sostienen código tipado, un proyecto empaquetado, una CLI automatizable y una verificación ejecutada, y añaden el contrato de agente, la separación de responsabilidades y la puerta determinista.
+
+| Necesidad | Skill |
+|---|---|
+| Lenguaje, tipos, proyecto, empaquetado y CLI | `python-idiomatic-style` |
+| Capas de prueba, fronteras, proceso y puerta | `python-testing-and-verification` |
+
+Quedan fuera como skills separadas el rendimiento, la publicación en PyPI, los frameworks web y los servidores MCP: no cambian el contrato del lenguaje ni la verificación, y sus reglas esenciales viven en las dos anteriores o se posponen hasta que exista una necesidad medida.
+
+### Precedencia entre las skills de Python
+
+Cada skill posee una materia y la otra la referencia: el lenguaje, los tipos, la estructura del proyecto, las dependencias, el empaquetado y la forma de la CLI son de `python-idiomatic-style`; la validación en runtime, la elección de capa, los dobles, las pruebas y la puerta son de `python-testing-and-verification`. La convención del proyecto gana sobre la preferencia de estilo cuando no contradice el lenguaje ni el contrato de la CLI.
+
+- **Proyecto con mesa de pruebas propia:** no se añade otra; pytest, unittest o tox se usan tal como estén, y la puerta ejecuta lo que el proyecto declara.
+- **Proyecto sin comprobador de tipos:** la puerta informa de que no está disponible; activar `strict` es una migración aparte con su coste medido.
+- **Dato que entra por HTTP, fichero, entorno o cola:** se valida en runtime y se prueba en `python-testing-and-verification`; una anotación no rechaza nada.
+- **CLI sin framework:** `argparse` es suficiente; Typer o Click se aceptan si el proyecto ya los tiene o si la CLI justifica la dependencia.
+
 ### Precedencia entre las skills de Go
 
 Cada skill posee una materia y las demás la referencian: el contrato de la CLI es de `go-cli-ai-first`; el estilo, la estructura de paquetes y las dependencias son de `go-idiomatic-style`; los errores, `context`, la concurrencia y el cierre son de `go-errors-and-lifecycle`; las pruebas y la puerta son de `go-testing-and-verification`. La convención del proyecto donde se trabaja gana sobre la preferencia de estilo cuando no contradice el contrato de la CLI.
@@ -201,6 +231,8 @@ Documentación: [`docs/skill-creator/index.html`](docs/skill-creator/index.html)
 | [`.skills/go-testing-and-verification/SKILL.md`](.skills/go-testing-and-verification/SKILL.md) | [`src/go-testing-and-verification/SKILL.md`](src/go-testing-and-verification/SKILL.md) |
 | [`.skills/typescript-idiomatic-style/SKILL.md`](.skills/typescript-idiomatic-style/SKILL.md) | [`src/typescript-idiomatic-style/SKILL.md`](src/typescript-idiomatic-style/SKILL.md) |
 | [`.skills/typescript-testing-and-verification/SKILL.md`](.skills/typescript-testing-and-verification/SKILL.md) | [`src/typescript-testing-and-verification/SKILL.md`](src/typescript-testing-and-verification/SKILL.md) |
+| [`.skills/python-idiomatic-style/SKILL.md`](.skills/python-idiomatic-style/SKILL.md) | [`src/python-idiomatic-style/SKILL.md`](src/python-idiomatic-style/SKILL.md) |
+| [`.skills/python-testing-and-verification/SKILL.md`](.skills/python-testing-and-verification/SKILL.md) | [`src/python-testing-and-verification/SKILL.md`](src/python-testing-and-verification/SKILL.md) |
 | [`.skills/web-interface-visual-design/SKILL.md`](.skills/web-interface-visual-design/SKILL.md) | [`src/web-interface-visual-design/SKILL.md`](src/web-interface-visual-design/SKILL.md) |
 | [`.skills/security-engineering/SKILL.md`](.skills/security-engineering/SKILL.md) | [`src/security-engineering/SKILL.md`](src/security-engineering/SKILL.md) |
 
@@ -236,6 +268,7 @@ python src/adr-software/scripts/test-adr.py
 python src/go-testing-and-verification/scripts/test-verify-go.py
 python src/typescript-testing-and-verification/scripts/test-verify-ts.py
 python src/javascript-testing-and-verification/scripts/test-verify-js.py
+python src/python-testing-and-verification/scripts/test-verify-python.py
 python src/security-engineering/scripts/test-security_scan.py
 ```
 
@@ -287,6 +320,12 @@ Cada skill declara su versión independiente en `metadata.version`; el procedimi
 - `docs/typescript-testing-and-verification/index.html` — página principal de la skill `typescript-testing-and-verification`.
 - `docs/typescript-testing-and-verification/flujo-de-trabajo.html` — diagrama del flujo, del mapa de riesgos al cierre con evidencia.
 - `docs/typescript-testing-and-verification/arquitectura.html` — diagrama del paquete, las fronteras validadas y la puerta.
+- `docs/python-idiomatic-style/index.html` — página principal de la skill `python-idiomatic-style`.
+- `docs/python-idiomatic-style/flujo-de-trabajo.html` — diagrama del flujo, del encargo al diff revisado.
+- `docs/python-idiomatic-style/arquitectura.html` — diagrama del paquete, las referencias y el proyecto.
+- `docs/python-testing-and-verification/index.html` — página principal de la skill `python-testing-and-verification`.
+- `docs/python-testing-and-verification/flujo-de-trabajo.html` — diagrama del flujo, del riesgo al informe ejecutado.
+- `docs/python-testing-and-verification/arquitectura.html` — diagrama del paquete, las capas de prueba y la puerta.
 - `docs/web-interface-visual-design/index.html` — página de entrada a la skill de diseño visual web.
 - `docs/web-interface-visual-design/flujo-de-trabajo.html` — diagrama de la inspección, implementación y verificación visual.
 - `docs/web-interface-visual-design/arquitectura.html` — diagrama del contrato, sus referencias y la evidencia renderizada.

@@ -1,0 +1,320 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "Arquitectura de la skill python-idiomatic-style",
+    "subtitle": "El paquete, las cuatro referencias y el proyecto: qué regla responde a cada decisión, qué comprueba el cambio y qué queda empaquetado.",
+    "locale": "es",
+    "output": "docs/python-idiomatic-style/arquitectura.html",
+    "quality_profile": "showcase"
+  },
+  "components": [
+    {
+      "id": "persona",
+      "type": "external",
+      "label": "Persona o agente",
+      "sublabel": "encarga el cambio",
+      "icon": "person",
+      "pos": [
+        40,
+        80
+      ],
+      "size": [
+        140,
+        64
+      ]
+    },
+    {
+      "id": "skill",
+      "type": "frontend",
+      "label": "SKILL.md",
+      "sublabel": "invariantes y pasos",
+      "pos": [
+        260,
+        80
+      ],
+      "size": [
+        150,
+        64
+      ]
+    },
+    {
+      "id": "lenguaje",
+      "type": "database",
+      "label": "language-rules.md",
+      "sublabel": "sintaxis · datos · errores",
+      "tag": "se abre en los pasos 2 y 3",
+      "pos": [
+        500,
+        80
+      ],
+      "size": [
+        150,
+        64
+      ]
+    },
+    {
+      "id": "tipos",
+      "type": "database",
+      "label": "type-rules.md",
+      "sublabel": "anotaciones · Protocol",
+      "tag": "se abre en el paso 3",
+      "pos": [
+        740,
+        80
+      ],
+      "size": [
+        150,
+        64
+      ]
+    },
+    {
+      "id": "proyecto",
+      "type": "database",
+      "label": "project-rules.md",
+      "sublabel": "pyproject · layout · build",
+      "tag": "se abre en el paso 4",
+      "pos": [
+        980,
+        80
+      ],
+      "size": [
+        150,
+        64
+      ]
+    },
+    {
+      "id": "cli",
+      "type": "database",
+      "label": "cli-rules.md",
+      "sublabel": "argparse · salida · códigos",
+      "tag": "se abre en el paso 5",
+      "pos": [
+        1220,
+        80
+      ],
+      "size": [
+        150,
+        64
+      ]
+    },
+    {
+      "id": "pyproject",
+      "type": "backend",
+      "label": "pyproject.toml",
+      "sublabel": "metadatos y herramientas",
+      "pos": [
+        260,
+        300
+      ],
+      "size": [
+        150,
+        64
+      ]
+    },
+    {
+      "id": "paquete",
+      "type": "backend",
+      "label": "paquete",
+      "sublabel": "src/ · py.typed",
+      "pos": [
+        500,
+        300
+      ],
+      "size": [
+        150,
+        64
+      ]
+    },
+    {
+      "id": "entrada",
+      "type": "backend",
+      "label": "CLI",
+      "sublabel": "project.scripts",
+      "pos": [
+        740,
+        300
+      ],
+      "size": [
+        150,
+        64
+      ]
+    },
+    {
+      "id": "comprobador",
+      "type": "security",
+      "label": "mypy · pyright",
+      "sublabel": "tipos del cambio",
+      "tag": "se ejecuta al cerrar",
+      "pos": [
+        980,
+        300
+      ],
+      "size": [
+        150,
+        64
+      ]
+    },
+    {
+      "id": "ruff",
+      "type": "security",
+      "label": "ruff",
+      "sublabel": "format · check",
+      "tag": "formato y lint",
+      "pos": [
+        1220,
+        300
+      ],
+      "size": [
+        150,
+        64
+      ]
+    },
+    {
+      "id": "resultado",
+      "type": "frontend",
+      "label": "Diff revisado",
+      "sublabel": "tipos · proyecto · deuda",
+      "pos": [
+        980,
+        520
+      ],
+      "size": [
+        150,
+        64
+      ]
+    }
+  ],
+  "boundaries": [
+    {
+      "kind": "region",
+      "label": "Paquete instalado",
+      "wraps": [
+        "skill",
+        "lenguaje",
+        "tipos",
+        "proyecto",
+        "cli"
+      ]
+    },
+    {
+      "kind": "security-group",
+      "label": "Proyecto y comprobación",
+      "wraps": [
+        "pyproject",
+        "paquete",
+        "entrada",
+        "comprobador",
+        "ruff",
+        "resultado"
+      ]
+    }
+  ],
+  "connections": [
+    {
+      "id": "encarga",
+      "from": "persona",
+      "to": "skill",
+      "label": "encarga",
+      "variant": "emphasis"
+    },
+    {
+      "id": "consulta-lenguaje",
+      "from": "skill",
+      "to": "lenguaje",
+      "label": "consulta",
+      "variant": "dashed"
+    },
+    {
+      "id": "consulta-tipos",
+      "from": "skill",
+      "to": "tipos",
+      "label": "consulta",
+      "variant": "dashed"
+    },
+    {
+      "id": "consulta-proyecto",
+      "from": "skill",
+      "to": "proyecto",
+      "label": "consulta",
+      "variant": "dashed"
+    },
+    {
+      "id": "consulta-cli",
+      "from": "skill",
+      "to": "cli",
+      "label": "consulta",
+      "variant": "dashed"
+    },
+    {
+      "id": "escribe-pyproject",
+      "from": "skill",
+      "to": "pyproject",
+      "label": "ordena",
+      "variant": "emphasis"
+    },
+    {
+      "id": "modela",
+      "from": "pyproject",
+      "to": "paquete",
+      "label": "empaqueta",
+      "variant": "emphasis"
+    },
+    {
+      "id": "expone",
+      "from": "paquete",
+      "to": "entrada",
+      "label": "expone",
+      "variant": "emphasis"
+    },
+    {
+      "id": "comprueba",
+      "from": "comprobador",
+      "to": "resultado",
+      "label": "verifica",
+      "variant": "emphasis"
+    },
+    {
+      "id": "formatea",
+      "from": "ruff",
+      "to": "resultado",
+      "label": "formato y lint"
+    },
+    {
+      "id": "declara",
+      "from": "entrada",
+      "to": "resultado",
+      "label": "declara",
+      "variant": "dashed"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "El paquete instalado",
+      "items": [
+        "SKILL.md fija los invariantes y el orden de trabajo; las referencias responden a la decisión concreta",
+        "language-rules.md y type-rules.md cubren sintaxis, datos, errores, anotaciones y estrechamiento",
+        "project-and-packaging.md y cli-rules.md cubren metadatos, layout, dependencias, build y el contrato de la CLI"
+      ]
+    },
+    {
+      "dot": "rose",
+      "title": "La convención gana",
+      "items": [
+        "Una regla escrita del proyecto prevalece cuando no contradice el lenguaje ni el contrato de la CLI",
+        "No se reformatea código ajeno ni se mezcla una refactorización con un cambio de comportamiento",
+        "No se añade una capa, un gestor ni una dependencia sin una razón y su alternativa descartada"
+      ]
+    },
+    {
+      "dot": "emerald",
+      "title": "Lo que la skill no hace",
+      "items": [
+        "No valida dato externo en runtime: lo remite a python-testing-and-verification",
+        "No escribe pruebas, no ejecuta la puerta y no publica el paquete",
+        "No impone un framework web, un ORM ni una biblioteca de terceros"
+      ]
+    }
+  ]
+}

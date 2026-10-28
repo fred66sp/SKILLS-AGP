@@ -1,0 +1,13 @@
+interface:
+  display_name: Estilo Python idiomático
+  short_description: Python tipado, idiomático y empaquetado
+  default_prompt: Usa $python-idiomatic-style para escribir o revisar Python con tipos
+    comprobables, errores explícitos, recursos cerrados y un proyecto empaquetado
+    en pyproject.toml.
+policy:
+  products:
+  - chatgpt
+  - codex
+  - api
+  - atlas
+  allow_implicit_invocation: true
