@@ -587,6 +587,17 @@
 }.to-top:focus-visible {outline: 2px solid var(--accent); outline-offset: 3px;
 }.to-top svg {width: 18px; height: 18px;
 }::selection {background: color-mix(in srgb, var(--guide) 26%, transparent);
+}/* Entrada por scroll, misma línea que el catálogo: cascada escalonada para
+   los bloques múltiples (tarjetas, reglas y prompts) y fade simple para el
+   resto. Sin JavaScript nada queda oculto y el estado final es el estático;
+   la regla global de prefers-reduced-motion lo apaga entero. */
+@keyframes fade {from {opacity: 0; } to {opacity: 1; }
+}@media screen and (prefers-reduced-motion: no-preference){
+  .cards.is-ready .card:not(.is-in), .rules.is-ready li:not(.is-in), .prompt.is-ready:not(.is-in), .section-head.is-ready:not(.is-in), .section > .sub.is-ready:not(.is-in), .note.is-ready:not(.is-in), .code.is-ready:not(.is-in), .section > .prose.is-ready:not(.is-in) {opacity: 0;
+  }.cards .card.is-in, .rules li.is-in, .prompt.is-in {animation: rise .55s cubic-bezier(.16, 1, .3, 1) backwards;
+    animation-delay: calc(var(--d, 0) * 70ms);
+  }.section-head.is-in, .section > .sub.is-in, .note.is-in, .code.is-in, .section > .prose.is-in {animation: fade .5s ease-out backwards;
+  }
 }@media (prefers-reduced-motion: reduce){* {scroll-behavior: auto !important; transition: none !important; animation: none !important;
 }
   }
@@ -1132,6 +1143,41 @@ description: Migrates Angular CLI projects from Webpack to Vite and esbuild. Use
   function update() { toTop.classList.toggle("is-visible", window.scrollY > 480); }
   window.addEventListener("scroll", update, { passive: true });
   update();
+})();
+</script>
+<script>
+(function () {
+  "use strict";
+  // Entrada por scroll, misma línea que el catálogo: cascada escalonada en
+  // los bloques múltiples (tarjetas, reglas, prompts) y fade simple en el
+  // resto; los que llegan juntos se renumeran en --d. Sin observer, todo
+  // queda visible.
+  var groups = document.querySelectorAll(".cards, .rules");
+  var singles = document.querySelectorAll(".section-head, .section > .sub, .note, .code, .section > .prose, .prompt");
+  if (!groups.length && !singles.length) { return; }
+  if (!("IntersectionObserver" in window)) { return; }
+  var observer = new IntersectionObserver(function (entries) {
+    entries.filter(function (e) { return e.isIntersecting; })
+      .sort(function (a, b) {
+        return parseFloat(a.target.style.getPropertyValue("--d")) - parseFloat(b.target.style.getPropertyValue("--d"));
+      })
+      .forEach(function (entry, i) {
+        entry.target.style.setProperty("--d", i);
+        entry.target.classList.add("is-in");
+        observer.unobserve(entry.target);
+      });
+  }, { threshold: 0, rootMargin: "0px 0px -8% 0px" });
+  groups.forEach(function (group) {
+    var blocks = group.querySelectorAll(".card, li");
+    blocks.forEach(function (block, i) { block.style.setProperty("--d", i); });
+    group.classList.add("is-ready");
+    blocks.forEach(function (block) { observer.observe(block); });
+  });
+  singles.forEach(function (block) {
+    block.style.setProperty("--d", 0);
+    block.classList.add("is-ready");
+    observer.observe(block);
+  });
 })();
 </script>
 <script src="../assets/microlighter/microlighter-docs.js"></script>
