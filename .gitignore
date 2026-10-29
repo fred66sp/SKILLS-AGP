@@ -129,6 +129,10 @@ mcp.json
 # nothing here may hide it; .cursor/ and .claude/ above only match directories.
 
 # --- Transient files and local databases ------------------------------------
+# playwright-cli deja snapshots, capturas y perfiles de sesión; no son entregables.
+.playwright-cli/
+test-results/
+playwright-report/
 *.log
 *.tmp
 *.temp
