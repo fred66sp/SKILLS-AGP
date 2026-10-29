@@ -8,6 +8,10 @@ Las categorías —Añadido, Corregido, Modificado— vienen de [Keep a Changelo
 
 ### Añadido
 
+- `DESIGN.md` en la raíz: sistema visual del catálogo y de las páginas de skill, extraído de la hoja compartida por las páginas escritas a mano. El frontmatter lleva los tokens normativos del tema claro —colores, roles tipográficos, radios, espaciado y componentes— y el cuerpo las secciones canónicas en castellano: el banco de pruebas como metáfora, un acento por familia, tipografías del sistema sin descargas, rejilla y puntos de ruptura, elevación por borde y sombra ambiental, formas, geometría de los componentes y reglas de uso. Lo que el formato no admite —rampas tonales OKLCH, sombras, movimiento y fragmentos autocontenidos— vive en `.impeccable/design.json`, que no se versiona.
+
+- `PRODUCT.md` en la raíz: contexto de producto del repositorio para el trabajo de diseño. Fija plataforma, usuarios —el autor, los agentes de código y otros desarrolladores—, propósito, posicionamiento, contexto de uso, capacidades y límites, compromisos de marca, evidencia disponible y las ausencias que no se deben rellenar: sin `LICENSE`, sin testimonios, sin métricas de uso y sin alcance de reutilización decidido.
+
 - Skill `document-redactor` y su enrutador: redacción y edición de prosa en castellano. Delimita la operación y el registro, congela cifras, citas y enlaces antes de editar, detecta los tics de la escritura de IA por racimo con identificadores `P01`…`P33`, reescribe conservando significado y cobertura, reconstruye el ritmo, inyecta voz solo donde el registro la admite y corrige la tipografía española. Cierra con una rúbrica de seis dimensiones y con `scripts/redactor.py check`, que separa defectos deterministas de señales que exigen criterio, acepta `--json` y `--strict` y devuelve 0/1/2; `scripts/test-redactor.py` cubre 22 casos. Incluye las referencias de patrones, tipografía y ritmo, voz y registro, y evaluación, más la plantilla de informe. Documentación en `docs/document-redactor/index.html`, con diagramas de flujo de trabajo y arquitectura, cada uno con su especificación y su recibo, enlazada desde el catálogo y el README. El catálogo de patrones parte de [Wikipedia: Signs of AI writing](https://en.wikipedia.org/wiki/Wikipedia:Signs_of_AI_writing) y de las adaptaciones al castellano de [`humanamente`](https://github.com/vicentealvarezasencio/humanamente) y [`blader/humanizer`](https://github.com/blader/humanizer), ambas con licencia MIT; el texto, los ejemplos y la puerta son propios.
 
 - `opencode.json` en la raíz: configuración compartida de OpenCode con los agentes y el modelo de cada uno, para que todas las máquinas trabajen con el mismo reparto. El estado local de OpenCode sigue fuera de git, y `.engram/` se ignora junto al resto de estado local de herramientas de IA.
@@ -79,6 +83,8 @@ Las categorías —Añadido, Corregido, Modificado— vienen de [Keep a Changelo
 - Recibos de `docs/`: `scripts/check-repo.py` verifica el `sha256` y los `bytes` del spec y del HTML y exige el spec en LF, sin depender de Archify ni de rutas absolutas guardadas en el recibo.
 
 ### Modificado
+
+- `README.md` y `CONTRIBUTING.md`: la tabla de estructura y la lista de ficheros de raíz describen `PRODUCT.md` y `DESIGN.md`, y `.impeccable/` aparece entre el estado local que queda fuera de git.
 
 - Skills `go-testing-and-verification`, `typescript-testing-and-verification` y `javascript-testing-and-verification`: el paso de la puerta advierte de que ejecuta código del proyecto (`go build`/`go test`, `npm run` y `node --check`) y de que solo debe usarse sobre un proyecto confiable o dentro de un contenedor o usuario sin privilegios.
 - `.github/workflows/validate.yml`: las acciones se fijan por SHA de commit con su versión en comentario. `.github/dependabot.yml` actualiza esas fijaciones semanalmente para `github-actions`.

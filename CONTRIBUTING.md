@@ -106,6 +106,8 @@ Crear un remoto, publicar o hacer `push` es una operación aparte, con su propio
 - `README.md`: qué es el repositorio y cómo se usa una skill.
 - `CHANGELOG.md`: historial del repositorio, con las categorías de Keep a Changelog y sin secciones de versión; qué cambió entre dos versiones de una skill lo responde el historial de Git.
 - `BACKLOG.md`: trabajo pendiente priorizado; es la única lista de planificación del repositorio.
+- `PRODUCT.md`: contexto de producto que lee el trabajo de diseño antes de tocar una interfaz: plataforma, usuarios, propósito, límites y las ausencias que no se deben rellenar.
+- `DESIGN.md`: sistema visual del catálogo y de las páginas de skill. Los tokens del frontmatter son normativos y el cuerpo explica dónde se aplica cada uno.
 - `.gitattributes`: fin de línea del repositorio. Todo texto viaja en LF (`* text=auto eol=lf`); lo que se compara byte a byte se declara con `-text`.
 - `opencode.json`: configuración compartida de OpenCode, con los agentes y el modelo de cada uno; el estado local de OpenCode vive en `.opencode/` y no se versiona.
 - `docs/`: guías y diagramas generados, con sus especificaciones y recibos.
