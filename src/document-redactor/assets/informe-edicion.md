@@ -1,4 +1,4 @@
-# Informe de edición — {documento}
+# Informe de edición: {documento}
 
 ## Operación
 

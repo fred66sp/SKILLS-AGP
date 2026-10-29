@@ -1,4 +1,4 @@
-# Modelo de amenazas — <sistema>
+# Modelo de amenazas: <sistema>
 
 | Campo | Valor |
 |---|---|

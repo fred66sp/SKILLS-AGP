@@ -2,7 +2,7 @@
 name: go-errors-and-lifecycle
 description: "Diseña el contrato de errores y el ciclo de vida de un programa Go: clasifica errores, los envuelve con contexto, los inspecciona con errors.Is y errors.As, los traduce a códigos de salida y mensajes machine-readable, y propaga context, cancelación, timeouts, señales y cierre ordenado; exige que toda goroutine tenga propietario, terminación, propagación y espera. Úsala cuando haya que definir o revisar errores, mapearlos a códigos de salida, añadir context o cancelación, manejar señales, introducir concurrencia o cerrar un proceso con limpieza. No la uses para el contrato de la CLI, estilo general ni pruebas, que tienen sus propias skills."
 metadata:
-  version: "1.0.0"
+  version: "1.0.1"
 ---
 
 # Errores y ciclo de vida en Go
@@ -32,49 +32,49 @@ Esta skill posee los errores, `context`, la concurrencia y el cierre. El contrat
 
 ## Procedimiento de errores y ciclo de vida
 
-**Paso 1 — Inventariar fallos y fronteras.**
+**Paso 1: Inventariar fallos y fronteras.**
 1. Enumera las operaciones que pueden fallar y quién puede actuar sobre cada fallo: usuario, agente, reintento, operador o nadie.
 2. Identifica las fronteras: dominio, CLI, red, disco, proceso. En cada frontera decide qué se envuelve, qué se registra y qué se oculta.
 3. Lee `references/error-contract.md` antes de definir la taxonomía.
 
-**Paso 2 — Definir la taxonomía.**
+**Paso 2: Definir la taxonomía.**
 1. Usa errores centinela (`var ErrX = errors.New(...)`) para condiciones estables que el llamador compara con `errors.Is`.
 2. Usa un tipo de error para datos estructurados que el llamador inspecciona con `errors.As`.
 3. Usa errores opacos para fallos que solo necesitan contexto de depuración.
 4. Asigna un `code` estable a cada condición que cruce la frontera de la CLI y mapéalo a `1`, `2`, `3` o `4` según el contrato de la CLI.
 
-**Paso 3 — Implementar el flujo.**
+**Paso 3: Implementar el flujo.**
 1. Comprueba cada error inmediatamente. No lo asignes a `_` sin una razón escrita.
 2. Añade contexto que el llamador no tenga: operación, recurso, identificador. No repitas el mensaje de la capa inferior.
 3. Si la anotación no aporta nada, devuelve `err` tal cual.
 4. Mantén el error original accesible con `%w`; no lo reconstruyas con `fmt.Errorf("%s", err)`.
 
-**Paso 4 — Traducir en la frontera.**
+**Paso 4: Traducir en la frontera.**
 1. Mapea el error a un `code`, un mensaje accionable y un código de salida en un único punto.
 2. No incluyas rutas internas, tokens, cabeceras ni trazas en el mensaje público. Los detalles completos van a `--debug` y a `stderr`, redactados.
 3. En modo JSON, produce el sobre de error del contrato de la CLI. En modo texto, escribe una línea accionable en `stderr`.
 4. Un fallo parcial por lotes devuelve `1` y detalla qué elementos fallaron; no lo conviertas en éxito.
 
-**Paso 5 — Propagar context y cancelación.**
+**Paso 5: Propagar context y cancelación.**
 1. Pasa `ctx` a todas las operaciones de I/O y espera.
 2. Deriva timeouts en la frontera responsable; no pongas el mismo timeout en todas las capas.
 3. Comprueba `ctx.Err()` al recibir una cancelación y devuélvela envuelta o tal cual según la frontera.
 4. Distingue cancelación del usuario de timeout: no son el mismo `code` ni el mismo mensaje.
 
-**Paso 6 — Justificar la concurrencia.**
+**Paso 6: Justificar la concurrencia.**
 1. Si no hay trabajo independiente, espera solapable o necesidad de capacidad, no introduzcas goroutines.
 2. Para cada goroutine, escribe en el diseño: quién la posee, cómo termina, cómo reporta y cómo se espera.
 3. Usa `errgroup.WithContext` cuando varias tareas relacionadas deban cancelarse entre sí. Usa `sync.WaitGroup` solo si no hay errores que propagar.
 4. Canales sin buffer o de tamaño uno salvo justificación. No cierres un canal desde el receptor ni uno que otro productor pueda usar.
 
-**Paso 7 — Cerrar el proceso.**
+**Paso 7: Cerrar el proceso.**
 1. Instala `signal.NotifyContext(ctx, os.Interrupt, syscall.SIGTERM)` en `main` y llama `stop` al salir.
 2. Ante la primera señal, deja de aceptar trabajo, cancela el contexto y espera a las tareas en curso con un deadline.
 3. Cierra recursos en orden inverso a su apertura y propaga el primer error de cierre.
 4. Sal con `3` si la cancelación fue por señal; con `1` si el cierre falló por otra causa.
 5. Un segundo SIGINT puede forzar la salida; si existe, documéntalo.
 
-**Paso 8 — Verificar y cerrar.**
+**Paso 8: Verificar y cerrar.**
 1. Prueba los caminos de error con `errors.Is`/`errors.As`, no con textos.
 2. Prueba la cancelación: el contexto se cancela, la operación retorna pronto y no quedan goroutines.
 3. Ejecuta la puerta de `go-testing-and-verification` sobre los caminos de error y cancelación.
@@ -104,5 +104,5 @@ No verificado: <lista, o "ninguno">
 
 ## Referencias de errores y ciclo de vida
 
-- [error-contract](references/error-contract.md) — taxonomía, envoltura, inspección, mensajes, mapeo a códigos y ejemplos. Léela en los pasos 1 a 4.
-- [lifecycle](references/lifecycle.md) — context, goroutines, errgroup, canales, mutex, señales y cierre ordenado. Léela en los pasos 5 a 7.
+- [error-contract](references/error-contract.md): taxonomía, envoltura, inspección, mensajes, mapeo a códigos y ejemplos. Léela en los pasos 1 a 4.
+- [lifecycle](references/lifecycle.md): context, goroutines, errgroup, canales, mutex, señales y cierre ordenado. Léela en los pasos 5 a 7.

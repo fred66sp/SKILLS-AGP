@@ -1,4 +1,4 @@
-# Informe de seguridad — <alcance>
+# Informe de seguridad: <alcance>
 
 | Campo | Valor |
 |---|---|
@@ -24,7 +24,7 @@
 |---|---|---|---|---|---|
 | SEC-001 | <crítica/alta/media/baja/informativa> | <categoría> | <ruta:línea> | <activo y efecto> | <abierto/corregido/aceptado> |
 
-### SEC-001 — <título>
+### SEC-001: <título>
 
 - **Entrada:** <qué controla el atacante>
 - **Traza:** <entrada → transformación → efecto>

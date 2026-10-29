@@ -6,7 +6,7 @@
 <meta name="description" content="Entrada a la skill document-redactor: qué hace, cuándo se activa, cómo se usa, qué contiene el paquete y dónde vive cada regla. Edita la prosa, no los hechos: quita los tics por racimos, reconstruye el ritmo y pasa la auditoría y la puerta.">
 <meta name="color-scheme" content="light dark">
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%239b2c4a'/%3E%3Cpath d='M25 11l-4-4L9 19l-2 6 6-2L25 11z' fill='none' stroke='%23ffffff' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
-<title>document-redactor — prosa que suena a alguien</title>
+<title>document-redactor · prosa que suena a alguien</title>
 <script>
 (function () {
   try {
@@ -466,7 +466,7 @@
 
     <section id="que-hace" class="section">
       <div class="section-head"><span class="section-num">1</span><h2 class="title">Qué hace</h2></div>
-      <p class="sub">Edita la prosa, no los hechos: quita los tics por racimos, reconstruye el ritmo y devuelve el texto a una voz concreta.</p>
+      <p class="sub">Trabaja la prosa sin mover los hechos. Quita los tics por racimos y devuelve al texto un ritmo y una voz concretos.</p>
 
       <div class="table-wrap wrap-cells">
         <table>
@@ -638,7 +638,7 @@ cat borrador.md | python3 scripts/redactor.py check -</code></pre></div>
 
       <div class="qa"><h3>¿Es un detector de IA?</h3><p>No. Detecta patrones de escritura frecuentes en textos generados, no autoría. Un texto humano puede contener varios y un texto de máquina puede no contener ninguno.</p></div>
       <div class="qa"><h3>¿Reescribe el texto entero?</h3><p>Edita. Conserva significado, cobertura, hechos y estructura salvo que el encargo autorice cambiarlos. Si el original está limpio, el trabajo es dejarlo casi igual.</p></div>
-      <div class="qa"><h3>¿Sirve para documentación técnica?</h3><p>Sí, con el registro técnico: quita relleno, adornos y fórmulas, y no inyecta opinión ni primera persona. La guía de estilo del proyecto manda.</p></div>
+      <div class="qa"><h3>¿Sirve para documentación técnica?</h3><p>En registro técnico, sí: quita relleno y fórmulas, y no añade opinión ni primera persona. La guía de estilo del proyecto manda.</p></div>
       <div class="qa"><h3>¿Y la estructura de un PRD o un ADR?</h3><p>Pertenece a <code>prd-cartographer</code> y <code>adr-software</code>. Esta skill edita la prosa que producen y no duplica sus contratos.</p></div>
     </section>
 
@@ -661,10 +661,10 @@ cat borrador.md | python3 scripts/redactor.py check -</code></pre></div>
         </a>
       </div>
 
-      <p>Cada diagrama se abre como página suelta: archify no enlaza desde el artefacto a una página local, así que se vuelve con el botón atrás del navegador o con el índice de arriba.</p>
+      <p>Cada diagrama se abre como página suelta. Archify no enlaza el artefacto con una página local: se vuelve con el botón atrás o con el índice de arriba.</p>
 
       <div class="note">
-        <p><strong>Convenio de este repositorio, no mandato de la skill.</strong> <code>docs/&lt;skill&gt;/index.html</code>, los diagramas y sus recibos <code>.delivery.json</code> son cómo SKILLS-AGP documenta sus skills. Los genera archify desde el <code>.json</code> que está junto a cada HTML.</p>
+        <p><strong>Es un convenio de este repositorio, no un mandato de la skill:</strong> <code>docs/&lt;skill&gt;/index.html</code>, los diagramas y sus recibos <code>.delivery.json</code> son cómo SKILLS-AGP documenta sus skills. Los genera archify desde el <code>.json</code> que está junto a cada HTML.</p>
       </div>
     </section>
 
@@ -693,7 +693,7 @@ python3 scripts/check-repo.py</code></pre></div>
       </div>
 
       <div class="note">
-        <p>La puerta comprueba forma, no verdad: no valida significado, hechos ni calidad del argumento. La auditoría de la rúbrica y la revisión de quien publica siguen siendo necesarias.</p>
+        <p>La puerta comprueba la forma. No valida el significado, los hechos ni la calidad del argumento; para eso quedan la rúbrica y la revisión de quien publica.</p>
       </div>
     </section>
 

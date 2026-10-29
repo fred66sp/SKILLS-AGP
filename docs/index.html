@@ -6,7 +6,7 @@
 <meta name="description" content="Punto de entrada al catálogo de skills de SKILLS-AGP: qué hace cada skill, cuándo se activa, dónde está su contrato, cómo se usa y cómo se verifica el repositorio. Documentación estática, sin dependencias externas.">
 <meta name="color-scheme" content="light dark">
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%230f766e'/%3E%3Crect x='7' y='8' width='18' height='4' rx='2' fill='%23ffffff'/%3E%3Crect x='7' y='14' width='14' height='4' rx='2' fill='%23ffffff' opacity='.85'/%3E%3Crect x='7' y='20' width='10' height='4' rx='2' fill='%23ffffff' opacity='.7'/%3E%3C/svg%3E">
-<title>SKILLS-AGP — catálogo de skills para agentes</title>
+<title>SKILLS-AGP · catálogo de skills para agentes</title>
 <script>
 (function () {
   try {
@@ -824,7 +824,7 @@
     <div class="hero-copy">
       <span class="pill"><span class="dot" aria-hidden="true"></span>punto de entrada · skills que se leen como contratos</span>
       <h1>El catálogo de skills, <span class="grad">de un vistazo</span></h1>
-      <p class="lead">Cada skill de este repositorio es un contrato: instrucciones verificables, referencias que se cargan solo cuando hacen falta y evidencia obligatoria antes de declarar algo terminado. Aquí están todas, con acceso a sus contratos y documentación.</p>
+      <p class="lead">Cada skill de este repositorio se lee como un contrato. El <code>SKILL.md</code> dice qué hace y cómo se comprueba; las referencias se abren cuando la tarea las pide, y nada se declara terminado sin evidencia. Aquí están todas, con su contrato y su documentación.</p>
       <div class="hero-actions">
         <a class="btn btn-primary" href="#catalogo">Explorar el catálogo
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 5l7 7-7 7"></path></svg>
@@ -885,7 +885,7 @@
         </div>
         <h3><a href="git-flow-management/index.html">git-flow-management</a></h3>
         <p class="tagline">Git con ceremonia proporcional y verificable</p>
-        <p class="desc">Clasifica cada operación por tamaño y riesgo, inspecciona antes de tocar nada y deja el cambio preparado con su mensaje. No ejecuta un commit, un push ni un borrado sin confirmación.</p>
+        <p class="desc">Clasifica cada operación por tamaño y riesgo. El cambio queda preparado en el stage con su mensaje; el commit, el push y el borrado esperan confirmación.</p>
         <div class="card-foot">
           <span class="meta">propia</span>
           <a href="../src/git-flow-management/SKILL.md">Contrato
@@ -901,7 +901,7 @@
         </div>
         <h3><a href="document-management-software/index.html">document-management-software</a></h3>
         <p class="tagline">Documentación con fuente de verdad</p>
-        <p class="desc">Inventaría lo que existe, decide la intervención mínima y clasifica la certeza de cada afirmación. Su script detecta enlaces rotos, documentos vacíos y referencias que caducan.</p>
+        <p class="desc">Inventaría lo que existe y elige la intervención mínima. Cada afirmación lleva su grado de certeza, y su script detecta enlaces rotos, documentos vacíos y referencias que caducan.</p>
         <div class="card-foot">
           <span class="meta">propia</span>
           <a href="../src/document-management-software/SKILL.md">Contrato
@@ -917,7 +917,7 @@
         </div>
         <h3><a href="prd-cartographer/index.html">prd-cartographer</a></h3>
         <p class="tagline">PRD verificable y trazable</p>
-        <p class="desc">Convierte una idea o una investigación en un PRD que separa hecho, decisión, inferencia, hipótesis y desconocido, con métricas medibles y criterios de aceptación observables.</p>
+        <p class="desc">Convierte una idea o una investigación en un PRD que separa hecho, decisión, inferencia, hipótesis y desconocido. Las métricas llevan método de medida y los criterios de aceptación se pueden observar.</p>
         <div class="card-foot">
           <span class="meta">propia</span>
           <a href="../src/prd-cartographer/SKILL.md">Contrato
@@ -933,7 +933,7 @@
         </div>
         <h3><a href="adr-software/index.html">adr-software</a></h3>
         <p class="tagline">Decisiones que un agente puede ejecutar</p>
-        <p class="desc">Decide si una decisión merece un ADR y lo redacta con contexto, alcance, alternativas, consecuencias y verificación. Una puerta determinista comprueba metadatos, secciones, índice y sustituciones.</p>
+        <p class="desc">Antes de escribir, decide si la decisión merece un ADR. Si la merece, redacta contexto, alcance, alternativas, consecuencias y verificación. Una puerta determinista revisa metadatos, secciones, índice y sustituciones.</p>
         <div class="card-foot">
           <span class="meta">propia</span>
           <a href="../src/adr-software/SKILL.md">Contrato
@@ -949,7 +949,7 @@
         </div>
         <h3><a href="go-cli-ai-first/index.html">go-cli-ai-first</a></h3>
         <p class="tagline">CLIs que un agente puede operar</p>
-        <p class="desc">Fija el contrato antes de implementar: stdout para el resultado, stderr para el diagnóstico, JSON estable, códigos de salida acotados y confirmación para lo destructivo.</p>
+        <p class="desc">Fija el contrato antes de implementar. <code>stdout</code> lleva el resultado y <code>stderr</code> el diagnóstico; el JSON tiene un sobre estable, los códigos de salida están acotados y lo destructivo pide confirmación.</p>
         <div class="card-foot">
           <span class="meta">propia</span>
           <a href="../src/go-cli-ai-first/SKILL.md">Contrato
@@ -965,7 +965,7 @@
         </div>
         <h3><a href="go-idiomatic-style/index.html">go-idiomatic-style</a></h3>
         <p class="tagline">Go legible, mínimo y mantenible</p>
-        <p class="desc">La solución más simple que conserva claridad y capacidad de evolución: gofmt, nombres y paquetes claros, errores primero e interfaces pequeñas definidas por quien las consume.</p>
+        <p class="desc">La solución más simple que conserva claridad y capacidad de evolución. <code>gofmt</code>, nombres y paquetes que dicen lo que hacen, errores primero e interfaces pequeñas definidas por quien las consume.</p>
         <div class="card-foot">
           <span class="meta">propia</span>
           <a href="../src/go-idiomatic-style/SKILL.md">Contrato
@@ -981,7 +981,7 @@
         </div>
         <h3><a href="go-errors-and-lifecycle/index.html">go-errors-and-lifecycle</a></h3>
         <p class="tagline">Errores como contrato y cierre ordenado</p>
-        <p class="desc">Clasifica y envuelve los errores, los inspecciona con <code>errors.Is</code> y <code>errors.As</code> y los traduce a códigos en una sola frontera. Separa cancelación, timeout y fallo interno.</p>
+        <p class="desc">Clasifica y envuelve los errores, los inspecciona con <code>errors.Is</code> y <code>errors.As</code> y los traduce a códigos en una sola frontera. Cancelación, timeout y fallo interno no se mezclan.</p>
         <div class="card-foot">
           <span class="meta">propia</span>
           <a href="../src/go-errors-and-lifecycle/SKILL.md">Contrato
@@ -997,7 +997,7 @@
         </div>
         <h3><a href="go-testing-and-verification/index.html">go-testing-and-verification</a></h3>
         <p class="tagline">Cerrar con evidencia ejecutada</p>
-        <p class="desc">Pruebas de tabla y golden files, extremo a extremo del binario y casos de error, <code>--dry-run</code>, <code>--yes</code> y cancelación. La puerta ejecuta gofmt, build, test, vet, race y lint.</p>
+        <p class="desc">Pruebas de tabla y golden files para la lógica; el binario se prueba de extremo a extremo, con casos de error, <code>--dry-run</code>, <code>--yes</code> y cancelación. La puerta ejecuta <code>gofmt</code>, <code>build</code>, <code>test</code>, <code>vet</code>, <code>race</code> y <code>lint</code>.</p>
         <div class="card-foot">
           <span class="meta">propia</span>
           <a href="../src/go-testing-and-verification/SKILL.md">Contrato
@@ -1013,7 +1013,7 @@
         </div>
         <h3><a href="typescript-idiomatic-style/index.html">typescript-idiomatic-style</a></h3>
         <p class="tagline">TypeScript que no permite el estado imposible</p>
-        <p class="desc">Diseño type-first con <code>strict</code>, uniones discriminadas, tipos branded, <code>satisfies</code> y genéricos justificados. Módulos y <code>exports</code> mínimos, y una CLI con citty, cancelación y salida separada.</p>
+        <p class="desc">Diseño type-first con <code>strict</code>, uniones discriminadas, tipos branded, <code>satisfies</code> y genéricos justificados. Los módulos y <code>exports</code> son mínimos, y la CLI usa citty, cancelación y salida separada.</p>
         <div class="card-foot">
           <span class="meta">propia</span>
           <a href="../src/typescript-idiomatic-style/SKILL.md">Contrato
@@ -1029,7 +1029,7 @@
         </div>
         <h3><a href="typescript-testing-and-verification/index.html">typescript-testing-and-verification</a></h3>
         <p class="tagline">Cerrar con evidencia ejecutada</p>
-        <p class="desc">Valida toda frontera externa con Zod 4 y deriva los tipos del esquema. Elige la capa de prueba más pequeña, prueba la CLI y ejecuta typecheck, lint, test y build con <code>verify-ts.py</code>.</p>
+        <p class="desc">Valida toda frontera externa con Zod 4 y deriva los tipos del esquema. La capa de prueba es la más pequeña y la CLI también se prueba. <code>verify-ts.py</code> ejecuta typecheck, lint, test y build.</p>
         <div class="card-foot">
           <span class="meta">propia</span>
           <a href="../src/typescript-testing-and-verification/SKILL.md">Contrato
@@ -1045,7 +1045,7 @@
         </div>
         <h3><a href="javascript-idiomatic-style/index.html">javascript-idiomatic-style</a></h3>
         <p class="tagline">JavaScript que falla en la primera línea</p>
-        <p class="desc">Declara el baseline de navegador y el de Node antes de escribir, usa <code>===</code> y <code>??</code>, cancela con <code>AbortSignal</code> y construye DOM con nodos. Un solo adaptador sabe dónde corre el código.</p>
+        <p class="desc">Declara el baseline de navegador y el de Node antes de escribir. Usa <code>===</code> y <code>??</code>, cancela con <code>AbortSignal</code> y construye el DOM con nodos. Un solo adaptador sabe dónde corre el código.</p>
         <div class="card-foot">
           <span class="meta">propia</span>
           <a href="../src/javascript-idiomatic-style/SKILL.md">Contrato
@@ -1061,7 +1061,7 @@
         </div>
         <h3><a href="javascript-testing-and-verification/index.html">javascript-testing-and-verification</a></h3>
         <p class="tagline">Prueba sin añadir un framework</p>
-        <p class="desc">Elige la capa más pequeña, usa <code>node:test</code> y el navegador como entorno DOM, controla reloj y red, y cierra con <code>verify-js.py</code>: sintaxis, tests del proyecto y <code>node --test</code>.</p>
+        <p class="desc">Elige la capa más pequeña. <code>node:test</code> cubre la lógica y el navegador hace de entorno DOM; el reloj y la red se controlan. <code>verify-js.py</code> comprueba sintaxis y ejecuta los tests del proyecto o <code>node --test</code>.</p>
         <div class="card-foot">
           <span class="meta">propia</span>
           <a href="../src/javascript-testing-and-verification/SKILL.md">Contrato
@@ -1077,7 +1077,7 @@
         </div>
         <h3><a href="python-idiomatic-style/index.html">python-idiomatic-style</a></h3>
         <p class="tagline">Python que declara lo que acepta</p>
-        <p class="desc">Modela estados con dataclasses y uniones, anota la API pública, propaga errores con causa y deja metadatos, dependencias y build en un solo <code>pyproject.toml</code>. Incluye el contrato de una CLI.</p>
+        <p class="desc">Modela los estados con dataclasses y uniones, anota la API pública y propaga los errores con causa. Metadatos, dependencias y build caben en un solo <code>pyproject.toml</code>. Incluye el contrato de una CLI.</p>
         <div class="card-foot">
           <span class="meta">propia</span>
           <a href="../src/python-idiomatic-style/SKILL.md">Contrato
@@ -1093,7 +1093,7 @@
         </div>
         <h3><a href="python-testing-and-verification/index.html">python-testing-and-verification</a></h3>
         <p class="tagline">Cerrar con evidencia ejecutada</p>
-        <p class="desc">Elige la capa más pequeña, usa <code>unittest</code> o pytest, controla red, reloj y entorno, y prueba la CLI como proceso. La puerta ejecuta sintaxis, formato, lint, tipos y pruebas con <code>verify-python.py</code>.</p>
+        <p class="desc">Elige la capa más pequeña. <code>unittest</code> o pytest cubren la lógica; la red, el reloj y el entorno se controlan; la CLI se prueba como proceso. <code>verify-python.py</code> ejecuta sintaxis, formato, lint, tipos y pruebas.</p>
         <div class="card-foot">
           <span class="meta">propia</span>
           <a href="../src/python-testing-and-verification/SKILL.md">Contrato
@@ -1109,7 +1109,7 @@
         </div>
         <h3><a href="web-interface-visual-design/index.html">web-interface-visual-design</a></h3>
         <p class="tagline">Calidad visual comprobada en el render</p>
-        <p class="desc">Guía composición, componentes, SVG, iconografía e infografías respetando el diseño existente. Exige inspeccionar el resultado renderizado y declara los límites de fidelidad y verificación.</p>
+        <p class="desc">Trabaja composición, componentes, SVG, iconografía e infografías sin romper el diseño existente. Exige mirar el resultado renderizado y declara los límites de fidelidad y verificación.</p>
         <div class="card-foot">
           <span class="meta">propia</span>
           <a href="../src/web-interface-visual-design/SKILL.md">Contrato
@@ -1125,7 +1125,7 @@
         </div>
         <h3><a href="security-engineering/index.html">security-engineering</a></h3>
         <p class="tagline">Riesgo demostrado, no declarado</p>
-        <p class="desc">Modela la amenaza, revisa código y agentes con evidencia, audita skills de terceros y cierra con corrección mínima, pruebas y riesgo residual. Incluye un escáner de señales determinista.</p>
+        <p class="desc">Modela la amenaza, revisa código y agentes con evidencia y audita las skills de terceros antes de usarlas. Cierra con corrección mínima, pruebas y riesgo residual. Incluye un escáner de señales determinista.</p>
         <div class="card-foot">
           <span class="meta">propia</span>
           <a href="../src/security-engineering/SKILL.md">Contrato
@@ -1141,7 +1141,7 @@
         </div>
         <h3><a href="document-redactor/index.html">document-redactor</a></h3>
         <p class="tagline">Prosa que suena a alguien</p>
-        <p class="desc">Quita los tics de la escritura de IA por racimo, conserva los hechos y la cobertura, reconstruye el ritmo y ajusta la voz al registro. Cierra con rúbrica y con <code>redactor.py check</code>.</p>
+        <p class="desc">Quita los tics de la escritura de IA por racimo sin tocar los hechos ni la cobertura. Reconstruye el ritmo, ajusta la voz al registro y cierra con rúbrica y con <code>redactor.py check</code>.</p>
         <div class="card-foot">
           <span class="meta">propia</span>
           <a href="../src/document-redactor/SKILL.md">Contrato
@@ -1157,7 +1157,7 @@
         </div>
         <h3><a href="skill-creator/index.html">skill-creator</a></h3>
         <p class="tagline">Skills que se descubren y se ejecutan</p>
-        <p class="desc">Procedimiento para crear skills nuevas con la especificación agentskills.io: estructura, redacción procedimental, metadatos para que se descubran y un validador.</p>
+        <p class="desc">Procedimiento para crear skills nuevas con la especificación agentskills.io. Cubre estructura, redacción procedimental y metadatos para que se descubran, y trae un validador.</p>
         <div class="card-foot">
           <span class="meta">terceros · fijada</span>
           <a href="../.skills/skill-creator/SKILL.md">Contrato
@@ -1191,7 +1191,7 @@
 
   <section class="section" id="uso">
     <div class="section-head"><span class="section-num" style="--num:#2563eb">2</span><h2 class="title">Cómo se usa una skill</h2></div>
-    <p class="sub">El paquete está diseñado para divulgación progresiva: el agente lee el contrato entero y abre solo la referencia que la operación concreta pide. Nada se da por terminado sin la evidencia que el propio contrato exige.</p>
+    <p class="sub">El paquete funciona por divulgación progresiva: el agente lee el contrato entero y abre solo la referencia que la operación pide. Nada se da por terminado sin la evidencia que el contrato exige.</p>
 
     <div class="steps">
       <div class="step">
@@ -1217,7 +1217,7 @@
     </div>
 
     <div class="note">
-      <p><strong>Divulgación progresiva, no resumen.</strong> Las páginas de este catálogo explican qué hace cada skill y cuándo se activa, pero no copian sus reglas. La copia se desincronizaría; el contrato, no.</p>
+      <p><strong>Divulgación progresiva.</strong> Las páginas de este catálogo explican qué hace cada skill y cuándo se activa, pero no copian sus reglas. Una copia se desincroniza; el contrato, no.</p>
     </div>
   </section>
 
@@ -1304,7 +1304,7 @@
       <div>
         <span class="eyebrow"><span class="dot" aria-hidden="true"></span>la puerta</span>
         <h2>Nada se cierra sin evidencia</h2>
-        <p>La misma comprobación que ejecuta la CI se ejecuta en local. Un fallo señala qué script falló, no un resultado global sin contexto.</p>
+        <p>La CI y el entorno local ejecutan la misma comprobación. Un fallo nombra el script que falló, no un resultado global.</p>
         <ul>
           <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"></path></svg>Metadatos, versiones, estructura y enrutadores</li>
           <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"></path></svg>Página, tarjeta en el catálogo y mención en el README de cada skill</li>

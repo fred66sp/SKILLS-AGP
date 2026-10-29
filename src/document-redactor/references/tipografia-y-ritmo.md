@@ -6,8 +6,8 @@ Dos capas que la corrección léxica no alcanza. La tipografía se comprueba con
 
 | Regla | Correcto | Defecto frecuente |
 |---|---|---|
-| Comillas | «latinas» en primer nivel, “inglesas” dentro, ‘simples’ dentro de las inglesas | “curvas inglesas” en el primer nivel |
-| Raya | — sin espacios para incisos y diálogo | ` — ` con espacios, ` -- ` doble guion |
+| Comillas | «latinas» en primer nivel, `“inglesas”` dentro, `‘simples’` dentro de las inglesas | `“curvas inglesas”` en el primer nivel |
+| Raya | Pegada al texto para incisos y diálogo | ` — ` con espacios, ` -- ` doble guion |
 | Signos de apertura | ¿Qué…? ¡Vamos! | `Qué…?`, `Vamos!` |
 | Mayúsculas | Solo la primera palabra y los nombres propios | `Guía De Estilo Para El Equipo` |
 | Puntos suspensivos | Tres puntos, con espacio delante si cierran frase | Más de tres, o pegados a la palabra |
@@ -20,9 +20,11 @@ Dos capas que la corrección léxica no alcanza. La tipografía se comprueba con
 
 Se convierten, no se mezclan. Jerarquía completa:
 
-> Dijo que «el informe cita “tres riesgos” sin numerarlos».
+```text
+«Dijo que el informe cita “tres riesgos” sin numerarlos».
+```
 
-En HTML, `&laquo;` y `&raquo;` o el carácter directo en UTF-8. En Markdown, el carácter directo. Nunca comillas curvas tipográficas salvo que el medio las imponga.
+En HTML, `&laquo;` y `&raquo;` o el carácter directo en UTF-8. En Markdown, el carácter directo. Nunca comillas curvas en el primer nivel salvo que el medio las imponga.
 
 ### Raya
 

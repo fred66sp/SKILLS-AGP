@@ -31,25 +31,25 @@ Esta skill posee la prosa: el registro, la sintaxis, el ritmo, la tipografía y 
 
 ## Procedimiento de redacción
 
-**Paso 1 — Delimitar la operación.**
+**Paso 1: Delimitar la operación.**
 1. Identifica una sola operación: redactar, editar o auditar. Si el encargo mezcla reescribir con cambiar el mensaje, sepáralos: primero se acuerda el contenido, después se edita la prosa.
 2. Sitúa el documento: tipo —artículo, guía, README, nota de versión, correo, propuesta, informe—, lector, canal y extensión esperada.
 3. Fija el límite de intervención: solo prosa, prosa y estructura, o también hechos. Si el encargo autoriza cambiar afirmaciones, dilo en el informe; si no, están congeladas.
 4. Localiza la convención aplicable antes de escribir: guía de estilo del repositorio, plantilla del documento, glosario, manual de marca o ejemplos previos del mismo autor.
 
-**Paso 2 — Fijar hechos y voz.**
+**Paso 2: Fijar hechos y voz.**
 1. Extrae y congela el inventario de hechos: cifras, unidades, nombres propios, fechas, versiones, citas, enlaces y compromisos. Ese inventario se compara al final; cualquier diferencia es un defecto de la edición.
 2. Marca lo que no tiene fuente. Una cifra sin origen no se «mejora»: se mantiene, se señala o se pregunta.
 3. Si hay muestra de la escritura del autor, léela antes de reescribir y anota longitud de frase, nivel léxico, apertura de párrafos, puntuación, coletillas y forma de enlazar ideas. Imita esos rasgos; no los sustituyas por un registro más culto.
 4. Si no hay muestra y el encargo no fija registro, infiere el registro del propio texto y del soporte. No preguntes por preguntar: pregunta solo si el registro cambia el resultado de forma material.
 
-**Paso 3 — Inventariar patrones.**
+**Paso 3: Inventariar patrones.**
 1. Lee `references/patrones-ia.md` y recorre el texto con sus identificadores. Anota el patrón, la línea y el fragmento; no corrijas todavía.
 2. Distingue señales de defecto: la tipografía incorrecta y los artefactos de chat son defectos; el léxico, la retórica y el ritmo son señales que exigen juicio.
 3. Busca racimos. Un «sin embargo» no es un tic; cinco aperturas con «Además» seguidas sí. Un patrón aislado se deja salvo que suene mal por sí mismo.
 4. Comprueba la sección de falsos positivos antes de tocar prosa legítima: pulcritud, vocabulario culto, un inciso, una apertura de carta y una raya suelta no son indicios.
 
-**Paso 4 — Reescribir.**
+**Paso 4: Reescribir.**
 1. Corrige primero lo que no admite discusión: tipografía, artefactos de chat, atribuciones vagas, relleno y conclusión genérica.
 2. Sustituye cada tic por la construcción natural que el propio texto pedía, no por una fórmula de reemplazo. Si quitar una palabra debilita la frase, la frase ya era débil; si la palabra es la correcta, se queda.
 3. Reconstruye el ritmo: alterna frases cortas con frases que se toman su tiempo. Un párrafo de frases idénticas se reescribe, no se retoca.
@@ -57,18 +57,18 @@ Esta skill posee la prosa: el registro, la sintaxis, el ritmo, la tipografía y 
 5. Conserva la estructura del documento salvo que el encargo incluya cambiarla. Un README no se convierte en ensayo ni un informe en artículo de opinión.
 6. No reescribas bloques de código, comandos ni frontmatter. Si el texto depende de ellos, la edición se limita a la prosa que los introduce y los comenta.
 
-**Paso 5 — Auditar.**
+**Paso 5: Auditar.**
 1. Segunda pasada sobre tu propio borrador: «¿qué sigue sonando a IA aquí?». Anota cada resto con su identificador.
 2. Puntúa la rúbrica de seis dimensiones de `references/evaluacion.md`. Es criterio, no algoritmo; el umbral es 42 sobre 60.
 3. Si queda por debajo del umbral y llevas menos de tres iteraciones, vuelve al paso 4. Si llevas tres, entrega el texto como borrador y declara los restos.
 4. Comprueba el inventario de hechos del paso 2: toda cifra, nombre, fecha, cita y enlace sigue igual. Una diferencia se corrige antes de continuar.
 
-**Paso 6 — Pasar la puerta.**
+**Paso 6: Pasar la puerta.**
 1. Ejecuta `python scripts/redactor.py check <fichero>` sobre el texto final. Sin `--strict`, falla con los defectos deterministas; con `--strict`, también con los avisos.
 2. Corrige lo que la puerta marque. Si un aviso es un falso positivo, dilo en el informe y no lo silencies cambiando el texto.
 3. La puerta no juzga el significado, la voz ni la calidad del argumento. No sustituye a la auditoría ni a la revisión humana.
 
-**Paso 7 — Entregar.**
+**Paso 7: Entregar.**
 1. Entrega el texto final en el soporte que corresponda y, salvo que se pida solo el texto, el informe de `assets/informe-edicion.md`.
 2. En el informe, nombra los patrones corregidos con su identificador, la puntuación por dimensión y lo que se dejó a propósito.
 3. Declara lo no verificado: hechos sin fuente, afirmaciones que no se pudieron contrastar, registros ambiguos y límites de la revisión.
@@ -100,7 +100,7 @@ No verificado: <lista, o "ninguno">
 
 ## Referencias de redacción
 
-- [patrones-ia](references/patrones-ia.md) — catálogo numerado de tics de la escritura de IA en castellano, agrupados por contenido, léxico, estilo, comunicación y relleno, con señales, ejemplo y corrección. Se lee en el paso 3.
-- [tipografia-y-ritmo](references/tipografia-y-ritmo.md) — comillas, raya, titulares, signos de apertura, emojis, negritas, listas, *burstiness*, regla 70/30 y marcadores discursivos. Se lee en los pasos 3 y 4.
-- [voz-y-registro](references/voz-y-registro.md) — modos de trabajo, perfiles de registro, calibración con una muestra del autor, límites de la voz y qué no se toca. Se lee en los pasos 2 y 4.
-- [evaluacion](references/evaluacion.md) — rúbrica de seis dimensiones, formato de entrega, falsos positivos, señales humanas y método de evaluación con y sin skill. Se lee en el paso 5.
+- [patrones-ia](references/patrones-ia.md): catálogo numerado de tics de la escritura de IA en castellano, agrupados por contenido, léxico, estilo, comunicación y relleno, con señales, ejemplo y corrección. Se lee en el paso 3.
+- [tipografia-y-ritmo](references/tipografia-y-ritmo.md): comillas, raya, titulares, signos de apertura, emojis, negritas, listas, *burstiness*, regla 70/30 y marcadores discursivos. Se lee en los pasos 3 y 4.
+- [voz-y-registro](references/voz-y-registro.md): modos de trabajo, perfiles de registro, calibración con una muestra del autor, límites de la voz y qué no se toca. Se lee en los pasos 2 y 4.
+- [evaluacion](references/evaluacion.md): rúbrica de seis dimensiones, formato de entrega, falsos positivos, señales humanas y método de evaluación con y sin skill. Se lee en el paso 5.

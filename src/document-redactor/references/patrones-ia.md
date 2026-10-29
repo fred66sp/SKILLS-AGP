@@ -107,7 +107,7 @@ La regla de oro: si quitar una palabra debilita la frase, la frase ya era débil
 **Corrección:** quitarlos. Un emoji suelto en un mensaje informal no es un tic; una lista de cinco, sí.
 
 ### P19. Comillas inglesas
-**Regla:** jerarquía del castellano: «latinas» como primer nivel, “inglesas” dentro de ellas y ‘simples’ dentro de las inglesas. Convertir las comillas curvas y rectas del original a latinas salvo que el medio imponga otra cosa.
+**Regla:** jerarquía del castellano: «latinas» como primer nivel, comillas inglesas dentro de ellas y comillas simples dentro de las inglesas. Convertir las comillas curvas y rectas del original a latinas salvo que el medio imponga otra cosa.
 **Antes:** «Dijo que "el proyecto va según lo previsto".»
 **Después:** «Dijo que «el proyecto va según lo previsto».»
 

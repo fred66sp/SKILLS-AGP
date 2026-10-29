@@ -2,7 +2,7 @@
 name: go-idiomatic-style
 description: "Escribe y revisa Go idiomático para CLIs y servicios pequeños: formato con gofmt, nombres, paquetes, estructura mínima, funciones, datos, interfaces y dependencias; exige la solución más simple, biblioteca estándar primero, interfaces pequeñas definidas por el consumidor, retornos concretos y flujo con errores primero. Úsala cuando haya que crear código Go nuevo, refactorizar, elegir estructura de paquetes, nombres o dependencias, o revisar estilo y diseño. No la uses para el contrato de una CLI, la estrategia de errores, contextos, concurrencia, pruebas o linting, que tienen sus propias skills."
 metadata:
-  version: "1.0.0"
+  version: "1.0.1"
 ---
 
 # Estilo y diseño idiomático en Go
@@ -33,17 +33,17 @@ Esta skill posee el estilo, la estructura y las dependencias. El contrato de la 
 
 ## Procedimiento de estilo
 
-**Paso 1 — Inspeccionar antes de escribir.**
+**Paso 1: Inspeccionar antes de escribir.**
 1. Lee `go.mod`, la estructura de paquetes, los tests y el estilo del código vecino.
 2. Identifica la convención existente para nombres, errores, configuración y organización. Si hay una regla escrita, prevalece.
 3. Localiza el punto de entrada y comprueba si ya existe un patrón `run()` o equivalente.
 
-**Paso 2 — Fijar el mapa de paquetes.**
+**Paso 2: Fijar el mapa de paquetes.**
 1. Escribe una frase por paquete con su responsabilidad. Si una frase necesita dos responsabilidades, el paquete está mal dividido.
 2. Mantén el dominio separado del parseo de flags y de la presentación. Una CLI pequeña puede vivir en un solo paquete; cuando el binario y la lógica dejen de caber con claridad, separa `cmd/<binario>` e `internal/<dominio>`. No añadas más capas.
 3. Comprueba que no hay ciclos ni paquetes comodín. Si aparece un `util`, asígnalo a un paquete con nombre de dominio.
 
-**Paso 3 — Nombrar.**
+**Paso 3: Nombrar.**
 1. Paquetes: minúsculas, sin guiones bajos, normalmente una palabra, sin repetir el nombre del símbolo que contienen.
 2. Exportados en PascalCase, no exportados en camelCase; acrónimos con su caso: `ID`, `URL`, `HTTP`.
 3. Receptores de una o dos letras, coherentes en todos los métodos del tipo; nunca `this` o `self`.
@@ -51,7 +51,7 @@ Esta skill posee el estilo, la estructura y las dependencias. El contrato de la 
 5. La longitud del nombre crece con el ámbito. `i` en un bucle, `pendingOrders` en una función larga.
 6. No repitas el contexto: `widget.New()`, no `widget.NewWidget()`.
 
-**Paso 4 — Diseñar funciones, datos e interfaces.**
+**Paso 4: Diseñar funciones, datos e interfaces.**
 1. Una función, una responsabilidad comprensible. Si necesita un comentario para explicar qué hace, probablemente hace demasiado.
 2. Prefiere firmas simples; si un booleano posicional no se entiende, usa un tipo con nombre o un comentario `/* name */`.
 3. Define la interfaz en el consumidor y solo con los métodos que usa. Si el productor necesita devolver algo, devuelve el tipo concreto.
@@ -59,18 +59,18 @@ Esta skill posee el estilo, la estructura y las dependencias. El contrato de la 
 5. Inicializa structs con nombres de campo; omite los ceros. Usa `&T{}` en lugar de `new(T)`.
 6. Usa `errors.Is` y `errors.As` para errores; el diseño de errores pertenece a la skill de errores y ciclo de vida.
 
-**Paso 5 — Implementar.**
+**Paso 5: Implementar.**
 1. Escribe primero el camino normal y los guard clauses; deja el caso feliz sin indentación.
 2. Mantén las funciones cortas por responsabilidad, no por un número arbitrario de líneas.
 3. Si necesitas `init()`, demuestra que es determinista, sin I/O, sin entorno y sin orden entre paquetes. Si no, usa una función explícita.
 4. Si añades una dependencia, escribe en el diff por qué la biblioteca estándar no basta.
 
-**Paso 6 — Formatear y compilar.**
+**Paso 6: Formatear y compilar.**
 1. Ejecuta `go fmt ./...` y `go vet ./...`.
 2. Ejecuta `go build ./...`; un cambio de estilo que rompe la compilación no es un cambio de estilo.
 3. Si el proyecto tiene `golangci-lint` configurado, ejecútalo. No lo añadas solo para cumplir esta skill.
 
-**Paso 7 — Revisar el diff.**
+**Paso 7: Revisar el diff.**
 1. Comprueba que no has introducido abstracciones, opciones, paquetes o dependencias que nadie pidió.
 2. Comprueba que no has reformateado código ajeno ni mezclado una refactorización con un cambio de comportamiento.
 3. Cierra con el bloque de resultado.
@@ -97,4 +97,4 @@ No verificado: <lista, o "ninguno">
 
 ## Referencias de estilo
 
-- [style-rules](references/style-rules.md) — tablas de decisión para formato, nombres, paquetes, estructura, funciones, datos, interfaces y dependencias. Léela en los pasos 2 a 4 cuando una regla no sea evidente.
+- [style-rules](references/style-rules.md): tablas de decisión para formato, nombres, paquetes, estructura, funciones, datos, interfaces y dependencias. Léela en los pasos 2 a 4 cuando una regla no sea evidente.

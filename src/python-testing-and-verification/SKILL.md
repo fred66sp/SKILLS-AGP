@@ -36,36 +36,36 @@ Esta skill posee la elección de capa, las pruebas, los datos, los dobles, el de
 
 ## Procedimiento de verificación Python
 
-**Paso 1 — Mapear riesgos y capas.**
+**Paso 1: Mapear riesgos y capas.**
 1. Enumera lo que el usuario o el agente observan: valores devueltos, excepciones, salida, ficheros, códigos de salida.
 2. Marca las fronteras por las que entra dato no confiable: HTTP, fichero, entorno, `argv`, base de datos, mensaje de cola.
 3. Marca los riesgos: datos que se destruyen, secretos que se filtran, concurrencia, compatibilidad del contrato.
 4. Descarta las comprobaciones que no añaden confianza; la capa se elige, no se acumula.
 
-**Paso 2 — Elegir capa y runner.**
+**Paso 2: Elegir capa y runner.**
 1. Lee `references/test-layers.md` para la tabla de capas y el criterio de descarte.
 2. Comprueba qué runner tiene el proyecto: `[tool.pytest.ini_options]`, `pytest.ini`, `tox.ini`, `unittest` o ninguno. Los comandos de CI mandan.
 3. Decide si la frontera se dobla o se ejecuta de verdad. La integración real se reserva para el contrato que no controlas.
 4. Si el runner elegido exige añadir una dependencia, es una decisión que se propone; no se toma dentro del cambio.
 
-**Paso 3 — Escribir la prueba que falla por la razón correcta.**
+**Paso 3: Escribir la prueba que falla por la razón correcta.**
 1. Lee `references/pytest-patterns.md` para fixtures, parametrización, excepciones, captura y limpieza.
 2. Escribe el caso mínimo: un comportamiento, una entrada, una comprobación con mensaje.
 3. Comprueba que falla por la causa prevista antes de corregir el código, o que el caso negativo lo demuestra.
 4. Añade los límites que importan: vacío, cero, `None`, cadena larga, error de red, timeout, cancelación.
 
-**Paso 4 — Aislar y estabilizar.**
+**Paso 4: Aislar y estabilizar.**
 1. Sustituye red, reloj, aleatoriedad, entorno y sistema de ficheros por dobles o recursos temporales.
 2. Espera eventos y procesos; nunca `sleep` como sincronización.
 3. Limpia ficheros, conexiones y variables en el fixture o con `monkeypatch`.
 4. Repite la suite dos veces, y en orden aleatorio si el runner lo permite, para detectar estado compartido.
 
-**Paso 5 — Probar la frontera y el proceso.**
+**Paso 5: Probar la frontera y el proceso.**
 1. Lee `references/boundaries-and-process.md` cuando el riesgo sea un cliente externo o una CLI.
 2. Valida el dato externo en el punto de entrada y prueba el rechazo, no solo la aceptación.
 3. Ejecuta la CLI como proceso: ayuda, versión, comando desconocido, flag inválido, `--dry-run`, falta de `--yes`, JSON válido y `KeyboardInterrupt`.
 
-**Paso 6 — Ejecutar la puerta.**
+**Paso 6: Ejecutar la puerta.**
 La puerta ejecuta código del proyecto (`pytest`, `ruff` y el comprobador de tipos): ejecútala solo sobre un proyecto confiable o dentro de un contenedor o usuario sin privilegios.
 
 1. Ejecuta `python3 <skill>/scripts/verify-python.py --root .` para la sintaxis.
@@ -73,7 +73,7 @@ La puerta ejecuta código del proyecto (`pytest`, `ruff` y el comprobador de tip
 3. Si falla, corrige por categoría: sintaxis, formato, lint, tipos, pruebas. No silencies con `# noqa` ni `# type: ignore` sin justificación.
 4. Copia `assets/verification-report.md` y rellena cada campo con la salida real.
 
-**Paso 7 — Cerrar con evidencia.**
+**Paso 7: Cerrar con evidencia.**
 1. Declara qué se verificó, con qué comando y con qué resultado.
 2. Declara lo que no se pudo verificar y por qué: red no disponible, servicio externo, intérprete distinto.
 3. No conviertas un fallo conocido en «pendiente»: o se corrige, o se declara como bloqueo.
@@ -103,11 +103,11 @@ No verificado: <lo que queda fuera, con motivo>
 
 ## Referencias de verificación Python
 
-- [test-layers](references/test-layers.md) — mapa de riesgo, capas, criterio de descarte, determinismo y datos de prueba. Léela en los pasos 1 y 2.
-- [pytest-patterns](references/pytest-patterns.md) — fixtures, parametrización, excepciones, captura, marcadores, `unittest` y diagnóstico. Léela en el paso 3.
-- [boundaries-and-process](references/boundaries-and-process.md) — validación en runtime, dobles de red, tiempo y entorno, pruebas de CLI y de propiedad. Léela en el paso 5.
-- [verification-report](assets/verification-report.md) — plantilla del cierre con comandos y resultados. Cópiala en el paso 6.
-- [verify-python](scripts/verify-python.py) — ejecuta la puerta y devuelve texto o JSON. Úsala en el paso 6.
+- [test-layers](references/test-layers.md): mapa de riesgo, capas, criterio de descarte, determinismo y datos de prueba. Léela en los pasos 1 y 2.
+- [pytest-patterns](references/pytest-patterns.md): fixtures, parametrización, excepciones, captura, marcadores, `unittest` y diagnóstico. Léela en el paso 3.
+- [boundaries-and-process](references/boundaries-and-process.md): validación en runtime, dobles de red, tiempo y entorno, pruebas de CLI y de propiedad. Léela en el paso 5.
+- [verification-report](assets/verification-report.md): plantilla del cierre con comandos y resultados. Cópiala en el paso 6.
+- [verify-python](scripts/verify-python.py): ejecuta la puerta y devuelve texto o JSON. Úsala en el paso 6.
 
 ## Puerta del paquete de verificación
 

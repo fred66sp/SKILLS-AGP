@@ -69,6 +69,8 @@ Las categorías —Añadido, Corregido, Modificado— vienen de [Keep a Changelo
 
 ### Corregido
 
+- Documentación del repositorio, catálogo y paquetes de `src/`: se pasó la puerta de `document-redactor` sobre la prosa versionada y se corrigió la tipografía que incumplía el contrato del castellano. Las rayas con espacios (`T02`) se sustituyeron por la forma que pedía cada contexto: dos puntos en títulos de paso, fases, PBI, escenarios y listas de rutas y referencias; raya pegada al texto en los incisos; y celda sin relleno en la tabla de ramas. Los títulos HTML usan el punto medio que ya empleaba la marca. Se retiró el «En resumen» del README y las comillas curvas de los ejemplos que podían ir como literal. Las versiones PATCH de las doce skills publicadas quedan declaradas sin etiqueta; `adr-software`, `document-redactor` y las dos de Python siguen en desarrollo.
+
 - `.gitattributes`: todo el repositorio se guarda y se sirve en LF (`* text=auto eol=lf`), de modo que un clon recibe los specs como los compara `scripts/check-repo.py` sin depender de la configuración de atributos de la máquina. La excepción byte a byte de `testdata/golden/*.json` se mantiene declarada con `-text`.
 
 - Enrutadores de `.skills/`: las referencias al contrato usan `../../src/<skill>/SKILL.md`, relativas a la carpeta del enrutador. Pi resuelve las rutas relativas contra el directorio del `SKILL.md`, no contra el directorio de trabajo; con la ruta anterior el contrato no se localizaba al ejecutar Pi fuera de la raíz.
