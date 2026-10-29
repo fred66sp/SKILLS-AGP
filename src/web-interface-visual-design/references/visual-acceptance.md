@@ -11,7 +11,7 @@ Lee esta referencia al evaluar o cambiar el contrato de la skill. No es una suit
 5. Si hay comparación, oculta la identidad de las variantes al revisor cuando sea posible y compara criterio a criterio: mejor / igual / peor, con motivo observable. No afirma causalidad a partir de una sola muestra; repite o usa proyectos reales antes de generalizar.
 6. Separa **estructura**, **función** y **visual** en el informe. Guarda defectos y correcciones; vuelve a inspeccionar el render corregido. Sin imágenes inspeccionadas, la calidad visual queda pendiente aunque Markdown, XML o build pasen.
 
-## Escenario A — Interfaz web
+## Escenario A: Interfaz web
 
 **Encargo reproducible:** Diseñar un dashboard de seguimiento de solicitudes para una persona de operaciones. La tarea principal es localizar y abrir solicitudes pendientes. Usar el stack y el sistema visual proporcionados; si no existen, declarar una dirección sobria apropiada, sin inventar marca. Datos de muestra: SOL-101, «Acceso al panel», Ana, pendiente; SOL-102, «Actualizar dirección», Luis, en curso; SOL-103, «Exportar informe», Marta, resuelta. Incluir búsqueda local, filtro por estado y apertura del detalle; mostrar estados vacío y sin resultados sin inventar métricas. Adaptar a móvil, tableta y escritorio.
 
@@ -22,7 +22,7 @@ Lee esta referencia al evaluar o cambiar el contrato de la skill. No es una suit
 - Búsqueda, filtro y detalle funcionan con teclado; el estado no se comunica solo por color. Verifica contraste con los colores finales.
 - No hay recortes ni desbordamiento accidental en los tamaños comunes del protocolo; el móvil reorganiza información sin perder campos o acciones. Comprueba texto al 200%.
 
-## Escenario B — SVG ilustrativo
+## Escenario B: SVG ilustrativo
 
 **Encargo reproducible:** Crear una ilustración SVG de una carpeta abierta con documentos para una pantalla de carga inicial, sin texto incorporado ni logotipo. Composición sobria con profundidad sutil, una dirección de luz coherente y un acento cromático del sistema proporcionado. No debe parecer un icono ampliado ni incluir datos. Integrarla a 240 y 480 CSS px sobre los fondos claro y oscuro del contexto; si solo existe un tema, definir fondos de prueba explícitos.
 
@@ -33,7 +33,7 @@ Lee esta referencia al evaluar o cambiar el contrato de la skill. No es una suit
 - Hay separación suficiente entre planos y fondos; no aparecen halos, dientes o deformación al integrar el recurso.
 - IDs y referencias resuelven al mostrar dos instancias juntas; su tratamiento decorativo no introduce foco o nombres redundantes. La validez XML se registra aparte del juicio visual.
 
-## Escenario C — Infografía de proceso
+## Escenario C: Infografía de proceso
 
 **Encargo reproducible:** Representar el flujo «Solicitud → Validación». Desde Validación, «completa» conduce a Aprobación y después a Archivo; «incompleta» conduce a Corrección y vuelve a Validación. No añadir pasos, porcentajes, duración ni participantes. Producir una infografía SVG integrada en una página con equivalente textual, etiquetas legibles y fuente editable. Permitir lectura en escritorio y móvil sin reducir el texto hasta hacerlo ilegible.
 

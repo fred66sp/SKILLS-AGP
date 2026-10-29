@@ -2,7 +2,7 @@
 name: typescript-idiomatic-style
 description: "Diseña y escribe TypeScript idiomático y type-first para librerías, servicios y CLIs: tsconfig estricto, uniones discriminadas, tipos branded, type guards, genéricos, tipos condicionales y mapeados, operador satisfies, objetos const en lugar de enum, módulos y exports, referencias de proyecto solo cuando el build lo exige, y reglas de CLI con citty y @clack/prompts. Úsala cuando haya que crear, refactorizar o revisar tipos, APIs y código TypeScript, elegir estructura de módulos o dependencias, o construir una CLI de TypeScript. No la uses para validación de datos en runtime, pruebas ni gates de CI, que tienen su propia skill."
 metadata:
-  version: "0.1.0"
+  version: "0.1.1"
 ---
 
 # Estilo y diseño idiomático en TypeScript
@@ -33,29 +33,29 @@ Esta skill posee los tipos, la estructura de módulos, las dependencias y la for
 
 ## Procedimiento de estilo TypeScript
 
-**Paso 1 — Inspeccionar antes de escribir.**
+**Paso 1: Inspeccionar antes de escribir.**
 1. Lee `package.json`, `tsconfig.json`, la versión de TypeScript y el gestor de paquetes. Localiza el runner de pruebas, el linter y el script de build.
 2. Ejecuta el typecheck existente para conocer el estado de partida: `tsc --noEmit` o el script `typecheck` del proyecto.
 3. Revisa los tipos y patrones vecinos: uniones, guards, errores, exports y estructura de carpetas. Si hay una regla escrita, prevalece.
 
-**Paso 2 — Modelar los estados.**
+**Paso 2: Modelar los estados.**
 1. Escribe una frase por estado del dominio y otra por transición. Si dos estados pueden coexistir y no deberían, faltan uniones discriminadas.
 2. Decide qué valores son identificadores, qué valores son cantidades y qué valores son contenido libre. Crea tipos branded solo para los dos primeros.
 3. Decide dónde entra el dato externo. Ese punto es una frontera y no se resuelve con un `as`: se valida con la skill de verificación.
 
-**Paso 3 — Escribir los tipos y la implementación.**
+**Paso 3: Escribir los tipos y la implementación.**
 1. Define las uniones y sus campos literales. Añade guards que devuelvan `value is T` y una función de renderizado o transición exhaustiva.
 2. Escribe las firmas públicas antes del cuerpo. Usa `satisfies` para tablas de configuración y `as const` para constantes.
 3. Usa genéricos solo donde la relación entre parámetros y retorno sea real. Comprueba los límites con una prueba de tipos cuando el tipo sea público y no trivial.
 4. Si un tipo condicional o mapeado no cabe en una línea legible, párate: probablemente la API necesita un tipo con nombre.
 
-**Paso 4 — Resolver módulos y exports.**
+**Paso 4: Resolver módulos y exports.**
 1. Mantén el módulo de dominio separado del adaptador (HTTP, CLI, base de datos). Si el proyecto es pequeño, un solo paquete sigue siendo válido.
 2. Evita ciclos. Un barrel `index.ts` solo existe para la API pública del paquete, no para cada carpeta.
 3. En una librería, revisa `exports`, `types` y `files`; comprueba que el consumidor no necesita importar desde `src/` ni desde una ruta interna.
 4. Añade project references o compilación incremental solo con una medición que muestre el problema y su mejora.
 
-**Paso 5 — Construir la CLI, si la hay.**
+**Paso 5: Construir la CLI, si la hay.**
 1. Lee `references/cli-rules.md` antes de elegir la estructura de comandos.
 2. Cada comando exporta `defineCommand()`; los subcomandos se cargan de forma perezosa. No añadas un parser alternativo.
 3. Los prompts comprueban `isCancel()` después de cada llamada. Toda operación destructiva exige confirmación explícita y admite modo no interactivo.
@@ -63,7 +63,7 @@ Esta skill posee los tipos, la estructura de módulos, las dependencias y la for
 5. La completitud de pestañas se activa solo en el proceso de completion; nunca en el arranque normal.
 6. Verifica con `--help` que todos los comandos y flags están registrados antes de cerrar.
 
-**Paso 6 — Comprobar el diff.**
+**Paso 6: Comprobar el diff.**
 1. Ejecuta el typecheck del proyecto y el linter si existe. Un cambio de tipos que rompe la compilación no es un cambio de tipos.
 2. Busca `any`, `as`, `enum`, `@ts-ignore` y supresiones nuevas. Cada una necesita una razón o se elimina.
 3. Comprueba que no has añadido abstracciones, genéricos, dependencias ni capas que nadie pidió.
@@ -95,5 +95,5 @@ No verificado: <lista, o "ninguno">
 
 ## Referencias de estilo TypeScript
 
-- [type-rules](references/type-rules.md) — tablas de decisión para `tsconfig`, `unknown`, uniones, branded, guards, genéricos, condicionales, módulos, exports y dependencias. Léela en los pasos 2 a 4 cuando una regla no sea evidente.
-- [cli-rules](references/cli-rules.md) — contrato de una CLI de TypeScript con citty, `@clack/prompts`, completion, salida y empaquetado. Léela en el paso 5.
+- [type-rules](references/type-rules.md): tablas de decisión para `tsconfig`, `unknown`, uniones, branded, guards, genéricos, condicionales, módulos, exports y dependencias. Léela en los pasos 2 a 4 cuando una regla no sea evidente.
+- [cli-rules](references/cli-rules.md): contrato de una CLI de TypeScript con citty, `@clack/prompts`, completion, salida y empaquetado. Léela en el paso 5.

@@ -2,7 +2,7 @@
 name: javascript-idiomatic-style
 description: "Escribe y revisa JavaScript vanilla mantenible para navegador y Node: declara los dos baselines del motor antes de elegir sintaxis, prefiere la construcción que rechaza a la que convierte, modela la asincronía con rechazos observados, resuelve módulos ESM y CJS, construye DOM sin innerHTML con datos externos y mantiene números, errores y dependencias bajo control. Úsala al crear, refactorizar o revisar .js, .mjs o .cjs sin tipos, al decidir qué parte del código es compartida entre navegador y Node, o al escribir un script o una CLI sin framework. No la uses para TypeScript ni JSX, para frameworks de interfaz, para escribir o ejecutar pruebas, ni para calidad visual y CSS."
 metadata:
-  version: "0.1.0"
+  version: "0.1.1"
 ---
 
 # Estilo y diseño idiomático en JavaScript
@@ -36,36 +36,36 @@ Esta skill posee el lenguaje, la forma de los módulos, la asincronía, el DOM y
 
 ## Procedimiento de estilo JavaScript
 
-**Paso 1 — Inspeccionar antes de escribir.**
+**Paso 1: Inspeccionar antes de escribir.**
 1. Lee `package.json` (`type`, `engines`, `exports`), `browserslist`, `.nvmrc`, la matriz de CI y el gestor si lo hay.
 2. Localiza el runner de pruebas, el linter y el script de build; no los sustituyas.
 3. Comprueba la sintaxis de partida con `node --check` o con el script del proyecto.
 4. Revisa los patrones vecinos: módulos, errores, DOM y nombres. Una regla escrita gana.
 
-**Paso 2 — Fijar el baseline y el reparto.**
+**Paso 2: Fijar el baseline y el reparto.**
 1. Escribe el baseline de cada objetivo y su intersección.
 2. Decide qué módulos son compartidos, cuáles de navegador y cuáles de Node; nombra el adaptador de cada frontera.
 3. Marca las fronteras por las que entra dato no confiable: `fetch`, formulario, `localStorage`, `argv`, `env` o fichero. Se validan antes de usarse.
 4. Si el proyecto es TypeScript o usa JSX, detente: esa materia es de las skills de TypeScript.
 
-**Paso 3 — Modelar datos y estados.**
+**Paso 3: Modelar datos y estados.**
 1. Nombra los estados del dominio; si dos no pueden coexistir, sepáralos con un campo literal y una rama exhaustiva.
 2. Decide qué valores son identificadores, cuáles cantidades y cuáles contenido libre. Sin tipos, el nombre y el constructor son el contrato.
 3. Define un error propio cuando el consumidor deba distinguirlo: conserva `Error` como base y usa `cause`.
 
-**Paso 4 — Escribir.**
+**Paso 4: Escribir.**
 1. Contratos antes de cuerpos: parámetros, retorno, errores y cancelación.
 2. Guardas primero; devuelve pronto en lugar de anidar.
 3. Aplica la referencia que corresponda: lenguaje, asincronía y módulos, navegador o Node.
 4. Si una feature no está en el baseline, sustitúyela; no la envuelvas en un polyfill que nadie pidió.
 
-**Paso 5 — Verificar.**
+**Paso 5: Verificar.**
 1. `node --check` sobre cada archivo tocado.
 2. El linter del proyecto, sin desactivar reglas para que pase.
 3. Si el código toca el DOM, ábrelo en el navegador; si toca Node, ejecútalo con los argumentos y variables reales.
 4. Las pruebas son de `javascript-testing-and-verification`: si no existen, dilo en el resultado en lugar de suplirlas.
 
-**Paso 6 — Revisar el diff.**
+**Paso 6: Revisar el diff.**
 1. Busca `var`, `==`, `innerHTML`, `eval`, `new Function`, `document.write`, `process.exit(` y `console.log` de producción, además de supresiones nuevas.
 2. Comprueba que no has añadido dependencias, capas ni abstracciones que nadie pidió.
 3. Cierra con el bloque de resultado.
@@ -94,10 +94,10 @@ Deuda y límites: <lo que queda fuera, con motivo>
 
 ## Referencias del paquete de estilo
 
-- [language-rules](references/language-rules.md) — declaraciones, igualdad, números, funciones, objetos, iteración, clases, expresiones regulares y nombres. Léela en los pasos 2 y 3.
-- [async-and-modules](references/async-and-modules.md) — promesas, `async/await`, cancelación, orden del event loop, ESM y CJS. Léela en el paso 4.
-- [browser-apis](references/browser-apis.md) — DOM seguro, eventos, `fetch`, formularios, almacenamiento, Workers y observers. Léela en el paso 4 cuando el código corra en navegador.
-- [node-apis](references/node-apis.md) — builtins `node:`, ficheros, streams, `argv`, `env`, señales y CLI sin dependencias. Léela en el paso 4 cuando el código corra en Node.
-- [engine-baseline](references/engine-baseline.md) — cómo se leen y concilian los dos baselines y cómo se comprueba una feature. Léela en los pasos 1 y 2.
+- [language-rules](references/language-rules.md): declaraciones, igualdad, números, funciones, objetos, iteración, clases, expresiones regulares y nombres. Léela en los pasos 2 y 3.
+- [async-and-modules](references/async-and-modules.md): promesas, `async/await`, cancelación, orden del event loop, ESM y CJS. Léela en el paso 4.
+- [browser-apis](references/browser-apis.md): DOM seguro, eventos, `fetch`, formularios, almacenamiento, Workers y observers. Léela en el paso 4 cuando el código corra en navegador.
+- [node-apis](references/node-apis.md): builtins `node:`, ficheros, streams, `argv`, `env`, señales y CLI sin dependencias. Léela en el paso 4 cuando el código corra en Node.
+- [engine-baseline](references/engine-baseline.md): cómo se leen y concilian los dos baselines y cómo se comprueba una feature. Léela en los pasos 1 y 2.
 
 Este paquete no incluye `scripts/`: la comprobación es `node --check`, el linter del proyecto y la ejecución real. La puerta determinista vive en `javascript-testing-and-verification`.

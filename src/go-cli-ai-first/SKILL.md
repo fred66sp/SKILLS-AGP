@@ -2,7 +2,7 @@
 name: go-cli-ai-first
 description: "Diseña, implementa y revisa CLIs en Go pensadas para agentes de IA y para personas: fija un contrato estable de comandos, flags, stdin/stdout/stderr, salida JSON, códigos de salida y errores machine-readable; exige modo no interactivo, `--dry-run`, confirmación explícita para operaciones destructivas, idempotencia, cancelación por señal y salida acotada. Úsala cuando haya que crear una CLI, añadir o cambiar comandos, flags o formato de salida, o auditar si una CLI existente es segura y automatizable. No la uses para diseño de producto, interfaces gráficas, APIs HTTP, arquitectura de microservicios, ni para reglas generales de estilo, errores o pruebas de Go, que tienen sus propias skills."
 metadata:
-  version: "1.0.0"
+  version: "1.0.1"
 ---
 
 # CLI Go para agentes
@@ -32,50 +32,50 @@ Esta skill posee el contrato de la CLI: comandos, flags, flujos, JSON, códigos 
 
 ## Procedimiento de la CLI
 
-**Paso 1 — Delimitar la CLI y sus consumidores.**
+**Paso 1: Delimitar la CLI y sus consumidores.**
 1. Identifica el binario, el dominio, los consumidores reales (agente, script, persona) y las operaciones que deben existir.
 2. Lee `references/cli-contract.md` antes de decidir nombres, flags, salida o códigos.
 3. Revisa `go.mod`, la estructura existente y cualquier convención del proyecto. Si ya hay una CLI, inventaría sus comandos y marca qué parte del contrato está implícita.
 
-**Paso 2 — Escribir el contrato.**
+**Paso 2: Escribir el contrato.**
 1. Copia `assets/command-spec.md` a un documento de trabajo y rellena una ficha por comando.
 2. Define para cada comando: entrada, salida de éxito, error posible, efecto sobre el estado, idempotencia, modo `--dry-run` y requisito de `--yes`.
 3. Fija el esquema JSON de éxito y de error. Si hay varios comandos, comparte el sobre y especializa solo `data`.
 4. Identifica los cambios incompatibles y decide versión y migración antes de implementar.
 
-**Paso 3 — Elegir la estructura.**
+**Paso 3: Elegir la estructura.**
 1. Empieza por la estructura mínima que mantenga `main` como cableado y la lógica en una función `run` testeable. Cuántos paquetes hacen falta lo decide `go-idiomatic-style`.
 2. Cuando la CLI tenga varios comandos o el paquete único deje de ser legible, separa `cmd/<binario>/main.go` (cableado), `internal/cli` (parseo, ayuda, formato y mapeo de errores) e `internal/app` (casos de uso). No crees esas capas antes de que exista la necesidad.
 3. Inyecta `stdin`, `stdout`, `stderr`, reloj y entorno como dependencias. No uses `os.Stdout` ni `time.Now` dentro de la lógica de negocio.
 
-**Paso 4 — Implementar la superficie.**
+**Paso 4: Implementar la superficie.**
 1. Implementa la ayuda raíz y la de cada comando antes que la lógica. Un comando sin ayuda no está listo.
 2. Usa `flag.NewFlagSet` con `flag.ContinueOnError` y una salida propia; no dejes que la biblioteca escriba la ayuda ni llame a `os.Exit`.
 3. Acepta `--flag` y `-flag`; documenta la forma canónica. Los nombres de flag usan kebab-case.
 4. Implementa un renderizador de texto y otro JSON sobre el mismo resultado tipado. No construyas el JSON a mano en cada comando.
 5. Implementa el sobre de error y el mapeo a código de salida en un único punto.
 
-**Paso 5 — Añadir seguridad e idempotencia.**
+**Paso 5: Añadir seguridad e idempotencia.**
 1. Implementa `--dry-run`: calcula el plan, muéstralo por `stdout` y no muta nada.
 2. Implementa la confirmación: sin `--yes`, una operación destructiva muestra el plan y sale con `4`; con `--yes`, ejecuta.
 3. Escribe archivos con temporal en el mismo directorio, `fsync` y `rename` atómico. Nunca dejes un archivo a medias.
 4. Devuelve `changed` en el resultado. Si el estado ya es el deseado, no reescribas y no falles.
 5. Limita listados y flujos; rechaza `--limit` negativo o cero cuando no tenga sentido.
 
-**Paso 6 — Resolver el ciclo de vida.**
+**Paso 6: Resolver el ciclo de vida.**
 Aplica `go-errors-and-lifecycle`. En la CLI:
 
 1. `main` crea el contexto con `signal.NotifyContext`, lo propaga a las operaciones y sale con `3` al cancelar.
 2. Trata `EPIPE` como una salida normal: si el consumidor cierra la tubería, termina con `0` sin ruido.
 
-**Paso 7 — Probar el contrato, no solo la lógica.**
+**Paso 7: Probar el contrato, no solo la lógica.**
 Aplica las capas de `go-testing-and-verification`. En la CLI cubre además:
 
 1. La superficie con pruebas de extremo a extremo que ejecutan el binario y comprueban por separado `stdout`, `stderr` y código de salida.
 2. Ayuda, versión, comando desconocido, flag desconocido, JSON válido, `--dry-run`, falta de `--yes`, cancelación y `EPIPE`.
 3. Golden files para la salida estable, normalizando rutas, tiempos y mensajes del sistema.
 
-**Paso 8 — Cerrar con evidencia.**
+**Paso 8: Cerrar con evidencia.**
 1. Ejecuta la puerta de `go-testing-and-verification` y adjunta su resultado.
 2. Rellena el bloque de resultado. Ningún comando del contrato queda sin verificar o declarado como no disponible.
 
@@ -103,5 +103,5 @@ No verificado: <lista, o "ninguno">
 
 ## Referencias de la CLI
 
-- [cli-contract](references/cli-contract.md) — gramática de comandos, flags, flujos, códigos de salida, sobre JSON, ayuda, seguridad y compatibilidad. Léela en el paso 1 y consúltala en los pasos 2, 4 y 5.
-- [command-spec](assets/command-spec.md) — ficha por comando. Cópiala en el paso 2.
+- [cli-contract](references/cli-contract.md): gramática de comandos, flags, flujos, códigos de salida, sobre JSON, ayuda, seguridad y compatibilidad. Léela en el paso 1 y consúltala en los pasos 2, 4 y 5.
+- [command-spec](assets/command-spec.md): ficha por comando. Cópiala en el paso 2.

@@ -6,7 +6,7 @@
 <meta name="description" content="Entrada a la skill skill-creator: qué hace, cuándo se activa, cómo se validan los metadatos, qué contiene el paquete, dónde vive cada regla, las preguntas de la primera conversación y los dos diagramas. Las reglas están en SKILL.md, en la checklist, en la plantilla y en scripts/validate-metadata.py, no copiadas en esta página.">
 <meta name="color-scheme" content="light dark">
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%236d28d9'/%3E%3Cpath d='M18.2 8.4l5.4 5.4-9.1 9.1-5.4-5.4z' fill='none' stroke='%23ffffff' stroke-width='2' stroke-linejoin='round'/%3E%3Cpath d='M8.6 23.4l-.9 1.9 1.9-.9' fill='none' stroke='%23ffffff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
-<title>skill-creator — Skills que se descubren y se ejecutan</title>
+<title>skill-creator · Skills que se descubren y se ejecutan</title>
 <script>
 (function () {
   try {
@@ -493,7 +493,7 @@
 
     <section id="cuando" class="section">
       <div class="section-head"><span class="section-num">2</span><h2 class="title">Cuándo se activa</h2></div>
-      <p class="sub">Las dos columnas están en la <code>description</code> del frontmatter. Los disparadores negativos no son cortesía: son lo que evita que la skill se active en la conversación equivocada.</p>
+      <p class="sub">Las dos columnas están en la <code>description</code> del frontmatter. Los disparadores negativos evitan que la skill se active en la conversación equivocada; no son cortesía.</p>
 
       <div class="table-wrap wrap-cells">
         <table>
@@ -513,7 +513,7 @@
 
     <section id="uso" class="section">
       <div class="section-head"><span class="section-num">3</span><h2 class="title">Cómo se usa</h2></div>
-      <p class="sub">El procedimiento cubre metadatos, directorio, <code>SKILL.md</code>, scripts, composición opcional y auditoría final, más la gestión de errores. Esta página no los copia: documenta la única puerta automática del recorrido, el validador de metadatos, y el significado de lo que imprime. Los límites que aplica a <code>name</code> y <code>description</code> están en el paso 1 de <code>SKILL.md</code> y en el propio script. La ruta está escrita como la escribe el <code>SKILL.md</code>, relativa a la carpeta de la skill; desde la raíz del repositorio el fichero está en <code>.skills/skill-creator/scripts/validate-metadata.py</code>.</p>
+      <p class="sub">El procedimiento cubre metadatos, directorio, <code>SKILL.md</code>, scripts, composición opcional, auditoría final y gestión de errores. Esta página documenta la única puerta automática del recorrido, el validador de metadatos, y el significado de lo que imprime. Los límites que aplica a <code>name</code> y <code>description</code> están en el paso 1 de <code>SKILL.md</code> y en el propio script. La ruta está escrita como la escribe el <code>SKILL.md</code>, relativa a la carpeta de la skill; desde la raíz del repositorio el fichero está en <code>.skills/skill-creator/scripts/validate-metadata.py</code>.</p>
 
       <div class="code"><pre><code>python3 scripts/validate-metadata.py --name "[name]" --description "[description]"</code></pre></div>
 
@@ -627,7 +627,7 @@
       <p>Cada diagrama se abre como página suelta: archify 3.2.0 no enlaza desde el artefacto a una página local, así que se vuelve con el botón atrás del navegador o con el índice de arriba.</p>
 
       <div class="note">
-        <p><strong>Convenio de este repositorio, no mandato de la skill.</strong> <code>docs/&lt;skill&gt;/index.html</code>, los diagramas de archify y sus recibos <code>.delivery.json</code> son cómo SKILLS-AGP documenta sus skills. Los genera archify 3.2.0 desde el <code>.json</code> que está junto a cada HTML; el comando y la comprobación del recibo están en la sección Documentación del <code>README.md</code>. La skill no pide esta página ni ningún diagrama: otro repositorio documenta lo que quiera.</p>
+        <p><strong>Es un convenio de este repositorio, no un mandato de la skill:</strong> <code>docs/&lt;skill&gt;/index.html</code>, los diagramas de archify y sus recibos <code>.delivery.json</code> son cómo SKILLS-AGP documenta sus skills. Los genera archify 3.2.0 desde el <code>.json</code> que está junto a cada HTML; el comando y la comprobación del recibo están en la sección Documentación del <code>README.md</code>. La skill no pide esta página ni ningún diagrama: otro repositorio documenta lo que quiera.</p>
       </div>
     </section>
     <section id="verificacion" class="section">

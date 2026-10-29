@@ -2,7 +2,7 @@
 name: prd-cartographer
 description: "Produce y revisa Product Requirements Documents (PRD) verificables y trazables: separa evidencia, decisiones, inferencias, hipótesis y desconocidos; exige métricas medibles, alcance con exclusiones y criterios de aceptación observables; y declara un estado de preparación explícito en lugar de un documento aparentemente completo. Úsala cuando haya que transformar una idea, una investigación, un concepto de producto o un encargo ambiguo en un PRD para producto, diseño, ingeniería y QA, o revisar y auditar un PRD existente. No la uses para diseño técnico, arquitectura de software, especificación de implementación, documentación técnica general, contenido comercial ni material de marketing."
 metadata:
-  version: "0.1.0"
+  version: "0.1.1"
 ---
 
 # PRD Cartographer
@@ -27,31 +27,31 @@ El documento debe servir para decidir y poder auditarse después. La claridad pr
 
 ## Procedimiento del PRD
 
-**Paso 1 — Delimitar el encargo.**
+**Paso 1: Delimitar el encargo.**
 1. Identifica la operación: crear un PRD, revisar uno existente o auditar su preparación sin modificarlo.
 2. Identifica el tipo: `producto` nuevo o `feature` sobre un producto existente. Para una feature, conserva el contexto del producto y no lo repitas sin necesidad.
 3. Identifica la audiencia y la decisión que habilita el PRD: inversión, priorización, diseño, desarrollo, validación o lanzamiento.
 4. Si faltan el problema, el usuario o la fuente de una decisión crítica, formula una sola pregunta concreta y detente. No interrogues para rellenar una plantilla.
 
-**Paso 2 — Inventariar las fuentes.**
+**Paso 2: Inventariar las fuentes.**
 1. Enumera las fuentes realmente disponibles: archivos, texto aportado, repositorio, entrevistas, datos, analítica, enlaces y decisiones previas.
 2. Registra para cada una: tipo, procedencia, fecha visible, alcance y limitación. Si una fecha no es visible, escribe `UNKNOWN`.
 3. Extrae afirmaciones atómicas. No mezcles hechos, opiniones, objetivos y propuestas en una sola frase.
 4. Lee `references/evidence-and-claims.md` cuando una afirmación no esté directamente sustentada o cuando dos fuentes puedan discrepar.
 
-**Paso 3 — Decidir si procede un PRD.**
+**Paso 3: Decidir si procede un PRD.**
 1. Comprueba si existe descubrimiento suficiente: problema delimitado, usuarios identificados con evidencia, oportunidad o necesidad sustentada y resultado esperado comprensible.
 2. Si no lo hay, entrega un diagnóstico de preparación con `Estado: NO LISTO` y redacta el `Problem Statement` o `Product Concept` que falta. No presentes ese documento como PRD.
 3. Si hay evidencia parcial, redacta el PRD como `PARCIAL` y marca cada hueco crítico con `UNKNOWN`, `Hipótesis` o `Parcial`.
 4. Formula el **Universal Idea Model**: `Un [objeto] para [usuarios] que [hace algo] para [lograr un resultado]. Los usuarios obtienen [valor] cuando [situación].` Si un campo no puede completarse sin inventar, escribe `UNKNOWN` y explica qué evidencia lo desbloquearía.
 
-**Paso 4 — Fijar problema y concepto.**
+**Paso 4: Fijar problema y concepto.**
 1. Describe el problema antes que la solución: entorno, personas afectadas, dinámica, estado actual, síntomas, causas conocidas y estado ideal.
 2. Distingue causa demostrada de hipótesis causal. Una correlación no demuestra una causa.
 3. Describe el concepto: contexto, usuarios y necesidades, experiencia o factor de forma, estrategia y monetización solo si aplica.
 4. Registra preguntas abiertas y riesgos del concepto antes de convertirlo en requisitos.
 
-**Paso 5 — Redactar el PRD.**
+**Paso 5: Redactar el PRD.**
 1. Copia la estructura de `assets/prd-template.md` y sustituye cada marcador por contenido concreto. Lee `references/prd-structure.md` para el criterio de cada sección.
 2. Escribe en español de España, en imperativo y tercera persona, sin voseo.
 3. Redacta cada requisito de forma comprensible, necesaria, no ambigua, comprobable y vinculada a una historia, objetivo o riesgo.
@@ -60,18 +60,18 @@ El documento debe servir para decidir y poder auditarse después. La claridad pr
 6. Separa en tablas o etiquetas visibles `hecho`, `decisión aprobada`, `propuesta`, `hipótesis` y `desconocido`.
 7. Añade requisitos no funcionales solo cuando estén justificados por seguridad, privacidad, accesibilidad, rendimiento, disponibilidad, cumplimiento o compatibilidad.
 
-**Paso 6 — Revisar coherencia y calidad.**
+**Paso 6: Revisar coherencia y calidad.**
 1. Busca contradicciones entre problema, usuarios, objetivos, funcionalidades, métricas, alcance y dependencias.
 2. Comprueba que cada funcionalidad tiene persona, objetivo o problema; que cada métrica tiene método; que cada exclusión no contradice los objetivos; y que ninguna dependencia no verificada se presenta como disponible.
 3. Lee `references/quality-gate.md` y ejecuta todas sus comprobaciones. No abuses del veredicto `LISTO PARA REVISIÓN`.
 4. Si una afirmación no se sostiene, baja su grado o retírala. No la maquilles con lenguaje seguro.
 
-**Paso 7 — Planificar validación y mantenimiento.**
+**Paso 7: Planificar validación y mantenimiento.**
 1. Define qué debe revisar producto, diseño, ingeniería, QA y usuarios reales. Asigna cada validación a una evidencia o acción concreta.
 2. Incluye versión, fecha, estado, propietario, historial de cambios y condiciones que obligan a revisar el PRD.
 3. Trata el PRD como documento vivo: debe reflejar lo que el equipo cree actualmente, no lo que creía al aprobarse.
 
-**Paso 8 — Cerrar con evidencia.**
+**Paso 8: Cerrar con evidencia.**
 1. Copia la estructura de `assets/delivery-template.md` y rellena cada campo con evidencia.
 2. Enumera las fuentes inventariadas, las afirmaciones críticas con su trazabilidad, las contradicciones, los `UNKNOWN` y las decisiones pendientes.
 3. Declara el resultado de la puerta de calidad y las validaciones humanas que faltan.
@@ -105,8 +105,8 @@ No presentes el PRD como aprobado. Si el usuario no ha dado aprobación, marca l
 
 ## Referencias del paquete de PRD
 
-- [evidence-and-claims](references/evidence-and-claims.md) — grados de certeza, comparación de fuentes y límites de la verificación. Léelo en el paso 2 y cuando una afirmación crítica no esté sustentada.
-- [prd-structure](references/prd-structure.md) — criterio de cada sección, métricas, personas, requisitos y criterios de aceptación. Léelo en el paso 5.
-- [quality-gate](references/quality-gate.md) — comprobaciones previas a declarar un PRD preparado para revisión. Léelo en el paso 6.
-- [prd-template](assets/prd-template.md) — estructura mínima del PRD. Cópiala en el paso 5.
-- [delivery-template](assets/delivery-template.md) — formato de cierre. Cópialo en el paso 8.
+- [evidence-and-claims](references/evidence-and-claims.md): grados de certeza, comparación de fuentes y límites de la verificación. Léelo en el paso 2 y cuando una afirmación crítica no esté sustentada.
+- [prd-structure](references/prd-structure.md): criterio de cada sección, métricas, personas, requisitos y criterios de aceptación. Léelo en el paso 5.
+- [quality-gate](references/quality-gate.md): comprobaciones previas a declarar un PRD preparado para revisión. Léelo en el paso 6.
+- [prd-template](assets/prd-template.md): estructura mínima del PRD. Cópiala en el paso 5.
+- [delivery-template](assets/delivery-template.md): formato de cierre. Cópialo en el paso 8.

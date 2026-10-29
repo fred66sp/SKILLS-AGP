@@ -2,7 +2,7 @@
 name: typescript-testing-and-verification
 description: "Diseña y ejecuta la verificación de código TypeScript: validación de todo dato externo en la frontera con Zod 4 y tipos inferidos, comprobación de tipos con tsc --noEmit, pruebas unitarias y de integración, pruebas de extremo a extremo de CLIs, determinismo, errores legibles, variables de entorno al arranque y la puerta de typecheck, lint, test y build con scripts/verify-ts.py. Úsala cuando haya que escribir o revisar pruebas, validar entradas no confiables, comprobar una regresión o declarar un cambio terminado. No la uses para diseño de tipos, estilo general ni arquitectura de la CLI, que tienen su propia skill."
 metadata:
-  version: "0.1.0"
+  version: "0.1.1"
 ---
 
 # Validación y verificación en TypeScript
@@ -36,41 +36,41 @@ Esta skill posee la validación en la frontera, las pruebas y la puerta de verif
 
 ## Procedimiento de verificación TypeScript
 
-**Paso 1 — Mapear comportamientos, fronteras y riesgos.**
+**Paso 1: Mapear comportamientos, fronteras y riesgos.**
 1. Enumera lo que el usuario o el agente observan: comandos, flags, formatos, errores, códigos de salida, efectos y límites.
 2. Marca cada frontera por la que entra un dato no confiable: cuerpo HTTP, query, webhook, respuesta de terceros, formulario, fichero, `process.env` y argumentos de la CLI.
 3. Marca los riesgos: datos que se destruyen, secretos que se filtran, cancelación, concurrencia, compatibilidad del contrato.
 4. Decide la capa de cada comprobación y descarta la que no aporte confianza.
 
-**Paso 2 — Validar las fronteras.**
+**Paso 2: Validar las fronteras.**
 1. Lee `references/validation-rules.md` antes de escribir el primer esquema.
 2. Define un esquema por contrato externo y deriva sus tipos. Mantén el esquema cerca del adaptador que lo usa, salvo que cliente y servidor compartan el mismo contrato.
 3. Parsea antes de usar. En un handler, `safeParse` y respuesta de error; en configuración, `parse` y arranque fallido.
 4. Comprueba que el esquema rechaza lo que debe rechazar y que las transformaciones producen el tipo de salida esperado.
 5. Revalida en el servidor aunque el cliente ya haya validado. El cliente no es confiable.
 
-**Paso 3 — Cubrir la lógica con pruebas.**
+**Paso 3: Cubrir la lógica con pruebas.**
 1. Lee `references/test-layers.md` para elegir la capa.
 2. Escribe pruebas unitarias para funciones con ramas, cálculos, validación y transformación. Usa tabla cuando compartan el mismo camino.
 3. Prueba los esquemas con válidos, inválidos y límites; comprueba `z.flattenError` o la forma de error que consuma el receptor.
 4. Prueba las transformaciones y refinamientos, incluidos los asíncronos con `parseAsync`.
 5. Comprueba errores y cancelación sin comparar mensajes completos que dependan del entorno.
 
-**Paso 4 — Probar la CLI, si la hay.**
+**Paso 4: Probar la CLI, si la hay.**
 1. Construye el binario una vez antes de la suite o en el `globalSetup` del runner.
 2. Ejecuta cada caso con `spawn`/`execFile`, argumentos explícitos y `stdin` controlado. No dependas del directorio de trabajo: pasa rutas absolutas o usa un directorio temporal.
 3. Captura `stdout` y `stderr` por separado y comprueba el código de salida.
 4. Cubre `--help`, `--version`, comando desconocido, flag desconocido, JSON válido, modo no interactivo, cancelación, `--dry-run` y falta de `--yes`.
 5. Comprueba que un fallo no deja archivos parciales y que los secretos no aparecen en ningún canal.
 
-**Paso 5 — Ejecutar la puerta.**
+**Paso 5: Ejecutar la puerta.**
 La puerta ejecuta los scripts del proyecto (`npm run`, `pnpm`, `yarn` o `bun`): ejecútala solo sobre un proyecto confiable o dentro de un contenedor o usuario sin privilegios.
 
 1. Ejecuta `python src/typescript-testing-and-verification/scripts/verify-ts.py --root . --test --lint --build` o el subconjunto que el proyecto soporte.
 2. Si falla, corrige por categoría: tipos, lint, test o build. No silencies con `@ts-ignore` ni desactives una regla sin justificación.
 3. Copia `assets/verification-report.md` y rellena cada campo con la salida real.
 
-**Paso 6 — Cerrar con evidencia.**
+**Paso 6: Cerrar con evidencia.**
 1. Declara qué se verificó, con qué comando y con qué resultado.
 2. Declara lo que no se pudo verificar y por qué.
 3. No conviertas un fallo conocido en «pendiente»: o se corrige, o se declara como bloqueo.
@@ -101,7 +101,7 @@ No verificado: <lista con motivo, o "ninguno">
 
 ## Referencias de verificación TypeScript
 
-- [validation-rules](references/validation-rules.md) — Zod 4 en la frontera: esquemas, tipos inferidos, `parse`/`safeParse`, transformaciones, errores, entorno, cliente/servidor y rendimiento. Léela en el paso 2.
-- [test-layers](references/test-layers.md) — capas de prueba, esquemas, CLI de extremo a extremo, determinismo y dobles de prueba. Léela en los pasos 3 y 4.
-- [verification-report](assets/verification-report.md) — formato de cierre con evidencia. Cópialo en el paso 5.
-- [verify-ts](scripts/verify-ts.py) — ejecuta la puerta y devuelve texto o JSON. Úsalo en el paso 5.
+- [validation-rules](references/validation-rules.md): Zod 4 en la frontera: esquemas, tipos inferidos, `parse`/`safeParse`, transformaciones, errores, entorno, cliente/servidor y rendimiento. Léela en el paso 2.
+- [test-layers](references/test-layers.md): capas de prueba, esquemas, CLI de extremo a extremo, determinismo y dobles de prueba. Léela en los pasos 3 y 4.
+- [verification-report](assets/verification-report.md): formato de cierre con evidencia. Cópialo en el paso 5.
+- [verify-ts](scripts/verify-ts.py): ejecuta la puerta y devuelve texto o JSON. Úsalo en el paso 5.

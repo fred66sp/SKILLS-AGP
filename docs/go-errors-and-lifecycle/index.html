@@ -6,7 +6,7 @@
 <meta name="description" content="Entrada a la skill go-errors-and-lifecycle: qué hace, cuándo se activa, cómo se usa, qué contiene el paquete, dónde vive cada regla, las preguntas de la primera conversación y los dos diagramas. Las reglas están en SKILL.md y en sus referencias, no copiadas en esta página.">
 <meta name="color-scheme" content="light dark">
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23c2410c'/%3E%3Cpath d='M16 7l8 17H8z' fill='none' stroke='%23ffffff' stroke-width='2.2' stroke-linejoin='round'/%3E%3Cpath d='M16 14v4' stroke='%23ffffff' stroke-width='2.2' stroke-linecap='round'/%3E%3Ccircle cx='16' cy='21' r='1.2' fill='%23ffffff'/%3E%3C/svg%3E">
-<title>go-errors-and-lifecycle — errores como contrato y cierre ordenado</title>
+<title>go-errors-and-lifecycle · errores como contrato y cierre ordenado</title>
 <script>
 (function () {
   try {
@@ -466,7 +466,7 @@
   <main id="contenido">
     <section id="que-hace" class="section">
       <div class="section-head"><span class="section-num">1</span><h2 class="title">Qué hace</h2></div>
-      <p class="sub">Convierte cada fallo en una decisión que el llamador puede tomar y cada proceso en algo que termina por todas sus salidas: éxito, error, cancelación, timeout o cierre del propietario.</p>
+      <p class="sub">Convierte cada fallo en una decisión para el llamador y cada proceso en algo que termina bien por cualquiera de sus salidas: éxito, error, cancelación, timeout o cierre del propietario.</p>
 
       <div class="table-wrap wrap-cells">
         <table>
@@ -489,7 +489,7 @@
 
     <section id="cuando" class="section">
       <div class="section-head"><span class="section-num">2</span><h2 class="title">Cuándo se activa</h2></div>
-      <p class="sub">La columna izquierda dispara la skill; la derecha está escrita en su descripción para que no se active donde no aporta.</p>
+      <p class="sub">La columna izquierda activa la skill. La derecha queda fuera de su descripción para que no se active donde no aporta.</p>
 
       <div class="table-wrap wrap-cells">
         <table>
@@ -563,7 +563,7 @@
 
     <section id="reglas" class="section">
       <div class="section-head"><span class="section-num">5</span><h2 class="title">Dónde están las reglas</h2></div>
-      <p class="sub">Las reglas viven en el paquete. Aquí no se copian: se indica qué fichero responde a cada pregunta.</p>
+      <p class="sub">Las reglas están en el paquete y aquí solo se indica qué fichero responde a cada pregunta.</p>
 
       <div class="table-wrap wrap-cells">
         <table>
@@ -618,10 +618,10 @@
         </a>
       </div>
 
-      <p>Cada diagrama se abre como página suelta: archify no enlaza desde el artefacto a una página local, así que se vuelve con el botón atrás del navegador o con el índice de arriba.</p>
+      <p>Cada diagrama se abre como página suelta. Archify no enlaza el artefacto con una página local: se vuelve con el botón atrás o con el índice de arriba.</p>
 
       <div class="note">
-        <p><strong>Convenio de este repositorio, no mandato de la skill.</strong> <code>docs/&lt;skill&gt;/index.html</code>, los diagramas y sus recibos <code>.delivery.json</code> son cómo SKILLS-AGP documenta sus skills. Los genera archify desde el <code>.json</code> que está junto a cada HTML; el comando y la comprobación del recibo están en la sección Documentación del <code>README.md</code>.</p>
+        <p><strong>Es un convenio de este repositorio, no un mandato de la skill:</strong> <code>docs/&lt;skill&gt;/index.html</code>, los diagramas y sus recibos <code>.delivery.json</code> son cómo SKILLS-AGP documenta sus skills. Los genera archify desde el <code>.json</code> que está junto a cada HTML; el comando y la comprobación del recibo están en la sección Documentación del <code>README.md</code>.</p>
       </div>
     </section>
     <section id="verificacion" class="section">

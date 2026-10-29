@@ -6,7 +6,7 @@
 <meta name="description" content="Entrada a la skill go-cli-ai-first: qué hace, cuándo se activa, cómo se usa, qué contiene el paquete, dónde vive cada regla, las preguntas de la primera conversación y los dos diagramas. Las reglas están en SKILL.md y en las referencias, no copiadas en esta página.">
 <meta name="color-scheme" content="light dark">
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%230284c7'/%3E%3Cpath d='M8 10l4 3-4 3' fill='none' stroke='%23ffffff' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M16 19h8' fill='none' stroke='%23ffffff' stroke-width='2.4' stroke-linecap='round'/%3E%3C/svg%3E">
-<title>go-cli-ai-first — una CLI que un agente puede descubrir, ejecutar y verificar</title>
+<title>go-cli-ai-first · una CLI que un agente puede descubrir, ejecutar y verificar</title>
 <script>
 (function () {
   try {
@@ -466,7 +466,7 @@
   <main id="contenido">
     <section id="que-hace" class="section">
       <div class="section-head"><span class="section-num">1</span><h2 class="title">Qué hace</h2></div>
-      <p class="sub">Convierte la interfaz de una CLI en un contrato que un agente puede descubrir, ejecutar y comprobar sin leer el código. La comodidad humana no se sacrifica: se subordina a la previsibilidad máquina.</p>
+      <p class="sub">Convierte la interfaz de una CLI en un contrato que un agente puede descubrir, ejecutar y comprobar sin leer el código. La comodidad humana no desaparece: queda por debajo de la previsibilidad de la máquina.</p>
 
       <div class="table-wrap wrap-cells">
         <table>
@@ -489,7 +489,7 @@
 
     <section id="cuando" class="section">
       <div class="section-head"><span class="section-num">2</span><h2 class="title">Cuándo se activa</h2></div>
-      <p class="sub">La columna izquierda dispara la skill; la derecha está escrita en su descripción para que no se active donde no aporta.</p>
+      <p class="sub">La columna izquierda activa la skill. La derecha queda fuera de su descripción para que no se active donde no aporta.</p>
 
       <div class="table-wrap wrap-cells">
         <table>
@@ -511,7 +511,7 @@
 
     <section id="uso" class="section">
       <div class="section-head"><span class="section-num">3</span><h2 class="title">Cómo se usa</h2></div>
-      <p class="sub">Ocho pasos en orden. La profundidad cambia con el tamaño de la CLI; la presencia de cada paso, no.</p>
+      <p class="sub">Ocho pasos en orden. El tamaño de la CLI cambia la profundidad de cada paso, no cuáles se hacen.</p>
 
       <div class="flow">
         <div class="flow-step"><code>paso 1</code><strong>Delimitar</strong><p>Binario, dominio, consumidores y operaciones. Antes de nombres, se lee el contrato de referencia.</p></div>
@@ -618,10 +618,10 @@
         </a>
       </div>
 
-      <p>Cada diagrama se abre como página suelta: archify no enlaza desde el artefacto a una página local, así que se vuelve con el botón atrás del navegador o con el índice de arriba.</p>
+      <p>Cada diagrama se abre como página suelta. Archify no enlaza el artefacto con una página local: se vuelve con el botón atrás o con el índice de arriba.</p>
 
       <div class="note">
-        <p><strong>Convenio de este repositorio, no mandato de la skill.</strong> <code>docs/&lt;skill&gt;/index.html</code>, los diagramas y sus recibos <code>.delivery.json</code> son cómo SKILLS-AGP documenta sus skills. Los genera archify desde el <code>.json</code> que está junto a cada HTML; el comando y la comprobación del recibo están en la sección Documentación del <code>README.md</code>. Otro repositorio documenta la skill como le parezca: la política documental del repositorio prevalece.</p>
+        <p><strong>Es un convenio de este repositorio, no un mandato de la skill:</strong> <code>docs/&lt;skill&gt;/index.html</code>, los diagramas y sus recibos <code>.delivery.json</code> son cómo SKILLS-AGP documenta sus skills. Los genera archify desde el <code>.json</code> que está junto a cada HTML; el comando y la comprobación del recibo están en la sección Documentación del <code>README.md</code>. Otro repositorio documenta la skill como le parezca: la política documental del repositorio prevalece.</p>
       </div>
     </section>
     <section id="verificacion" class="section">

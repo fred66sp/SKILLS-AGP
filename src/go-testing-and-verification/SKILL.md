@@ -2,7 +2,7 @@
 name: go-testing-and-verification
 description: "Diseña y ejecuta la verificación de código Go, con prioridad en CLIs: pruebas unitarias y de tabla, golden files deterministas, pruebas de extremo a extremo del binario, casos de error y cancelación, y la puerta gofmt, build, test, vet, race y lint. Úsala cuando haya que escribir o revisar pruebas, fijar el comportamiento de una CLI, comprobar una regresión o declarar un cambio terminado. No la uses para benchmarks de rendimiento, estrategia de errores, diseño de la CLI ni estilo general, que tienen sus propias skills."
 metadata:
-  version: "1.0.0"
+  version: "1.0.1"
 ---
 
 # Pruebas y verificación en Go
@@ -33,43 +33,43 @@ Esta skill posee las pruebas y la puerta de verificación. El contrato de la CLI
 
 ## Procedimiento de verificación
 
-**Paso 1 — Mapear comportamientos y riesgos.**
+**Paso 1: Mapear comportamientos y riesgos.**
 1. Enumera los comportamientos que el usuario o el agente observan: comandos, flags, formatos, errores, códigos de salida, efectos y límites.
 2. Marca los riesgos: datos que se destruyen, secretos que se filtran, cancelación, concurrencia, compatibilidad del contrato.
 3. Decide la capa de cada comprobación y descarta la que no aporte confianza.
 
-**Paso 2 — Cubrir la lógica pura.**
+**Paso 2: Cubrir la lógica pura.**
 1. Escribe pruebas unitarias para las funciones con ramas, cálculos, validación y transformación.
 2. Usa tabla cuando los casos compartan el mismo camino; incluye límites, cero, vacío, error y variantes de entrada.
 3. Comprueba errores con `errors.Is`/`errors.As`.
 
-**Paso 3 — Fijar la salida.**
+**Paso 3: Fijar la salida.**
 1. Usa golden files para texto y JSON estables. Guarda el fichero esperado junto al test.
 2. Normaliza lo que depende del entorno antes de comparar: rutas, `\` frente a `/`, timestamps, IDs aleatorios.
 3. Implementa una flag `-update` o un helper equivalente que solo reescriba los golden cuando se pida; revisa el diff antes de aceptarlo.
 4. Valida el JSON con `json.Unmarshal` o un esquema, no solo con comparación de cadenas.
 
-**Paso 4 — Probar el binario.**
+**Paso 4: Probar el binario.**
 1. Construye el binario una vez en `TestMain` o con `go build` a un directorio temporal.
 2. Ejecuta cada caso con `exec.CommandContext`, argumentos explícitos y `stdin` controlado.
 3. Captura `stdout` y `stderr` por separado y comprueba el código de salida.
 4. Cubre ayuda, versión, comando desconocido, flag desconocido, JSON válido, `--dry-run`, falta de `--yes` y `EPIPE`.
 5. No dependas del directorio de trabajo del test: pasa rutas absolutas o usa `t.TempDir()`.
 
-**Paso 5 — Cubrir errores, seguridad y ciclo de vida.**
+**Paso 5: Cubrir errores, seguridad y ciclo de vida.**
 1. Prueba cada `code` estable y su código de salida.
 2. Comprueba que un fallo no deja archivos parciales y que `--dry-run` no muta.
 3. Comprueba que los secretos no aparecen en `stdout`, `stderr` ni en el JSON.
 4. Prueba la cancelación con un contexto cancelado y, si hay goroutines, con el detector de carreras.
 
-**Paso 6 — Ejecutar la puerta.**
+**Paso 6: Ejecutar la puerta.**
 La puerta ejecuta código del proyecto (`go build`, `go test` y el linter): ejecútala solo sobre un proyecto confiable o dentro de un contenedor o usuario sin privilegios.
 
 1. Ejecuta `python src/go-testing-and-verification/scripts/verify-go.py --root .` (o `--race`, `--lint`).
 2. Si falla, corrige por categoría: formato, compilación, test, vet, race, lint. No silencies con `//nolint` sin justificación.
 3. Copia `assets/verification-report.md` y rellena cada campo con la salida real.
 
-**Paso 7 — Cerrar con evidencia.**
+**Paso 7: Cerrar con evidencia.**
 1. Declara qué se verificó, con qué comando y con qué resultado.
 2. Declara lo que no se pudo verificar y por qué.
 3. No conviertas un fallo conocido en «pendiente»: o se corrige, o se declara como bloqueo.
@@ -97,6 +97,6 @@ No verificado: <lista con motivo, o "ninguno">
 
 ## Referencias de verificación
 
-- [test-layers](references/test-layers.md) — patrones de tabla, golden, extremo a extremo, cancelación y determinismo. Léela en los pasos 2 a 5.
-- [verification-report](assets/verification-report.md) — formato de cierre con evidencia. Cópialo en el paso 6.
-- [verify-go](scripts/verify-go.py) — ejecuta la puerta y devuelve texto o JSON. Úsalo en el paso 6.
+- [test-layers](references/test-layers.md): patrones de tabla, golden, extremo a extremo, cancelación y determinismo. Léela en los pasos 2 a 5.
+- [verification-report](assets/verification-report.md): formato de cierre con evidencia. Cópialo en el paso 6.
+- [verify-go](scripts/verify-go.py): ejecuta la puerta y devuelve texto o JSON. Úsalo en el paso 6.

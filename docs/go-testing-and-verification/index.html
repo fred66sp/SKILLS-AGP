@@ -6,7 +6,7 @@
 <meta name="description" content="Entrada a la skill go-testing-and-verification: qué hace, cuándo se activa, cómo se usa, qué contiene el paquete, dónde vive cada regla, las preguntas de la primera conversación y los dos diagramas. Las reglas están en SKILL.md, en la referencia de capas y en el script de la puerta, no copiadas en esta página.">
 <meta name="color-scheme" content="light dark">
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%2315803d'/%3E%3Cpath d='M9 17l4 4 10-11' fill='none' stroke='%23ffffff' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
-<title>go-testing-and-verification — cerrar con evidencia ejecutada</title>
+<title>go-testing-and-verification · cerrar con evidencia ejecutada</title>
 <script>
 (function () {
   try {
@@ -489,7 +489,7 @@
 
     <section id="cuando" class="section">
       <div class="section-head"><span class="section-num">2</span><h2 class="title">Cuándo se activa</h2></div>
-      <p class="sub">La columna izquierda dispara la skill; la derecha está escrita en su descripción para que no se active donde no aporta.</p>
+      <p class="sub">La columna izquierda activa la skill. La derecha queda fuera de su descripción para que no se active donde no aporta.</p>
 
       <div class="table-wrap wrap-cells">
         <table>
@@ -511,7 +511,7 @@
 
     <section id="uso" class="section">
       <div class="section-head"><span class="section-num">3</span><h2 class="title">Cómo se usa</h2></div>
-      <p class="sub">Siete pasos: decidir qué importa, cubrirlo en la capa correcta y demostrar el resultado con la puerta ejecutada.</p>
+      <p class="sub">Siete pasos: decidir qué importa, cubrirlo en la capa correcta y demostrarlo con la puerta ejecutada.</p>
 
       <div class="flow">
         <div class="flow-step"><code>paso 1</code><strong>Mapear</strong><p>Comportamientos observables y riesgos: datos, secretos, cancelación, concurrencia y compatibilidad del contrato.</p></div>
@@ -568,7 +568,7 @@
 
     <section id="reglas" class="section">
       <div class="section-head"><span class="section-num">5</span><h2 class="title">Dónde están las reglas</h2></div>
-      <p class="sub">Las reglas viven en el paquete. Aquí no se copian: se indica qué fichero responde a cada pregunta.</p>
+      <p class="sub">Las reglas están en el paquete y aquí solo se indica qué fichero responde a cada pregunta.</p>
 
       <div class="table-wrap wrap-cells">
         <table>
@@ -622,10 +622,10 @@
         </a>
       </div>
 
-      <p>Cada diagrama se abre como página suelta: archify no enlaza desde el artefacto a una página local, así que se vuelve con el botón atrás del navegador o con el índice de arriba.</p>
+      <p>Cada diagrama se abre como página suelta. Archify no enlaza el artefacto con una página local: se vuelve con el botón atrás o con el índice de arriba.</p>
 
       <div class="note">
-        <p><strong>Convenio de este repositorio, no mandato de la skill.</strong> <code>docs/&lt;skill&gt;/index.html</code>, los diagramas y sus recibos <code>.delivery.json</code> son cómo SKILLS-AGP documenta sus skills. Los genera archify desde el <code>.json</code> que está junto a cada HTML; el comando y la comprobación del recibo están en la sección Documentación del <code>README.md</code>.</p>
+        <p><strong>Es un convenio de este repositorio, no un mandato de la skill:</strong> <code>docs/&lt;skill&gt;/index.html</code>, los diagramas y sus recibos <code>.delivery.json</code> son cómo SKILLS-AGP documenta sus skills. Los genera archify desde el <code>.json</code> que está junto a cada HTML; el comando y la comprobación del recibo están en la sección Documentación del <code>README.md</code>.</p>
       </div>
     </section>
     <section id="verificacion" class="section">

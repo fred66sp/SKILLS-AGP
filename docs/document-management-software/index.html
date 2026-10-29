@@ -6,7 +6,7 @@
 <meta name="description" content="Entrada a la skill document-management-software: qué hace, cuándo se activa, sus pasos, las preguntas de la primera conversación y dónde vive cada regla. Las reglas están en SKILL.md y en las referencias, no copiadas en esta página.">
 <meta name="color-scheme" content="light dark">
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%231e40af'/%3E%3Cpath d='M11 7h7l4 4v14H11z' fill='none' stroke='%23ffffff' stroke-width='2.2' stroke-linejoin='round'/%3E%3Cpath d='M18 7v4h4' fill='none' stroke='%23ffffff' stroke-width='2.2' stroke-linejoin='round'/%3E%3Cpath d='M14 17h6M14 21h4' fill='none' stroke='%23ffffff' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E">
-<title>document-management-software — Documentación de software con fuente de verdad</title>
+<title>document-management-software · Documentación de software con fuente de verdad</title>
 <script>
 (function () {
   try {
@@ -466,7 +466,7 @@
   <main id="contenido">
     <section id="que-hace" class="section">
       <div class="section-head"><span class="section-num">1</span><h2 class="title">Qué hace</h2></div>
-      <p class="sub">Ataca los tres modos en que la documentación de un proyecto deja de ser verdad: afirma cosas que nadie comprobó, repite un dato en dos sitios que después divergen, y describe un estado que el código ya abandonó.</p>
+      <p class="sub">La documentación deja de ser verdad de tres maneras: afirma cosas que nadie comprobó, repite un dato en dos sitios que después divergen o describe un estado que el código ya abandonó.</p>
 
       <div class="table-wrap wrap-cells">
         <table>
@@ -488,7 +488,7 @@
 
     <section id="cuando" class="section">
       <div class="section-head"><span class="section-num">2</span><h2 class="title">Cuándo se activa</h2></div>
-      <p class="sub">La columna izquierda dispara la skill; la derecha está escrita en su descripción para que no se active donde no aporta.</p>
+      <p class="sub">La columna izquierda activa la skill. La derecha queda fuera de su descripción para que no se active donde no aporta.</p>
 
       <div class="table-wrap wrap-cells">
         <table>
@@ -505,7 +505,7 @@
 
     <section id="uso" class="section">
       <div class="section-head"><span class="section-num">3</span><h2 class="title">Cómo se usa</h2></div>
-      <p class="sub">Un encargo, un procedimiento. El orden no cambia; lo que cambia con el tamaño del encargo es la profundidad de cada paso.</p>
+      <p class="sub">Un encargo, un procedimiento. El orden es el mismo; el tamaño del encargo cambia la profundidad de cada paso.</p>
 
       <div class="flow">
         <div class="flow-step"><code>paso 1</code><strong>Delimitar</strong><p>Qué se pide —crear, actualizar, auditar o responder—, para quién se escribe y qué fuente responde de cada afirmación.</p></div>
@@ -565,7 +565,7 @@
 
     <section id="reglas" class="section">
       <div class="section-head"><span class="section-num">5</span><h2 class="title">Dónde están las reglas</h2></div>
-      <p class="sub">Las reglas viven en los ficheros del paquete, no en esta página. Aquí no se copian: se indica cuál responde a cada pregunta, para que solo haya una fuente que mantener.</p>
+      <p class="sub">Las reglas están en los ficheros del paquete, no en esta página. Aquí solo se indica cuál responde a cada pregunta, para mantener una sola fuente.</p>
 
       <div class="table-wrap wrap-cells">
         <table>
@@ -592,9 +592,9 @@
 
       <div class="qa"><h3>¿Qué diferencia hay entre una inferencia y una propuesta?</h3><p>La inferencia es una conclusión sacada de evidencia que ya existe: se confirma o se baja de grado. La propuesta es un diseño que nadie ha adoptado todavía: se aprueba o se descarta. Confundirlas convierte una idea en un hecho, y eso es lo que luego alguien ejecuta en producción.</p></div>
       <div class="qa"><h3>¿Se puede pedir que documente sin leer el código?</h3><p>Se puede, y sale otra cosa: propuestas y huecos declarados, no el estado implementado. Si lo que se quiere es describir el comportamiento actual, leer las fuentes es parte del trabajo, no un extra.</p></div>
-      <div class="qa"><h3>¿Por qué no basta el código como documentación?</h3><p>Porque el código dice cómo está, no la intención, ni las restricciones, ni por qué se descartaron las alternativas. Y porque quien tiene que operar una incidencia no lee el código para saber qué hacer.</p></div>
+      <div class="qa"><h3>¿Por qué no basta el código como documentación?</h3><p>El código dice cómo está, pero no la intención, las restricciones ni por qué se descartaron las alternativas. Y quien opera una incidencia no lee el código para saber qué hacer.</p></div>
       <div class="qa"><h3>¿Y si el proyecto ya tiene su propia estructura documental?</h3><p>Se respeta tal cual, aunque a la skill le parecería mejor otra. Proponer un cambio de convención es un encargo aparte y explícito. Esta misma página se rige por esa regla: es la convención de SKILLS-AGP, no una norma de la skill.</p></div>
-      <div class="qa"><h3>¿Sirve para documentar una dependencia externa?</h3><p>Sí, con límites: se prioriza la documentación oficial, se identifica la versión consultada y se escribe cómo y por qué la usa este proyecto. Copiar su documentación entera crea una segunda fuente que nadie va a mantener.</p></div>
+      <div class="qa"><h3>¿Sirve para documentar una dependencia externa?</h3><p>Sí, con límites. Se prioriza la documentación oficial y se identifica la versión consultada; después se escribe cómo y por qué la usa este proyecto. Copiar su documentación entera crea una segunda fuente que nadie va a mantener.</p></div>
       <div class="qa"><h3>¿El cierre es obligatorio aunque el cambio sea de una línea?</h3><p>Sí, con tamaño proporcional: cinco líneas donde «Artefactos» y «Verificación» pueden ser un comando o «ninguno». Lo que no se admite es declarar terminado algo sin ninguna comprobación detrás.</p></div>
     </section>
 
@@ -620,7 +620,7 @@
       <p>Cada diagrama se abre como página suelta: archify 3.2.0 no enlaza desde el artefacto a una página local, así que se vuelve con el botón atrás del navegador o con el índice de arriba.</p>
 
       <div class="note">
-        <p><strong>Convenio de este repositorio, no mandato de la skill.</strong> <code>docs/&lt;skill&gt;/index.html</code>, los diagramas y sus recibos <code>.delivery.json</code> son cómo SKILLS-AGP documenta sus skills. Los genera archify 3.2.0 desde el <code>.json</code> que está junto a cada HTML; el comando y la comprobación del recibo están en la sección Documentación del <code>README.md</code>. Otro repositorio documenta la skill como le parezca: la invariante 7 dice que la política documental del repositorio prevalece, y esta página se somete a la de este.</p>
+        <p><strong>Es un convenio de este repositorio, no un mandato de la skill:</strong> <code>docs/&lt;skill&gt;/index.html</code>, los diagramas y sus recibos <code>.delivery.json</code> son cómo SKILLS-AGP documenta sus skills. Los genera archify 3.2.0 desde el <code>.json</code> que está junto a cada HTML; el comando y la comprobación del recibo están en la sección Documentación del <code>README.md</code>. Otro repositorio documenta la skill como le parezca: la invariante 7 dice que la política documental del repositorio prevalece, y esta página se somete a la de este.</p>
       </div>
     </section>
     <section id="verificacion" class="section">

@@ -6,7 +6,7 @@
 <meta name="description" content="Entrada a la skill git-flow-management: qué hace, cuándo se activa, cómo se usa, qué contiene el paquete, dónde vive cada regla, las preguntas de la primera conversación y los dos diagramas. Las reglas están en SKILL.md y en sus referencias, no copiadas en esta página.">
 <meta name="color-scheme" content="light dark">
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%230f766e'/%3E%3Cpath d='M12 9a3 3 0 1 0 0 .01M12 12v11' fill='none' stroke='%23ffffff' stroke-width='2.4' stroke-linecap='round'/%3E%3Ccircle cx='21' cy='9' r='3' fill='none' stroke='%23ffffff' stroke-width='2.4'/%3E%3Cpath d='M21 12v3a4 4 0 0 1-4 4h-5' fill='none' stroke='%23ffffff' stroke-width='2.4' stroke-linecap='round'/%3E%3C/svg%3E">
-<title>git-flow-management — Git con ceremonia proporcional y verificable</title>
+<title>git-flow-management · Git con ceremonia proporcional y verificable</title>
 <script>
 (function () {
   try {
@@ -466,7 +466,7 @@
   <main id="contenido">
     <section id="que-hace" class="section">
       <div class="section-head"><span class="section-num">1</span><h2 class="title">Qué hace</h2></div>
-      <p class="sub">Trata Git como un procedimiento con evidencia en los dos extremos: una mirada al estado antes de decidir y una prueba del resultado antes de llamarlo terminado. La ceremonia crece con el riesgo, no con la costumbre.</p>
+      <p class="sub">Trata Git como un procedimiento con evidencia en los dos extremos: mira el estado antes de decidir y prueba el resultado antes de llamarlo terminado. La ceremonia crece con el riesgo; la costumbre no la justifica.</p>
 
       <div class="table-wrap wrap-cells">
         <table>
@@ -487,7 +487,7 @@
 
     <section id="cuando" class="section">
       <div class="section-head"><span class="section-num">2</span><h2 class="title">Cuándo se activa</h2></div>
-      <p class="sub">La columna izquierda dispara la skill; la derecha está escrita en su descripción para que no se active donde no aporta.</p>
+      <p class="sub">La columna izquierda activa la skill. La derecha queda fuera de su descripción para que no se active donde no aporta.</p>
 
       <div class="table-wrap wrap-cells">
         <table>
@@ -510,7 +510,7 @@
 
     <section id="uso" class="section">
       <div class="section-head"><span class="section-num">3</span><h2 class="title">Cómo se usa</h2></div>
-      <p class="sub">Cinco momentos, siempre en el mismo orden. Lo que cambia con el tamaño de la tarea es la profundidad de cada uno, no su presencia.</p>
+      <p class="sub">Cinco momentos, siempre en el mismo orden. El tamaño de la tarea cambia la profundidad de cada uno, no cuáles se hacen.</p>
 
       <div class="flow">
         <div class="flow-step"><code>clasificar</code><strong>Mide</strong><p>Tamaño y riesgo antes de cualquier comando que persista. De aquí sale si hay rama, cuántos commits y cuánta verificación.</p></div>
@@ -581,7 +581,7 @@ scripts/verify-branch.sh &lt;ancestro&gt; &lt;descendiente&gt; [remoto]</code></
 
     <section id="reglas" class="section">
       <div class="section-head"><span class="section-num">5</span><h2 class="title">Dónde están las reglas</h2></div>
-      <p class="sub">Las reglas viven en los ficheros del paquete, no en esta página. Aquí no se copian: se indica cuál responde a cada pregunta, para que solo haya una fuente que mantener.</p>
+      <p class="sub">Las reglas están en los ficheros del paquete, no en esta página. Aquí solo se indica cuál responde a cada pregunta, para mantener una sola fuente.</p>
 
       <div class="table-wrap wrap-cells">
         <table>
@@ -619,7 +619,7 @@ scripts/verify-branch.sh &lt;ancestro&gt; &lt;descendiente&gt; [remoto]</code></
       <div class="qa"><h3>¿Puedo hacer rebase de mi rama?</h3><p>Solo si es privada y no está publicada. Una rama compartida o ya publicada no se rebasa ni se aplasta sin una regla documentada y una aprobación explícita.</p></div>
       <div class="qa"><h3>Me equivoqué con un commit. ¿<code>reset --hard</code>?</h3><p>Primero se inspecciona el estado, el historial y el reflog, y se prefiere revertir o un commit correctivo. Un reset destructivo exige autorización para ese comando concreto, con las consecuencias expuestas, y se verifica antes de dar el paso siguiente.</p></div>
       <div class="qa"><h3>¿Por qué el cierre dice NO VERIFICADO y no INCOMPLETO?</h3><p>Porque son cosas distintas. INCOMPLETO significa que una condición obligatoria falló o no se ejecutó; NO VERIFICADO, que no hay evidencia suficiente para afirmar nada. La skill prefiere el segundo antes que una conclusión sin pruebas.</p></div>
-      <div class="qa"><h3>¿Sirve para un repositorio sin remoto?</h3><p>Sí. Un flujo local no incumple nada por no tener remoto: las comprobaciones contra el remoto simplemente no aplican. Lo que no se hace es convertir esa ausencia en un incumplimiento inventado.</p></div>
+      <div class="qa"><h3>¿Sirve para un repositorio sin remoto?</h3><p>Sí. Un flujo local no incumple nada por no tener remoto: las comprobaciones contra el remoto simplemente no aplican. Esa ausencia no se convierte en un incumplimiento inventado.</p></div>
     </section>
 
     <section id="diagramas" class="section">
@@ -644,7 +644,7 @@ scripts/verify-branch.sh &lt;ancestro&gt; &lt;descendiente&gt; [remoto]</code></
       <p>Cada diagrama se abre como página suelta: archify 3.2.0 no enlaza desde el artefacto a una página local, así que se vuelve con el botón atrás del navegador o con el índice de arriba.</p>
 
       <div class="note">
-        <p><strong>Convenio de este repositorio, no mandato de la skill.</strong> <code>docs/&lt;skill&gt;/index.html</code>, los diagramas y sus recibos <code>.delivery.json</code> son cómo SKILLS-AGP documenta sus skills. Los genera archify 3.2.0 desde el <code>.json</code> que está junto a cada HTML; el comando y la comprobación del recibo están en la sección Documentación del <code>README.md</code>. Otro repositorio documenta la skill como le parezca: la política documental del repositorio prevalece, y esta página se somete a la de este.</p>
+        <p><strong>Es un convenio de este repositorio, no un mandato de la skill:</strong> <code>docs/&lt;skill&gt;/index.html</code>, los diagramas y sus recibos <code>.delivery.json</code> son cómo SKILLS-AGP documenta sus skills. Los genera archify 3.2.0 desde el <code>.json</code> que está junto a cada HTML; el comando y la comprobación del recibo están en la sección Documentación del <code>README.md</code>. Otro repositorio documenta la skill como le parezca: la política documental del repositorio prevalece, y esta página se somete a la de este.</p>
       </div>
     </section>
     <section id="verificacion" class="section">

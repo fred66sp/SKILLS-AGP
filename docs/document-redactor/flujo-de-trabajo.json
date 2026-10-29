@@ -1,0 +1,311 @@
+{
+  "schema_version": 2,
+  "diagram_type": "workflow",
+  "meta": {
+    "title": "Flujo de trabajo de la skill document-redactor",
+    "subtitle": "Del encargo al texto revisado: delimitar la operación, congelar los hechos, quitar los racimos, reconstruir el ritmo y pasar la auditoría y la puerta.",
+    "locale": "es",
+    "output": "docs/document-redactor/flujo-de-trabajo.html",
+    "visual_preset": "signal-flow",
+    "quality_profile": "showcase"
+  },
+  "lanes": [
+    {
+      "id": "encargo",
+      "label": "Encargo y límite"
+    },
+    {
+      "id": "inventario",
+      "label": "Hechos y voz"
+    },
+    {
+      "id": "escritura",
+      "label": "La skill: quitar y reescribir"
+    },
+    {
+      "id": "auditoria",
+      "label": "Auditoría"
+    },
+    {
+      "id": "cierre",
+      "label": "Puerta y entrega",
+      "variant": "exception"
+    }
+  ],
+  "phases": [
+    {
+      "id": "delimitar",
+      "label": "Delimitar",
+      "fromCol": 0,
+      "toCol": 1
+    },
+    {
+      "id": "editar",
+      "label": "Editar",
+      "fromCol": 2,
+      "toCol": 3,
+      "variant": "emphasis"
+    },
+    {
+      "id": "puntuar",
+      "label": "Puntuar",
+      "fromCol": 4,
+      "toCol": 4
+    },
+    {
+      "id": "entregar",
+      "label": "Entregar",
+      "fromCol": 5,
+      "toCol": 5,
+      "variant": "security"
+    }
+  ],
+  "groups": [
+    {
+      "id": "congelado",
+      "label": "No se toca",
+      "lane": "inventario",
+      "fromCol": 0,
+      "toCol": 1,
+      "variant": "emphasis"
+    },
+    {
+      "id": "puerta",
+      "label": "Comprobación final",
+      "lane": "cierre",
+      "fromCol": 4,
+      "toCol": 5,
+      "variant": "security"
+    }
+  ],
+  "mainPath": [
+    "encargo",
+    "limite",
+    "voz",
+    "racimos",
+    "reescritura",
+    "ritmo",
+    "rubrica",
+    "puerta",
+    "entrega"
+  ],
+  "nodes": [
+    {
+      "id": "encargo",
+      "lane": "encargo",
+      "col": 0,
+      "type": "external",
+      "label": "Encargo",
+      "sublabel": "tipo · lector · canal",
+      "tag": "redactar, editar o auditar",
+      "icon": "start"
+    },
+    {
+      "id": "limite",
+      "lane": "encargo",
+      "col": 1,
+      "type": "external",
+      "label": "Límite y registro",
+      "sublabel": "prosa, estructura o hechos",
+      "tag": "se declara antes de escribir"
+    },
+    {
+      "id": "hechos",
+      "lane": "inventario",
+      "col": 0,
+      "type": "backend",
+      "label": "Hechos congelados",
+      "sublabel": "cifras · citas · enlaces",
+      "tag": "se comparan al final"
+    },
+    {
+      "id": "voz",
+      "lane": "inventario",
+      "col": 1,
+      "type": "backend",
+      "label": "Voz",
+      "sublabel": "muestra o perfil",
+      "tag": "técnico se queda neutro"
+    },
+    {
+      "id": "racimos",
+      "lane": "escritura",
+      "col": 2,
+      "type": "backend",
+      "label": "Racimos",
+      "sublabel": "P01…P33",
+      "tag": "no casos sueltos"
+    },
+    {
+      "id": "reescritura",
+      "lane": "escritura",
+      "col": 3,
+      "type": "backend",
+      "label": "Reescritura",
+      "sublabel": "significado y cobertura",
+      "tag": "sin inventar datos"
+    },
+    {
+      "id": "ritmo",
+      "lane": "escritura",
+      "col": 4,
+      "type": "security",
+      "label": "Ritmo",
+      "sublabel": "frases cortas y largas",
+      "tag": "la prueba más profunda"
+    },
+    {
+      "id": "rubrica",
+      "lane": "auditoria",
+      "col": 4,
+      "type": "frontend",
+      "label": "Rúbrica",
+      "sublabel": "seis dimensiones · 42/60",
+      "tag": "máximo tres pasadas"
+    },
+    {
+      "id": "puerta",
+      "lane": "cierre",
+      "col": 4,
+      "type": "security",
+      "label": "Puerta",
+      "sublabel": "redactor.py check",
+      "tag": "forma, no verdad",
+      "icon": "stop"
+    },
+    {
+      "id": "entrega",
+      "lane": "cierre",
+      "col": 5,
+      "type": "frontend",
+      "label": "Entrega",
+      "sublabel": "texto e informe",
+      "icon": "success"
+    }
+  ],
+  "edges": [
+    {
+      "id": "situa",
+      "from": "encargo",
+      "to": "limite",
+      "label": "sitúa",
+      "variant": "emphasis",
+      "role": "main"
+    },
+    {
+      "id": "congela",
+      "from": "encargo",
+      "to": "hechos",
+      "label": "congela",
+      "variant": "dashed",
+      "role": "branch"
+    },
+    {
+      "id": "calibra",
+      "from": "limite",
+      "to": "voz",
+      "label": "calibra",
+      "role": "main"
+    },
+    {
+      "id": "busca",
+      "from": "voz",
+      "to": "racimos",
+      "label": "busca",
+      "role": "main"
+    },
+    {
+      "id": "reescribe",
+      "from": "racimos",
+      "to": "reescritura",
+      "label": "reescribe",
+      "variant": "emphasis",
+      "role": "main"
+    },
+    {
+      "id": "rompe",
+      "from": "reescritura",
+      "to": "ritmo",
+      "label": "varía",
+      "variant": "emphasis",
+      "role": "main"
+    },
+    {
+      "id": "puntua",
+      "from": "ritmo",
+      "to": "rubrica",
+      "label": "puntúa",
+      "role": "main"
+    },
+    {
+      "id": "comprueba",
+      "from": "rubrica",
+      "to": "puerta",
+      "label": "si ≥ 42",
+      "role": "main"
+    },
+    {
+      "id": "cierra",
+      "from": "puerta",
+      "to": "entrega",
+      "label": "texto e informe",
+      "variant": "emphasis",
+      "role": "main"
+    },
+    {
+      "id": "reitera",
+      "from": "rubrica",
+      "to": "reescritura",
+      "label": "si < 42 y quedan pasadas",
+      "variant": "dashed",
+      "role": "return"
+    },
+    {
+      "id": "borrador",
+      "from": "puerta",
+      "to": "rubrica",
+      "label": "defecto sin corregir",
+      "variant": "security",
+      "role": "return",
+      "fromSide": "left",
+      "toSide": "right"
+    },
+    {
+      "id": "compara",
+      "from": "hechos",
+      "to": "reescritura",
+      "label": "contrasta",
+      "variant": "dashed",
+      "role": "branch"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "Lo que se congela",
+      "items": [
+        "Cifras, unidades, nombres, fechas, versiones, citas, enlaces y compromisos se inventarían antes de editar y se comparan al terminar",
+        "Una afirmación sin fuente se marca o se pregunta; nunca se rellena con una cita plausible",
+        "Código, comandos, identificadores, frontmatter y bloques de código se citan tal cual"
+      ]
+    },
+    {
+      "dot": "rose",
+      "title": "Dónde se detiene",
+      "items": [
+        "Un texto humano y limpio no se toca: sobre-editar destruye lo que lo hacía bueno",
+        "Un documento legal o regulado se edita en forma y no en fondo; el significado lo aprueba su responsable",
+        "Un registro ambiguo que cambia el resultado se pregunta una vez; si no lo cambia, se decide y se declara"
+      ]
+    },
+    {
+      "dot": "emerald",
+      "title": "Cómo se cierra",
+      "items": [
+        "La rúbrica puntúa claridad, ritmo, confianza, autenticidad, densidad y alma; por debajo de 42/60 se repite la pasada, hasta tres",
+        "redactor.py check comprueba tipografía y señales; no valida significado, hechos ni calidad del argumento",
+        "El informe nombra patrones corregidos, patrones conservados, puntuación, puerta y lo no verificado"
+      ]
+    }
+  ]
+}

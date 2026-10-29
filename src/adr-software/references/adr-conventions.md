@@ -6,8 +6,8 @@ Aplica al localizar o crear el directorio de ADR, nombrar archivos, fijar estado
 
 Si el repositorio ya tiene un directorio de ADR, se conserva. Si no lo tiene, elige entre:
 
-- `docs/decisions/` — convención MADR, recomendada cuando el proyecto ya usa `docs/`.
-- `adr/` — alternativa simple para repositorios pequeños o sin estructura documental.
+- `docs/decisions/`: convención MADR, recomendada cuando el proyecto ya usa `docs/`.
+- `adr/`: alternativa simple para repositorios pequeños o sin estructura documental.
 
 Orden de detección que usa `scripts/adr.py`: `docs/decisions/`, `adr/`, `docs/adr/`, `docs/adrs/`, `decisions/`. Si ninguno existe, la convención nueva se decide con el responsable y no se crea un directorio que contradiga la estructura existente.
 
@@ -24,9 +24,9 @@ Patrón con numeración: `NNNN-titulo-con-guiones.md`.
 
 Todo ADR contiene, como mínimo:
 
-1. **Contexto y problema** — por qué la decisión existe ahora, qué la dispara y qué restricciones aplican.
-2. **Decisión** — qué se elige, con alcance, límites y no-goals.
-3. **Consecuencias** — qué se vuelve más fácil y más difícil, qué riesgos aparecen y qué tareas quedan.
+1. **Contexto y problema**: por qué la decisión existe ahora, qué la dispara y qué restricciones aplican.
+2. **Decisión**: qué se elige, con alcance, límites y no-goals.
+3. **Consecuencias**: qué se vuelve más fácil y más difícil, qué riesgos aparecen y qué tareas quedan.
 
 Un ADR con contrato de agente añade además: restricciones medibles, no-goals explícitos, tareas de seguimiento y, cuando exista, un criterio de confirmación que se pueda convertir en prueba o comprobación.
 

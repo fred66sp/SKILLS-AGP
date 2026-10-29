@@ -25,7 +25,7 @@ Un item se cierra como se cierran los cambios del repositorio: `python scripts/c
 
 ## Listo para trabajar
 
-### PBI-03 — Validar en los dos sistemas donde se trabaja
+### PBI-03: Validar en los dos sistemas donde se trabaja
 
 - **Tipo:** CI · **Prioridad:** Should · **Tamaño:** M · **Estado:** listo
 - **Evidencia:** `.github/workflows/validate.yml` fija `ubuntu-latest` y Python 3.12; el entorno de trabajo es Windows con Python 3.13. El repositorio existe para que todas las máquinas trabajen igual.
@@ -40,7 +40,7 @@ Un item se cierra como se cierran los cambios del repositorio: `python scripts/c
 
 ## Sin refinar
 
-### PBI-05 — Garantías de la documentación HTML
+### PBI-05: Garantías de la documentación HTML
 
 - **Tipo:** documentación · **Prioridad:** Could · **Tamaño:** M aproximado · **Estado:** sin refinar
 - **Intención:** que `docs/*.html` no se rompa en silencio y que los diagramas se puedan regenerar desde un clon limpio.

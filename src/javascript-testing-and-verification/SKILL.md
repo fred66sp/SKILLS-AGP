@@ -2,7 +2,7 @@
 name: javascript-testing-and-verification
 description: "Demuestra el comportamiento del JavaScript vanilla sin añadir un framework: elige la capa de prueba más pequeña, escribe pruebas con node:test y node:assert/strict, prueba DOM y eventos en una página de navegador o con el entorno que el proyecto ya tenga, simula red, almacenamiento y reloj, prueba el proceso con argv, env y stdin controlados, y cierra con la puerta scripts/verify-js.py, que comprueba sintaxis, ejecuta el script test del proyecto o node --test e informa del baseline de Node. Úsala al escribir o revisar pruebas, validar una frontera no confiable, comprobar una regresión o declarar un cambio terminado. No la uses para estilo, módulos, diseño de DOM ni arquitectura, que son de javascript-idiomatic-style."
 metadata:
-  version: "0.1.0"
+  version: "0.1.1"
 ---
 
 # Pruebas y verificación en JavaScript
@@ -36,38 +36,38 @@ Esta skill posee la elección de capa, las pruebas, los dobles, el determinismo 
 
 ## Procedimiento de verificación JavaScript
 
-**Paso 1 — Mapear riesgos y capas.**
+**Paso 1: Mapear riesgos y capas.**
 1. Enumera lo que el usuario o el agente observan: valores devueltos, texto en pantalla, salida de consola, ficheros, códigos de salida.
 2. Marca las fronteras por las que entra dato no confiable: `fetch`, formulario, `localStorage`, `argv`, `env`, fichero.
 3. Marca los riesgos: datos que se destruyen, secretos que se filtran, cancelación, compatibilidad del contrato.
 4. Descarta las comprobaciones que no añaden confianza; la capa se elige, no se acumula.
 
-**Paso 2 — Elegir capa y runner.**
+**Paso 2: Elegir capa y runner.**
 1. Lee `references/test-layers.md` para la tabla de capas y el criterio de descarte.
 2. Comprueba qué runner tiene el proyecto: script `test`, configuración de Vitest o Jest, o ninguno.
 3. Con Node, el descubrimiento de `node --test` basta. Con DOM, decide entre navegador real y el entorno que ya exista.
 4. Si el runner elegido exige añadir una dependencia, es una decisión que se propone; no se toma dentro del cambio.
 
-**Paso 3 — Escribir la prueba que falla por la razón correcta.**
+**Paso 3: Escribir la prueba que falla por la razón correcta.**
 1. Lee `references/node-tests.md` o `references/browser-tests.md` según la capa.
 2. Escribe el caso mínimo: un comportamiento, una entrada, una comprobación con mensaje.
 3. Comprueba que falla por la causa prevista antes de corregir el código, o que el caso negativo lo demuestra.
 4. Añade los límites que importan: vacío, cero, `null`, cadena larga, error de red, cancelación.
 
-**Paso 4 — Aislar y estabilizar.**
+**Paso 4: Aislar y estabilizar.**
 1. Sustituye red, reloj, aleatoriedad y almacenamiento por dobles controlados.
 2. Espera eventos y promesas; nunca `sleep`.
 3. Limpia temporales, listeners y temporizadores en `afterEach` o en el propio test.
 4. Repite la suite dos veces para detectar dependencia de orden o de estado.
 
-**Paso 5 — Ejecutar la puerta.**
+**Paso 5: Ejecutar la puerta.**
 La puerta ejecuta código del proyecto (`node --check` y los scripts del proyecto): ejecútala solo sobre un proyecto confiable o dentro de un contenedor o usuario sin privilegios.
 
 1. `python3 <skill>/scripts/verify-js.py --root <raíz>` para la sintaxis; añade `--test` y `--lint` cuando el proyecto los tenga.
 2. La puerta no sustituye al runner del proyecto: si hay script `test`, ese manda.
 3. Si `node` no está disponible o el proyecto no tiene `package.json`, la puerta lo dice; no lo interpretes como éxito.
 
-**Paso 6 — Cerrar con evidencia.**
+**Paso 6: Cerrar con evidencia.**
 1. Rellena `assets/verification-report.md` con los comandos y su resultado real.
 2. Declara lo que no se comprobó y por qué: DOM sin navegador disponible, runner ausente, red no simulada.
 3. Cierra con el bloque de resultado.
@@ -95,11 +95,11 @@ No verificado: <lo que queda fuera, con motivo>
 
 ## Referencias del paquete de verificación
 
-- [test-layers](references/test-layers.md) — mapa de riesgo, capas, criterio de descarte, determinismo y datos de prueba. Léela en los pasos 1 y 2.
-- [node-tests](references/node-tests.md) — `node:test`, `assert/strict`, hooks, dobles, proceso y diagnóstico. Léela en el paso 3 cuando la capa sea Node.
-- [browser-tests](references/browser-tests.md) — runner en una página, eventos, red, almacenamiento, esperas y límites. Léela en el paso 3 cuando la capa sea el navegador.
-- [test-runner](assets/test-runner.html) — página de pruebas sin dependencias; cópiala en el proyecto y sustituye los casos.
-- [verification-report](assets/verification-report.md) — plantilla del cierre con comandos y resultados.
+- [test-layers](references/test-layers.md): mapa de riesgo, capas, criterio de descarte, determinismo y datos de prueba. Léela en los pasos 1 y 2.
+- [node-tests](references/node-tests.md): `node:test`, `assert/strict`, hooks, dobles, proceso y diagnóstico. Léela en el paso 3 cuando la capa sea Node.
+- [browser-tests](references/browser-tests.md): runner en una página, eventos, red, almacenamiento, esperas y límites. Léela en el paso 3 cuando la capa sea el navegador.
+- [test-runner](assets/test-runner.html): página de pruebas sin dependencias; cópiala en el proyecto y sustituye los casos.
+- [verification-report](assets/verification-report.md): plantilla del cierre con comandos y resultados.
 
 ## Puerta del paquete de verificación
 

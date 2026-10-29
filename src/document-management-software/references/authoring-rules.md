@@ -49,7 +49,7 @@ Fuera de cualquier artefacto versionado:
 
 La única referencia a un commit que sí se escribe es la fijación de un tercero: repositorio de origen y commit al que está fijada una copia vendida, enlazado a ese commit. Es un contrato de reproducibilidad, no historia de la propia entrega.
 
-Del registro de trabajo, lo que no se pierde: las palabras literales del encargo, las decisiones con su motivo, los resultados de las comprobaciones y los límites declarados. Lo que no: ninguna referencia viva. Se escribe en presente sobre el estado actual — «el escaneo devuelve 4 hallazgos», no «bajó de 10 a 4»— y quien necesite el commit lo consulta en el historial.
+Del registro de trabajo, lo que no se pierde: las palabras literales del encargo, las decisiones con su motivo, los resultados de las comprobaciones y los límites declarados. Lo que no: ninguna referencia viva. Se escribe en presente sobre el estado actual —«el escaneo devuelve 4 hallazgos», no «bajó de 10 a 4»— y quien necesite el commit lo consulta en el historial.
 
 `scripts/doc-inventory.py` comprueba en la prosa de los Markdown cinco familias sacadas de la lista de arriba: narraciones de proceso, recuentos de artefactos que caducan, referencias de Git (SHA sueltos de 7 a 40 hexadecimales), rutas de una máquina concreta y frases de estado del entorno («commiteado», «árbol limpio», «nada publicado», «sin remoto», «no define remoto», «todavía no hay versiones», «no está versionado», «en este equipo»). La lista vive en este fichero; el script la ejecuta y no decide nada más. Las ramas y las etiquetas con nombre propio no las comprueba: son vocabulario habitual del dominio en un repositorio que gestiona Git, y ahí la comprobación es leer.
 

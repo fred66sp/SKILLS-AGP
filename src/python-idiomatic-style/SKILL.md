@@ -13,7 +13,7 @@ Esta skill posee el lenguaje, los tipos, la estructura del proyecto, las depende
 
 ## Invariantes de estilo Python
 
-1. Declara el intérprete antes de escribir: `requires-python` en `pyproject.toml` y la misma versión en la matriz de CI. Una sintaxis nueva —`match`, `X | Y`, `Self`, `tomllib`— se usa solo si el mínimo declarado la admite.
+1. Declara el intérprete antes de escribir: `requires-python` en `pyproject.toml` y la misma versión en la matriz de CI. Una sintaxis nueva, como `match`, `X | Y`, `Self` o `tomllib`, se usa solo si el mínimo declarado la admite.
 2. `pyproject.toml` es la única fuente de metadatos y de configuración de herramientas. No repartas versión, dependencias ni reglas de ruff entre `setup.py`, `setup.cfg`, `requirements.txt` y `tox.ini`; si ya existen por historia, no añadas una cuarta.
 3. Estructura `src/` para una librería publicable: `src/<paquete>/` y `tests/` hermanos. Un script suelto no necesita paquete; un paquete no finge ser un script.
 4. Anota las firmas públicas: parámetros y retorno. Los locales se infieren. `Any` se justifica en la misma línea o no se escribe; nunca llega a la API pública.
@@ -35,37 +35,37 @@ Esta skill posee el lenguaje, los tipos, la estructura del proyecto, las depende
 
 ## Procedimiento de estilo Python
 
-**Paso 1 — Inspeccionar antes de escribir.**
+**Paso 1: Inspeccionar antes de escribir.**
 1. Lee `pyproject.toml`, el lockfile, la versión de Python de CI y las herramientas declaradas: ruff, mypy o pyright, pytest, build.
 2. Localiza la disposición real: `src/`, paquete plano, `tests/` y puntos de entrada (`[project.scripts]`).
 3. Ejecuta el comprobador de tipos y el linter existentes para conocer el estado de partida; no los sustituyas.
 4. Revisa los patrones vecinos: errores, modelos, nombres, imports y logging. Una regla escrita gana sobre la preferencia.
 
-**Paso 2 — Modelar los datos y los estados.**
+**Paso 2: Modelar los datos y los estados.**
 1. Escribe una frase por entidad y otra por estado. Si dos estados no pueden coexistir, sepáralos con una unión o dos tipos.
 2. Decide qué valores son identificadores, cuáles cantidades y cuáles contenido libre. Anota los dos primeros y no los mezcles con `str` desnudo en la API pública.
 3. Decide dónde entra el dato externo: fichero, entorno, HTTP, base de datos. Ese punto es una frontera y se valida en runtime con `python-testing-and-verification`; el tipo no valida nada.
 4. Define el error base del paquete y sus causas antes de escribir el camino feliz.
 
-**Paso 3 — Escribir el módulo.**
+**Paso 3: Escribir el módulo.**
 1. Escribe las firmas públicas antes de los cuerpos. Anota parámetros, retorno y excepciones documentadas.
 2. Guardas primero y retorno temprano; el camino feliz no va indentado dentro de condicionales.
 3. Aplica `references/language-rules.md` y `references/type-rules.md` cuando la decisión no sea evidente.
 4. Los imports se agrupan por biblioteca estándar, terceros y locales, y se ordenan con la herramienta del proyecto. Sin imports circulares ni `import *`.
 
-**Paso 4 — Resolver el proyecto y las dependencias.**
+**Paso 4: Resolver el proyecto y las dependencias.**
 1. Lee `references/project-and-packaging.md` antes de tocar metadatos, layout o build.
 2. Mantén el dominio separado del adaptador (HTTP, CLI, base de datos). Un paquete pequeño con un módulo por responsabilidad sigue siendo válido.
 3. Añade una dependencia solo con una razón y su alternativa descartada. Un extra opcional no se convierte en dependencia base.
 4. Fija el backend de build y comprueba que `python -m build` produce el artefacto esperado antes de publicar.
 
-**Paso 5 — Construir la CLI, si la hay.**
+**Paso 5: Construir la CLI, si la hay.**
 1. Lee `references/cli-rules.md` antes de elegir comandos y flags.
 2. Cada comando valida sus argumentos al entrar, no a mitad del trabajo. `--help` y `--version` funcionan sin efectos.
 3. Toda operación destructiva exige confirmación explícita y admite `--dry-run` y modo no interactivo. `KeyboardInterrupt` devuelve un código distinto de éxito, sin traza.
 4. La salida legible va a `stdout`, el diagnóstico a `stderr`; `--json` es estable y no mezcla avisos con datos.
 
-**Paso 6 — Comprobar el diff.**
+**Paso 6: Comprobar el diff.**
 1. Ejecuta `ruff format --check`, `ruff check` y el comprobador de tipos. Un cambio que rompe la comprobación no está terminado.
 2. Busca `Any`, `# type: ignore`, `cast`, `except Exception`, `print` de diagnóstico y dependencias nuevas. Cada uno necesita una razón o se elimina.
 3. Comprueba que no has añadido capas, abstracciones ni opciones que nadie pidió.
@@ -96,7 +96,7 @@ No verificado: <lista, o "ninguno">
 
 ## Referencias de estilo Python
 
-- [language-rules](references/language-rules.md) — intérprete, estructura, nombres, funciones, datos, excepciones, recursos, asincronía y logging. Léela en los pasos 2 y 3 cuando una regla no sea evidente.
-- [type-rules](references/type-rules.md) — tablas de decisión para anotaciones, `Any`, uniones, `Protocol`, `TypedDict`, genéricos, `overload`, `TypeGuard` y supresiones. Léela en el paso 3.
-- [project-and-packaging](references/project-and-packaging.md) — `pyproject.toml`, layout, dependencias, extras, lockfile, backend de build y publicación. Léela en el paso 4.
-- [cli-rules](references/cli-rules.md) — contrato de una CLI de Python con `argparse` o Typer, salida, códigos de salida, cancelación y empaquetado del punto de entrada. Léela en el paso 5.
+- [language-rules](references/language-rules.md): intérprete, estructura, nombres, funciones, datos, excepciones, recursos, asincronía y logging. Léela en los pasos 2 y 3 cuando una regla no sea evidente.
+- [type-rules](references/type-rules.md): tablas de decisión para anotaciones, `Any`, uniones, `Protocol`, `TypedDict`, genéricos, `overload`, `TypeGuard` y supresiones. Léela en el paso 3.
+- [project-and-packaging](references/project-and-packaging.md): `pyproject.toml`, layout, dependencias, extras, lockfile, backend de build y publicación. Léela en el paso 4.
+- [cli-rules](references/cli-rules.md): contrato de una CLI de Python con `argparse` o Typer, salida, códigos de salida, cancelación y empaquetado del punto de entrada. Léela en el paso 5.
