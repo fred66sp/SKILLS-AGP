@@ -386,24 +386,36 @@
      paso,porque ni `.flow` ni `.table-wrap` traen margen propio. */
   .flow + .table-wrap,.grid + .table-wrap {margin-top: 24px;
 }
+  /* Componentes usados por páginas concretas del catálogo; viven aquí para
+     que todas compartan una sola hoja y no una variante por página. */
+  .steps {display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px;
+}.step {background: var(--bg-elev); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 16px 18px;
+}.step-num {display: block; font-family: var(--mono); font-size: 11px; letter-spacing: .06em; color: var(--accent); margin-bottom: 6px;
+}.step strong {display: block; margin-bottom: 4px;
+}.step p {margin: 0; color: var(--muted); font-size: 14px;
+}@media (max-width: 640px){.steps {grid-template-columns: minmax(0, 1fr);
+} }ul.tight {margin: 12px 0; padding-left: 20px;
+}ul.tight li {margin: 6px 0;
+}.sev {display: inline-block; min-width: 60px; text-align: center; padding: 2px 8px; border-radius: 6px;
+    font-family: var(--mono); font-size: 11.5px; font-weight: 700; letter-spacing: .02em; text-transform: uppercase;
+}.sev-error {background: color-mix(in srgb, #ef4444 16%, transparent); color: var(--error-text);
+}.sev-ok {background: color-mix(in srgb, var(--ok) 16%, transparent); color: var(--ok-text);
+}.skip-link {position: absolute; left: 16px; top: -60px; z-index: 100; padding: 10px 16px; border-radius: var(--radius-sm);
+    background: var(--bg-elev); border: 1px solid var(--accent); color: var(--text); font-weight: 650; font-size: 14px;
+}.skip-link:focus {top: 12px;
+}
 </style>
 </head>
 <body>
+<a class="skip-link" href="#contenido">Saltar al contenido</a>
 <header class="topbar">
   <a class="brand" href="#top">
-    <span class="brand-mark" aria-hidden="true">
-      <svg viewBox="0 0 32 32" role="presentation">
-        <defs>
+    <span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 32 32" role="presentation"><defs>
           <linearGradient id="brand-grad" x1="0" y1="0" x2="1" y2="1">
             <stop offset="0" stop-color="#1e40af"></stop>
             <stop offset="1" stop-color="#0ea5e9"></stop>
           </linearGradient>
-        </defs>
-        <rect width="32" height="32" fill="url(#brand-grad)"></rect>
-        <circle cx="16" cy="16" r="8" fill="none" stroke="#ffffff" stroke-width="2.2"></circle>
-        <path d="m19.8 12.2-2.3 5.3-5.3 2.3 2.3-5.3z" fill="#ffffff"></path>
-      </svg>
-    </span>
+        </defs><rect width="32" height="32" fill="url(#brand-grad)"></rect><circle cx="16" cy="16" r="8" fill="none" stroke="#ffffff" stroke-width="2.2"/><path d="m19.8 12.2-2.3 5.3-5.3 2.3 2.3-5.3z" fill="#ffffff"/></svg></span>
     <span class="brand-name">prd-cartographer<small>PRD verificable y trazable</small></span>
   </a>
   <span class="topbar-spacer"></span>
@@ -446,10 +458,11 @@
     <a href="#reglas">5. Dónde están las reglas</a>
     <a href="#preguntas">6. Preguntas cortas</a>
     <a href="#diagramas">7. Los diagramas</a>
+    <a href="#verificacion">8. Verificación</a>
     <div class="toc-extra"><a href="../index.html">Volver al catálogo</a></div>
   </nav>
 
-  <main>
+  <main id="contenido">
     <section id="que-hace" class="section">
       <div class="section-head"><span class="section-num">1</span><h2 class="title">Qué hace</h2></div>
       <p class="sub">Ataca los tres modos en que un PRD deja de servir para decidir: afirma cosas que nadie comprobó, mide objetivos con intenciones y convierte una solución propuesta en una necesidad validada.</p>
@@ -604,6 +617,27 @@
         <p><strong>Convenio de este repositorio, no mandato de la skill.</strong> <code>docs/&lt;skill&gt;/index.html</code>, los diagramas y sus recibos <code>.delivery.json</code> son cómo SKILLS-AGP documenta sus skills. Los genera archify desde el <code>.json</code> que está junto a cada HTML; el comando y la comprobación del recibo están en la sección Documentación del <code>README.md</code>. Otro repositorio documenta la skill como le parezca: la política documental del repositorio prevalece, y esta página se somete a la de este.</p>
       </div>
     </section>
+    <section id="verificacion" class="section">
+      <div class="section-head"><span class="section-num">8</span><h2 class="title">Verificación</h2></div>
+      <p class="sub">El documento se contrasta con la evidencia y la puerta del repositorio se ejecuta; un PRD con una contradicción abierta no se declara terminado.</p>
+
+      <div class="code"><pre><code>python3 scripts/check-repo.py</code></pre></div>
+
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Código</th><th>Significado</th></tr></thead>
+          <tbody>
+            <tr><td><code>0</code></td><td>Estructura, enlaces y recibos sin hallazgos.</td></tr>
+            <tr><td><code>distinto de 0</code></td><td>Algún hallazgo; se corrige antes de cerrar.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="note">
+        <p>La puerta comprueba estructura y enlaces, no si el requisito es correcto. Las validaciones de producto, diseño, ingeniería, QA y usuarios quedan registradas con su estado en el cierre del PRD.</p>
+      </div>
+    </section>
+
   </main>
 </div>
 

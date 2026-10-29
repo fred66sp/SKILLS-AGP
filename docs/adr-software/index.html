@@ -386,25 +386,36 @@
      paso,porque ni `.flow` ni `.table-wrap` traen margen propio. */
   .flow + .table-wrap,.grid + .table-wrap {margin-top: 24px;
 }
+  /* Componentes usados por páginas concretas del catálogo; viven aquí para
+     que todas compartan una sola hoja y no una variante por página. */
+  .steps {display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px;
+}.step {background: var(--bg-elev); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 16px 18px;
+}.step-num {display: block; font-family: var(--mono); font-size: 11px; letter-spacing: .06em; color: var(--accent); margin-bottom: 6px;
+}.step strong {display: block; margin-bottom: 4px;
+}.step p {margin: 0; color: var(--muted); font-size: 14px;
+}@media (max-width: 640px){.steps {grid-template-columns: minmax(0, 1fr);
+} }ul.tight {margin: 12px 0; padding-left: 20px;
+}ul.tight li {margin: 6px 0;
+}.sev {display: inline-block; min-width: 60px; text-align: center; padding: 2px 8px; border-radius: 6px;
+    font-family: var(--mono); font-size: 11.5px; font-weight: 700; letter-spacing: .02em; text-transform: uppercase;
+}.sev-error {background: color-mix(in srgb, #ef4444 16%, transparent); color: var(--error-text);
+}.sev-ok {background: color-mix(in srgb, var(--ok) 16%, transparent); color: var(--ok-text);
+}.skip-link {position: absolute; left: 16px; top: -60px; z-index: 100; padding: 10px 16px; border-radius: var(--radius-sm);
+    background: var(--bg-elev); border: 1px solid var(--accent); color: var(--text); font-weight: 650; font-size: 14px;
+}.skip-link:focus {top: 12px;
+}
 </style>
 </head>
 <body>
+<a class="skip-link" href="#contenido">Saltar al contenido</a>
 <header class="topbar">
   <a class="brand" href="#top">
-    <span class="brand-mark" aria-hidden="true">
-      <svg viewBox="0 0 32 32" role="presentation">
-        <defs>
+    <span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 32 32" role="presentation"><defs>
           <linearGradient id="brand-grad" x1="0" y1="0" x2="1" y2="1">
             <stop offset="0" stop-color="#92400e"></stop>
             <stop offset="1" stop-color="#d97706"></stop>
           </linearGradient>
-        </defs>
-        <rect width="32" height="32" fill="url(#brand-grad)"></rect>
-        <path d="M11 7h8l4 4v14H11z" fill="none" stroke="#ffffff" stroke-width="2.1" stroke-linejoin="round"></path>
-        <path d="M19 7v4h4" fill="none" stroke="#ffffff" stroke-width="2.1" stroke-linejoin="round"></path>
-        <path d="m14 19 2.2 2.2 4.3-4.6" fill="none" stroke="#ffffff" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"></path>
-      </svg>
-    </span>
+        </defs><rect width="32" height="32" fill="url(#brand-grad)"></rect><path d="M11 7h8l4 4v14H11z" fill="none" stroke="#ffffff" stroke-width="2.1" stroke-linejoin="round"/><path d="M19 7v4h4" fill="none" stroke="#ffffff" stroke-width="2.1" stroke-linejoin="round"/><path d="m14 19 2.2 2.2 4.3-4.6" fill="none" stroke="#ffffff" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
     <span class="brand-name">adr-software<small>ADR con contrato de agente</small></span>
   </a>
   <span class="topbar-spacer"></span>
@@ -452,7 +463,7 @@
     <div class="toc-extra"><a href="../index.html">Volver al catálogo</a></div>
   </nav>
 
-  <main>
+  <main id="contenido">
     <section id="que-hace" class="section">
       <div class="section-head"><span class="section-num">1</span><h2 class="title">Qué hace</h2></div>
       <p class="sub">Ataca los modos en que un ADR deja de servir: cuenta una decisión que nadie tomó, omite lo que queda fuera, compara opciones de paja o envejece sin que nadie sepa si sigue vigente.</p>
@@ -480,27 +491,17 @@
       <div class="section-head"><span class="section-num">2</span><h2 class="title">Cuándo se activa</h2></div>
       <p class="sub">Se activa ante una operación sobre el registro de decisiones, no ante cualquier texto de arquitectura.</p>
 
-      <div class="grid cols-2">
-        <div class="card">
-          <h3>Sí</h3>
-          <ul>
-            <li>Proponer, redactar o revisar un ADR.</li>
-            <li>Aceptar, rechazar, deprecar o sustituir una decisión.</li>
-            <li>Inicializar el directorio, el índice y el primer ADR.</li>
-            <li>Corregir convenciones o auditar un registro existente.</li>
-            <li>Buscar si una decisión ya está registrada.</li>
-          </ul>
-        </div>
-        <div class="card">
-          <h3>No</h3>
-          <ul>
-            <li>Diseñar la arquitectura o comparar tecnologías sin una decisión que registrar.</li>
-            <li>Redactar un PRD o requisitos de producto.</li>
-            <li>Documentación general, guías, API o instalación.</li>
-            <li>Actas de reunión o historial de cambios de implementación.</li>
-            <li>Decisiones triviales, reversibles y locales.</li>
-          </ul>
-        </div>
+      <div class="table-wrap wrap-cells">
+        <table>
+          <thead><tr><th>Se activa para</th><th>No se activa para</th></tr></thead>
+          <tbody>
+            <tr><td>Proponer, redactar o revisar un ADR.</td><td>Diseñar la arquitectura o comparar tecnologías sin una decisión que registrar.</td></tr>
+            <tr><td>Aceptar, rechazar, deprecar o sustituir una decisión.</td><td>Redactar un PRD o requisitos de producto.</td></tr>
+            <tr><td>Inicializar el directorio, el índice y el primer ADR.</td><td>Documentación general, guías, API o instalación.</td></tr>
+            <tr><td>Corregir convenciones o auditar un registro existente.</td><td>Actas de reunión o historial de cambios de implementación.</td></tr>
+            <tr><td>Buscar si una decisión ya está registrada.</td><td>Decisiones triviales, reversibles y locales.</td></tr>
+          </tbody>
+        </table>
       </div>
     </section>
 
@@ -681,21 +682,28 @@ python3 scripts/check-repo.py</code></pre></div>
 
   var prefs = {};
   try { prefs = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}"); } catch (e) { prefs = {}; }
+
   var initialTheme = prefs.theme;
   if (initialTheme !== "dark" && initialTheme !== "light") {
     initialTheme = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
   }
   applyTheme(initialTheme);
 
+  function savePrefs() {
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(prefs)); } catch (e) {}
+  }
+
   var themeBtn = document.getElementById("theme-toggle");
   if (themeBtn) {
     themeBtn.addEventListener("click", function () {
       prefs.theme = root.getAttribute("data-theme") === "dark" ? "light" : "dark";
       applyTheme(prefs.theme);
-      try { localStorage.setItem(STORAGE_KEY, JSON.stringify(prefs)); } catch (e) {}
+      savePrefs();
     });
   }
 
+  // El botón de copiar no se escribe en el marcado: se crea aquí para que
+  // añadir un bloque de código no obligue a recordar su botón.
   document.querySelectorAll(".code").forEach(function (block) {
     if (block.querySelector(".copy")) { return; }
     var btn = document.createElement("button");
@@ -704,6 +712,7 @@ python3 scripts/check-repo.py</code></pre></div>
     btn.innerHTML = COPY_ICON + "<span>Copiar</span>";
     btn.setAttribute("aria-label", "Copiar");
     block.appendChild(btn);
+
     btn.addEventListener("click", function () {
       var pre = block.querySelector("pre");
       var code = (pre && (pre.querySelector("code") || pre)) || null;
@@ -711,9 +720,11 @@ python3 scripts/check-repo.py</code></pre></div>
       var done = function () {
         btn.classList.add("copied");
         btn.innerHTML = CHECK_ICON + "<span>Copiado</span>";
+        btn.setAttribute("aria-label", "Copiado");
         setTimeout(function () {
           btn.classList.remove("copied");
           btn.innerHTML = COPY_ICON + "<span>Copiar</span>";
+          btn.setAttribute("aria-label", "Copiar");
         }, 1600);
       };
       var text = code.textContent;
@@ -735,10 +746,7 @@ python3 scripts/check-repo.py</code></pre></div>
 
   if ("IntersectionObserver" in window) {
     var links = {};
-    document.querySelectorAll(".toc a").forEach(function (a) {
-      var id = a.getAttribute("href").slice(1);
-      if (id) { links[id] = a; }
-    });
+    document.querySelectorAll(".toc a").forEach(function (a) { links[a.getAttribute("href").slice(1)] = a; });
     var observer = new IntersectionObserver(function (entries) {
       entries.forEach(function (entry) {
         if (entry.isIntersecting) {

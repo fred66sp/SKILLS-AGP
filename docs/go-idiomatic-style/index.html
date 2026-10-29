@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="Entrada a la skill go-idiomatic-style: qué hace, cuándo se activa, cómo se usa, qué contiene el paquete, dónde vive cada regla, las preguntas de la primera conversación y los dos diagramas. Las reglas están en SKILL.md y en la referencia de estilo, no copiadas en esta página.">
 <meta name="color-scheme" content="light dark">
-<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%237c3aed'/%3E%3Cpath d='M12 10l-4 6 4 6M20 10l4 6-4 6' fill='none' stroke='%23ffffff' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%237c3aed'/%3E%3Cpath d='M11 20l-4-4 4-4M21 12l4 4-4 4M18 9l-4 14' fill='none' stroke='%23ffffff' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
 <title>go-idiomatic-style — Go legible, mínimo y mantenible</title>
 <script>
 (function () {
@@ -386,24 +386,37 @@
      paso,porque ni `.flow` ni `.table-wrap` traen margen propio. */
   .flow + .table-wrap,.grid + .table-wrap {margin-top: 24px;
 }
+  /* Componentes usados por páginas concretas del catálogo; viven aquí para
+     que todas compartan una sola hoja y no una variante por página. */
+  .steps {display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px;
+}.step {background: var(--bg-elev); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 16px 18px;
+}.step-num {display: block; font-family: var(--mono); font-size: 11px; letter-spacing: .06em; color: var(--accent); margin-bottom: 6px;
+}.step strong {display: block; margin-bottom: 4px;
+}.step p {margin: 0; color: var(--muted); font-size: 14px;
+}@media (max-width: 640px){.steps {grid-template-columns: minmax(0, 1fr);
+} }ul.tight {margin: 12px 0; padding-left: 20px;
+}ul.tight li {margin: 6px 0;
+}.sev {display: inline-block; min-width: 60px; text-align: center; padding: 2px 8px; border-radius: 6px;
+    font-family: var(--mono); font-size: 11.5px; font-weight: 700; letter-spacing: .02em; text-transform: uppercase;
+}.sev-error {background: color-mix(in srgb, #ef4444 16%, transparent); color: var(--error-text);
+}.sev-ok {background: color-mix(in srgb, var(--ok) 16%, transparent); color: var(--ok-text);
+}.skip-link {position: absolute; left: 16px; top: -60px; z-index: 100; padding: 10px 16px; border-radius: var(--radius-sm);
+    background: var(--bg-elev); border: 1px solid var(--accent); color: var(--text); font-weight: 650; font-size: 14px;
+}.skip-link:focus {top: 12px;
+}
 </style>
 </head>
 <body>
+<a class="skip-link" href="#contenido">Saltar al contenido</a>
 
 <header class="topbar">
   <a class="brand" href="#top">
-    <span class="brand-mark" aria-hidden="true">
-      <svg viewBox="0 0 32 32" role="presentation">
-        <defs>
+    <span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 32 32" role="presentation"><defs>
           <linearGradient id="brand-grad" x1="0" y1="0" x2="1" y2="1">
             <stop offset="0" stop-color="#7c3aed"></stop>
             <stop offset="1" stop-color="#0ea5e9"></stop>
           </linearGradient>
-        </defs>
-        <rect width="32" height="32" fill="url(#brand-grad)"></rect>
-        <path d="M11 10l-4 6 4 6" fill="none" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"></path><path d="M21 10l4 6-4 6" fill="none" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"></path><path d="M18 8l-4 16" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round"></path>
-      </svg>
-    </span>
+        </defs><rect width="32" height="32" fill="url(#brand-grad)"></rect><path d="M11 20l-4-4 4-4M21 12l4 4-4 4M18 9l-4 14" fill="none" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
     <span class="brand-name">go-idiomatic-style<small>estilo y diseño en Go</small></span>
   </a>
   <span class="topbar-spacer"></span>
@@ -446,10 +459,11 @@
     <a href="#reglas">5. Dónde están las reglas</a>
     <a href="#preguntas">6. Preguntas cortas</a>
     <a href="#diagramas">7. Los diagramas</a>
+    <a href="#verificacion">8. Verificación</a>
     <div class="toc-extra"><a href="../index.html">Volver al catálogo</a></div>
   </nav>
 
-  <main>
+  <main id="contenido">
     <section id="que-hace" class="section">
       <div class="section-head"><span class="section-num">1</span><h2 class="title">Qué hace</h2></div>
       <p class="sub">Reduce el coste de leer y cambiar código Go sin sacrificar claridad, seguridad ni capacidad de evolución. La sencillez se demuestra con menos piezas, no con más.</p>
@@ -604,6 +618,30 @@
         <p><strong>Convenio de este repositorio, no mandato de la skill.</strong> <code>docs/&lt;skill&gt;/index.html</code>, los diagramas y sus recibos <code>.delivery.json</code> son cómo SKILLS-AGP documenta sus skills. Los genera archify desde el <code>.json</code> que está junto a cada HTML; el comando y la comprobación del recibo están en la sección Documentación del <code>README.md</code>.</p>
       </div>
     </section>
+    <section id="verificacion" class="section">
+      <div class="section-head"><span class="section-num">8</span><h2 class="title">Verificación</h2></div>
+      <p class="sub">El formato, la compilación y la puerta del repositorio se ejecutan; un cambio de estilo que rompe la compilación no es un cambio de estilo.</p>
+
+      <div class="code"><pre><code>gofmt -l .
+go vet ./...
+go build ./...
+python3 scripts/check-repo.py</code></pre></div>
+
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Código</th><th>Significado</th></tr></thead>
+          <tbody>
+            <tr><td><code>0</code></td><td>Formato, vet y compilación sin hallazgos.</td></tr>
+            <tr><td><code>distinto de 0</code></td><td>Algún comando falla; se corrige antes de cerrar.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="note">
+        <p>gofmt no se negocia. La puerta no juzga la claridad de los nombres ni la necesidad de una abstracción: eso lo decide la revisión del diff.</p>
+      </div>
+    </section>
+
   </main>
 </div>
 
@@ -623,7 +661,7 @@
 (function () {
   "use strict";
 
-  var STORAGE_KEY = "git-flow-management:prefs";
+  var STORAGE_KEY = "go-idiomatic-style:prefs";
   var root = document.documentElement;
 
   var COPY_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>';

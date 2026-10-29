@@ -386,28 +386,37 @@
      paso,porque ni `.flow` ni `.table-wrap` traen margen propio. */
   .flow + .table-wrap,.grid + .table-wrap {margin-top: 24px;
 }
+  /* Componentes usados por páginas concretas del catálogo; viven aquí para
+     que todas compartan una sola hoja y no una variante por página. */
+  .steps {display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px;
+}.step {background: var(--bg-elev); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 16px 18px;
+}.step-num {display: block; font-family: var(--mono); font-size: 11px; letter-spacing: .06em; color: var(--accent); margin-bottom: 6px;
+}.step strong {display: block; margin-bottom: 4px;
+}.step p {margin: 0; color: var(--muted); font-size: 14px;
+}@media (max-width: 640px){.steps {grid-template-columns: minmax(0, 1fr);
+} }ul.tight {margin: 12px 0; padding-left: 20px;
+}ul.tight li {margin: 6px 0;
+}.sev {display: inline-block; min-width: 60px; text-align: center; padding: 2px 8px; border-radius: 6px;
+    font-family: var(--mono); font-size: 11.5px; font-weight: 700; letter-spacing: .02em; text-transform: uppercase;
+}.sev-error {background: color-mix(in srgb, #ef4444 16%, transparent); color: var(--error-text);
+}.sev-ok {background: color-mix(in srgb, var(--ok) 16%, transparent); color: var(--ok-text);
+}.skip-link {position: absolute; left: 16px; top: -60px; z-index: 100; padding: 10px 16px; border-radius: var(--radius-sm);
+    background: var(--bg-elev); border: 1px solid var(--accent); color: var(--text); font-weight: 650; font-size: 14px;
+}.skip-link:focus {top: 12px;
+}
 </style>
 </head>
 <body>
+<a class="skip-link" href="#contenido">Saltar al contenido</a>
 
 <header class="topbar">
   <a class="brand" href="#top">
-    <span class="brand-mark" aria-hidden="true">
-      <svg viewBox="0 0 32 32" role="presentation">
-        <defs>
+    <span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 32 32" role="presentation"><defs>
           <linearGradient id="brand-grad" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0" stop-color="#14b8a6"></stop>
+            <stop offset="0" stop-color="#0f766e"></stop>
             <stop offset="1" stop-color="#2563eb"></stop>
           </linearGradient>
-        </defs>
-        <rect width="32" height="32" fill="url(#brand-grad)"></rect>
-        <path d="M12 22V9" fill="none" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round"></path>
-        <circle cx="12" cy="8.2" r="2.6" fill="none" stroke="#ffffff" stroke-width="2.2"></circle>
-        <circle cx="20.5" cy="8.2" r="2.6" fill="none" stroke="#ffffff" stroke-width="2.2"></circle>
-        <path d="M20.5 10.8v2.6a3.4 3.4 0 0 1-3.4 3.4H12" fill="none" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round"></path>
-        <circle cx="12" cy="22.2" r="2.6" fill="none" stroke="#ffffff" stroke-width="2.2"></circle>
-      </svg>
-    </span>
+        </defs><rect width="32" height="32" fill="url(#brand-grad)"></rect><path d="M12 9a3 3 0 1 0 0 .01M12 12v11" fill="none" stroke="#ffffff" stroke-width="2.4" stroke-linecap="round"/><circle cx="21" cy="9" r="3" fill="none" stroke="#ffffff" stroke-width="2.4"/><path d="M21 12v3a4 4 0 0 1-4 4h-5" fill="none" stroke="#ffffff" stroke-width="2.4" stroke-linecap="round"/></svg></span>
     <span class="brand-name">git-flow-management<small>skill de Git verificable</small></span>
   </a>
   <span class="topbar-spacer"></span>
@@ -450,10 +459,11 @@
     <a href="#reglas">5. Dónde están las reglas</a>
     <a href="#preguntas">6. Preguntas cortas</a>
     <a href="#diagramas">7. Los diagramas</a>
+    <a href="#verificacion">8. Verificación</a>
     <div class="toc-extra"><a href="../index.html">Volver al catálogo</a></div>
   </nav>
 
-  <main>
+  <main id="contenido">
     <section id="que-hace" class="section">
       <div class="section-head"><span class="section-num">1</span><h2 class="title">Qué hace</h2></div>
       <p class="sub">Trata Git como un procedimiento con evidencia en los dos extremos: una mirada al estado antes de decidir y una prueba del resultado antes de llamarlo terminado. La ceremonia crece con el riesgo, no con la costumbre.</p>
@@ -637,6 +647,29 @@ scripts/verify-branch.sh &lt;ancestro&gt; &lt;descendiente&gt; [remoto]</code></
         <p><strong>Convenio de este repositorio, no mandato de la skill.</strong> <code>docs/&lt;skill&gt;/index.html</code>, los diagramas y sus recibos <code>.delivery.json</code> son cómo SKILLS-AGP documenta sus skills. Los genera archify 3.2.0 desde el <code>.json</code> que está junto a cada HTML; el comando y la comprobación del recibo están en la sección Documentación del <code>README.md</code>. Otro repositorio documenta la skill como le parezca: la política documental del repositorio prevalece, y esta página se somete a la de este.</p>
       </div>
     </section>
+    <section id="verificacion" class="section">
+      <div class="section-head"><span class="section-num">8</span><h2 class="title">Verificación</h2></div>
+      <p class="sub">La contención de ramas y la puerta del repositorio se ejecutan antes de cerrar; sin esa evidencia el cierre es INCOMPLETO o NO VERIFICADO.</p>
+
+      <div class="code"><pre><code>src/git-flow-management/scripts/verify-branch.sh <ancestro> <descendiente> [remoto]
+python3 scripts/check-repo.py</code></pre></div>
+
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Código</th><th>Significado</th></tr></thead>
+          <tbody>
+            <tr><td><code>0</code></td><td>La rama descendiente contiene al ancestro; el cierre puede declararse.</td></tr>
+            <tr><td><code>1</code></td><td>La contención no se cumple.</td></tr>
+            <tr><td><code>2</code></td><td>Uso inválido o un comando Git no disponible.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="note">
+        <p>La contención demuestra que el commit está dentro de la rama; no sustituye la revisión del plan de integración ni autoriza el push.</p>
+      </div>
+    </section>
+
   </main>
 </div>
 

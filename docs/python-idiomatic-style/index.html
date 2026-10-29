@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="Entrada a la skill python-idiomatic-style: qué hace, cuándo se activa, cómo se usa, qué contiene el paquete y dónde vive cada regla. Las reglas están en SKILL.md y en sus cuatro referencias, no copiadas en esta página.">
 <meta name="color-scheme" content="light dark">
-<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%232b5b84'/%3E%3Cpath d='M16 9c-4 0-6 2-6 5s3 3 6 3 6 0 6 3-2 5-6 5M10 22v-3M22 13v-3' fill='none' stroke='%23ffffff' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%232b5b84'/%3E%3Cpath d='M11 20l-4-4 4-4M21 12l4 4-4 4M18 9l-4 14' fill='none' stroke='%23ffffff' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
 <title>python-idiomatic-style — Python que declara lo que acepta</title>
 <script>
 (function () {
@@ -385,23 +385,36 @@
      paso,porque ni `.flow` ni `.table-wrap` traen margen propio. */
   .flow + .table-wrap,.grid + .table-wrap {margin-top: 24px;
 }
+  /* Componentes usados por páginas concretas del catálogo; viven aquí para
+     que todas compartan una sola hoja y no una variante por página. */
+  .steps {display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px;
+}.step {background: var(--bg-elev); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 16px 18px;
+}.step-num {display: block; font-family: var(--mono); font-size: 11px; letter-spacing: .06em; color: var(--accent); margin-bottom: 6px;
+}.step strong {display: block; margin-bottom: 4px;
+}.step p {margin: 0; color: var(--muted); font-size: 14px;
+}@media (max-width: 640px){.steps {grid-template-columns: minmax(0, 1fr);
+} }ul.tight {margin: 12px 0; padding-left: 20px;
+}ul.tight li {margin: 6px 0;
+}.sev {display: inline-block; min-width: 60px; text-align: center; padding: 2px 8px; border-radius: 6px;
+    font-family: var(--mono); font-size: 11.5px; font-weight: 700; letter-spacing: .02em; text-transform: uppercase;
+}.sev-error {background: color-mix(in srgb, #ef4444 16%, transparent); color: var(--error-text);
+}.sev-ok {background: color-mix(in srgb, var(--ok) 16%, transparent); color: var(--ok-text);
+}.skip-link {position: absolute; left: 16px; top: -60px; z-index: 100; padding: 10px 16px; border-radius: var(--radius-sm);
+    background: var(--bg-elev); border: 1px solid var(--accent); color: var(--text); font-weight: 650; font-size: 14px;
+}.skip-link:focus {top: 12px;
+}
 </style>
 </head>
 <body>
+<a class="skip-link" href="#contenido">Saltar al contenido</a>
 <header class="topbar">
   <a class="brand" href="#top">
-    <span class="brand-mark" aria-hidden="true">
-      <svg viewBox="0 0 32 32" role="presentation">
-        <defs>
+    <span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 32 32" role="presentation"><defs>
           <linearGradient id="brand-grad" x1="0" y1="0" x2="1" y2="1">
             <stop offset="0" stop-color="#2b5b84"></stop>
             <stop offset="1" stop-color="#3b82f6"></stop>
           </linearGradient>
-        </defs>
-        <rect width="32" height="32" fill="url(#brand-grad)"></rect>
-        <path d="M16 9c-4 0-6 2-6 5s3 3 6 3 6 0 6 3-2 5-6 5M10 22v-3M22 13v-3" fill="none" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"></path>
-      </svg>
-    </span>
+        </defs><rect width="32" height="32" fill="url(#brand-grad)"></rect><path d="M11 20l-4-4 4-4M21 12l4 4-4 4M18 9l-4 14" fill="none" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
     <span class="brand-name">python-idiomatic-style<small>estilo y empaquetado</small></span>
   </a>
   <span class="topbar-spacer"></span>
@@ -444,10 +457,11 @@
     <a href="#reglas">5. Dónde están las reglas</a>
     <a href="#preguntas">6. Preguntas cortas</a>
     <a href="#diagramas">7. Los diagramas</a>
+    <a href="#verificacion">8. Verificación</a>
     <div class="toc-extra"><a href="../index.html">Volver al catálogo</a></div>
   </nav>
 
-  <main>
+  <main id="contenido">
 
     <section id="que-hace" class="section">
       <div class="section-head"><span class="section-num">1</span><h2 class="title">Qué hace</h2></div>
@@ -611,6 +625,30 @@
         <p><strong>Convenio de este repositorio, no mandato de la skill.</strong> <code>docs/&lt;skill&gt;/index.html</code>, los diagramas y sus recibos <code>.delivery.json</code> son cómo SKILLS-AGP documenta sus skills. Los genera archify desde el <code>.json</code> que está junto a cada HTML; el comando y la comprobación del recibo están en la sección Documentación del <code>README.md</code>.</p>
       </div>
     </section>
+    <section id="verificacion" class="section">
+      <div class="section-head"><span class="section-num">8</span><h2 class="title">Verificación</h2></div>
+      <p class="sub">La sintaxis, el formato, el lint y la puerta del repositorio se ejecutan; una herramienta ausente se declara.</p>
+
+      <div class="code"><pre><code>python3 -m compileall -q .
+ruff format --check .
+ruff check .
+python3 scripts/check-repo.py</code></pre></div>
+
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Código</th><th>Significado</th></tr></thead>
+          <tbody>
+            <tr><td><code>0</code></td><td>Sintaxis, formato, lint y puerta sin hallazgos.</td></tr>
+            <tr><td><code>distinto de 0</code></td><td>Algún comando falla o una herramienta no está instalada; se declara antes de cerrar.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="note">
+        <p>compileall no ejecuta el código. ruff y el comprobador de tipos son del proyecto: si no están instalados, el hueco se informa, no se omite.</p>
+      </div>
+    </section>
+
   </main>
 </div>
 
@@ -626,28 +664,50 @@
 <script>
 (function () {
   "use strict";
-  var root = document.documentElement;
-  var toggle = document.getElementById("theme-toggle");
-  var toTop = document.getElementById("to-top");
 
-  function store(theme) {
-    try { localStorage.setItem("python-idiomatic-style:prefs", JSON.stringify({ theme: theme })); } catch (e) {}
-  }
-  function label() {
-    var dark = root.getAttribute("data-theme") === "dark";
-    toggle.setAttribute("aria-label", dark ? "Cambiar a tema claro" : "Cambiar a tema oscuro");
-  }
-  label();
-  toggle.addEventListener("click", function () {
-    var next = root.getAttribute("data-theme") === "dark" ? "light" : "dark";
-    root.setAttribute("data-theme", next);
-    store(next);
-    label();
-  });
+  var STORAGE_KEY = "python-idiomatic-style:prefs";
+  var root = document.documentElement;
 
   var COPY_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>';
   var CHECK_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>';
 
+  function updateThemeLabel() {
+    var btn = document.getElementById("theme-toggle");
+    if (!btn) { return; }
+    var dark = root.getAttribute("data-theme") === "dark";
+    btn.setAttribute("aria-label", dark ? "Cambiar a tema claro" : "Cambiar a tema oscuro");
+  }
+
+  function applyTheme(theme) {
+    if (theme !== "dark" && theme !== "light") { theme = "light"; }
+    root.setAttribute("data-theme", theme);
+    updateThemeLabel();
+  }
+
+  var prefs = {};
+  try { prefs = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}"); } catch (e) { prefs = {}; }
+
+  var initialTheme = prefs.theme;
+  if (initialTheme !== "dark" && initialTheme !== "light") {
+    initialTheme = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+  }
+  applyTheme(initialTheme);
+
+  function savePrefs() {
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(prefs)); } catch (e) {}
+  }
+
+  var themeBtn = document.getElementById("theme-toggle");
+  if (themeBtn) {
+    themeBtn.addEventListener("click", function () {
+      prefs.theme = root.getAttribute("data-theme") === "dark" ? "light" : "dark";
+      applyTheme(prefs.theme);
+      savePrefs();
+    });
+  }
+
+  // El botón de copiar no se escribe en el marcado: se crea aquí para que
+  // añadir un bloque de código no obligue a recordar su botón.
   document.querySelectorAll(".code").forEach(function (block) {
     if (block.querySelector(".copy")) { return; }
     var btn = document.createElement("button");
@@ -656,14 +716,16 @@
     btn.innerHTML = COPY_ICON + "<span>Copiar</span>";
     btn.setAttribute("aria-label", "Copiar");
     block.appendChild(btn);
+
     btn.addEventListener("click", function () {
-      var code = block.querySelector("pre code") || block.querySelector("pre");
+      var pre = block.querySelector("pre");
+      var code = (pre && (pre.querySelector("code") || pre)) || null;
       if (!code) { return; }
       var done = function () {
         btn.classList.add("copied");
         btn.innerHTML = CHECK_ICON + "<span>Copiado</span>";
         btn.setAttribute("aria-label", "Copiado");
-        window.setTimeout(function () {
+        setTimeout(function () {
           btn.classList.remove("copied");
           btn.innerHTML = COPY_ICON + "<span>Copiar</span>";
           btn.setAttribute("aria-label", "Copiar");
@@ -673,49 +735,39 @@
       if (navigator.clipboard && navigator.clipboard.writeText) {
         navigator.clipboard.writeText(text).then(done, done);
       } else {
-        var area = document.createElement("textarea");
-        area.value = text;
-        area.style.position = "fixed";
-        area.style.opacity = "0";
-        document.body.appendChild(area);
-        area.select();
+        var ta = document.createElement("textarea");
+        ta.value = text;
+        ta.style.position = "fixed";
+        ta.style.opacity = "0";
+        document.body.appendChild(ta);
+        ta.select();
         try { document.execCommand("copy"); } catch (e) {}
-        document.body.removeChild(area);
+        document.body.removeChild(ta);
         done();
       }
     });
   });
 
-  var tocLinks = Array.prototype.slice.call(document.querySelectorAll('.toc a[href^="#"]'));
-  var sections = Array.prototype.slice.call(document.querySelectorAll("main section[id]"));
-  var ticking = false;
-
-  function setActive(id) {
-    tocLinks.forEach(function (a) {
-      a.classList.toggle("active", a.getAttribute("href") === "#" + id);
-    });
+  if ("IntersectionObserver" in window) {
+    var links = {};
+    document.querySelectorAll(".toc a").forEach(function (a) { links[a.getAttribute("href").slice(1)] = a; });
+    var observer = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) {
+          Object.keys(links).forEach(function (id) { links[id].classList.remove("active"); });
+          if (links[entry.target.id]) { links[entry.target.id].classList.add("active"); }
+        }
+      });
+    }, { rootMargin: "-20% 0px -70% 0px", threshold: 0 });
+    document.querySelectorAll("main section").forEach(function (s) { observer.observe(s); });
   }
-  function syncToc() {
-    if (!sections.length) { return; }
-    var offset = 220;
-    var current = sections[0];
-    sections.forEach(function (section) {
-      if (section.getBoundingClientRect().top <= offset) { current = section; }
-    });
-    if (window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 2) {
-      current = sections[sections.length - 1];
-    }
-    setActive(current.id);
-  }
-  function onScroll() {
-    if (ticking) { return; }
-    ticking = true;
-    window.requestAnimationFrame(function () { ticking = false; syncToc(); });
-  }
-  window.addEventListener("scroll", onScroll, { passive: true });
-  window.addEventListener("resize", onScroll);
-  syncToc();
-
+})();
+</script>
+<script>
+(function () {
+  "use strict";
+  var toTop = document.getElementById("to-top");
+  if (!toTop) { return; }
   function update() { toTop.classList.toggle("is-visible", window.scrollY > 480); }
   window.addEventListener("scroll", update, { passive: true });
   update();
