@@ -617,6 +617,45 @@
     padding: 16px 18px; border-radius: var(--radius-sm);
     background: linear-gradient(110deg, color-mix(in srgb, var(--accent-4) 9%, var(--bg-elev)), var(--bg-elev) 62%);
 }.anatomy-outside p {margin: 0;
+}
+/* El diagrama se dibuja en su orden de lectura: entrada, contrato y recursos.
+   La animación no esconde nada sin JavaScript y el estado final es el estático. */
+.skill-anatomy {--anatomy-ease: cubic-bezier(.16, 1, .3, 1);
+}.skill-anatomy .anatomy-link {background-position: center top;
+}.anatomy-entry, .anatomy-core, .anatomy-resources div, .anatomy-outside {
+    transition: transform .18s var(--anatomy-ease), border-color .18s, box-shadow .18s;
+}.anatomy-icon {transition: transform .18s var(--anatomy-ease), box-shadow .18s;
+}@keyframes anatomy-draw {from {background-size: 2px 0; } to {background-size: 2px 100%; }
+}@keyframes anatomy-rail {from {opacity: 0; transform: scaleX(0); } to {opacity: 1; transform: scaleX(1); }
+}@keyframes anatomy-pop {from {opacity: 0; transform: scale(.82); } to {opacity: 1; transform: scale(1); }
+}@media screen and (prefers-reduced-motion: no-preference){
+  .skill-anatomy.is-ready:not(.is-in) figcaption, .skill-anatomy.is-ready:not(.is-in) .anatomy-entry,
+  .skill-anatomy.is-ready:not(.is-in) .anatomy-link, .skill-anatomy.is-ready:not(.is-in) .anatomy-package,
+  .skill-anatomy.is-ready:not(.is-in) .anatomy-resources div, .skill-anatomy.is-ready:not(.is-in) .anatomy-optional,
+  .skill-anatomy.is-ready:not(.is-in) .anatomy-outside {opacity: 0;
+  }.skill-anatomy.is-ready:not(.is-in) .anatomy-resources::after {opacity: 0; transform: scaleX(0);
+  }.skill-anatomy.is-in figcaption {animation: rise .5s var(--anatomy-ease) backwards;
+  }.skill-anatomy.is-in .anatomy-entry {animation: rise .5s .04s var(--anatomy-ease) backwards;
+  }.skill-anatomy.is-in .anatomy-link {animation: rise .45s .09s var(--anatomy-ease) backwards, anatomy-draw .4s .09s var(--anatomy-ease) backwards;
+  }.skill-anatomy.is-in .anatomy-package {animation: rise .55s .14s var(--anatomy-ease) backwards;
+  }.skill-anatomy.is-in .anatomy-core {animation: rise .55s .21s var(--anatomy-ease) backwards;
+  }.skill-anatomy.is-in .anatomy-core .anatomy-icon {animation: anatomy-pop .45s .27s var(--anatomy-ease) backwards;
+  }.skill-anatomy.is-in .anatomy-resources::after {animation: anatomy-rail .45s .24s var(--anatomy-ease) backwards;
+  }.skill-anatomy.is-in .anatomy-resources div {animation: rise .5s var(--anatomy-ease) backwards;
+  }.skill-anatomy.is-in .anatomy-resources div:nth-child(1) {animation-delay: .30s;
+  }.skill-anatomy.is-in .anatomy-resources div:nth-child(2) {animation-delay: .35s;
+  }.skill-anatomy.is-in .anatomy-resources div:nth-child(3) {animation-delay: .40s;
+  }.skill-anatomy.is-in .anatomy-optional {animation: rise .5s .45s var(--anatomy-ease) backwards;
+  }.skill-anatomy.is-in .anatomy-outside {animation: rise .5s .50s var(--anatomy-ease) backwards;
+  }
+}@media (hover: hover){
+  .anatomy-entry:hover, .anatomy-core:hover, .anatomy-resources div:hover, .anatomy-outside:hover {transform: translateY(-2px);
+  }.anatomy-entry:hover {border-color: color-mix(in srgb, var(--accent-2) 62%, var(--border)); box-shadow: var(--shadow-lg);
+  }.anatomy-core:hover {box-shadow: 0 12px 28px -18px color-mix(in srgb, var(--accent) 55%, transparent), var(--shadow);
+  }.anatomy-resources div:hover {border-color: color-mix(in srgb, var(--node) 68%, var(--border)); box-shadow: var(--shadow);
+  }.anatomy-outside:hover {border-color: color-mix(in srgb, var(--accent-4) 55%, var(--border-strong)); box-shadow: var(--shadow);
+  }.anatomy-entry:hover .anatomy-icon, .anatomy-core:hover .anatomy-icon, .anatomy-resources div:hover .anatomy-icon {transform: scale(1.06);
+  }
 }@media (max-width: 619px){.anatomy-resources {grid-template-columns: 1fr; gap: 18px; padding: 0 0 0 20px; text-align: left;
 }.anatomy-resources::after {top: -28px; bottom: 0; height: auto; left: 0; right: auto;
     background: none; border-left: 2px solid var(--accent-3);
@@ -1475,6 +1514,22 @@
   function update() { toTop.classList.toggle("is-visible", window.scrollY > 480); }
   window.addEventListener("scroll", update, { passive: true });
   update();
+})();
+</script>
+<script>
+(function () {
+  "use strict";
+  var figure = document.querySelector(".skill-anatomy");
+  if (!figure || !("IntersectionObserver" in window)) { return; }
+  figure.classList.add("is-ready");
+  var observer = new IntersectionObserver(function (entries) {
+    entries.forEach(function (entry) {
+      if (!entry.isIntersecting) { return; }
+      entry.target.classList.add("is-in");
+      observer.unobserve(entry.target);
+    });
+  }, { threshold: 0.2, rootMargin: "0px 0px -8% 0px" });
+  observer.observe(figure);
 })();
 </script>
 <script src="assets/microlighter/microlighter-docs.js"></script>
