@@ -493,7 +493,7 @@
 
     <section id="cuando" class="section">
       <div class="section-head"><span class="section-num">2</span><h2 class="title">Cuándo se activa</h2></div>
-      <p class="sub">Las dos columnas están en la <code>description</code> del frontmatter. Los disparadores negativos no son cortesía: son lo que evita que la skill se active en la conversación equivocada.</p>
+      <p class="sub">Las dos columnas están en la <code>description</code> del frontmatter. Los disparadores negativos evitan que la skill se active en la conversación equivocada; no son cortesía.</p>
 
       <div class="table-wrap wrap-cells">
         <table>
@@ -513,7 +513,7 @@
 
     <section id="uso" class="section">
       <div class="section-head"><span class="section-num">3</span><h2 class="title">Cómo se usa</h2></div>
-      <p class="sub">El procedimiento cubre metadatos, directorio, <code>SKILL.md</code>, scripts, composición opcional y auditoría final, más la gestión de errores. Esta página no los copia: documenta la única puerta automática del recorrido, el validador de metadatos, y el significado de lo que imprime. Los límites que aplica a <code>name</code> y <code>description</code> están en el paso 1 de <code>SKILL.md</code> y en el propio script. La ruta está escrita como la escribe el <code>SKILL.md</code>, relativa a la carpeta de la skill; desde la raíz del repositorio el fichero está en <code>.skills/skill-creator/scripts/validate-metadata.py</code>.</p>
+      <p class="sub">El procedimiento cubre metadatos, directorio, <code>SKILL.md</code>, scripts, composición opcional, auditoría final y gestión de errores. Esta página documenta la única puerta automática del recorrido, el validador de metadatos, y el significado de lo que imprime. Los límites que aplica a <code>name</code> y <code>description</code> están en el paso 1 de <code>SKILL.md</code> y en el propio script. La ruta está escrita como la escribe el <code>SKILL.md</code>, relativa a la carpeta de la skill; desde la raíz del repositorio el fichero está en <code>.skills/skill-creator/scripts/validate-metadata.py</code>.</p>
 
       <div class="code"><pre><code>python3 scripts/validate-metadata.py --name "[name]" --description "[description]"</code></pre></div>
 

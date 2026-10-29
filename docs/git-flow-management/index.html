@@ -510,7 +510,7 @@
 
     <section id="uso" class="section">
       <div class="section-head"><span class="section-num">3</span><h2 class="title">Cómo se usa</h2></div>
-      <p class="sub">Cinco momentos, siempre en el mismo orden. Lo que cambia con el tamaño de la tarea es la profundidad de cada uno, no su presencia.</p>
+      <p class="sub">Cinco momentos, siempre en el mismo orden. El tamaño de la tarea cambia la profundidad de cada uno, no cuáles se hacen.</p>
 
       <div class="flow">
         <div class="flow-step"><code>clasificar</code><strong>Mide</strong><p>Tamaño y riesgo antes de cualquier comando que persista. De aquí sale si hay rama, cuántos commits y cuánta verificación.</p></div>
@@ -581,7 +581,7 @@ scripts/verify-branch.sh &lt;ancestro&gt; &lt;descendiente&gt; [remoto]</code></
 
     <section id="reglas" class="section">
       <div class="section-head"><span class="section-num">5</span><h2 class="title">Dónde están las reglas</h2></div>
-      <p class="sub">Las reglas viven en los ficheros del paquete, no en esta página. Aquí no se copian: se indica cuál responde a cada pregunta, para que solo haya una fuente que mantener.</p>
+      <p class="sub">Las reglas están en los ficheros del paquete, no en esta página. Aquí solo se indica cuál responde a cada pregunta, para mantener una sola fuente.</p>
 
       <div class="table-wrap wrap-cells">
         <table>
@@ -619,7 +619,7 @@ scripts/verify-branch.sh &lt;ancestro&gt; &lt;descendiente&gt; [remoto]</code></
       <div class="qa"><h3>¿Puedo hacer rebase de mi rama?</h3><p>Solo si es privada y no está publicada. Una rama compartida o ya publicada no se rebasa ni se aplasta sin una regla documentada y una aprobación explícita.</p></div>
       <div class="qa"><h3>Me equivoqué con un commit. ¿<code>reset --hard</code>?</h3><p>Primero se inspecciona el estado, el historial y el reflog, y se prefiere revertir o un commit correctivo. Un reset destructivo exige autorización para ese comando concreto, con las consecuencias expuestas, y se verifica antes de dar el paso siguiente.</p></div>
       <div class="qa"><h3>¿Por qué el cierre dice NO VERIFICADO y no INCOMPLETO?</h3><p>Porque son cosas distintas. INCOMPLETO significa que una condición obligatoria falló o no se ejecutó; NO VERIFICADO, que no hay evidencia suficiente para afirmar nada. La skill prefiere el segundo antes que una conclusión sin pruebas.</p></div>
-      <div class="qa"><h3>¿Sirve para un repositorio sin remoto?</h3><p>Sí. Un flujo local no incumple nada por no tener remoto: las comprobaciones contra el remoto simplemente no aplican. Lo que no se hace es convertir esa ausencia en un incumplimiento inventado.</p></div>
+      <div class="qa"><h3>¿Sirve para un repositorio sin remoto?</h3><p>Sí. Un flujo local no incumple nada por no tener remoto: las comprobaciones contra el remoto simplemente no aplican. Esa ausencia no se convierte en un incumplimiento inventado.</p></div>
     </section>
 
     <section id="diagramas" class="section">
