@@ -308,6 +308,14 @@
 }@keyframes rise {from {opacity: 0; transform: translateY(14px); } to {opacity: 1; transform: none; }
 }.hero-copy {animation: rise .6s ease-out both;
 }.hero-art {animation: rise .8s .1s ease-out both;
+}/* Deriva ambiental del hero: los halos se desplazan y virean de tono muy
+   despacio. Se animan translate/scale independientes para no pisar el
+   transform base (el centrado del blob) y hue-rotate da el cambio de color
+   ligero; la regla global de prefers-reduced-motion lo apaga entero. */
+@keyframes hero-drift {from {translate: 0 0; scale: 1; filter: blur(6px) hue-rotate(0deg); } to {translate: 64px -36px; scale: 1.12; filter: blur(6px) hue-rotate(40deg); }
+}@keyframes blob-drift {from {translate: 0 0; scale: 1; filter: blur(26px) hue-rotate(-18deg); } to {translate: 30px -36px; scale: 1.12; filter: blur(26px) hue-rotate(22deg); }
+}.hero::before {animation: hero-drift 20s ease-in-out -5s infinite alternate;
+}.art-blob {animation: blob-drift 13s ease-in-out -3s infinite alternate;
 }.section-wrap {max-width: 1180px;
     margin: 0 auto;
     padding: clamp(36px, 5vw, 64px) clamp(16px, 4vw, 40px) 0;
@@ -647,6 +655,15 @@
   }.skill-anatomy.is-in .anatomy-resources div:nth-child(3) {animation-delay: .40s;
   }.skill-anatomy.is-in .anatomy-optional {animation: rise .5s .45s var(--anatomy-ease) backwards;
   }.skill-anatomy.is-in .anatomy-outside {animation: rise .5s .50s var(--anatomy-ease) backwards;
+  }
+}/* Entrada en cascada fila a fila de los bloques del catálogo (tarjetas,
+   pasos, estructura y bloques sueltos): mismo convenio que la anatomía — sin
+   JavaScript nada queda oculto y el estado final es el estático. --d es la
+   posición del bloque en el lote que entra (la fija el script). */
+@media screen and (prefers-reduced-motion: no-preference){
+  .skills.is-ready .skill-card:not(.is-in), .steps.is-ready .step:not(.is-in), .struct.is-ready .struct-item:not(.is-in), .section-head.is-ready:not(.is-in), .section > .sub.is-ready:not(.is-in), .guide-feature.is-ready:not(.is-in), .note.is-ready:not(.is-in), .verify.is-ready:not(.is-in) {opacity: 0;
+  }.skills .skill-card.is-in, .steps .step.is-in, .struct .struct-item.is-in, .section-head.is-in, .section > .sub.is-in, .guide-feature.is-in, .note.is-in, .verify.is-in {animation: rise .55s cubic-bezier(.16, 1, .3, 1) backwards;
+    animation-delay: calc(var(--d, 0) * 70ms);
   }
 }@media (hover: hover){
   .anatomy-entry:hover, .anatomy-core:hover, .anatomy-resources div:hover, .anatomy-outside:hover {transform: translateY(-2px);
@@ -1546,6 +1563,42 @@
     });
   }, { threshold: 0.2, rootMargin: "0px 0px -8% 0px" });
   observer.observe(figure);
+})();
+</script>
+<script>
+(function () {
+  "use strict";
+  // Entrada en cascada fila a fila de los bloques del catálogo (tarjetas,
+  // pasos y estructura): cada bloque se revela al entrar en pantalla y los
+  // que llegan juntos se renumeran en --d para escalonarse; sin observer,
+  // todo visible.
+  var grids = document.querySelectorAll(".skills, .steps, .struct");
+  if (!grids.length || !("IntersectionObserver" in window)) { return; }
+  var observer = new IntersectionObserver(function (entries) {
+    entries.filter(function (e) { return e.isIntersecting; })
+      .sort(function (a, b) {
+        return parseFloat(a.target.style.getPropertyValue("--d")) - parseFloat(b.target.style.getPropertyValue("--d"));
+      })
+      .forEach(function (entry, i) {
+        entry.target.style.setProperty("--d", i);
+        entry.target.classList.add("is-in");
+        observer.unobserve(entry.target);
+      });
+  }, { threshold: 0, rootMargin: "0px 0px -8% 0px" });
+  grids.forEach(function (grid) {
+    var blocks = grid.querySelectorAll(".skill-card, .step, .struct-item");
+    blocks.forEach(function (block, i) { block.style.setProperty("--d", i); });
+    grid.classList.add("is-ready");
+    blocks.forEach(function (block) { observer.observe(block); });
+  });
+  // Bloques sueltos (cabeceras de sección, guía, notas y panel de
+  // verificación): mismo reveal, sin rejilla que coordinar.
+  document.querySelectorAll(".section-head, .section > .sub, .guide-feature, .note, .verify")
+    .forEach(function (block) {
+      block.style.setProperty("--d", 0);
+      block.classList.add("is-ready");
+      observer.observe(block);
+    });
 })();
 </script>
 <script src="assets/microlighter/microlighter-docs.js"></script>
