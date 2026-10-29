@@ -405,6 +405,7 @@
 }.skip-link:focus {top: 12px;
 }
 </style>
+<link rel="stylesheet" href="../assets/microlighter/microlighter-docs.css">
 </head>
 <body>
 <a class="skip-link" href="#contenido">Saltar al contenido</a>
@@ -535,7 +536,7 @@
       <div class="section-head"><span class="section-num">4</span><h2 class="title">Qué contiene el paquete</h2></div>
       <p class="sub">El agente lee <code>SKILL.md</code> al activarse, abre la referencia para elegir y escribir la prueba y usa el script para ejecutar la puerta.</p>
 
-      <div class="code"><pre><code>go-testing-and-verification/
+      <div class="code"><pre><code class="language-bash">go-testing-and-verification/
 ├── SKILL.md                      # invariantes, procedimiento y bloque de cierre
 ├── references/
 │   └── test-layers.md            # tabla, golden, extremo a extremo, cancelación y determinismo
@@ -632,7 +633,7 @@
       <div class="section-head"><span class="section-num">8</span><h2 class="title">Verificación</h2></div>
       <p class="sub">La puerta y sus propias pruebas se ejecutan; lo que no se pudo verificar se declara con su motivo.</p>
 
-      <div class="code"><pre><code>python3 src/go-testing-and-verification/scripts/verify-go.py --root . --race
+      <div class="code"><pre><code class="language-bash">python3 src/go-testing-and-verification/scripts/verify-go.py --root . --race
 python3 src/go-testing-and-verification/scripts/test-verify-go.py
 python3 scripts/check-repo.py</code></pre></div>
 
@@ -779,5 +780,6 @@ python3 scripts/check-repo.py</code></pre></div>
   update();
 })();
 </script>
+<script src="../assets/microlighter/microlighter-docs.js"></script>
 </body>
 </html>

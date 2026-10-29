@@ -405,6 +405,7 @@
 }.skip-link:focus {top: 12px;
 }
 </style>
+<link rel="stylesheet" href="../assets/microlighter/microlighter-docs.css">
 </head>
 <body>
 <a class="skip-link" href="#contenido">Saltar al contenido</a>
@@ -531,7 +532,7 @@
       <div class="section-head"><span class="section-num">4</span><h2 class="title">Qué contiene el paquete</h2></div>
       <p class="sub">El agente lee <code>SKILL.md</code> al activarse y abre el resto solo cuando el paso en curso lo pide.</p>
 
-      <div class="code"><pre><code>prd-cartographer/
+      <div class="code"><pre><code class="language-bash">prd-cartographer/
 ├── SKILL.md                        # invariantes, procedimiento y formato de cierre
 ├── references/
 │   ├── evidence-and-claims.md      # grados de certeza y comparación de fuentes
@@ -621,7 +622,7 @@
       <div class="section-head"><span class="section-num">8</span><h2 class="title">Verificación</h2></div>
       <p class="sub">El documento se contrasta con la evidencia y la puerta del repositorio se ejecuta; un PRD con una contradicción abierta no se declara terminado.</p>
 
-      <div class="code"><pre><code>python3 scripts/check-repo.py</code></pre></div>
+      <div class="code"><pre><code class="language-bash">python3 scripts/check-repo.py</code></pre></div>
 
       <div class="table-wrap">
         <table>
@@ -765,5 +766,6 @@
   update();
 })();
 </script>
+<script src="../assets/microlighter/microlighter-docs.js"></script>
 </body>
 </html>

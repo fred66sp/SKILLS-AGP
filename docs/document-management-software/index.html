@@ -405,6 +405,7 @@
 }.skip-link:focus {top: 12px;
 }
 </style>
+<link rel="stylesheet" href="../assets/microlighter/microlighter-docs.css">
 </head>
 <body>
 <a class="skip-link" href="#contenido">Saltar al contenido</a>
@@ -517,7 +518,7 @@
         <div class="flow-step"><code>paso 7</code><strong>Cerrar con evidencia</strong><p>Cinco líneas: intervención, artefactos, verificación, afirmaciones sin sustento y pendientes.</p></div>
       </div>
 
-      <div class="code"><pre><code>python3 scripts/doc-inventory.py --root &lt;directorio&gt; [--glob "*.md"] [--json]</code></pre></div>
+      <div class="code"><pre><code class="language-bash">python3 scripts/doc-inventory.py --root &lt;directorio&gt; [--glob "*.md"] [--json]</code></pre></div>
 
       <div class="qa"><h3>El script sale con 0</h3><p>Inventario completo sin hallazgos. Esa lista es la línea base antes de tocar nada.</p></div>
       <div class="qa"><h3>El script sale con 3</h3><p>Hay hallazgos: enlaces relativos rotos, documentos sin título, documentos vacíos, encabezados repetidos entre documentos o referencias vivas escritas como documentación. Es una salida esperada. Para cada uno se decide si se corrige en este encargo o se reporta con evidencia.</p></div>
@@ -531,7 +532,7 @@
       <div class="section-head"><span class="section-num">4</span><h2 class="title">Qué contiene el paquete</h2></div>
       <p class="sub">El agente lee <code>SKILL.md</code> al activarse y abre el resto solo cuando el paso en curso lo pide, así que la skill es estricta sin consumir contexto en cada conversación.</p>
 
-      <div class="code"><pre><code>document-management-software/
+      <div class="code"><pre><code class="language-bash">document-management-software/
 ├── SKILL.md                        # el contrato: invariantes, pasos, formato de cierre
 ├── references/
 │   ├── document-inventory.md       # qué documento merece existir y por qué
@@ -627,7 +628,7 @@
       <div class="section-head"><span class="section-num">8</span><h2 class="title">Verificación</h2></div>
       <p class="sub">El inventario y la puerta del repositorio se ejecutan; un documento sin H1, con un enlace roto o con una referencia viva no se declara terminado.</p>
 
-      <div class="code"><pre><code>python3 src/document-management-software/scripts/doc-inventory.py --root .
+      <div class="code"><pre><code class="language-bash">python3 src/document-management-software/scripts/doc-inventory.py --root .
 python3 src/document-management-software/scripts/test-doc-inventory.py
 python3 scripts/check-repo.py</code></pre></div>
 
@@ -774,5 +775,6 @@ python3 scripts/check-repo.py</code></pre></div>
   update();
 })();
 </script>
+<script src="../assets/microlighter/microlighter-docs.js"></script>
 </body>
 </html>

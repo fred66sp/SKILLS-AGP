@@ -404,6 +404,7 @@
 }.skip-link:focus {top: 12px;
 }
 </style>
+<link rel="stylesheet" href="../assets/microlighter/microlighter-docs.css">
 </head>
 <body>
 <a class="skip-link" href="#contenido">Saltar al contenido</a>
@@ -535,7 +536,7 @@
       <div class="section-head"><span class="section-num">4</span><h2 class="title">Qué contiene el paquete</h2></div>
       <p class="sub">El agente lee <code>SKILL.md</code> al activarse, abre la referencia de la capa elegida y ejecuta la puerta en lugar de reescribirla.</p>
 
-      <div class="code"><pre><code>python-testing-and-verification/
+      <div class="code"><pre><code class="language-bash">python-testing-and-verification/
 ├── SKILL.md                          # invariantes, procedimiento y bloque de cierre
 ├── references/
 │   ├── test-layers.md                # riesgo, capas, determinismo y datos de prueba
@@ -635,7 +636,7 @@
       <div class="section-head"><span class="section-num">8</span><h2 class="title">Verificación</h2></div>
       <p class="sub">La puerta y sus propias pruebas se ejecutan; lo que no se pudo verificar se declara con su motivo.</p>
 
-      <div class="code"><pre><code>python3 src/python-testing-and-verification/scripts/verify-python.py --root . --format --lint --types --test
+      <div class="code"><pre><code class="language-bash">python3 src/python-testing-and-verification/scripts/verify-python.py --root . --format --lint --types --test
 python3 src/python-testing-and-verification/scripts/test-verify-python.py
 python3 scripts/check-repo.py</code></pre></div>
 
@@ -779,5 +780,6 @@ python3 scripts/check-repo.py</code></pre></div>
   update();
 })();
 </script>
+<script src="../assets/microlighter/microlighter-docs.js"></script>
 </body>
 </html>

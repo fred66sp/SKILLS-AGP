@@ -405,6 +405,7 @@
 }.skip-link:focus {top: 12px;
 }
 </style>
+<link rel="stylesheet" href="../assets/microlighter/microlighter-docs.css">
 </head>
 <body>
 <a class="skip-link" href="#contenido">Saltar al contenido</a>
@@ -535,7 +536,7 @@
       <div class="section-head"><span class="section-num">4</span><h2 class="title">Qué contiene el paquete</h2></div>
       <p class="sub">El agente lee <code>SKILL.md</code> al activarse y abre la referencia solo cuando una decisión concreta no es evidente.</p>
 
-      <div class="code"><pre><code>go-idiomatic-style/
+      <div class="code"><pre><code class="language-bash">go-idiomatic-style/
 ├── SKILL.md                      # invariantes, procedimiento y bloque de cierre
 ├── references/
 │   └── style-rules.md            # tablas de formato, nombres, paquetes, estructura, funciones, datos, interfaces y dependencias
@@ -622,7 +623,7 @@
       <div class="section-head"><span class="section-num">8</span><h2 class="title">Verificación</h2></div>
       <p class="sub">El formato, la compilación y la puerta del repositorio se ejecutan; un cambio de estilo que rompe la compilación no es un cambio de estilo.</p>
 
-      <div class="code"><pre><code>gofmt -l .
+      <div class="code"><pre><code class="language-bash">gofmt -l .
 go vet ./...
 go build ./...
 python3 scripts/check-repo.py</code></pre></div>
@@ -769,5 +770,6 @@ python3 scripts/check-repo.py</code></pre></div>
   update();
 })();
 </script>
+<script src="../assets/microlighter/microlighter-docs.js"></script>
 </body>
 </html>

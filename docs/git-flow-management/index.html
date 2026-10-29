@@ -405,6 +405,7 @@
 }.skip-link:focus {top: 12px;
 }
 </style>
+<link rel="stylesheet" href="../assets/microlighter/microlighter-docs.css">
 </head>
 <body>
 <a class="skip-link" href="#contenido">Saltar al contenido</a>
@@ -520,7 +521,7 @@
         <div class="flow-step"><code>verificar</code><strong>Prueba</strong><p>Estado, ascendencia e integración con comandos de solo lectura. Sin esa evidencia el cierre es INCOMPLETO o NO VERIFICADO.</p></div>
       </div>
 
-      <div class="code"><pre><code>git status --short --branch
+      <div class="code"><pre><code class="language-bash">git status --short --branch
 
 scripts/verify-branch.sh &lt;ancestro&gt; &lt;descendiente&gt; [remoto]</code></pre></div>
 
@@ -538,7 +539,7 @@ scripts/verify-branch.sh &lt;ancestro&gt; &lt;descendiente&gt; [remoto]</code></
       <div class="section-head"><span class="section-num">4</span><h2 class="title">Qué contiene el paquete</h2></div>
       <p class="sub">El agente lee <code>SKILL.md</code> al activarse y abre una referencia solo cuando la operación concreta la pide, así que la skill es estricta sin consumir contexto en cada conversación.</p>
 
-      <div class="code"><pre><code>git-flow-management/
+      <div class="code"><pre><code class="language-bash">git-flow-management/
 ├── SKILL.md                          # invariantes, proporcionalidad, protocolo de commit, cierre
 ├── references/
 │   ├── workflow-detection.md         # qué política de ramas declara el repositorio
@@ -651,7 +652,7 @@ scripts/verify-branch.sh &lt;ancestro&gt; &lt;descendiente&gt; [remoto]</code></
       <div class="section-head"><span class="section-num">8</span><h2 class="title">Verificación</h2></div>
       <p class="sub">La contención de ramas y la puerta del repositorio se ejecutan antes de cerrar; sin esa evidencia el cierre es INCOMPLETO o NO VERIFICADO.</p>
 
-      <div class="code"><pre><code>src/git-flow-management/scripts/verify-branch.sh <ancestro> <descendiente> [remoto]
+      <div class="code"><pre><code class="language-bash">src/git-flow-management/scripts/verify-branch.sh <ancestro> <descendiente> [remoto]
 python3 scripts/check-repo.py</code></pre></div>
 
       <div class="table-wrap">
@@ -797,5 +798,6 @@ python3 scripts/check-repo.py</code></pre></div>
   update();
 })();
 </script>
+<script src="../assets/microlighter/microlighter-docs.js"></script>
 </body>
 </html>

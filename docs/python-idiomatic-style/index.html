@@ -404,6 +404,7 @@
 }.skip-link:focus {top: 12px;
 }
 </style>
+<link rel="stylesheet" href="../assets/microlighter/microlighter-docs.css">
 </head>
 <body>
 <a class="skip-link" href="#contenido">Saltar al contenido</a>
@@ -534,7 +535,7 @@
       <div class="section-head"><span class="section-num">4</span><h2 class="title">Qué contiene el paquete</h2></div>
       <p class="sub">El agente lee <code>SKILL.md</code> al activarse y abre solo la referencia que el paso en curso pide.</p>
 
-      <div class="code"><pre><code>python-idiomatic-style/
+      <div class="code"><pre><code class="language-bash">python-idiomatic-style/
 ├── SKILL.md                          # invariantes, procedimiento y bloque de cierre
 ├── references/
 │   ├── language-rules.md             # intérprete, módulos, datos, errores, recursos, asincronía
@@ -629,7 +630,7 @@
       <div class="section-head"><span class="section-num">8</span><h2 class="title">Verificación</h2></div>
       <p class="sub">La sintaxis, el formato, el lint y la puerta del repositorio se ejecutan; una herramienta ausente se declara.</p>
 
-      <div class="code"><pre><code>python3 -m compileall -q .
+      <div class="code"><pre><code class="language-bash">python3 -m compileall -q .
 ruff format --check .
 ruff check .
 python3 scripts/check-repo.py</code></pre></div>
@@ -773,5 +774,6 @@ python3 scripts/check-repo.py</code></pre></div>
   update();
 })();
 </script>
+<script src="../assets/microlighter/microlighter-docs.js"></script>
 </body>
 </html>

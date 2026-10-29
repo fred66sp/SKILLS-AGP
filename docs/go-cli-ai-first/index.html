@@ -405,6 +405,7 @@
 }.skip-link:focus {top: 12px;
 }
 </style>
+<link rel="stylesheet" href="../assets/microlighter/microlighter-docs.css">
 </head>
 <body>
 <a class="skip-link" href="#contenido">Saltar al contenido</a>
@@ -536,7 +537,7 @@
       <div class="section-head"><span class="section-num">4</span><h2 class="title">Qué contiene el paquete</h2></div>
       <p class="sub">El agente lee <code>SKILL.md</code> al activarse y abre la referencia o la plantilla cuando el paso concreto lo pide.</p>
 
-      <div class="code"><pre><code>go-cli-ai-first/
+      <div class="code"><pre><code class="language-bash">go-cli-ai-first/
 ├── SKILL.md                      # invariantes, procedimiento y bloque de cierre
 ├── references/
 │   └── cli-contract.md           # gramática, flags, salida, códigos, JSON, ayuda y compatibilidad
@@ -628,7 +629,7 @@
       <div class="section-head"><span class="section-num">8</span><h2 class="title">Verificación</h2></div>
       <p class="sub">El contrato se comprueba con las herramientas del proyecto; una CLI que compila pero no prueba stdout, stderr y el código de salida no está terminada.</p>
 
-      <div class="code"><pre><code>gofmt -l .
+      <div class="code"><pre><code class="language-bash">gofmt -l .
 go build ./...
 go test ./...
 go vet ./...
@@ -776,5 +777,6 @@ python3 scripts/check-repo.py</code></pre></div>
   update();
 })();
 </script>
+<script src="../assets/microlighter/microlighter-docs.js"></script>
 </body>
 </html>

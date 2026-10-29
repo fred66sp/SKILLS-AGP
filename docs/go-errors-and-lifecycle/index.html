@@ -405,6 +405,7 @@
 }.skip-link:focus {top: 12px;
 }
 </style>
+<link rel="stylesheet" href="../assets/microlighter/microlighter-docs.css">
 </head>
 <body>
 <a class="skip-link" href="#contenido">Saltar al contenido</a>
@@ -536,7 +537,7 @@
       <div class="section-head"><span class="section-num">4</span><h2 class="title">Qué contiene el paquete</h2></div>
       <p class="sub">El agente lee <code>SKILL.md</code> al activarse y abre una de sus referencias según el paso en curso.</p>
 
-      <div class="code"><pre><code>go-errors-and-lifecycle/
+      <div class="code"><pre><code class="language-bash">go-errors-and-lifecycle/
 ├── SKILL.md                      # invariantes, procedimiento y bloque de cierre
 ├── references/
 │   ├── error-contract.md         # clasificación, estrategia, envoltura, inspección, frontera y códigos
@@ -628,7 +629,7 @@
       <div class="section-head"><span class="section-num">8</span><h2 class="title">Verificación</h2></div>
       <p class="sub">Los errores, la cancelación y los recursos se prueban con las herramientas del proyecto; sin esa evidencia no hay cierre.</p>
 
-      <div class="code"><pre><code>gofmt -l .
+      <div class="code"><pre><code class="language-bash">gofmt -l .
 go build ./...
 go test ./...
 go test -race ./...
@@ -777,5 +778,6 @@ python3 scripts/check-repo.py</code></pre></div>
   update();
 })();
 </script>
+<script src="../assets/microlighter/microlighter-docs.js"></script>
 </body>
 </html>

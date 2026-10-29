@@ -405,6 +405,7 @@
 }.skip-link:focus {top: 12px;
 }
 </style>
+<link rel="stylesheet" href="../assets/microlighter/microlighter-docs.css">
 </head>
 <body>
 <a class="skip-link" href="#contenido">Saltar al contenido</a>
@@ -521,7 +522,7 @@
       </div>
 
       <h3>Comandos del paquete</h3>
-      <div class="code"><pre><code># Crear un ADR propuesto y actualizar el índice
+      <div class="code"><pre><code class="language-bash"># Crear un ADR propuesto y actualizar el índice
 python3 src/adr-software/scripts/adr.py new --title "Adoptar PostgreSQL 16" --deciders "Ana, Luis" --update-index
 
 # Cambiar estado; al sustituir, el enlace es obligatorio
@@ -626,7 +627,7 @@ python3 src/adr-software/scripts/adr.py check --root .</code></pre></div>
       <div class="section-head"><span class="section-num">8</span><h2 class="title">Verificación</h2></div>
       <p class="sub">La puerta del paquete y la del repositorio se ejecutan; no se declaran.</p>
 
-      <div class="code"><pre><code>python3 src/adr-software/scripts/adr.py check --root .
+      <div class="code"><pre><code class="language-bash">python3 src/adr-software/scripts/adr.py check --root .
 python3 src/adr-software/scripts/test-adr.py
 python3 scripts/check-repo.py</code></pre></div>
 
@@ -769,5 +770,6 @@ python3 scripts/check-repo.py</code></pre></div>
   update();
 })();
 </script>
+<script src="../assets/microlighter/microlighter-docs.js"></script>
 </body>
 </html>

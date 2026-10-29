@@ -1,0 +1,53 @@
+/* MicroLighter 2.0.0 (MIT, Dave Rupert): tema Monokai fijado a la paleta
+   oscura. Los bloques de código de estas páginas tienen fondo oscuro en los
+   dos temas, así que no se usa light-dark(). El gris de comentario del tema
+   (#75715e) se aclara a #8f897b: sobre el fondo de código queda en 5,49:1,
+   por encima del 4,5:1 que exige AA. */
+::highlight(comment),
+::highlight(quote) { color: #8f897b; }
+
+::highlight(keyword),
+::highlight(storage),
+::highlight(at-rule),
+::highlight(doctype),
+::highlight(important),
+::highlight(section) { color: #f92672; }
+
+::highlight(operator),
+::highlight(punctuation) { color: #f92672; }
+
+::highlight(string),
+::highlight(regexp),
+::highlight(attribute-value),
+::highlight(link),
+::highlight(raw) { color: #e6db74; }
+
+::highlight(numeric),
+::highlight(boolean),
+::highlight(constant),
+::highlight(symbol),
+::highlight(character-entity),
+::highlight(anchor),
+::highlight(entity) { color: #ae81ff; }
+
+::highlight(function),
+::highlight(decorator),
+::highlight(animation) { color: #a6e22e; }
+
+::highlight(type),
+::highlight(support) { color: #66d9ef; }
+
+::highlight(variable),
+::highlight(interpolation) { color: #f8f8f2; }
+
+::highlight(property),
+::highlight(key),
+::highlight(attribute-name) { color: #a6e22e; }
+
+::highlight(tag) { color: #f92672; }
+
+::highlight(selector) { color: #a6e22e; }
+
+::highlight(inserted) { color: #e6db74; }
+
+::highlight(deleted) { color: #f92672; }

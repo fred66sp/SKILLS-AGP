@@ -405,6 +405,7 @@
 }
 </style>
 
+<link rel="stylesheet" href="../assets/microlighter/microlighter-docs.css">
 </head>
 <body>
 <a class="skip-link" href="#contenido">Saltar al contenido</a>
@@ -550,7 +551,7 @@
       </div>
 
       <h3 class="title" style="font-size:16px; margin:26px 0 10px;">Uso directo de la puerta</h3>
-      <div class="code"><pre><code># Texto desde un fichero
+      <div class="code"><pre><code class="language-bash"># Texto desde un fichero
 python3 scripts/redactor.py check borrador.md
 
 # Salida JSON, para otra herramienta
@@ -672,7 +673,7 @@ cat borrador.md | python3 scripts/redactor.py check -</code></pre></div>
       <div class="section-head"><span class="section-num">8</span><h2 class="title">Verificación</h2></div>
       <p class="sub">La puerta de la skill, sus pruebas y la validación del repositorio. Un defecto se corrige o se justifica; no se silencia cambiando el texto.</p>
 
-      <div class="code"><pre><code># La puerta de la skill
+      <div class="code"><pre><code class="language-bash"># La puerta de la skill
 python3 src/document-redactor/scripts/redactor.py check texto.md
 
 # Sus pruebas
@@ -821,5 +822,6 @@ python3 scripts/check-repo.py</code></pre></div>
   update();
 })();
 </script>
+<script src="../assets/microlighter/microlighter-docs.js"></script>
 </body>
 </html>

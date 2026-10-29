@@ -405,6 +405,7 @@
 }.skip-link:focus {top: 12px;
 }
 </style>
+<link rel="stylesheet" href="../assets/microlighter/microlighter-docs.css">
 </head>
 <body>
 <a class="skip-link" href="#contenido">Saltar al contenido</a>
@@ -515,7 +516,7 @@
       <div class="section-head"><span class="section-num">3</span><h2 class="title">Cómo se usa</h2></div>
       <p class="sub">El procedimiento cubre metadatos, directorio, <code>SKILL.md</code>, scripts, composición opcional, auditoría final y gestión de errores. Esta página documenta la única puerta automática del recorrido, el validador de metadatos, y el significado de lo que imprime. Los límites que aplica a <code>name</code> y <code>description</code> están en el paso 1 de <code>SKILL.md</code> y en el propio script. La ruta está escrita como la escribe el <code>SKILL.md</code>, relativa a la carpeta de la skill; desde la raíz del repositorio el fichero está en <code>.skills/skill-creator/scripts/validate-metadata.py</code>.</p>
 
-      <div class="code"><pre><code>python3 scripts/validate-metadata.py --name "[name]" --description "[description]"</code></pre></div>
+      <div class="code"><pre><code class="language-bash">python3 scripts/validate-metadata.py --name "[name]" --description "[description]"</code></pre></div>
 
       <h3>Qué significa cada salida</h3>
       <div class="table-wrap wrap-cells">
@@ -539,7 +540,7 @@
       <div class="section-head"><span class="section-num">4</span><h2 class="title">Qué contiene el paquete</h2></div>
       <p class="sub">Ninguna documentación para personas: el paquete se carga en la ventana de contexto del agente, así que lo que no se ejecuta no tiene sitio dentro.</p>
 
-      <div class="code"><pre><code>skill-creator/
+      <div class="code"><pre><code class="language-bash">skill-creator/
 ├── SKILL.md                       # los pasos y la gestión de errores
 ├── references/
 │   └── checklist.md               # la auditoría final, en cinco bloques
@@ -634,7 +635,7 @@
       <div class="section-head"><span class="section-num">8</span><h2 class="title">Verificación</h2></div>
       <p class="sub">El frontmatter se valida y la puerta del repositorio se ejecuta; una skill con metadatos inválidos no se declara terminada.</p>
 
-      <div class="code"><pre><code>python3 scripts/validate-metadata.py --name "<name>" --description "<description>"
+      <div class="code"><pre><code class="language-bash">python3 scripts/validate-metadata.py --name "<name>" --description "<description>"
 python3 scripts/check-repo.py</code></pre></div>
 
       <div class="table-wrap">
@@ -777,5 +778,6 @@ python3 scripts/check-repo.py</code></pre></div>
   update();
 })();
 </script>
+<script src="../assets/microlighter/microlighter-docs.js"></script>
 </body>
 </html>
