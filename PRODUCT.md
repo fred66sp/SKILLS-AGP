@@ -34,7 +34,7 @@ Repositorio personal de skills para agentes: cada skill enseña a un agente a ha
 
 ## Capabilities and Constraints
 
-- 17 skills propias en `src/`, cada una con versión independiente en `metadata.version`, más `skill-creator` de terceros fijado en `.skills/`.
+- 18 skills propias en `src/`, cada una con versión independiente en `metadata.version`, más `skill-creator` de terceros fijado en `.skills/`.
 - Especificación de referencia: [agentskills.io](https://agentskills.io/), aplicada de forma estricta a estructura, metadatos y divulgación progresiva.
 - La validación es determinista y local; un fallo debe indicar qué script falló.
 - El sitio de documentación no descarga dependencias, tipografías ni scripts de terceros: HTML, CSS y JavaScript propios.

@@ -204,6 +204,18 @@ Documentación: [`docs/security-engineering/index.html`](docs/security-engineeri
 
 La seguridad posee el modelo de amenazas, la revisión, la auditoría de terceros y el cierre con evidencia. No sustituye a las demás skills: el contrato de la CLI sigue en `go-cli-ai-first`, el estilo y la arquitectura del lenguaje en su skill, las pruebas y sus puertas en la skill de verificación correspondiente, y la documentación en `document-management-software`. Cuando un arreglo de seguridad cambia el comportamiento, se presenta el compromiso y se decide; no se impone.
 
+### `playwright-cli-usage`
+
+Conduce un navegador real desde la terminal cuando la pregunta no se responde sin uno. Antes de abrirlo presenta un briefing de siete líneas —pregunta, origen, sesión, acciones, datos, límites y cierre— y espera un sí explícito; sin esa confirmación solo lee el entorno. Ordena el uso en una escalera: sin navegador, un comando, sesión corta o prueba del proyecto. Usa `find`, `--depth` y `--raw` para no volcar snapshots en el contexto, cierra la sesión y declara artefactos y límites. Incluye `scripts/preflight.py`, que reconoce binario, versión, configuración, artefactos e ignorados sin abrir nada, y `scripts/test-preflight.py`, que cubre binario ausente, versión fallida, configuración, artefactos e ignorados.
+
+Contrato completo: [`src/playwright-cli-usage/SKILL.md`](src/playwright-cli-usage/SKILL.md).
+
+Documentación: [`docs/playwright-cli-usage/index.html`](docs/playwright-cli-usage/index.html).
+
+### Precedencia del navegador
+
+La autorización, la proporcionalidad y la evidencia del navegador son de `playwright-cli-usage`; la referencia de comandos, de la skill oficial que instala el CLI. La suite de regresión y su puerta siguen en la skill de verificación del lenguaje, el juicio visual en `web-interface-visual-design` y el tratamiento de credenciales y datos en `security-engineering`. Descubrir con el navegador no autoriza a sustituir la prueba que conserva el comportamiento.
+
 ### `web-interface-visual-design`
 
 Diseña, implementa y revisa la calidad visual de interfaces web sin imponer un framework ni sustituir el sistema de diseño existente. Cubre composición, tipografía, color, responsive, accesibilidad, SVG, iconografía e infografías. Exige inspeccionar el resultado renderizado cuando hay herramientas disponibles y distingue esa evidencia de compilar o validar XML. Reconoce los límites de fidelidad del SVG y no inventa datos para completar una composición.
@@ -248,6 +260,7 @@ Documentación: [`docs/skill-creator/index.html`](docs/skill-creator/index.html)
 | [`.skills/python-testing-and-verification/SKILL.md`](.skills/python-testing-and-verification/SKILL.md) | [`src/python-testing-and-verification/SKILL.md`](src/python-testing-and-verification/SKILL.md) |
 | [`.skills/web-interface-visual-design/SKILL.md`](.skills/web-interface-visual-design/SKILL.md) | [`src/web-interface-visual-design/SKILL.md`](src/web-interface-visual-design/SKILL.md) |
 | [`.skills/security-engineering/SKILL.md`](.skills/security-engineering/SKILL.md) | [`src/security-engineering/SKILL.md`](src/security-engineering/SKILL.md) |
+| [`.skills/playwright-cli-usage/SKILL.md`](.skills/playwright-cli-usage/SKILL.md) | [`src/playwright-cli-usage/SKILL.md`](src/playwright-cli-usage/SKILL.md) |
 
 `python scripts/check-repo.py` comprueba que cada enrutador resuelve su contrato desde su propio directorio, que el nombre del enrutador y el del contrato coinciden y que no hay enrutadores huérfanos ni skills canónicas sin enrutador.
 
@@ -283,6 +296,7 @@ python src/typescript-testing-and-verification/scripts/test-verify-ts.py
 python src/javascript-testing-and-verification/scripts/test-verify-js.py
 python src/python-testing-and-verification/scripts/test-verify-python.py
 python src/security-engineering/scripts/test-security_scan.py
+python src/playwright-cli-usage/scripts/test-preflight.py
 ```
 
 `check-repo.py` valida metadatos, estructura, enrutadores, enlaces Markdown, recibos de los diagramas, versiones y etiquetas de skills, la página de cada skill en `docs/` con su enlace en el catálogo y su referencia en este README, y sintaxis de los scripts. Las pruebas unitarias se ejecutan aparte para que un fallo indique qué script falló. La CI (`.github/workflows/validate.yml`) ejecuta los mismos comandos en cada push y pull request.
@@ -345,6 +359,7 @@ Cada skill declara su versión independiente en `metadata.version`; el procedimi
 - `docs/security-engineering/index.html`: página de entrada a la skill de seguridad, con el alcance, el procedimiento, el paquete y el escáner.
 - `docs/security-engineering/flujo-de-trabajo.html`: diagrama del flujo, del encargo al riesgo residual.
 - `docs/security-engineering/arquitectura.html`: diagrama del paquete, la superficie revisada y la puerta.
+- `docs/playwright-cli-usage/index.html`: página de entrada a la skill del navegador, con la puerta de confirmación, la escalera de uso, el paquete y el reconocimiento del entorno.
 
 Los diagramas son artefactos de [archify](https://github.com/tt-a1i/archify) 3.2.0. Cada uno tiene su especificación (`*.json`) y su recibo de entrega (`*.delivery.json`) con el `sha256` del HTML y del spec. Para regenerarlos hace falta archify 3.2.0 y el checkout local en `archify/`, ignorado por Git, con los ajustes de ancho descritos en `archify/LOCAL-PATCH.md`; el comando es el mismo en todas las carpetas de `docs/<skill>/`:
 

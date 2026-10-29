@@ -50,5 +50,8 @@ jobs:
       - name: Test the security scanner
         run: python3 src/security-engineering/scripts/test-security_scan.py
 
+      - name: Test the browser preflight
+        run: python3 src/playwright-cli-usage/scripts/test-preflight.py
+
       - name: Test the writing gate
         run: python3 src/document-redactor/scripts/test-redactor.py

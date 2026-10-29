@@ -38,6 +38,18 @@ Un item se cierra como se cierran los cambios del repositorio: `python scripts/c
 - **Dependencias:** verificar en verde requiere `push`, que es una operación aparte con su propia confirmación.
 - **Revisado:** 2026-10-25
 
+### PBI-06: Contraste del botón primario en tema oscuro
+
+- **Tipo:** documentación · **Prioridad:** Should · **Tamaño:** S · **Estado:** listo
+- **Evidencia:** en las páginas escritas a mano de `docs/`, `.btn-primary` usa `color:#fff` sobre un degradado de `--accent` y `--accent-2`; en `data-theme="dark"` esos tokens son claros, así que el texto blanco queda por debajo de 2:1. La página `docs/playwright-cli-usage/index.html` ya lleva una corrección local para su botón.
+- **Resultado esperado:** el texto del botón primario se lee en ambos temas sin cambiar la identidad ni el acento de cada skill.
+- **Aceptación:**
+  - contraste calculado ≥4.5:1 en tema oscuro en todas las páginas escritas a mano;
+  - la corrección vive en la regla común o en un token de rol, no repetida por página;
+  - `python scripts/check-repo.py` en 0 y captura de una página con el botón legible.
+- **Dependencias:** ninguna.
+- **Revisado:** 2026-10-29
+
 ## Sin refinar
 
 ### PBI-05: Garantías de la documentación HTML
