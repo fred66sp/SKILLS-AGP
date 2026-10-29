@@ -1,0 +1,320 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "Arquitectura de la skill document-redactor",
+    "subtitle": "El contrato, las cuatro referencias, la plantilla de informe y la puerta: qué capa responde a cada decisión y qué se comprueba antes de entregar.",
+    "locale": "es",
+    "output": "docs/document-redactor/arquitectura.html",
+    "quality_profile": "showcase"
+  },
+  "components": [
+    {
+      "id": "persona",
+      "type": "external",
+      "label": "Persona o agente",
+      "sublabel": "encarga el texto",
+      "icon": "person",
+      "pos": [
+        40,
+        80
+      ],
+      "size": [
+        140,
+        64
+      ]
+    },
+    {
+      "id": "skill",
+      "type": "frontend",
+      "label": "SKILL.md",
+      "sublabel": "invariantes y pasos",
+      "pos": [
+        260,
+        80
+      ],
+      "size": [
+        150,
+        64
+      ]
+    },
+    {
+      "id": "patrones",
+      "type": "database",
+      "label": "patrones-ia.md",
+      "sublabel": "P01…P33 · racimos",
+      "tag": "se abre en el paso 3",
+      "pos": [
+        500,
+        80
+      ],
+      "size": [
+        150,
+        64
+      ]
+    },
+    {
+      "id": "tipografia",
+      "type": "database",
+      "label": "tipografia-y-ritmo.md",
+      "sublabel": "«» · raya · burstiness",
+      "tag": "se abre en los pasos 3 y 4",
+      "pos": [
+        740,
+        80
+      ],
+      "size": [
+        150,
+        64
+      ]
+    },
+    {
+      "id": "voz",
+      "type": "database",
+      "label": "voz-y-registro.md",
+      "sublabel": "perfiles · muestra · precedencia",
+      "tag": "se abre en los pasos 2 y 4",
+      "pos": [
+        980,
+        80
+      ],
+      "size": [
+        150,
+        64
+      ]
+    },
+    {
+      "id": "evaluacion",
+      "type": "database",
+      "label": "evaluacion.md",
+      "sublabel": "rúbrica · falsos positivos",
+      "tag": "se abre en el paso 5",
+      "pos": [
+        1220,
+        80
+      ],
+      "size": [
+        150,
+        64
+      ]
+    },
+    {
+      "id": "informe",
+      "type": "backend",
+      "label": "informe-edicion.md",
+      "sublabel": "texto · puntuación · cambios",
+      "pos": [
+        240,
+        300
+      ],
+      "size": [
+        150,
+        64
+      ]
+    },
+    {
+      "id": "texto",
+      "type": "backend",
+      "label": "Texto editado",
+      "sublabel": "prosa · estructura",
+      "pos": [
+        500,
+        300
+      ],
+      "size": [
+        150,
+        64
+      ]
+    },
+    {
+      "id": "hechos",
+      "type": "security",
+      "label": "Hechos congelados",
+      "sublabel": "cifras · citas · enlaces",
+      "tag": "se comparan al cerrar",
+      "pos": [
+        740,
+        300
+      ],
+      "size": [
+        150,
+        64
+      ]
+    },
+    {
+      "id": "puerta",
+      "type": "security",
+      "label": "redactor.py check",
+      "sublabel": "tipografía y señales",
+      "tag": "se ejecuta, no se cita",
+      "pos": [
+        980,
+        300
+      ],
+      "size": [
+        150,
+        64
+      ]
+    },
+    {
+      "id": "pruebas",
+      "type": "security",
+      "label": "test-redactor.py",
+      "sublabel": "22 pruebas",
+      "tag": "códigos 0/1/2",
+      "pos": [
+        1220,
+        300
+      ],
+      "size": [
+        150,
+        64
+      ]
+    },
+    {
+      "id": "resultado",
+      "type": "frontend",
+      "label": "Entrega",
+      "sublabel": "texto e informe",
+      "pos": [
+        980,
+        520
+      ],
+      "size": [
+        150,
+        64
+      ]
+    }
+  ],
+  "boundaries": [
+    {
+      "kind": "region",
+      "label": "Paquete de la skill",
+      "wraps": [
+        "skill",
+        "patrones",
+        "tipografia",
+        "voz",
+        "evaluacion"
+      ]
+    },
+    {
+      "kind": "security-group",
+      "label": "Salida y comprobación",
+      "wraps": [
+        "texto",
+        "hechos",
+        "puerta",
+        "pruebas",
+        "resultado"
+      ]
+    }
+  ],
+  "connections": [
+    {
+      "id": "encarga",
+      "from": "persona",
+      "to": "skill",
+      "label": "encarga",
+      "variant": "emphasis"
+    },
+    {
+      "id": "consulta-patrones",
+      "from": "skill",
+      "to": "patrones",
+      "label": "consulta",
+      "variant": "dashed"
+    },
+    {
+      "id": "consulta-tipografia",
+      "from": "skill",
+      "to": "tipografia",
+      "label": "consulta",
+      "variant": "dashed"
+    },
+    {
+      "id": "consulta-voz",
+      "from": "skill",
+      "to": "voz",
+      "label": "consulta",
+      "variant": "dashed"
+    },
+    {
+      "id": "consulta-evaluacion",
+      "from": "skill",
+      "to": "evaluacion",
+      "label": "consulta",
+      "variant": "dashed"
+    },
+    {
+      "id": "plantilla",
+      "from": "skill",
+      "to": "informe",
+      "label": "cierra con",
+      "variant": "emphasis"
+    },
+    {
+      "id": "edita",
+      "from": "skill",
+      "to": "texto",
+      "label": "reescribe",
+      "variant": "emphasis"
+    },
+    {
+      "id": "contrasta",
+      "from": "hechos",
+      "to": "texto",
+      "label": "contrasta",
+      "variant": "emphasis"
+    },
+    {
+      "id": "comprueba",
+      "from": "puerta",
+      "to": "resultado",
+      "label": "verifica",
+      "variant": "emphasis"
+    },
+    {
+      "id": "declara",
+      "from": "texto",
+      "to": "resultado",
+      "label": "declara",
+      "variant": "dashed"
+    },
+    {
+      "id": "protege",
+      "from": "pruebas",
+      "to": "resultado",
+      "label": "prueba la puerta"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "Las capas del paquete",
+      "items": [
+        "SKILL.md fija los invariantes y el orden de trabajo; las referencias responden a la decisión concreta y no se copian entre sí",
+        "patrones-ia.md describe señales con identificador; tipografia-y-ritmo.md fija la forma; voz-y-registro.md decide la voz",
+        "evaluacion.md cierra con la rúbrica, los falsos positivos y el método de comparación con y sin skill"
+      ]
+    },
+    {
+      "dot": "rose",
+      "title": "La evidencia no se edita",
+      "items": [
+        "La prosa cambia; las cifras, nombres, fechas, citas y enlaces se congelan y se comparan antes de entregar",
+        "Una afirmación sin fuente se señala y se deja al responsable; la edición de estilo no añade evidencia",
+        "El informe declara lo no verificado en lugar de presentar el texto como contrastado"
+      ]
+    },
+    {
+      "dot": "emerald",
+      "title": "Lo que la skill no hace",
+      "items": [
+        "No decide qué documentos debe tener un proyecto: eso es document-management-software",
+        "No redacta la estructura de un PRD ni de un ADR: eso es prd-cartographer y adr-software",
+        "No detecta autoría ni sustituye la revisión de quien publica"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "de24e211-bc0f-4f56-ba2d-26eaa8578a0a",
+  "status": "current",
+  "command": "deliver",
+  "type": "architecture",
+  "input": "/home/desarrollo/PROJECTS/SKILLS-AGP/docs/document-redactor/arquitectura.json",
+  "output": "/home/desarrollo/PROJECTS/SKILLS-AGP/docs/document-redactor/arquitectura.html",
+  "specification": {
+    "sha256": "4e27a37093c5e2d44963e863fe9aae2f7701701ae92de6e534b7c88bb9477fd0",
+    "bytes": 6842
+  },
+  "artifact": {
+    "sha256": "02003a1440a60a3acdab10d89eab5b141dd06e2ba77ddafd98073f36e29e15c6",
+    "bytes": 838357
+  }
+}

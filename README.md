@@ -43,6 +43,14 @@ Gestiona la documentación de un proyecto de software como conocimiento verifica
 
 Contrato completo: [`src/document-management-software/SKILL.md`](src/document-management-software/SKILL.md).
 
+### `document-redactor`
+
+Redacta y edita la prosa de un documento en castellano con contrato de agente: delimita la operación, fija el registro y congela los hechos antes de tocar el texto, detecta los tics de la escritura de IA por racimos y no por casos sueltos, reescribe conservando significado y cobertura, reconstruye el ritmo, inyecta voz solo en los registros que la admiten y corrige la tipografía española. Audita el resultado con una rúbrica de seis dimensiones y lo cierra con la puerta `scripts/redactor.py check`, que distingue defectos deterministas de señales que exigen criterio y devuelve texto o JSON. Cubre artículos, guías, README, notas de versión, correos y propuestas; no decide qué documentos debe tener un proyecto ni redacta la estructura de un PRD o un ADR.
+
+Contrato completo: [`src/document-redactor/SKILL.md`](src/document-redactor/SKILL.md).
+
+Precedencia con las demás skills documentales: `document-management-software` decide qué artefactos existen, si siguen siendo ciertos y qué afirmación está respaldada; `prd-cartographer` y `adr-software` poseen la estructura de sus documentos. `document-redactor` posee solo la prosa. Para editar el texto de un PRD o un ADR se aplica primero el contrato de su skill y después el registro y la forma de esta.
+
 ### `prd-cartographer`
 
 Convierte una idea, una investigación o un concepto de producto en un PRD verificable, o revisa uno existente sin convertirlo en una especificación técnica. Separa hecho, decisión aprobada, inferencia, hipótesis, propuesta y desconocido; exige métricas con método de medida, alcance con exclusiones y criterios de aceptación observables; y entrega un estado de preparación explícito en lugar de un documento aparentemente completo. Incluye el Universal Idea Model, una plantilla de PRD, una plantilla de cierre y una puerta de calidad.
