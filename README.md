@@ -360,6 +360,8 @@ Cada skill declara su versión independiente en `metadata.version`; el procedimi
 - `docs/security-engineering/flujo-de-trabajo.html`: diagrama del flujo, del encargo al riesgo residual.
 - `docs/security-engineering/arquitectura.html`: diagrama del paquete, la superficie revisada y la puerta.
 - `docs/playwright-cli-usage/index.html`: página de entrada a la skill del navegador, con la puerta de confirmación, la escalera de uso, el paquete y el reconocimiento del entorno.
+- `docs/playwright-cli-usage/flujo-de-trabajo.html`: diagrama del flujo, de la pregunta al cierre con la puerta de confirmación.
+- `docs/playwright-cli-usage/arquitectura.html`: diagrama del contrato, las cuatro referencias y la sesión confirmada.
 
 Los diagramas son artefactos de [archify](https://github.com/tt-a1i/archify) 3.2.0. Cada uno tiene su especificación (`*.json`) y su recibo de entrega (`*.delivery.json`) con el `sha256` del HTML y del spec. Para regenerarlos hace falta archify 3.2.0 y el checkout local en `archify/`, ignorado por Git, con los ajustes de ancho descritos en `archify/LOCAL-PATCH.md`; el comando es el mismo en todas las carpetas de `docs/<skill>/`:
 

@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "cb8d3005-d6f9-4c8d-8ca7-ab1cb9e4d998",
+  "status": "current",
+  "command": "deliver",
+  "type": "workflow",
+  "input": "/home/desarrollo/PROJECTS/SKILLS-AGP/docs/playwright-cli-usage/flujo-de-trabajo.json",
+  "output": "/home/desarrollo/PROJECTS/SKILLS-AGP/docs/playwright-cli-usage/flujo-de-trabajo.html",
+  "specification": {
+    "sha256": "11f02f74ecf491746da8b610bcc7970ab73e93d2f07c59a530ecef61e27a979e",
+    "bytes": 6974
+  },
+  "artifact": {
+    "sha256": "c99ee7025de7cbbf4591488e3064f20e8153a07044bbc94ea7654acb518779a4",
+    "bytes": 833835
+  }
+}

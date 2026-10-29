@@ -1,0 +1,268 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "Arquitectura de la skill playwright-cli-usage",
+    "subtitle": "El contrato, las cuatro referencias y la sesión: qué consulta cada paso, qué se confirma antes de abrir y qué queda fuera del contrato.",
+    "locale": "es",
+    "output": "docs/playwright-cli-usage/arquitectura.html",
+    "quality_profile": "showcase"
+  },
+  "components": [
+    {
+      "id": "persona",
+      "type": "external",
+      "label": "Persona o agente",
+      "sublabel": "encarga la comprobación",
+      "icon": "person",
+      "pos": [40, 80],
+      "size": [140, 64]
+    },
+    {
+      "id": "skill",
+      "type": "frontend",
+      "label": "SKILL.md",
+      "sublabel": "invariantes y puerta",
+      "pos": [260, 80],
+      "size": [150, 64]
+    },
+    {
+      "id": "confirmation",
+      "type": "database",
+      "label": "confirmation.md",
+      "sublabel": "briefing y permisos",
+      "tag": "se abre antes del open",
+      "pos": [500, 80],
+      "size": [150, 64]
+    },
+    {
+      "id": "proportional",
+      "type": "database",
+      "label": "proportional-use.md",
+      "sublabel": "escalera y presupuesto",
+      "tag": "se abre al planificar",
+      "pos": [740, 80],
+      "size": [150, 64]
+    },
+    {
+      "id": "commands",
+      "type": "database",
+      "label": "commands.md",
+      "sublabel": "comandos y sesiones",
+      "tag": "referencia, no contrato",
+      "pos": [980, 80],
+      "size": [150, 64]
+    },
+    {
+      "id": "verification",
+      "type": "database",
+      "label": "verification.md",
+      "sublabel": "evidencia y cierre",
+      "tag": "se abre al declarar",
+      "pos": [1220, 80],
+      "size": [150, 64]
+    },
+    {
+      "id": "tests",
+      "type": "backend",
+      "label": "test-preflight.py",
+      "sublabel": "binarios simulados",
+      "tag": "cubren el reconocimiento",
+      "pos": [40, 300],
+      "size": [150, 64]
+    },
+    {
+      "id": "preflight",
+      "type": "backend",
+      "label": "preflight.py",
+      "sublabel": "reconoce el entorno",
+      "tag": "texto o --json",
+      "pos": [260, 300],
+      "size": [150, 64]
+    },
+    {
+      "id": "cli",
+      "type": "backend",
+      "label": "playwright-cli",
+      "sublabel": "el CLI oficial",
+      "tag": "open tras el sí",
+      "pos": [500, 300],
+      "size": [150, 64]
+    },
+    {
+      "id": "browser",
+      "type": "external",
+      "label": "Navegador real",
+      "sublabel": "sesión nombrada",
+      "tag": "headless por defecto",
+      "pos": [740, 300],
+      "size": [150, 64]
+    },
+    {
+      "id": "artifacts",
+      "type": "security",
+      "label": "Artefactos",
+      "sublabel": "capturas · trazas · estado",
+      "tag": "no se versionan",
+      "pos": [980, 300],
+      "size": [150, 64]
+    },
+    {
+      "id": "suite",
+      "type": "backend",
+      "label": "Prueba del proyecto",
+      "sublabel": "si la comprobación se repite",
+      "pos": [740, 520],
+      "size": [150, 64]
+    },
+    {
+      "id": "cierre",
+      "type": "frontend",
+      "label": "Evidencia y cierre",
+      "sublabel": "observado · supuesto · no verificado",
+      "pos": [980, 520],
+      "size": [150, 64],
+      "icon": "success"
+    },
+    {
+      "id": "visual",
+      "type": "external",
+      "label": "web-interface-visual-design",
+      "sublabel": "juicio visual",
+      "pos": [1220, 520],
+      "size": [180, 64]
+    }
+  ],
+  "boundaries": [
+    {
+      "kind": "region",
+      "label": "Paquete de la skill",
+      "wraps": ["skill", "confirmation", "proportional", "commands", "verification"]
+    },
+    {
+      "kind": "security-group",
+      "label": "Sesión confirmada",
+      "wraps": ["cli", "browser", "artifacts"]
+    }
+  ],
+  "connections": [
+    {
+      "id": "encarga",
+      "from": "persona",
+      "to": "skill",
+      "label": "encarga",
+      "variant": "emphasis"
+    },
+    {
+      "id": "consulta-confirmation",
+      "from": "skill",
+      "to": "confirmation",
+      "label": "consulta",
+      "variant": "dashed"
+    },
+    {
+      "id": "consulta-proportional",
+      "from": "skill",
+      "to": "proportional",
+      "label": "consulta",
+      "variant": "dashed"
+    },
+    {
+      "id": "consulta-commands",
+      "from": "skill",
+      "to": "commands",
+      "label": "consulta",
+      "variant": "dashed"
+    },
+    {
+      "id": "consulta-verification",
+      "from": "skill",
+      "to": "verification",
+      "label": "consulta",
+      "variant": "dashed"
+    },
+    {
+      "id": "reconoce",
+      "from": "skill",
+      "to": "preflight",
+      "label": "ejecuta"
+    },
+    {
+      "id": "propone",
+      "from": "preflight",
+      "to": "cli",
+      "label": "informa del estado",
+      "variant": "dashed"
+    },
+    {
+      "id": "conduce",
+      "from": "skill",
+      "to": "cli",
+      "label": "conduce tras el sí",
+      "variant": "emphasis"
+    },
+    {
+      "id": "abre",
+      "from": "cli",
+      "to": "browser",
+      "label": "observa e interactúa",
+      "variant": "emphasis"
+    },
+    {
+      "id": "genera",
+      "from": "browser",
+      "to": "artifacts",
+      "label": "genera"
+    },
+    {
+      "id": "declara",
+      "from": "artifacts",
+      "to": "cierre",
+      "label": "inspecciona y declara",
+      "variant": "dashed"
+    },
+    {
+      "id": "convierte",
+      "from": "cierre",
+      "to": "suite",
+      "label": "si se repite",
+      "variant": "dashed"
+    },
+    {
+      "id": "aporta",
+      "from": "cierre",
+      "to": "visual",
+      "label": "aporta el render",
+      "variant": "dashed"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "El paquete de la skill",
+      "items": [
+        "SKILL.md fija los límites, la puerta de confirmación, la escalera de proporcionalidad, el procedimiento y el cierre",
+        "Las cuatro referencias se abren cuando el paso las pide: confirmation antes del open, proportional-use al planificar, commands para la superficie y verification al declarar",
+        "preflight.py reconoce binario, versión, configuración y artefactos sin abrir sesiones; test-preflight.py lo cubre con binarios simulados"
+      ]
+    },
+    {
+      "dot": "rose",
+      "title": "La sesión confirmada",
+      "items": [
+        "El CLI se conduce tras un sí explícito; sin él solo se permite leer el entorno: --version, --help y config-print",
+        "Producción, escritura de datos y adjuntarse al navegador personal se confirman por su nombre, no dentro del briefing general",
+        "Capturas, trazas y estado de autenticación son artefactos sensibles: se declaran, se borran si no son evidencia y no se versionan"
+      ]
+    },
+    {
+      "dot": "emerald",
+      "title": "Lo que la skill no hace",
+      "items": [
+        "No escribe la suite de regresión: si la comprobación se repite, es una prueba del runner del proyecto",
+        "No decide composición, tipografía ni contraste: entrega el render y su evidencia a web-interface-visual-design",
+        "No inventa credenciales ni reutiliza sesiones ajenas; el tratamiento de datos sensibles pertenece a security-engineering"
+      ]
+    }
+  ]
+}

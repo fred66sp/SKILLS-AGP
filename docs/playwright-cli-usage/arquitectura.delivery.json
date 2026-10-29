@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "58e7540c-fff1-4406-a7b9-1186901747d2",
+  "status": "current",
+  "command": "deliver",
+  "type": "architecture",
+  "input": "/home/desarrollo/PROJECTS/SKILLS-AGP/docs/playwright-cli-usage/arquitectura.json",
+  "output": "/home/desarrollo/PROJECTS/SKILLS-AGP/docs/playwright-cli-usage/arquitectura.html",
+  "specification": {
+    "sha256": "59f1be7678b32e35fc43433c20863b2042e2ec9de108dcd661d7faf6ca63645b",
+    "bytes": 7170
+  },
+  "artifact": {
+    "sha256": "7edaef38448283f9320cfc6f9319258c77b2b73f18e61014c698fba6286f5387",
+    "bytes": 843645
+  }
+}

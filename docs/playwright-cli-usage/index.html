@@ -436,6 +436,7 @@
       <a class="btn btn-primary" href="#que-hace">Qué hace</a>
       <a class="btn btn-ghost" href="#confirmacion">La confirmación</a>
       <a class="btn btn-ghost" href="#uso">Cómo se usa</a>
+      <a class="btn btn-ghost" href="#diagramas">Los diagramas</a>
       <a class="btn btn-ghost" href="#verificacion">Verificación</a>
       <a class="btn btn-ghost" href="../index.html">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 19l-7-7 7-7"></path></svg>
@@ -454,7 +455,8 @@
     <a href="#uso">4. Cómo se usa</a>
     <a href="#paquete">5. Qué contiene el paquete</a>
     <a href="#preguntas">6. Preguntas cortas</a>
-    <a href="#verificacion">7. Verificación</a>
+    <a href="#diagramas">7. Los diagramas</a>
+    <a href="#verificacion">8. Verificación</a>
     <div class="toc-extra"><a href="../index.html">Volver al catálogo</a></div>
   </nav>
 
@@ -595,8 +597,34 @@ Cierre: &lt;artefactos que se guardan, cuáles se borran, cómo se cierra la ses
       <div class="qa"><h3>¿Cómo sé que la acción funcionó?</h3><p>Por una observación posterior a la acción y contra un criterio escrito antes. El código de salida cero solo dice que el comando se aceptó.</p></div>
     </section>
 
+    <section id="diagramas" class="section">
+      <div class="section-head"><span class="section-num">7</span><h2 class="title">Los diagramas</h2><span class="chip-repo">de este repositorio</span></div>
+      <p class="sub">De la pregunta al cierre: cómo se decide abrir el navegador, dónde se detiene la sesión y qué demuestra la evidencia. Dos vistas del mismo contrato, generadas desde su especificación y con recibo de entrega.</p>
+
+      <div class="grid cols-2">
+        <a class="card card-link" href="flujo-de-trabajo.html">
+          <div class="card-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h6v5H4zM14 13h6v5h-6z"></path><path d="M10 8.5h2a2 2 0 0 1 2 2v5"></path></svg></div>
+          <h3>Flujo de trabajo</h3>
+          <p>De la pregunta al cierre: cómo se decide abrir el navegador, dónde se detiene la sesión y qué demuestra la evidencia antes de declarar.</p>
+          <span class="go">Abrir el diagrama →</span>
+        </a>
+        <a class="card card-link" href="arquitectura.html">
+          <div class="card-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1.5"></rect><rect x="14" y="3" width="7" height="7" rx="1.5"></rect><rect x="3" y="14" width="7" height="7" rx="1.5"></rect><rect x="14" y="14" width="7" height="7" rx="1.5"></rect></svg></div>
+          <h3>Arquitectura</h3>
+          <p>El contrato, las cuatro referencias y la sesión confirmada: qué consulta cada paso, qué se confirma antes de abrir y qué queda fuera.</p>
+          <span class="go">Abrir el diagrama →</span>
+        </a>
+      </div>
+
+      <p>Cada diagrama se abre como página suelta. Archify no enlaza el artefacto con una página local: se vuelve con el botón atrás o con el índice de arriba.</p>
+
+      <div class="note">
+        <p><strong>Es un convenio de este repositorio, no un mandato de la skill:</strong> <code>docs/&lt;skill&gt;/index.html</code>, los diagramas y sus recibos <code>.delivery.json</code> son cómo SKILLS-AGP documenta sus skills. Los genera archify desde el <code>.json</code> que está junto a cada HTML; el comando y la comprobación del recibo están en la sección Documentación del <code>README.md</code>.</p>
+      </div>
+    </section>
+
     <section id="verificacion" class="section">
-      <div class="section-head"><span class="section-num">7</span><h2 class="title">Verificación</h2></div>
+      <div class="section-head"><span class="section-num">8</span><h2 class="title">Verificación</h2></div>
       <p class="sub">La herramienta y sus pruebas se ejecutan; la puerta del repositorio comprueba el resto. Un entorno listo no demuestra que la página haga lo esperado.</p>
 
       <div class="code"><pre><code class="language-bash">python3 src/playwright-cli-usage/scripts/test-preflight.py
@@ -626,7 +654,7 @@ python3 scripts/check-repo.py</code></pre></div>
 
 <footer class="footer">
   <span><code>docs/playwright-cli-usage/</code> · skill <code>playwright-cli-usage</code> · documento en español</span>
-  <span><a href="../index.html">Catálogo</a> · <a href="#top">Volver arriba</a> · <a href="../../src/playwright-cli-usage/SKILL.md">SKILL.md</a> · <a href="../../.skills/playwright-cli-usage/SKILL.md">Enrutador</a></span>
+  <span><a href="../index.html">Catálogo</a> · <a href="#top">Volver arriba</a> · <a href="../../src/playwright-cli-usage/SKILL.md">SKILL.md</a> · <a href="../../.skills/playwright-cli-usage/SKILL.md">Enrutador</a> · <a href="flujo-de-trabajo.html">Flujo</a> · <a href="arquitectura.html">Arquitectura</a></span>
   <span>Página estática: no envía datos ni carga recursos externos</span>
 </footer>
 

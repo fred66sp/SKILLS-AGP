@@ -1,0 +1,286 @@
+{
+  "schema_version": 2,
+  "diagram_type": "workflow",
+  "meta": {
+    "title": "Flujo de trabajo de la skill playwright-cli-usage",
+    "subtitle": "De la pregunta al cierre: decidir si hace falta un navegador, reconocer el entorno, confirmar la sesión, conducirla con pasos pequeños y declarar la evidencia.",
+    "locale": "es",
+    "output": "docs/playwright-cli-usage/flujo-de-trabajo.html",
+    "visual_preset": "signal-flow",
+    "quality_profile": "showcase"
+  },
+  "lanes": [
+    {
+      "id": "encargo",
+      "label": "Encargo y pregunta"
+    },
+    {
+      "id": "skill",
+      "label": "La skill: decidir y conducir"
+    },
+    {
+      "id": "navegador",
+      "label": "El navegador"
+    },
+    {
+      "id": "control",
+      "label": "Parada y cierre",
+      "variant": "exception"
+    }
+  ],
+  "phases": [
+    {
+      "id": "decidir",
+      "label": "Decidir",
+      "fromCol": 0,
+      "toCol": 0
+    },
+    {
+      "id": "reconocer",
+      "label": "Reconocer",
+      "fromCol": 1,
+      "toCol": 1
+    },
+    {
+      "id": "confirmar",
+      "label": "Confirmar",
+      "fromCol": 2,
+      "toCol": 2,
+      "variant": "emphasis"
+    },
+    {
+      "id": "conducir",
+      "label": "Ejecutar",
+      "fromCol": 3,
+      "toCol": 4
+    },
+    {
+      "id": "cerrar",
+      "label": "Observar y cerrar",
+      "fromCol": 5,
+      "toCol": 5,
+      "variant": "security"
+    }
+  ],
+  "groups": [
+    {
+      "id": "escalera",
+      "label": "Escalera de proporcionalidad",
+      "lane": "encargo",
+      "fromCol": 0,
+      "toCol": 1
+    },
+    {
+      "id": "sesion",
+      "label": "Sesión confirmada",
+      "lane": "navegador",
+      "fromCol": 3,
+      "toCol": 5,
+      "variant": "emphasis"
+    }
+  ],
+  "mainPath": [
+    "pregunta",
+    "preflight",
+    "briefing",
+    "sesion",
+    "pasos",
+    "posterior",
+    "cierre"
+  ],
+  "nodes": [
+    {
+      "id": "pregunta",
+      "lane": "encargo",
+      "col": 0,
+      "type": "external",
+      "label": "Pregunta observable",
+      "sublabel": "¿se responde sin navegador?",
+      "tag": "nace del encargo",
+      "icon": "start"
+    },
+    {
+      "id": "alternativa",
+      "lane": "encargo",
+      "col": 1,
+      "type": "external",
+      "label": "Sin navegador",
+      "sublabel": "código · tests · curl",
+      "tag": "si basta, no hay sesión"
+    },
+    {
+      "id": "preflight",
+      "lane": "skill",
+      "col": 1,
+      "type": "backend",
+      "label": "Preflight",
+      "sublabel": "binario · versión · configuración",
+      "tag": "no abre sesiones"
+    },
+    {
+      "id": "briefing",
+      "lane": "skill",
+      "col": 2,
+      "type": "security",
+      "label": "Briefing y sí",
+      "sublabel": "siete líneas, un permiso",
+      "tag": "caduca al acabar"
+    },
+    {
+      "id": "sesion",
+      "lane": "navegador",
+      "col": 3,
+      "type": "backend",
+      "label": "Sesión nombrada",
+      "sublabel": "open con el perfil acordado",
+      "tag": "headless por defecto"
+    },
+    {
+      "id": "pasos",
+      "lane": "navegador",
+      "col": 4,
+      "type": "backend",
+      "label": "Pasos pequeños",
+      "sublabel": "una acción por comando",
+      "tag": "refs observados"
+    },
+    {
+      "id": "posterior",
+      "lane": "navegador",
+      "col": 5,
+      "type": "frontend",
+      "label": "Observación posterior",
+      "sublabel": "URL · snapshot · consola · red",
+      "tag": "el estado, no el clic"
+    },
+    {
+      "id": "parada",
+      "lane": "control",
+      "col": 2,
+      "type": "security",
+      "label": "Parada",
+      "sublabel": "sin sí · datos reales · CAPTCHA",
+      "tag": "no se sortea",
+      "icon": "stop"
+    },
+    {
+      "id": "cierre",
+      "lane": "control",
+      "col": 5,
+      "type": "frontend",
+      "label": "Cierre",
+      "sublabel": "lo visto y lo no verificado",
+      "icon": "success"
+    }
+  ],
+  "edges": [
+    {
+      "id": "basta",
+      "from": "pregunta",
+      "to": "alternativa",
+      "label": "si basta",
+      "variant": "dashed",
+      "role": "branch"
+    },
+    {
+      "id": "decide",
+      "from": "pregunta",
+      "to": "preflight",
+      "label": "si no basta",
+      "variant": "emphasis",
+      "role": "main"
+    },
+    {
+      "id": "reconoce",
+      "from": "preflight",
+      "to": "briefing",
+      "label": "entorno listo",
+      "role": "main"
+    },
+    {
+      "id": "autoriza",
+      "from": "briefing",
+      "to": "sesion",
+      "label": "sí explícito",
+      "variant": "emphasis",
+      "role": "main"
+    },
+    {
+      "id": "conduce",
+      "from": "sesion",
+      "to": "pasos",
+      "label": "observa y actúa",
+      "role": "main"
+    },
+    {
+      "id": "demuestra",
+      "from": "pasos",
+      "to": "posterior",
+      "label": "comprueba el efecto",
+      "role": "main"
+    },
+    {
+      "id": "declara",
+      "from": "posterior",
+      "to": "cierre",
+      "label": "declara lo visto",
+      "variant": "emphasis",
+      "role": "main"
+    },
+    {
+      "id": "rechazo",
+      "from": "briefing",
+      "to": "parada",
+      "label": "sin sí no hay sesión",
+      "variant": "security",
+      "role": "return"
+    },
+    {
+      "id": "riesgo",
+      "from": "pasos",
+      "to": "parada",
+      "label": "datos reales · CAPTCHA · timeout",
+      "variant": "security",
+      "role": "return",
+      "fromSide": "left",
+      "toSide": "right"
+    },
+    {
+      "id": "informa",
+      "from": "parada",
+      "to": "alternativa",
+      "label": "alternativa sin navegador",
+      "variant": "dashed",
+      "role": "return"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "La decisión manda",
+      "items": [
+        "Sin navegador primero: el código, el DOM servido, los tests o una captura previa responden muchas veces",
+        "El nivel más bajo que responde la pregunta: un comando, una sesión de 3 a 15 comandos, o una prueba del proyecto",
+        "El presupuesto de páginas, pasos y tiempo se fija antes de abrir, no durante"
+      ]
+    },
+    {
+      "dot": "rose",
+      "title": "Dónde se detiene",
+      "items": [
+        "Sin briefing y un sí explícito no hay open, attach ni show; una confirmación genérica no autoriza producción ni escritura de datos",
+        "Datos reales, CAPTCHA o 2FA: se para y se pide intervención; no se sortea el control",
+        "Un timeout no se tapa con esperas: se observa otra vez y se identifica la causa"
+      ]
+    },
+    {
+      "dot": "emerald",
+      "title": "Cómo se cierra",
+      "items": [
+        "close en la sesión propia y detach en la ajena; close-all y kill-all solo sobre sesiones propias y con confirmación",
+        "El efecto se demuestra con una observación posterior contra un criterio escrito antes; el código de salida solo dice que el comando se aceptó",
+        "Lo no verificado se escribe con su motivo; capturas, trazas y estado de autenticación se declaran y nunca se versionan"
+      ]
+    }
+  ]
+}
