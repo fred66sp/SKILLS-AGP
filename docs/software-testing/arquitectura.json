@@ -1,0 +1,328 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "Arquitectura de la skill software-testing",
+    "subtitle": "El contrato, las cuatro referencias, las plantillas y la puerta de forma: qué consulta cada fase, qué se valida al cerrar y qué queda fuera del contrato.",
+    "locale": "es",
+    "output": "docs/software-testing/arquitectura.html",
+    "quality_profile": "showcase"
+  },
+  "components": [
+    {
+      "id": "persona",
+      "type": "external",
+      "label": "Persona o agente",
+      "sublabel": "necesita evidencia",
+      "icon": "person",
+      "pos": [
+        40,
+        80
+      ],
+      "size": [
+        140,
+        64
+      ]
+    },
+    {
+      "id": "skill",
+      "type": "frontend",
+      "label": "SKILL.md",
+      "sublabel": "principios y fases",
+      "pos": [
+        260,
+        80
+      ],
+      "size": [
+        150,
+        64
+      ]
+    },
+    {
+      "id": "principles",
+      "type": "database",
+      "label": "principles.md",
+      "sublabel": "los siete límites",
+      "tag": "se abre al decidir",
+      "pos": [
+        500,
+        80
+      ],
+      "size": [
+        150,
+        64
+      ]
+    },
+    {
+      "id": "design",
+      "type": "database",
+      "label": "test-design.md",
+      "sublabel": "niveles y técnicas",
+      "tag": "se abre al diseñar",
+      "pos": [
+        740,
+        80
+      ],
+      "size": [
+        150,
+        64
+      ]
+    },
+    {
+      "id": "process",
+      "type": "database",
+      "label": "process.md",
+      "sublabel": "fases y criterio de salida",
+      "tag": "se abre al planificar",
+      "pos": [
+        980,
+        80
+      ],
+      "size": [
+        150,
+        64
+      ]
+    },
+    {
+      "id": "reporting",
+      "type": "database",
+      "label": "reporting.md",
+      "sublabel": "defectos y métricas",
+      "tag": "se abre al cerrar",
+      "pos": [
+        1220,
+        80
+      ],
+      "size": [
+        150,
+        64
+      ]
+    },
+    {
+      "id": "testcase",
+      "type": "backend",
+      "label": "assets/test-case.md",
+      "sublabel": "plantilla de caso",
+      "tag": "esperado antes de ejecutar",
+      "pos": [
+        500,
+        300
+      ],
+      "size": [
+        150,
+        64
+      ]
+    },
+    {
+      "id": "testreport",
+      "type": "backend",
+      "label": "assets/test-report.md",
+      "sublabel": "plantilla de informe",
+      "tag": "secciones exigidas",
+      "pos": [
+        740,
+        300
+      ],
+      "size": [
+        150,
+        64
+      ]
+    },
+    {
+      "id": "casecheck",
+      "type": "backend",
+      "label": "case-check.py",
+      "sublabel": "puerta de forma",
+      "tag": "códigos 0/1/2",
+      "pos": [
+        980,
+        300
+      ],
+      "size": [
+        150,
+        64
+      ]
+    },
+    {
+      "id": "tests",
+      "type": "backend",
+      "label": "test-case-check.py",
+      "sublabel": "28 pruebas",
+      "tag": "documentos temporales",
+      "pos": [
+        1220,
+        300
+      ],
+      "size": [
+        150,
+        64
+      ]
+    },
+    {
+      "id": "runner",
+      "type": "external",
+      "label": "Runner del proyecto",
+      "sublabel": "suite y puerta del lenguaje",
+      "tag": "fuera del contrato",
+      "pos": [
+        500,
+        520
+      ],
+      "size": [
+        150,
+        64
+      ]
+    },
+    {
+      "id": "navegador",
+      "type": "external",
+      "label": "playwright-cli-usage",
+      "sublabel": "render si la prueba lo pide",
+      "tag": "fuera del contrato",
+      "pos": [
+        740,
+        520
+      ],
+      "size": [
+        150,
+        64
+      ]
+    }
+  ],
+  "boundaries": [
+    {
+      "kind": "region",
+      "label": "Paquete de la skill",
+      "wraps": [
+        "skill",
+        "principles",
+        "design",
+        "process",
+        "reporting",
+        "testcase",
+        "testreport",
+        "casecheck",
+        "tests"
+      ]
+    },
+    {
+      "kind": "security-group",
+      "label": "Fuera del contrato",
+      "wraps": [
+        "runner",
+        "navegador"
+      ]
+    }
+  ],
+  "connections": [
+    {
+      "id": "encarga",
+      "from": "persona",
+      "to": "skill",
+      "label": "encarga",
+      "variant": "emphasis"
+    },
+    {
+      "id": "consulta-principles",
+      "from": "skill",
+      "to": "principles",
+      "label": "consulta",
+      "variant": "dashed"
+    },
+    {
+      "id": "consulta-design",
+      "from": "skill",
+      "to": "design",
+      "label": "consulta",
+      "variant": "dashed"
+    },
+    {
+      "id": "consulta-process",
+      "from": "skill",
+      "to": "process",
+      "label": "consulta",
+      "variant": "dashed"
+    },
+    {
+      "id": "consulta-reporting",
+      "from": "skill",
+      "to": "reporting",
+      "label": "consulta",
+      "variant": "dashed"
+    },
+    {
+      "id": "parte-caso",
+      "from": "skill",
+      "to": "testcase",
+      "label": "diseña desde la plantilla"
+    },
+    {
+      "id": "rellena-informe",
+      "from": "skill",
+      "to": "testreport",
+      "label": "cierra con el informe"
+    },
+    {
+      "id": "pasa-caso",
+      "from": "testcase",
+      "to": "casecheck",
+      "label": "pasa la forma"
+    },
+    {
+      "id": "pasa-informe",
+      "from": "testreport",
+      "to": "casecheck",
+      "label": "pasa la forma"
+    },
+    {
+      "id": "cubre",
+      "from": "casecheck",
+      "to": "tests",
+      "label": "cubierto por",
+      "variant": "dashed"
+    },
+    {
+      "id": "deriva",
+      "from": "skill",
+      "to": "runner",
+      "label": "deriva la suite que se repite",
+      "variant": "dashed"
+    },
+    {
+      "id": "render",
+      "from": "skill",
+      "to": "navegador",
+      "label": "pide el render",
+      "variant": "dashed"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "El paquete de la skill",
+      "items": [
+        "SKILL.md fija límites, escalera de proporcionalidad, fases, evidencia y precedencia; las fases tienen criterio de salida",
+        "Las cuatro referencias se abren cuando el paso las pide: principles al decidir, test-design al diseñar, process al planificar y reporting al cerrar",
+        "Las plantillas fijan la forma del caso y del informe; el resultado esperado se escribe antes de ejecutar"
+      ]
+    },
+    {
+      "dot": "rose",
+      "title": "La puerta y sus límites",
+      "items": [
+        "case-check.py valida secciones, enumerados, pasos numerados, evidencia exigida, métricas cuadradas y placeholders; texto o --json, códigos 0/1/2",
+        "test-case-check.py lo cubre con documentos temporales y las plantillas reales: 28 pruebas en verde",
+        "La puerta comprueba forma, no verdad: la evidencia real la sostiene la ronda, no el script"
+      ]
+    },
+    {
+      "dot": "emerald",
+      "title": "Los contratos vecinos",
+      "items": [
+        "El runner y la puerta del lenguaje ejecutan y conservan: todo caso que se repite deriva a la suite del proyecto",
+        "playwright-cli-usage conduce el navegador cuando la prueba de interfaz necesita render; el juicio visual es de web-interface-visual-design",
+        "security-engineering posee las pruebas de seguridad; reportar un defecto no es corregirlo"
+      ]
+    }
+  ]
+}

@@ -216,6 +216,18 @@ Documentación: [`docs/playwright-cli-usage/index.html`](docs/playwright-cli-usa
 
 La autorización, la proporcionalidad y la evidencia del navegador son de `playwright-cli-usage`; la referencia de comandos, de la skill oficial que instala el CLI. La suite de regresión y su puerta siguen en la skill de verificación del lenguaje, el juicio visual en `web-interface-visual-design` y el tratamiento de credenciales y datos en `security-engineering`. Descubrir con el navegador no autoriza a sustituir la prueba que conserva el comportamiento.
 
+### `software-testing`
+
+Aplica método de prueba al software: clasifica el riesgo por impacto y probabilidad, elige el nivel más bajo de la escalera —revisión, humo, casos escritos o ronda completa— que reduzca la incertidumbre y diseña cada caso con un ángulo declarado: partición de equivalencia, valores límite, tabla de decisión o transición de estados. El resultado esperado se escribe antes de ejecutar; el fallo solo se reporta reproducible; el cierre cuadra métricas con estados y separa lo comprobado de lo no verificado. Incluye las referencias de principios, diseño, proceso y reporting, las plantillas de caso e informe y `scripts/case-check.py`, que comprueba su forma —secciones, enumerados, pasos numerados, evidencia exigida, métricas y placeholders— con texto o `--json` y códigos 0/1/2, junto a `scripts/test-case-check.py` con 28 pruebas.
+
+Contrato completo: [`src/software-testing/SKILL.md`](src/software-testing/SKILL.md).
+
+Documentación: [`docs/software-testing/index.html`](docs/software-testing/index.html), con diagramas de flujo de trabajo y arquitectura.
+
+### Precedencia de las pruebas
+
+El método, el diseño de casos y el informe son de `software-testing`; la suite y la puerta del lenguaje siguen en la skill de verificación de cada lenguaje, la conducción del navegador en `playwright-cli-usage`, el juicio visual en `web-interface-visual-design` y las pruebas de seguridad en `security-engineering`. Diseñar la prueba no autoriza a ejecutar la puerta del proyecto: cada contrato manda en su capa.
+
 ### `web-interface-visual-design`
 
 Diseña, implementa y revisa la calidad visual de interfaces web sin imponer un framework ni sustituir el sistema de diseño existente. Cubre composición, tipografía, color, responsive, accesibilidad, SVG, iconografía e infografías. Exige inspeccionar el resultado renderizado cuando hay herramientas disponibles y distingue esa evidencia de compilar o validar XML. Reconoce los límites de fidelidad del SVG y no inventa datos para completar una composición.
@@ -297,6 +309,7 @@ python src/javascript-testing-and-verification/scripts/test-verify-js.py
 python src/python-testing-and-verification/scripts/test-verify-python.py
 python src/security-engineering/scripts/test-security_scan.py
 python src/playwright-cli-usage/scripts/test-preflight.py
+python src/software-testing/scripts/test-case-check.py
 ```
 
 `check-repo.py` valida metadatos, estructura, enrutadores, enlaces Markdown, recibos de los diagramas, versiones y etiquetas de skills, la página de cada skill en `docs/` con su enlace en el catálogo y su referencia en este README, y sintaxis de los scripts. Las pruebas unitarias se ejecutan aparte para que un fallo indique qué script falló. La CI (`.github/workflows/validate.yml`) ejecuta los mismos comandos en cada push y pull request.

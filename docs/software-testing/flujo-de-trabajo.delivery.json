@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "3443fbfd-30d4-4f08-907c-76510e566b5d",
+  "status": "current",
+  "command": "deliver",
+  "type": "workflow",
+  "input": "/home/desarrollo/PROJECTS/SKILLS-AGP/docs/software-testing/flujo-de-trabajo.json",
+  "output": "/home/desarrollo/PROJECTS/SKILLS-AGP/docs/software-testing/flujo-de-trabajo.html",
+  "specification": {
+    "sha256": "587ba20d60a7a915c155a87f92754880af270e127d01cb78ca4ba48333b3c95a",
+    "bytes": 7365
+  },
+  "artifact": {
+    "sha256": "6ae9f19af21ad84cc92680bc2658cf4c0871da34085207a9245abf64fc808f16",
+    "bytes": 836870
+  }
+}
