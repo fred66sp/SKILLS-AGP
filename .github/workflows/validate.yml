@@ -55,3 +55,6 @@ jobs:
 
       - name: Test the writing gate
         run: python3 src/document-redactor/scripts/test-redactor.py
+
+      - name: Test the test-document gate
+        run: python3 src/software-testing/scripts/test-case-check.py
