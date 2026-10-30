@@ -222,7 +222,7 @@ Aplica método de prueba al software: clasifica el riesgo por impacto y probabil
 
 Contrato completo: [`src/software-testing/SKILL.md`](src/software-testing/SKILL.md).
 
-Documentación: [`docs/software-testing/index.html`](docs/software-testing/index.html).
+Documentación: [`docs/software-testing/index.html`](docs/software-testing/index.html), con diagramas de flujo de trabajo y arquitectura.
 
 ### Precedencia de las pruebas
 

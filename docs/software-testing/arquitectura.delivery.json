@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "3eb3e018-226a-478b-adad-33bd36eabf01",
+  "status": "current",
+  "command": "deliver",
+  "type": "architecture",
+  "input": "/home/desarrollo/PROJECTS/SKILLS-AGP/docs/software-testing/arquitectura.json",
+  "output": "/home/desarrollo/PROJECTS/SKILLS-AGP/docs/software-testing/arquitectura.html",
+  "specification": {
+    "sha256": "997ec1e3390079b65df0657a191ee1bf09e5b42060aed2ef713b2a91299cedc9",
+    "bytes": 7243
+  },
+  "artifact": {
+    "sha256": "f27159797e4e412ef9bb56eb190d7e8f27ccf99b5fa846f315639c18a3711215",
+    "bytes": 839661
+  }
+}

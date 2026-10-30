@@ -1,0 +1,311 @@
+{
+  "schema_version": 2,
+  "diagram_type": "workflow",
+  "meta": {
+    "title": "Flujo de trabajo de la skill software-testing",
+    "subtitle": "Del criterio de aceptación al informe honesto: clasificar el riesgo, planificar con exclusiones, diseñar casos con un ángulo, ejecutar con evidencia y cerrar cuadrando las métricas.",
+    "locale": "es",
+    "output": "docs/software-testing/flujo-de-trabajo.html",
+    "visual_preset": "signal-flow",
+    "quality_profile": "showcase"
+  },
+  "lanes": [
+    {
+      "id": "encargo",
+      "label": "Encargo y riesgo"
+    },
+    {
+      "id": "skill",
+      "label": "La skill: método y diseño"
+    },
+    {
+      "id": "ronda",
+      "label": "Ejecución de la ronda"
+    },
+    {
+      "id": "control",
+      "label": "Parada y cierre",
+      "variant": "exception"
+    }
+  ],
+  "phases": [
+    {
+      "id": "entender",
+      "label": "Entender",
+      "fromCol": 0,
+      "toCol": 0
+    },
+    {
+      "id": "planificar",
+      "label": "Planificar",
+      "fromCol": 1,
+      "toCol": 1
+    },
+    {
+      "id": "disenar",
+      "label": "Diseñar",
+      "fromCol": 2,
+      "toCol": 2,
+      "variant": "emphasis"
+    },
+    {
+      "id": "ejecutar",
+      "label": "Ejecutar",
+      "fromCol": 3,
+      "toCol": 4
+    },
+    {
+      "id": "cerrar",
+      "label": "Cerrar",
+      "fromCol": 5,
+      "toCol": 5,
+      "variant": "security"
+    }
+  ],
+  "groups": [
+    {
+      "id": "criterio",
+      "label": "Criterio y riesgo",
+      "lane": "encargo",
+      "fromCol": 0,
+      "toCol": 1
+    },
+    {
+      "id": "evidencia",
+      "label": "Evidencia y triaje",
+      "lane": "ronda",
+      "fromCol": 3,
+      "toCol": 4,
+      "variant": "emphasis"
+    }
+  ],
+  "mainPath": [
+    "criterio",
+    "riesgo",
+    "plan",
+    "casos",
+    "ejecucion",
+    "estado",
+    "informe"
+  ],
+  "nodes": [
+    {
+      "id": "criterio",
+      "lane": "encargo",
+      "col": 0,
+      "type": "external",
+      "label": "Criterio",
+      "sublabel": "qué cuenta como fallo",
+      "tag": "la vara de medir",
+      "icon": "start"
+    },
+    {
+      "id": "riesgo",
+      "lane": "encargo",
+      "col": 1,
+      "type": "external",
+      "label": "Riesgo clasificado",
+      "sublabel": "impacto × probabilidad",
+      "tag": "prioridad, no volumen"
+    },
+    {
+      "id": "exclusion",
+      "lane": "encargo",
+      "col": 2,
+      "type": "external",
+      "label": "Exclusiones",
+      "sublabel": "fuera y por qué",
+      "tag": "decisión escrita"
+    },
+    {
+      "id": "plan",
+      "lane": "skill",
+      "col": 1,
+      "type": "backend",
+      "label": "Plan de ronda",
+      "sublabel": "niveles y técnicas",
+      "tag": "proporcionado al riesgo"
+    },
+    {
+      "id": "casos",
+      "lane": "skill",
+      "col": 2,
+      "type": "backend",
+      "label": "Casos diseñados",
+      "sublabel": "un ángulo por caso",
+      "tag": "esperado antes de ejecutar"
+    },
+    {
+      "id": "puerta",
+      "lane": "skill",
+      "col": 3,
+      "type": "security",
+      "label": "case-check.py",
+      "sublabel": "forma del documento",
+      "tag": "forma, no verdad"
+    },
+    {
+      "id": "ejecucion",
+      "lane": "ronda",
+      "col": 3,
+      "type": "backend",
+      "label": "Ejecución priorizada",
+      "sublabel": "orden por riesgo",
+      "tag": "bloqueado con motivo"
+    },
+    {
+      "id": "estado",
+      "lane": "ronda",
+      "col": 4,
+      "type": "frontend",
+      "label": "Estado y evidencia",
+      "sublabel": "tres estados y rastro",
+      "tag": "sin rastro no hay estado"
+    },
+    {
+      "id": "triaje",
+      "lane": "ronda",
+      "col": 5,
+      "type": "security",
+      "label": "Triaje de fallos",
+      "sublabel": "reproducible primero",
+      "tag": "severidad ≠ prioridad"
+    },
+    {
+      "id": "parada",
+      "lane": "control",
+      "col": 2,
+      "type": "security",
+      "label": "Parada",
+      "sublabel": "sin criterio o bloqueo",
+      "tag": "no se disfraza",
+      "icon": "stop"
+    },
+    {
+      "id": "informe",
+      "lane": "control",
+      "col": 5,
+      "type": "frontend",
+      "label": "Informe honesto",
+      "sublabel": "métricas y no verificado",
+      "tag": "lecciones al cierre",
+      "icon": "success"
+    }
+  ],
+  "edges": [
+    {
+      "id": "clasifica",
+      "from": "criterio",
+      "to": "riesgo",
+      "label": "clasifica el daño",
+      "role": "main"
+    },
+    {
+      "id": "planifica",
+      "from": "riesgo",
+      "to": "plan",
+      "label": "elige el nivel",
+      "role": "main"
+    },
+    {
+      "id": "excluye",
+      "from": "riesgo",
+      "to": "exclusion",
+      "label": "escribe el hueco",
+      "variant": "dashed",
+      "role": "branch"
+    },
+    {
+      "id": "disena",
+      "from": "plan",
+      "to": "casos",
+      "label": "técnicas por riesgo",
+      "variant": "emphasis",
+      "role": "main"
+    },
+    {
+      "id": "comprueba",
+      "from": "casos",
+      "to": "puerta",
+      "label": "pasa la forma",
+      "variant": "dashed",
+      "role": "branch"
+    },
+    {
+      "id": "ejecuta",
+      "from": "casos",
+      "to": "ejecucion",
+      "label": "en orden de prioridad",
+      "variant": "emphasis",
+      "role": "main"
+    },
+    {
+      "id": "observa",
+      "from": "ejecucion",
+      "to": "estado",
+      "label": "deja rastro",
+      "role": "main"
+    },
+    {
+      "id": "falla",
+      "from": "estado",
+      "to": "triaje",
+      "label": "si falla",
+      "variant": "dashed",
+      "role": "branch"
+    },
+    {
+      "id": "baila",
+      "from": "estado",
+      "to": "parada",
+      "label": "si baila, aísla",
+      "variant": "dashed",
+      "role": "branch"
+    },
+    {
+      "id": "reporta",
+      "from": "triaje",
+      "to": "informe",
+      "label": "defecto reproducible",
+      "variant": "dashed",
+      "role": "branch"
+    },
+    {
+      "id": "cierra",
+      "from": "estado",
+      "to": "informe",
+      "label": "cuadra las métricas",
+      "variant": "emphasis",
+      "role": "main"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "La decisión manda",
+      "items": [
+        "El riesgo elige el nivel: revisión, humo, casos escritos o ronda completa; el presupuesto se declara antes de empezar",
+        "Un caso sin ángulo declarado repite a otro: partición, límite, tabla de decisión o transición",
+        "El resultado esperado se escribe antes de ejecutar; después solo se escribe lo observado"
+      ]
+    },
+    {
+      "dot": "rose",
+      "title": "Dónde se detiene",
+      "items": [
+        "Sin criterio de aceptación ningún resultado puede ser rojo y nada puede demostrarse",
+        "Un bloqueado se declara con su motivo y se pide lo que falta; no se convierte en fallado ni desaparece",
+        "Un resultado que baila se aísla: la inestabilidad es un hallazgo, no ruido que limpiar con reintentos"
+      ]
+    },
+    {
+      "dot": "emerald",
+      "title": "Qué queda demostrado",
+      "items": [
+        "Un caso superado demuestra ese caso, no que la feature funcione; un verde no certifica ausencia de defectos",
+        "Estado y evidencia van juntos: la puerta rechaza superado o fallado sin evidencia observada",
+        "El informe separa lo comprobado de lo no verificado y cuadra superados + fallados + bloqueados con los ejecutados"
+      ]
+    }
+  ]
+}
