@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#030a1b"><title>SKILLS-AGP V10 | Ingeniería para agentes de IA</title><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box}html,body{margin:0;min-height:100%;background:#030a1b;color:#fff;font-family:Roboto,Arial,sans-serif}body{overflow-x:hidden}.hero{position:relative;isolation:isolate;min-height:100svh;display:flex;flex-direction:column;align-items:center;justify-content:center;overflow:hidden;padding:112px 22px 115px;text-align:center}.background{position:absolute;inset:-2%;z-index:-3;background:#030a1b url('./docs/assets/background.webp') center/cover no-repeat;animation:ambient 26s ease-in-out infinite;transform-origin:center}.gradient-atmosphere{position:absolute;inset:-12%;z-index:-2;pointer-events:none;opacity:.55;mix-blend-mode:screen;background:radial-gradient(ellipse 36% 35% at 16% 66%,rgba(0,157,255,.14),transparent 78%),radial-gradient(ellipse 35% 40% at 86% 55%,rgba(118,45,235,.14),transparent 78%),radial-gradient(ellipse 40% 24% at 55% 85%,rgba(0,170,255,.09),transparent 80%);animation:gradientDrift 32s ease-in-out infinite alternate;will-change:transform,opacity}@keyframes gradientDrift{0%{transform:translate3d(-1.5%,1%,0) scale(1);opacity:.38}50%{transform:translate3d(1%,-1%,0) scale(1.045);opacity:.67}100%{transform:translate3d(2%,-.5%,0) scale(1.015);opacity:.48}}canvas{position:absolute;inset:0;width:100%;height:100%;z-index:-2;pointer-events:none}.shade{position:absolute;inset:0;z-index:-1;pointer-events:none;background:radial-gradient(ellipse 37% 30% at 50% 37%,rgba(2,8,23,.4),transparent 95%)}.top{position:absolute;z-index:2;top:5%;left:4.5%;right:4.5%;display:flex;align-items:center;justify-content:space-between;gap:18px}.brand{font-size:clamp(17px,1.4vw,23px);font-weight:900;letter-spacing:-.02em}.brand span{color:#36d7ff}.top small{font-size:clamp(9px,.75vw,12px);letter-spacing:.25em;color:#b7c8e8}.content{position:relative;z-index:1;width:100%;max-width:900px;transform:translateY(-5.5vh)}.eyebrow{margin:0 0:25px;font-size:clamp(10px,.95vw,15px);letter-spacing:.35em;color:#8abfff;font-weight:400}h1{margin:0;font-weight:900;font-size:clamp(49px,6.4vw,106px);line-height:1.05;letter-spacing:-.05em;white-space:nowrap;text-shadow:0 3px 22px #0007}.gradient{background:linear-gradient(110deg,#5eeaff,#55aaff 50%,#9453ff);-webkit-background-clip:text;background-clip:text;color:transparent}.subtitle{margin:13px 0 28px;font-size:clamp(23px,2.65vw,44px);font-weight:300;line-height:1.22}.description{margin:0 auto 43px;max-width:550px;color:#c1cbe0;font-weight:300;font-size:clamp(16px,1.25vw,21px);line-height:1.48}.cta{display:inline-flex;align-items:center;justify-content:center;gap:24px;padding:18px 42px;border-radius:99px;border:1.5px solid #8deeff;color:white;text-decoration:none;font-size:clamp(17px,1.25vw,21px);font-weight:500;background:linear-gradient(100deg,#008bff,#385df1 57%,#8d34f2);box-shadow:0 0 23px #188dff90,0 0 42px #693bff4a;transition:transform .2s,box-shadow .2s}.cta:hover{transform:translateY(-3px);box-shadow:0 0 35px #188dffb0,0 0 60px #693bff70}.cta:focus-visible{outline:3px solid #fff;outline-offset:5px}.bottom{position:absolute;bottom:6%;left:18px;right:18px;display:flex;align-items:center;flex-direction:column;gap:23px;color:#b5c7e5;font-size:clamp(9px,.7vw,12px);letter-spacing:.28em}.bottom i{display:block;width:1px;height:48px;background:linear-gradient(#b7d7ff,transparent)}@keyframes ambient{0%,100%{transform:scale(1.015) translate3d(0,0,0);filter:saturate(1)}50%{transform:scale(1.065) translate3d(0,-.35%,0);filter:saturate(1.09)}}@media(max-width:650px){.hero{padding:110px 17px 105px}.background{background-position:49% center}.top{top:28px}.top small{letter-spacing:.12em}.content{transform:translateY(-3vh)}.eyebrow{letter-spacing:.16em;margin-bottom:18px}h1{font-size:clamp(43px,10vw,70px)}.subtitle{margin:15px 0 24px}.description{margin-bottom:34px}.cta{padding:16px 30px}.bottom{bottom:23px;letter-spacing:.13em;gap:13px}.bottom i{height:25px}}@media(prefers-reduced-motion:reduce){.background,.gradient-atmosphere{animation:none}.cta{transition:none}}
+
+/* V9: subtle HTML motion, without changing the approved background */
+.content{animation:contentEnter 1.05s cubic-bezier(.2,.8,.2,1) both}
+@keyframes contentEnter{from{opacity:0;transform:translateY(calc(-5.5vh + 16px))}to{opacity:1;transform:translateY(-5.5vh)}}
+.top{animation:fadeEnter 1.3s ease both}.bottom{animation:fadeEnter 1.6s .2s ease both}
+@keyframes fadeEnter{from{opacity:0}to{opacity:1}}
+.cta{position:relative;isolation:isolate;overflow:hidden;background:linear-gradient(115deg,#008bff 0%,#365df1 36%,#8d34f2 70%,#167cfa 100%);background-size:220% 220%;animation:buttonGradient 11s ease-in-out infinite;transition:transform .35s cubic-bezier(.2,.8,.2,1),box-shadow .35s ease,border-color .35s ease,filter .35s ease;will-change:background-position}
+@keyframes buttonGradient{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
+.cta::before{content:"";position:absolute;inset:0;z-index:-1;border-radius:inherit;background:linear-gradient(110deg,transparent 20%,rgba(255,255,255,.2) 49%,transparent 78%);transform:translateX(-145%);transition:transform .8s cubic-bezier(.2,.7,.2,1);pointer-events:none}
+.cta:hover{transform:translateY(-3px) scale(1.025);border-color:#c3f4ff;box-shadow:0 0 30px #188dff90,0 0 54px #693bff66,0 9px 30px #0209198c;filter:brightness(1.07)}
+.cta:hover::before{transform:translateX(145%)}
+.cta:active{transform:translateY(-1px) scale(.985);transition-duration:.12s}
+.cta .arrow{display:inline-block;transition:transform .35s cubic-bezier(.2,.8,.2,1)}
+.cta:hover .arrow{transform:translateX(5px)}
+.brand{transition:filter .35s ease,transform .35s ease}.brand:hover{filter:drop-shadow(0 0 9px #36d7ff80);transform:translateY(-1px)}
+.gradient{background-size:160% 100%;animation:titleLight 13s ease-in-out infinite alternate}
+@keyframes titleLight{from{background-position:0% 50%}to{background-position:100% 50%}}
+@media(max-width:650px){@keyframes contentEnter{from{opacity:0;transform:translateY(calc(-3vh + 12px))}to{opacity:1;transform:translateY(-3vh)}}}
+@media(prefers-reduced-motion:reduce){.content,.top,.bottom,.cta,.gradient{animation:none!important}.cta,.cta::before,.cta .arrow,.brand{transition:none!important}}
+
+/* V10: cursor-following ambient illumination, kept behind real content */
+.cursor-light{position:absolute;inset:0;z-index:-1;pointer-events:none;opacity:0;will-change:opacity;background:radial-gradient(circle 270px at var(--light-x,50%) var(--light-y,50%),rgba(50,189,255,.17) 0%,rgba(55,115,255,.095) 29%,rgba(128,71,245,.05) 53%,transparent 100%);mix-blend-mode:screen;transition:opacity .6s ease}
+@media (hover:none),(pointer:coarse),(prefers-reduced-motion:reduce){.cursor-light{display:none!important}}
+</style></head><body><main class="hero"><div class="background" aria-hidden="true"></div><div class="gradient-atmosphere" aria-hidden="true"></div><canvas id="particles" aria-hidden="true"></canvas><div class="shade" aria-hidden="true"></div><div class="cursor-light" aria-hidden="true"></div><header class="top"><div class="brand">SKILLS-<span>AGP</span></div><small>AGENT ENGINEERING</small></header><section class="content" aria-label="Presentación"><p class="eyebrow">CONTRATOS · MÉTODO · EVIDENCIA</p><h1>SKILLS-<span class="gradient">AGP</span></h1><p class="subtitle">Ingeniería para agentes de IA</p><p class="description">Skills diseñadas para trabajar con rigor,<br class="desktop"> reducir la ambigüedad y verificar los resultados.</p><a class="cta" href="./docs/index.html">Explorar las skills <span class="arrow" aria-hidden="true">→</span></a></section><footer class="bottom"><i aria-hidden="true"></i><span>PROCEDIMIENTOS VERIFICABLES PARA AGENTES</span></footer></main>
+<script>
+(()=>{
+  const canvas=document.getElementById('particles');
+  const ctx=canvas.getContext('2d',{alpha:true});
+  const reduced=matchMedia('(prefers-reduced-motion: reduce)');
+  if(!ctx||reduced.matches)return;
+  const palette=[[47,205,255],[75,129,255],[165,91,255],[237,108,255]];
+  let w=0,h=0,dpr=1,particles=[],halos=[],drifters=[],raf=0,last=0;
+  const rand=(a,b)=>a+Math.random()*(b-a);
+  function resetParticle(p,initial=false){
+    p.x=rand(0,w);p.y=rand(h*.12,h*.93);
+    p.ox=p.x;p.oy=p.y;
+    p.life=initial?rand(0,1):0;p.duration=rand(2.6,6.5);
+    p.dx=rand(-20,20);p.dy=rand(-17,10);
+    p.r=rand(.35,1.5);p.color=palette[Math.floor(rand(0,palette.length))];
+    p.alpha=rand(.18,.53);
+  }
+  function resize(){
+    w=canvas.clientWidth;h=canvas.clientHeight;dpr=Math.min(devicePixelRatio||1,1.7);
+    canvas.width=Math.round(w*dpr);canvas.height=Math.round(h*dpr);
+    ctx.setTransform(dpr,0,0,dpr,0,0);
+    const count=Math.min(115,Math.max(45,Math.round(w*h/15000)));
+    particles=Array.from({length:count},()=>{let p={};resetParticle(p,true);return p});
+    drifters=Array.from({length:Math.min(24,Math.max(12,Math.round(w*h/55000)))},()=>({x:rand(.02,.98)*w,y:rand(.08,.96)*h,r:rand(.55,1.8),vx:rand(-5,5),vy:rand(-8,-2),phase:rand(0,Math.PI*2),speed:rand(.5,1.3),color:palette[Math.floor(rand(0,palette.length))]}));
+    halos=Array.from({length:7},(_,i)=>({x:rand(.05,.95),y:rand(.23,.94),r:rand(19,65),phase:rand(0,Math.PI*2),speed:rand(.25,.58),color:palette[i%palette.length]}));
+  }
+  function draw(t){
+    const dt=Math.min(.05,(t-last)/1000||0);last=t;
+    ctx.clearRect(0,0,w,h);
+    ctx.globalCompositeOperation='screen';
+    const time=t/1000;
+    for(const halo of halos){
+      const pulse=.5+.5*Math.sin(time*halo.speed+halo.phase);
+      const x=w*halo.x+Math.sin(time*.16+halo.phase)*9;
+      const y=h*halo.y+Math.cos(time*.13+halo.phase)*7;
+      const radius=halo.r*(.85+.18*pulse);
+      const [r,g,b]=halo.color;
+      const grad=ctx.createRadialGradient(x,y,0,x,y,radius);
+      grad.addColorStop(0,`rgba(${r},${g},${b},${(.09+.12*pulse).toFixed(3)})`);
+      grad.addColorStop(.3,`rgba(${r},${g},${b},${(.045+.05*pulse).toFixed(3)})`);
+      grad.addColorStop(1,`rgba(${r},${g},${b},0)`);
+      ctx.fillStyle=grad;ctx.beginPath();ctx.arc(x,y,radius,0,Math.PI*2);ctx.fill();
+    }
+    for(const d of drifters){
+      d.x+=d.vx*dt;d.y+=d.vy*dt;
+      if(d.y<-.02*h)d.y=1.02*h;
+      if(d.x<0)d.x=w;if(d.x>w)d.x=0;
+      const glow=.5+.5*Math.sin(time*d.speed+d.phase);
+      const [r,g,b]=d.color;
+      const a=.08+.27*glow;
+      ctx.fillStyle=`rgba(${r},${g},${b},${a.toFixed(3)})`;
+      ctx.beginPath();ctx.arc(d.x,d.y,d.r,0,Math.PI*2);ctx.fill();
+    }
+    for(const p of particles){
+      p.life+=dt/p.duration;
+      if(p.life>=1)resetParticle(p);
+      const progress=p.life;
+      const envelope=Math.sin(Math.PI*progress)**1.5;
+      const x=p.ox+p.dx*progress;
+      const y=p.oy+p.dy*progress;
+      const [r,g,b]=p.color;
+      ctx.fillStyle=`rgba(${r},${g},${b},${(envelope*p.alpha).toFixed(3)})`;
+      ctx.beginPath();ctx.arc(x,y,p.r,0,Math.PI*2);ctx.fill();
+    }
+    ctx.globalCompositeOperation='source-over';
+    raf=requestAnimationFrame(draw);
+  }
+  function stop(){cancelAnimationFrame(raf);raf=0}
+  function start(){if(!raf&&!document.hidden&&!reduced.matches){last=performance.now();raf=requestAnimationFrame(draw)}}
+  resize();addEventListener('resize',()=>{stop();resize();start()},{passive:true});
+  document.addEventListener('visibilitychange',()=>document.hidden?stop():start());
+  reduced.addEventListener('change',()=>{stop();ctx.clearRect(0,0,w,h);start()});
+  start();
+})();
+</script>
+<script>
+/* Independent of the existing particle animation: no extra dependencies. */
+(()=>{
+ const hero=document.querySelector('.hero');
+ const light=hero.querySelector('.cursor-light');
+ const reduce=matchMedia('(prefers-reduced-motion: reduce)');
+ const fine=matchMedia('(hover:hover) and (pointer:fine)');
+ let x=0,y=0,tx=0,ty=0,energy=0,targetEnergy=0,frame=0,active=false,lastMove=0;
+ const clamp=(v,a,b)=>Math.min(b,Math.max(a,v));
+ function allowed(){return fine.matches&&!reduce.matches&&!document.hidden}
+ function tick(t){
+  frame=0;
+  if(!allowed()){light.style.opacity='0';active=false;return}
+  const rect=hero.getBoundingClientRect();
+  x+=(tx-x)*.095;y+=(ty-y)*.095;
+  if(t-lastMove>170)targetEnergy=.37;
+  energy+=(targetEnergy-energy)*.055;
+  light.style.setProperty('--light-x',`${x.toFixed(1)}px`);
+  light.style.setProperty('--light-y',`${y.toFixed(1)}px`);
+  light.style.opacity=String(clamp(energy,0,1));
+  if(active||energy>.015)frame=requestAnimationFrame(tick);
+ }
+ function start(){if(!frame)frame=requestAnimationFrame(tick)}
+ hero.addEventListener('pointermove',e=>{
+  if(!allowed()||e.pointerType==='touch')return;
+  const r=hero.getBoundingClientRect();tx=e.clientX-r.left;ty=e.clientY-r.top;
+  if(!active){x=tx;y=ty;active=true}
+  lastMove=performance.now();targetEnergy=.95;start();
+ },{passive:true});
+ hero.addEventListener('pointerleave',()=>{active=false;targetEnergy=0;start()});
+ function reset(){if(!allowed()){active=false;targetEnergy=0;energy=0;light.style.opacity='0';cancelAnimationFrame(frame);frame=0}}
+ reduce.addEventListener('change',reset);fine.addEventListener('change',reset);
+ document.addEventListener('visibilitychange',reset);
+})();
+</script>
+</body></html>
