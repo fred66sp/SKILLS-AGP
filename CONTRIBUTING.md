@@ -110,4 +110,4 @@ Crear un remoto, publicar o hacer `push` es una operación aparte, con su propio
 - `DESIGN.md`: sistema visual del catálogo y de las páginas de skill. Los tokens del frontmatter son normativos y el cuerpo explica dónde se aplica cada uno.
 - `.gitattributes`: fin de línea del repositorio. Todo texto viaja en LF (`* text=auto eol=lf`); lo que se compara byte a byte se declara con `-text`.
 - `opencode.json`: configuración compartida de OpenCode, con los agentes y el modelo de cada uno; el estado local de OpenCode vive en `.opencode/` y no se versiona.
-- `docs/`: guías y diagramas generados, con sus especificaciones y recibos.
+- `docs/`: guías y diagramas generados, con sus especificaciones y recibos. Las páginas de skill comparten `docs/assets/site.css` y `docs/assets/site.js`, y declaran su acento con `data-skill`.

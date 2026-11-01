@@ -15,7 +15,8 @@ Comprueba:
 - que cada skill canónica declare una versión SemVer en `metadata.version` y
   que no contradiga sus etiquetas `<skill>/v<versión>` publicadas;
 - que cada skill de `src/` tenga su página en `docs/`, un enlace en
-  `docs/index.html` y una referencia en `README.md`;
+  `docs/index.html` y una referencia en `README.md`, y que la página use la
+  hoja y el comportamiento comunes de `docs/assets/` con su `data-skill`;
 - que los scripts Python compilen y los scripts de shell tengan sintaxis
   válida cuando `bash` está disponible.
 
@@ -254,6 +255,13 @@ def check_catalog(root, src_names, errors):
             errors.append(
                 f"[catalogo] {readme.relative_to(root).as_posix()}: no referencia 'src/{name}/SKILL.md'"
             )
+        page_text = read(page)
+        if f'data-skill="{name}"' not in page_text:
+            errors.append(f"[catalogo] {route}: falta data-skill=\"{name}\"")
+        if "../assets/site.css" not in page_text:
+            errors.append(f"[catalogo] {route}: no enlaza la hoja común ../assets/site.css")
+        if "<style" in page_text:
+            errors.append(f"[catalogo] {route}: estilo inline; el chrome vive en docs/assets/site.css")
 
 
 def check_skills(root, errors, notes):
