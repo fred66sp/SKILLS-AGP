@@ -139,6 +139,7 @@
     }
   },
   "governance": {
+    "mode": "solo",
     "protected": ["identity.*", "tokens.color.*"],
     "configurable": ["tokens.spacing.*"],
     "exceptions": []

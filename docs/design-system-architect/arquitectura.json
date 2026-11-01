@@ -3,7 +3,7 @@
   "diagram_type": "architecture",
   "meta": {
     "title": "Arquitectura de design-system-architect",
-    "subtitle": "El paquete canónico, el contrato y sus fuentes de tokens, la puerta determinista y la frontera con la skill de diseño visual.",
+    "subtitle": "El paquete canónico, el contrato —documentado o JSON—, la implementación real, la puerta de acoplamiento y la frontera con la skill de diseño visual.",
     "locale": "es",
     "output": "docs/design-system-architect/arquitectura.html",
     "quality_profile": "showcase"
@@ -84,8 +84,8 @@
     {
       "id": "contrato",
       "type": "database",
-      "label": "design-system.json",
-      "sublabel": "identidad · componentes · gobernanza",
+      "label": "Contrato del sistema",
+      "sublabel": "DESIGN.md · ADR · JSON opcional",
       "pos": [
         180,
         320
@@ -127,8 +127,8 @@
     {
       "id": "catalogo",
       "type": "frontend",
-      "label": "Catálogo generado",
-      "sublabel": "index · tokens.css · catalog.css · catalog.json",
+      "label": "Catálogo",
+      "sublabel": "generado o externo · huellas",
       "pos": [
         850,
         370
@@ -136,13 +136,14 @@
       "size": [
         260,
         64
-      ]
+      ],
+      "tag": "consume el CSS real"
     },
     {
       "id": "aprobaciones",
       "type": "external",
-      "label": "Aprobaciones externas",
-      "sublabel": "id · path · source · reason",
+      "label": "Revisión o aprobación",
+      "sublabel": "solo: commit · approvals: id",
       "icon": "person",
       "pos": [
         180,
@@ -158,7 +159,7 @@
       "type": "security",
       "label": "gate",
       "sublabel": "contrato actual vs baseline",
-      "tag": "con aprobación",
+      "tag": "según governance.mode",
       "pos": [
         520,
         540
@@ -200,7 +201,7 @@
       "id": "check",
       "type": "security",
       "label": "check",
-      "sublabel": "conformidad de componentes",
+      "sublabel": "estructura · fidelidad",
       "tag": "PASS · FAIL · UNKNOWN",
       "pos": [
         520,
@@ -252,6 +253,20 @@
         320,
         64
       ]
+    },
+    {
+      "id": "implementacion",
+      "type": "database",
+      "label": "CSS real",
+      "sublabel": "clases y valores",
+      "pos": [
+        710,
+        540
+      ],
+      "size": [
+        130,
+        64
+      ]
     }
   ],
   "boundaries": [
@@ -276,9 +291,10 @@
     },
     {
       "kind": "region",
-      "label": "Puerta y evidencias externas",
+      "label": "Puerta, acoplamiento y evidencias",
       "wraps": [
         "aprobaciones",
+        "implementacion",
         "gate",
         "protegido",
         "informes",
@@ -393,33 +409,40 @@
       "to": "ds",
       "label": "hallazgo de render",
       "variant": "dashed"
+    },
+    {
+      "id": "clases",
+      "from": "implementacion",
+      "to": "check",
+      "label": "clases reales",
+      "variant": "emphasis"
     }
   ],
   "cards": [
     {
       "dot": "cyan",
-      "title": "Una fuente canónica para tokens y componentes",
+      "title": "La implementación manda; el contrato la describe",
       "items": [
-        "El contrato declara tokens embebidos o fuentes DTCG en tokenSources: un token definido en ambos sitios es un error de duplicidad",
-        "El catálogo consume los mismos tokens que el producto mediante tokens.css; no crea una segunda paleta ni un segundo componente",
-        "El manifiesto guarda las huellas del contrato, de cada fuente DTCG y de cada artefacto; editar el HTML o el CSS generados rompe la sincronía y check lo demuestra"
+        "El CSS, los componentes y el catálogo existente son la evidencia primaria; design-system.json es opcional y solo se escribe si habilita aprobaciones, consumidores, generación o puerta",
+        "Un DESIGN.md o un ADR es un contrato de pleno derecho: se lee como fuente canónica y no se duplica en otro formato",
+        "discover separa fuente de artefacto generado, clasifica packs de marca y devuelve el mapa de valores duplicados antes de declarar tokens"
       ]
     },
     {
       "dot": "rose",
-      "title": "El validador comprueba el alcance, no la autenticidad de la aprobación",
+      "title": "Dos regímenes: revisión por commit o aprobación externa",
       "items": [
-        "El agente no puede crear ni modificar el archivo de aprobaciones: lo aporta la persona o un sistema externo y solo se lee y se cita",
-        "gate exige id, path, approved_by, approved_at, source y reason; approved_by por sí solo no autoriza nada",
-        "No autentica la identidad, no demuestra que la aprobación venga de fuera y no impide forjar el archivo con permiso de escritura: Git y la revisión humana son el control real"
+        "En modo solo no hay archivo de aprobaciones y gate devuelve UNKNOWN ante un cambio protegido: la confirmación es la revisión y su commit",
+        "En modo approvals se exigen id, path, approved_by, approved_at, source y reason; approved_by por sí solo no autoriza nada",
+        "El agente no se aprueba a sí mismo y el validador comprueba el alcance, no la autenticidad"
       ]
     },
     {
       "dot": "emerald",
-      "title": "Estructura, catálogo y render son evidencias distintas",
+      "title": "Estructura, acoplamiento y render son evidencias distintas",
       "items": [
-        "check demuestra forma, tokens, referencias y sincronía del catálogo; no que el catálogo sea visualmente correcto",
-        "El informe del adaptador declara la conformidad de los componentes con su evidencia, pero el validador no ejecuta el framework que lo produjo",
+        "implementation-fidelity da FAIL si una muestra usa clases que no existen en el CSS del producto o si el catálogo externo define una capa ds-* propia",
+        "El catálogo externo importa la implementación y no recibe un tokens.css paralelo; el manifiesto solo sella el catálogo generado",
         "Contraste, foco, teclado, reflow y movimiento se miden en el render; sin medición quedan en UNKNOWN"
       ]
     }

@@ -3,7 +3,7 @@
   "diagram_type": "workflow",
   "meta": {
     "title": "Flujo de trabajo de design-system-architect",
-    "subtitle": "Del descubrimiento al cierre verificado: proponer el contrato, obtener la aprobación fuera del agente, aplicar, verificar y publicar el catálogo sin saltarse la gobernanza.",
+    "subtitle": "De la implementación al cierre verificado: decidir si hace falta contrato, proponerlo, revisarlo o aprobarlo, aplicar, comprobar el acoplamiento y cerrar sin saltarse la gobernanza.",
     "locale": "es",
     "output": "docs/design-system-architect/flujo-de-trabajo.html",
     "visual_preset": "signal-flow",
@@ -29,14 +29,14 @@
     },
     {
       "id": "b",
-      "label": "B · Proponer contrato",
+      "label": "B · Decidir el contrato",
       "fromCol": 1,
       "toCol": 1,
       "variant": "emphasis"
     },
     {
       "id": "c",
-      "label": "C · Aprobar",
+      "label": "C · Revisar o aprobar",
       "fromCol": 2,
       "toCol": 2,
       "variant": "security"
@@ -49,7 +49,7 @@
     },
     {
       "id": "e",
-      "label": "E · Verificar",
+      "label": "E · Verificar acoplamiento",
       "fromCol": 4,
       "toCol": 4,
       "variant": "security"
@@ -63,8 +63,8 @@
   ],
   "mainPath": [
     "descubre",
-    "propone",
-    "aprueba",
+    "soporte",
+    "autoriza",
     "aplica",
     "verifica",
     "cierra"
@@ -76,27 +76,27 @@
       "col": 0,
       "type": "backend",
       "label": "Descubrir",
-      "sublabel": "docs · tokens · componentes",
+      "sublabel": "implementación · catálogo",
       "tag": "solo lectura",
       "icon": "start"
     },
     {
-      "id": "propone",
+      "id": "soporte",
       "lane": "principal",
       "col": 1,
       "type": "backend",
-      "label": "Proponer contrato",
-      "sublabel": "ruta · antes · después",
-      "tag": "aún no se aplica"
+      "label": "Decidir el contrato",
+      "sublabel": "documento o JSON",
+      "tag": "solo si habilita"
     },
     {
-      "id": "aprueba",
+      "id": "autoriza",
       "lane": "principal",
       "col": 2,
       "type": "external",
-      "label": "Aprobación externa",
-      "sublabel": "id · path · source",
-      "tag": "el agente no la crea",
+      "label": "Revisar o aprobar",
+      "sublabel": "commit · id · source",
+      "tag": "no se autoaprueba",
       "icon": "person"
     },
     {
@@ -114,7 +114,7 @@
       "col": 4,
       "type": "security",
       "label": "Verificar",
-      "sublabel": "check · gate · baseline",
+      "sublabel": "check · fidelidad",
       "tag": "PASS · FAIL · UNKNOWN"
     },
     {
@@ -123,7 +123,7 @@
       "col": 5,
       "type": "frontend",
       "label": "Catálogo y cierre",
-      "sublabel": "artefactos y huellas",
+      "sublabel": "catálogo acoplado",
       "tag": "huellas y límites",
       "icon": "success"
     },
@@ -142,7 +142,7 @@
       "col": 2,
       "type": "security",
       "label": "Bloquear",
-      "sublabel": "sin aprobación válida",
+      "sublabel": "sin confirmación",
       "tag": "no se aplica",
       "icon": "stop"
     },
@@ -163,37 +163,47 @@
       "label": "UNKNOWN",
       "sublabel": "evidencia insuficiente",
       "tag": "no es PASS"
+    },
+    {
+      "id": "rehace",
+      "lane": "limites",
+      "col": 5,
+      "type": "security",
+      "label": "Rehacer",
+      "sublabel": "dos rechazos",
+      "tag": "desde la implementación",
+      "yOffset": 110
     }
   ],
   "edges": [
     {
       "id": "inventaria",
       "from": "descubre",
-      "to": "propone",
-      "label": "inventario",
+      "to": "soporte",
+      "label": "inventario y duplicados",
       "role": "main",
       "variant": "emphasis"
     },
     {
       "id": "propone-cambio",
-      "from": "propone",
-      "to": "aprueba",
+      "from": "soporte",
+      "to": "autoriza",
       "label": "ruta protegida",
       "role": "main"
     },
     {
       "id": "compatible",
-      "from": "propone",
+      "from": "soporte",
       "to": "aplica",
       "label": "compatible",
       "role": "branch",
       "variant": "dashed"
     },
     {
-      "id": "autoriza",
-      "from": "aprueba",
+      "id": "confirma",
+      "from": "autoriza",
       "to": "aplica",
-      "label": "cubre rutas",
+      "label": "confirma o cubre",
       "role": "main",
       "variant": "emphasis"
     },
@@ -224,23 +234,23 @@
     {
       "id": "cambio-propuesto",
       "from": "deriva",
-      "to": "propone",
+      "to": "soporte",
       "label": "propone cambio",
       "role": "return",
       "variant": "dashed"
     },
     {
       "id": "sin-aprobacion",
-      "from": "aprueba",
+      "from": "autoriza",
       "to": "bloquea",
-      "label": "sin aprobación",
+      "label": "sin confirmación",
       "role": "return",
       "variant": "security"
     },
     {
       "id": "espera",
       "from": "bloquea",
-      "to": "aprueba",
+      "to": "autoriza",
       "label": "espera",
       "role": "return",
       "variant": "dashed"
@@ -276,34 +286,50 @@
       "label": "declara UNKNOWN",
       "role": "return",
       "variant": "dashed"
+    },
+    {
+      "id": "rechazo",
+      "from": "cierra",
+      "to": "rehace",
+      "label": "dos rechazos",
+      "role": "return",
+      "variant": "security"
+    },
+    {
+      "id": "reconstruye",
+      "from": "rehace",
+      "to": "descubre",
+      "label": "reconstruye",
+      "role": "return",
+      "variant": "dashed"
     }
   ],
   "cards": [
     {
       "dot": "cyan",
-      "title": "El contrato antes que la pantalla",
+      "title": "Se parte de la implementación, no del artefacto que la skill sabe producir",
       "items": [
-        "Un agente puede diseñar e implementar dentro del sistema, pero no puede cambiar sus decisiones consolidadas sin autorización explícita",
-        "Un contrato existente y bloqueado gana sobre cualquier preferencia estética; si hay que cambiarlo, se detiene la implementación y se sigue la gobernanza",
-        "El contrato posee la identidad, los tokens, los componentes y las reglas; la interfaz los consume"
+        "El CSS, los componentes y el catálogo existente son la evidencia primaria; el contrato se lee después como descripción de esos hechos",
+        "Un DESIGN.md o un ADR es un contrato de pleno derecho; design-system.json solo se escribe si habilita aprobaciones, consumidores, generación o puerta",
+        "Dos rechazos por la misma causa cambian el enfoque: se reconstruye desde la implementación, no se parchea una tercera vez"
       ]
     },
     {
       "dot": "rose",
-      "title": "La aprobación es externa y se comprueba su alcance, no su autenticidad",
+      "title": "Dos regímenes, y en ninguno el agente se aprueba a sí mismo",
       "items": [
-        "El agente no puede crear ni modificar el archivo de aprobaciones: solo lo lee y lo cita con su id y su source",
-        "Se exigen id, path, approved_by, approved_at, source y reason; approved_by por sí solo no autoriza nada",
-        "El validador comprueba que la aprobación cubre cada ruta protegida que cambió; no autentica la identidad ni demuestra que venga de fuera del agente"
+        "En modo solo la revisión es el commit y la confirmación de la persona: no hay archivo de aprobaciones y gate devuelve UNKNOWN ante un cambio protegido",
+        "En modo approvals se exigen id, path, approved_by, approved_at, source y reason; approved_by por sí solo no autoriza nada",
+        "El validador comprueba el alcance, no la autenticidad; Git y la revisión humana son el control real"
       ]
     },
     {
       "dot": "emerald",
-      "title": "Un PASS estructural no demuestra calidad visual ni accesibilidad",
+      "title": "El acoplamiento manda sobre la forma del contrato",
       "items": [
-        "La verificación separa estructura, visual y accesibilidad: contraste, foco, teclado, reflow y movimiento se miden en el render",
-        "UNKNOWN nunca se redondea a PASS: falta el baseline, el catálogo, el informe del adaptador o la medición",
-        "Un catálogo generado demuestra sincronía con el contrato, no que sea visualmente correcto"
+        "implementation-fidelity da FAIL si una muestra usa clases que no existen en el CSS del producto o si el catálogo externo define una capa ds-* propia",
+        "Un catálogo externo importa la implementación y no recibe un tokens.css paralelo; el iframe es una opción, no un requisito",
+        "UNKNOWN nunca se redondea a PASS: falta implementación declarada, baseline, catálogo o medición"
       ]
     }
   ]

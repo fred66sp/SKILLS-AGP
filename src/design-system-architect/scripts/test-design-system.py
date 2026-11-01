@@ -89,6 +89,7 @@ def base_contract() -> dict:
         },
         "accessibility": {"standard": "WCAG 2.2 AA", "focusVisible": True},
         "governance": {
+            "mode": "approvals",
             "protected": ["identity.*", "tokens.color.*"],
             "configurable": ["tokens.spacing.*"],
             "exceptions": [],
@@ -386,11 +387,25 @@ class DesignSystemTest(unittest.TestCase):
     def catalog_contract(self) -> tuple[Path, Path]:
         contract_data = base_contract()
         contract_data["catalog"] = {"path": "catalog"}
+        contract_data["implementation"] = {"styles": ["web/app.css"]}
         contract = self.write("design-system.json", contract_data)
+        (self.root / "web").mkdir(exist_ok=True)
+        (self.root / "web" / "app.css").write_text(".btn-primary { color: #0f766e; }\n", encoding="utf-8")
         out = self.root / "catalog"
         code, _, _ = self.run_cli("catalog", str(contract), "--out", str(out))
         self.assertEqual(code, ds.EXIT_PASS)
         return contract, out
+
+    def test_gate_solo_mode_protected_change_is_unknown(self) -> None:
+        baseline = copy.deepcopy(base_contract())
+        baseline["governance"]["mode"] = "solo"
+        current = copy.deepcopy(baseline)
+        current["tokens"]["color"]["brand"]["$value"]["hex"] = "#115e59"
+        baseline_path = self.write("baseline.json", baseline)
+        contract = self.write("design-system.json", current)
+        code, out, _ = self.run_cli("gate", str(contract), "--baseline", str(baseline_path))
+        self.assertEqual(code, ds.EXIT_UNKNOWN)
+        self.assertIn("governance.mode es solo", out)
 
     def test_catalog_consistency_passes(self) -> None:
         contract, _ = self.catalog_contract()
@@ -488,6 +503,80 @@ class DesignSystemTest(unittest.TestCase):
             for name in ("index.html", "tokens.css", "catalog.css", "catalog.json")
         }
         self.assertEqual(first, second)
+
+    # -- Catálogo externo y acoplamiento ------------------------------------
+
+    def external_contract(
+        self, example: str = '<button class="btn-primary">Guardar</button>'
+    ) -> Path:
+        contract_data = base_contract()
+        contract_data["catalog"] = {
+            "mode": "external",
+            "path": "docs/ds",
+            "sources": ["web/app.css"],
+        }
+        contract_data["components"]["button"]["example"] = example
+        contract = self.write("design-system.json", contract_data)
+        (self.root / "web").mkdir(exist_ok=True)
+        (self.root / "web" / "app.css").write_text(
+            ".btn-primary { color: #0f766e; }\n.btn-ghost { color: #0f172a; }\n",
+            encoding="utf-8",
+        )
+        catalog = self.root / "docs" / "ds"
+        catalog.mkdir(parents=True)
+        (catalog / "index.html").write_text(
+            '<link rel="stylesheet" href="../../web/app.css"><p class="btn-primary">Guardar</p>\n',
+            encoding="utf-8",
+        )
+        return contract
+
+    def test_external_catalog_with_product_classes_passes(self) -> None:
+        contract = self.external_contract()
+        code, out, _ = self.run_cli("check", str(contract))
+        self.assertEqual(code, ds.EXIT_PASS)
+        self.assertIn("PASS catalog-consistency", out)
+        self.assertIn("PASS implementation-fidelity", out)
+
+    def test_catalog_without_implementation_is_unknown(self) -> None:
+        contract_data = base_contract()
+        contract_data["catalog"] = {"path": "catalog"}
+        contract = self.write("design-system.json", contract_data)
+        code, out, _ = self.run_cli("check", str(contract))
+        self.assertEqual(code, ds.EXIT_UNKNOWN)
+        self.assertIn("UNKNOWN implementation-fidelity", out)
+
+    def test_external_catalog_sample_with_unknown_class_fails(self) -> None:
+        contract = self.external_contract(
+            '<button class="btn-primary ds-button">Guardar</button>'
+        )
+        code, out, _ = self.run_cli("check", str(contract))
+        self.assertEqual(code, ds.EXIT_FAIL)
+        self.assertIn("FAIL implementation-fidelity", out)
+        self.assertIn("ds-button", out)
+
+    def test_external_catalog_own_class_layer_fails(self) -> None:
+        contract = self.external_contract()
+        (self.root / "docs" / "ds" / "catalog.css").write_text(
+            ".ds-card { padding: 8px; }\n", encoding="utf-8"
+        )
+        code, out, _ = self.run_cli("check", str(contract))
+        self.assertEqual(code, ds.EXIT_FAIL)
+        self.assertIn("capa propia", out)
+
+    def test_external_catalog_must_import_implementation(self) -> None:
+        contract = self.external_contract()
+        (self.root / "docs" / "ds" / "index.html").write_text(
+            "<p>Catálogo escrito a mano</p>\n", encoding="utf-8"
+        )
+        code, out, _ = self.run_cli("check", str(contract))
+        self.assertEqual(code, ds.EXIT_FAIL)
+        self.assertIn("no importa la implementación", out)
+
+    def test_external_catalog_is_not_generated(self) -> None:
+        contract = self.external_contract()
+        code, _, err = self.run_cli("catalog", str(contract), "--out", str(self.root / "otro"))
+        self.assertEqual(code, ds.EXIT_USAGE)
+        self.assertIn("external", err)
 
     # -- Adaptadores --------------------------------------------------------
 
@@ -593,6 +682,61 @@ class DesignSystemTest(unittest.TestCase):
         unknowns = {item["what"] for item in inventory["unknown"]}
         self.assertIn("tokens", unknowns)
         self.assertIn("componentes", unknowns)
+
+    def test_discover_finds_nested_brand_pack_and_duplicates(self) -> None:
+        project = self.root / "producto"
+        (project / "docs" / "tasks-ai-brand" / "design").mkdir(parents=True)
+        (project / "docs" / "tasks-ai-brand" / "design" / "tokens.json").write_text(
+            json.dumps(
+                {"color": {"brand": "#0f766e"}, "typography": {"body": {"fontFamily": "Inter"}}},
+                ensure_ascii=False,
+            ),
+            encoding="utf-8",
+        )
+        (project / "web" / "src").mkdir(parents=True)
+        (project / "web" / "src" / "app.css").write_text(
+            ":root { --accent: #0f766e; }\n", encoding="utf-8"
+        )
+        (project / "web" / "public").mkdir(parents=True)
+        (project / "web" / "public" / "brand.css").write_text(
+            ":root { --brand: #0f766e; }\n", encoding="utf-8"
+        )
+        code, out, _ = self.run_cli("discover", str(project), "--json")
+        self.assertEqual(code, ds.EXIT_PASS)
+        inventory = json.loads(out)
+        self.assertTrue(any("brand-pack" in fact["what"] for fact in inventory["facts"]))
+        self.assertNotIn("tokens", {item["what"] for item in inventory["unknown"]})
+        duplicates = {item["value"]: item for item in inventory["duplicates"]}
+        self.assertGreaterEqual(duplicates["#0f766e"]["count"], 3)
+
+    def test_discover_separates_generated_artifacts(self) -> None:
+        project = self.root / "producto"
+        (project / "web").mkdir(parents=True)
+        (project / "web" / "app.css").write_text(
+            ":root { --accent: #0f766e; }\n", encoding="utf-8"
+        )
+        catalog = project / "docs" / "ds"
+        catalog.mkdir(parents=True)
+        (catalog / "catalog.json").write_text(
+            json.dumps({"schema": "design-system.catalog.v1", "inputs": [], "artifacts": []}),
+            encoding="utf-8",
+        )
+        (catalog / "tokens.css").write_text(
+            ":root { --ds-color-brand: #0f766e; }\n", encoding="utf-8"
+        )
+        code, out, _ = self.run_cli("discover", str(project), "--json")
+        self.assertEqual(code, ds.EXIT_PASS)
+        inventory = json.loads(out)
+        roles = {
+            fact["path"]: fact.get("detail", {}).get("role")
+            for fact in inventory["facts"]
+            if fact["what"].endswith("variable(s) CSS")
+        }
+        self.assertEqual(roles["web/app.css"], "source")
+        self.assertEqual(roles["docs/ds/tokens.css"], "generated")
+        self.assertTrue(
+            any(fact["what"] == "catálogo generado existente" for fact in inventory["facts"])
+        )
 
     # -- Contrato documental de la integración ------------------------------
 

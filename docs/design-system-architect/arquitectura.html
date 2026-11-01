@@ -5195,7 +5195,7 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
         <div class="pulse-dot"></div>
         <h1>Arquitectura de design-system-architect</h1>
       </div>
-      <p class="subtitle">El paquete canónico, el contrato y sus fuentes de tokens, la puerta determinista y la frontera con la skill de diseño visual.</p>
+      <p class="subtitle">El paquete canónico, el contrato —documentado o JSON—, la implementación real, la puerta de acoplamiento y la frontera con la skill de diseño visual.</p>
     </div>
 
 
@@ -5205,7 +5205,7 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
          data-preset-badge-editorial-plate="ARCHIFY / LÁMINA 04">
       <svg viewBox="0 0 1180 942" role="img" lang="es" aria-labelledby="archify-diagram-title archify-diagram-description" data-animation="trace" data-preset="classic" data-quality-profile="showcase" data-node-ui="" data-reader-fit="width-first" data-reader-min-text="7.5" data-reader-primary-text="14">
         <title id="archify-diagram-title">Arquitectura de design-system-architect</title>
-        <desc id="archify-diagram-description">El paquete canónico, el contrato y sus fuentes de tokens, la puerta determinista y la frontera con la skill de diseño visual.</desc>
+        <desc id="archify-diagram-description">El paquete canónico, el contrato —documentado o JSON—, la implementación real, la puerta de acoplamiento y la frontera con la skill de diseño visual.</desc>
         <!-- Definitions -->
         <defs>
           <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
@@ -5254,7 +5254,7 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
 
         <rect data-graph-role="structural-frame" data-composition-frame-kind="region" data-composition-frame-id="1" data-composition-frame-label="Generación desde el contrato" x="150" y="290" width="990" height="214" rx="12" class="c-region" stroke-width="1"/>
 
-        <rect data-graph-role="structural-frame" data-composition-frame-kind="region" data-composition-frame-id="2" data-composition-frame-label="Puerta y evidencias externas" x="150" y="510" width="990" height="234" rx="12" class="c-region" stroke-width="1"/>
+        <rect data-graph-role="structural-frame" data-composition-frame-kind="region" data-composition-frame-id="2" data-composition-frame-label="Puerta, acoplamiento y evidencias" x="150" y="510" width="990" height="234" rx="12" class="c-region" stroke-width="1"/>
 
         <rect data-graph-role="structural-frame" data-composition-frame-kind="region" data-composition-frame-id="3" data-composition-frame-label="Frontera de responsabilidad" x="250" y="760" width="800" height="114" rx="12" class="c-region" stroke-width="1"/>
 
@@ -5296,16 +5296,16 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
           <path data-edge-from="aprobaciones" data-edge-to="gate" data-edge-label="cubre las rutas" data-edge-key="8" data-edge-id="cubre" data-composition-points="400,572;520,572" data-composition-crossover="halo" data-composition-independent="true" d="M 400 572 L 520 572" class="a-emphasis" data-animate="edge" style="--step:8" stroke-width="1.8" marker-end="url(#arrowhead-emphasis)"/>
         </g>
         <g data-graph-role="automatic-crossover" style="--step:9">
-          <path data-graph-role="automatic-crossover-underlay" d="M 700 572 L 850 572" fill="none" stroke="var(--mask)" stroke-width="5.8" stroke-linecap="round" stroke-linejoin="round" pointer-events="none"/>
-          <path data-edge-from="gate" data-edge-to="protegido" data-edge-label="sin rutas extra" data-edge-key="9" data-edge-id="aplica" data-composition-points="700,572;850,572" data-composition-crossover="halo" data-composition-independent="true" d="M 700 572 L 850 572" class="a-emphasis" data-animate="edge" style="--step:9" stroke-width="1.8" marker-end="url(#arrowhead-emphasis)"/>
+          <path data-graph-role="automatic-crossover-underlay" d="M 610 540 L 610 524 Q 610 516 618 516 L 972 516 Q 980 516 980 524 L 980 540" fill="none" stroke="var(--mask)" stroke-width="5.8" stroke-linecap="round" stroke-linejoin="round" pointer-events="none"/>
+          <path data-edge-from="gate" data-edge-to="protegido" data-edge-label="sin rutas extra" data-edge-key="9" data-edge-id="aplica" data-composition-points="610,540;610,516;980,516;980,540" data-composition-crossover="halo" data-composition-independent="true" d="M 610 540 L 610 524 Q 610 516 618 516 L 972 516 Q 980 516 980 524 L 980 540" class="a-emphasis" data-animate="edge" style="--step:9" stroke-width="1.8" marker-end="url(#arrowhead-emphasis)"/>
         </g>
         <g data-graph-role="automatic-crossover" style="--step:10">
           <path data-graph-role="automatic-crossover-underlay" d="M 400 692 L 520 692" fill="none" stroke="var(--mask)" stroke-width="5.8" stroke-linecap="round" stroke-linejoin="round" pointer-events="none"/>
           <path data-edge-from="informes" data-edge-to="check" data-edge-label="informe declarado" data-edge-key="10" data-edge-id="informa" data-composition-points="400,692;520,692" data-composition-crossover="halo" data-composition-independent="true" d="M 400 692 L 520 692" class="a-emphasis" data-animate="edge" style="--step:10" stroke-width="1.8" marker-end="url(#arrowhead-emphasis)"/>
         </g>
         <g data-graph-role="automatic-crossover" style="--step:11">
-          <path data-graph-role="automatic-crossover-underlay" d="M 700 692 L 850 692" fill="none" stroke="var(--mask)" stroke-width="5.8" stroke-linecap="round" stroke-linejoin="round" pointer-events="none"/>
-          <path data-edge-from="check" data-edge-to="conformidad" data-edge-label="por componente" data-edge-key="11" data-edge-id="declara" data-composition-points="700,692;850,692" data-composition-crossover="halo" data-composition-independent="true" d="M 700 692 L 850 692" class="a-emphasis" data-animate="edge" style="--step:11" stroke-width="1.8" marker-end="url(#arrowhead-emphasis)"/>
+          <path data-graph-role="automatic-crossover-underlay" d="M 700 699 L 850 699" fill="none" stroke="var(--mask)" stroke-width="5.8" stroke-linecap="round" stroke-linejoin="round" pointer-events="none"/>
+          <path data-edge-from="check" data-edge-to="conformidad" data-edge-label="por componente" data-edge-key="11" data-edge-id="declara" data-composition-points="700,699;850,699" data-composition-crossover="halo" data-composition-independent="true" d="M 700 699 L 850 699" class="a-emphasis" data-animate="edge" style="--step:11" stroke-width="1.8" marker-end="url(#arrowhead-emphasis)"/>
         </g>
         <g data-graph-role="automatic-crossover" style="--step:12">
           <path data-graph-role="automatic-crossover-underlay" d="M 540 830.05 L 700 830.05" fill="none" stroke="var(--mask)" stroke-width="5.8" stroke-linecap="round" stroke-linejoin="round" pointer-events="none"/>
@@ -5314,6 +5314,10 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
         <g data-graph-role="automatic-crossover" style="--step:13">
           <path data-graph-role="automatic-crossover-underlay" d="M 700 815 L 540 815" fill="none" stroke="var(--mask)" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round" pointer-events="none"/>
           <path data-edge-from="visual" data-edge-to="ds" data-edge-label="hallazgo de render" data-edge-key="13" data-edge-id="hallazgo" data-composition-points="700,815;540,815" data-composition-crossover="halo" data-composition-independent="true" d="M 700 815 L 540 815" class="a-dashed" data-animate="edge" style="--step:12" stroke-width="1.5" marker-end="url(#arrowhead-dashed)"/>
+        </g>
+        <g data-graph-role="automatic-crossover" style="--step:14">
+          <path data-graph-role="automatic-crossover-underlay" d="M 775 604 L 775 674.9 Q 775 682.9 767 682.9 L 700 682.9" fill="none" stroke="var(--mask)" stroke-width="5.8" stroke-linecap="round" stroke-linejoin="round" pointer-events="none"/>
+          <path data-edge-from="implementacion" data-edge-to="check" data-edge-label="clases reales" data-edge-key="14" data-edge-id="clases" data-composition-points="775,604;775,682.9;700,682.9" data-composition-crossover="halo" data-composition-independent="true" d="M 775 604 L 775 674.9 Q 775 682.9 767 682.9 L 700 682.9" class="a-emphasis" data-animate="edge" style="--step:12" stroke-width="1.8" marker-end="url(#arrowhead-emphasis)"/>
         </g>
 
         <!-- Components -->
@@ -5381,16 +5385,16 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
         <text data-detail="context" x="900" y="216" class="t-muted" font-size="9" text-anchor="middle">plantilla · catalog.html · catalog.css</text>
         </g>
 
-        <g id="node-contrato" data-node-id="contrato" data-node-label="design-system.json" tabindex="0" role="button" aria-label="Enfocar design-system.json, identidad · componentes · gobernanza, Generación desde el contrato" aria-pressed="false" data-node-kind="database" data-node-sublabel="identidad · componentes · gobernanza" data-node-context="Generación desde el contrato">
-          <title>design-system.json · identidad · componentes · gobernanza · Generación desde el contrato</title>
+        <g id="node-contrato" data-node-id="contrato" data-node-label="Contrato del sistema" tabindex="0" role="button" aria-label="Enfocar Contrato del sistema, DESIGN.md · ADR · JSON opcional, Generación desde el contrato" aria-pressed="false" data-node-kind="database" data-node-sublabel="DESIGN.md · ADR · JSON opcional" data-node-context="Generación desde el contrato">
+          <title>Contrato del sistema · DESIGN.md · ADR · JSON opcional · Generación desde el contrato</title>
           <rect x="180" y="320" width="220" height="64" rx="8" class="c-mask"/>
           <rect x="180" y="320" width="220" height="64" rx="8" class="c-database" data-animate="node" style="--step:5" stroke-width="1.5"/>
           <g aria-hidden="true" data-semantic-sigil="database" class="semantic-sigil s-database" transform="translate(186 326) scale(0.6875)">
             <ellipse cx="8" cy="4" rx="5" ry="2"/>
             <path d="M3 4v8c0 1.1 2.2 2 5 2s5-.9 5-2V4M3 8c0 1.1 2.2 2 5 2s5-.9 5-2"/>
           </g>
-          <text data-node-label="" data-detail-anchor="" x="290" y="350" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">design-system.json</text>
-        <text data-detail="context" x="290" y="366" class="t-muted" font-size="9" text-anchor="middle">identidad · componentes · gobernanza</text>
+          <text data-node-label="" data-detail-anchor="" x="290" y="350" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">Contrato del sistema</text>
+        <text data-detail="context" x="290" y="366" class="t-muted" font-size="9" text-anchor="middle">DESIGN.md · ADR · JSON opcional</text>
         </g>
 
         <g id="node-fuentes" data-node-id="fuentes" data-node-label="tokenSources" tabindex="0" role="button" aria-label="Enfocar tokenSources, fuentes DTCG externas, Generación desde el contrato" aria-pressed="false" data-node-kind="database" data-node-sublabel="fuentes DTCG externas" data-node-context="Generación desde el contrato">
@@ -5418,8 +5422,8 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
         <text data-detail="fine" x="620" y="426" class="t-security" font-size="7" text-anchor="middle">puerta determinista</text>
         </g>
 
-        <g id="node-catalogo" data-node-id="catalogo" data-node-label="Catálogo generado" tabindex="0" role="button" aria-label="Enfocar Catálogo generado, index · tokens.css · catalog.css · catalog.json, Generación desde el contrato" aria-pressed="false" data-node-kind="frontend" data-node-sublabel="index · tokens.css · catalog.css · catalog.json" data-node-context="Generación desde el contrato">
-          <title>Catálogo generado · index · tokens.css · catalog.css · catalog.json · Generación desde el contrato</title>
+        <g id="node-catalogo" data-node-id="catalogo" data-node-label="Catálogo" tabindex="0" role="button" aria-label="Enfocar Catálogo, generado o externo · huellas, Generación desde el contrato" aria-pressed="false" data-node-kind="frontend" data-node-sublabel="generado o externo · huellas" data-node-tag="consume el CSS real" data-node-context="Generación desde el contrato">
+          <title>Catálogo · generado o externo · huellas · Generación desde el contrato · consume el CSS real</title>
           <rect x="850" y="370" width="260" height="64" rx="8" class="c-mask"/>
           <rect x="850" y="370" width="260" height="64" rx="8" class="c-frontend" data-animate="node" style="--step:8" stroke-width="1.5"/>
           <g aria-hidden="true" data-semantic-sigil="frontend" class="semantic-sigil s-frontend" transform="translate(856 376) scale(0.6875)">
@@ -5428,23 +5432,24 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
             <circle cx="4.1" cy="4.8" r=".7" class="sigil-fill"/>
             <circle cx="6.3" cy="4.8" r=".7" class="sigil-fill"/>
           </g>
-          <text data-node-label="" data-detail-anchor="" x="980" y="400" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">Catálogo generado</text>
-        <text data-detail="context" x="980" y="416" class="t-muted" font-size="8.9" text-anchor="middle">index · tokens.css · catalog.css · catalog.json</text>
+          <text data-node-label="" data-detail-anchor="" x="980" y="400" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">Catálogo</text>
+        <text data-detail="context" x="980" y="416" class="t-muted" font-size="9" text-anchor="middle">generado o externo · huellas</text>
+        <text data-detail="fine" x="980" y="426" class="t-frontend" font-size="7" text-anchor="middle">consume el CSS real</text>
         </g>
 
-        <g id="node-aprobaciones" data-node-id="aprobaciones" data-node-label="Aprobaciones externas" tabindex="0" role="button" aria-label="Enfocar Aprobaciones externas, id · path · source · reason, Puerta y evidencias externas" aria-pressed="false" data-node-kind="external" data-node-sublabel="id · path · source · reason" data-node-context="Puerta y evidencias externas">
-          <title>Aprobaciones externas · id · path · source · reason · Puerta y evidencias externas</title>
+        <g id="node-aprobaciones" data-node-id="aprobaciones" data-node-label="Revisión o aprobación" tabindex="0" role="button" aria-label="Enfocar Revisión o aprobación, solo: commit · approvals: id, Puerta, acoplamiento y evidencias" aria-pressed="false" data-node-kind="external" data-node-sublabel="solo: commit · approvals: id" data-node-context="Puerta, acoplamiento y evidencias">
+          <title>Revisión o aprobación · solo: commit · approvals: id · Puerta, acoplamiento y evidencias</title>
           <rect x="180" y="540" width="220" height="64" rx="8" class="c-mask"/>
           <rect x="180" y="540" width="220" height="64" rx="8" class="c-external" data-animate="node" style="--step:8" stroke-width="1.5"/>
           <g aria-hidden="true" data-semantic-sigil="person" class="semantic-sigil s-external" transform="translate(186 546) scale(0.6875)">
             <circle cx="8" cy="4.5" r="2.5"/><path d="M3 14v-2a5 5 0 0 1 10 0v2"/>
           </g>
-          <text data-node-label="" data-detail-anchor="" x="290" y="570" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">Aprobaciones externas</text>
-        <text data-detail="context" x="290" y="586" class="t-muted" font-size="9" text-anchor="middle">id · path · source · reason</text>
+          <text data-node-label="" data-detail-anchor="" x="290" y="570" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">Revisión o aprobación</text>
+        <text data-detail="context" x="290" y="586" class="t-muted" font-size="9" text-anchor="middle">solo: commit · approvals: id</text>
         </g>
 
-        <g id="node-gate" data-node-id="gate" data-node-label="gate" tabindex="0" role="button" aria-label="Enfocar gate, contrato actual vs baseline, Puerta y evidencias externas" aria-pressed="false" data-node-kind="security" data-node-sublabel="contrato actual vs baseline" data-node-tag="con aprobación" data-node-context="Puerta y evidencias externas">
-          <title>gate · contrato actual vs baseline · Puerta y evidencias externas · con aprobación</title>
+        <g id="node-gate" data-node-id="gate" data-node-label="gate" tabindex="0" role="button" aria-label="Enfocar gate, contrato actual vs baseline, Puerta, acoplamiento y evidencias" aria-pressed="false" data-node-kind="security" data-node-sublabel="contrato actual vs baseline" data-node-tag="según governance.mode" data-node-context="Puerta, acoplamiento y evidencias">
+          <title>gate · contrato actual vs baseline · Puerta, acoplamiento y evidencias · según governance.mode</title>
           <rect x="520" y="540" width="180" height="64" rx="8" class="c-mask"/>
           <rect x="520" y="540" width="180" height="64" rx="8" class="c-security" data-animate="node" style="--step:9" stroke-width="1.5"/>
           <g aria-hidden="true" data-semantic-sigil="security" class="semantic-sigil s-security" transform="translate(526 546) scale(0.6875)">
@@ -5453,11 +5458,11 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
           </g>
           <text data-node-label="" data-detail-anchor="" x="610" y="570" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">gate</text>
         <text data-detail="context" x="610" y="586" class="t-muted" font-size="9" text-anchor="middle">contrato actual vs baseline</text>
-        <text data-detail="fine" x="610" y="596" class="t-security" font-size="7" text-anchor="middle">con aprobación</text>
+        <text data-detail="fine" x="610" y="596" class="t-security" font-size="7" text-anchor="middle">según governance.mode</text>
         </g>
 
-        <g id="node-protegido" data-node-id="protegido" data-node-label="Cambio protegido" tabindex="0" role="button" aria-label="Enfocar Cambio protegido, aplicado y cubierto, Puerta y evidencias externas" aria-pressed="false" data-node-kind="backend" data-node-sublabel="aplicado y cubierto" data-node-context="Puerta y evidencias externas">
-          <title>Cambio protegido · aplicado y cubierto · Puerta y evidencias externas</title>
+        <g id="node-protegido" data-node-id="protegido" data-node-label="Cambio protegido" tabindex="0" role="button" aria-label="Enfocar Cambio protegido, aplicado y cubierto, Puerta, acoplamiento y evidencias" aria-pressed="false" data-node-kind="backend" data-node-sublabel="aplicado y cubierto" data-node-context="Puerta, acoplamiento y evidencias">
+          <title>Cambio protegido · aplicado y cubierto · Puerta, acoplamiento y evidencias</title>
           <rect x="850" y="540" width="260" height="64" rx="8" class="c-mask"/>
           <rect x="850" y="540" width="260" height="64" rx="8" class="c-backend" data-animate="node" style="--step:10" stroke-width="1.5"/>
           <g aria-hidden="true" data-semantic-sigil="backend" class="semantic-sigil s-backend" transform="translate(856 546) scale(0.6875)">
@@ -5467,8 +5472,8 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
         <text data-detail="context" x="980" y="586" class="t-muted" font-size="9" text-anchor="middle">aplicado y cubierto</text>
         </g>
 
-        <g id="node-informes" data-node-id="informes" data-node-label="Informes de adaptadores" tabindex="0" role="button" aria-label="Enfocar Informes de adaptadores, design-system.adapter.v1, Puerta y evidencias externas" aria-pressed="false" data-node-kind="database" data-node-sublabel="design-system.adapter.v1" data-node-context="Puerta y evidencias externas">
-          <title>Informes de adaptadores · design-system.adapter.v1 · Puerta y evidencias externas</title>
+        <g id="node-informes" data-node-id="informes" data-node-label="Informes de adaptadores" tabindex="0" role="button" aria-label="Enfocar Informes de adaptadores, design-system.adapter.v1, Puerta, acoplamiento y evidencias" aria-pressed="false" data-node-kind="database" data-node-sublabel="design-system.adapter.v1" data-node-context="Puerta, acoplamiento y evidencias">
+          <title>Informes de adaptadores · design-system.adapter.v1 · Puerta, acoplamiento y evidencias</title>
           <rect x="180" y="660" width="220" height="64" rx="8" class="c-mask"/>
           <rect x="180" y="660" width="220" height="64" rx="8" class="c-database" data-animate="node" style="--step:10" stroke-width="1.5"/>
           <g aria-hidden="true" data-semantic-sigil="database" class="semantic-sigil s-database" transform="translate(186 666) scale(0.6875)">
@@ -5479,8 +5484,8 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
         <text data-detail="context" x="290" y="706" class="t-muted" font-size="9" text-anchor="middle">design-system.adapter.v1</text>
         </g>
 
-        <g id="node-check" data-node-id="check" data-node-label="check" tabindex="0" role="button" aria-label="Enfocar check, conformidad de componentes, Puerta y evidencias externas" aria-pressed="false" data-node-kind="security" data-node-sublabel="conformidad de componentes" data-node-tag="PASS · FAIL · UNKNOWN" data-node-context="Puerta y evidencias externas">
-          <title>check · conformidad de componentes · Puerta y evidencias externas · PASS · FAIL · UNKNOWN</title>
+        <g id="node-check" data-node-id="check" data-node-label="check" tabindex="0" role="button" aria-label="Enfocar check, estructura · fidelidad, Puerta, acoplamiento y evidencias" aria-pressed="false" data-node-kind="security" data-node-sublabel="estructura · fidelidad" data-node-tag="PASS · FAIL · UNKNOWN" data-node-context="Puerta, acoplamiento y evidencias">
+          <title>check · estructura · fidelidad · Puerta, acoplamiento y evidencias · PASS · FAIL · UNKNOWN</title>
           <rect x="520" y="660" width="180" height="64" rx="8" class="c-mask"/>
           <rect x="520" y="660" width="180" height="64" rx="8" class="c-security" data-animate="node" style="--step:11" stroke-width="1.5"/>
           <g aria-hidden="true" data-semantic-sigil="security" class="semantic-sigil s-security" transform="translate(526 666) scale(0.6875)">
@@ -5488,12 +5493,12 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
             <path d="m5.8 8 1.5 1.5 3-3"/>
           </g>
           <text data-node-label="" data-detail-anchor="" x="610" y="690" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">check</text>
-        <text data-detail="context" x="610" y="706" class="t-muted" font-size="9" text-anchor="middle">conformidad de componentes</text>
+        <text data-detail="context" x="610" y="706" class="t-muted" font-size="9" text-anchor="middle">estructura · fidelidad</text>
         <text data-detail="fine" x="610" y="716" class="t-security" font-size="7" text-anchor="middle">PASS · FAIL · UNKNOWN</text>
         </g>
 
-        <g id="node-conformidad" data-node-id="conformidad" data-node-label="Conformidad declarada" tabindex="0" role="button" aria-label="Enfocar Conformidad declarada, por componente, con evidencia, Puerta y evidencias externas" aria-pressed="false" data-node-kind="frontend" data-node-sublabel="por componente, con evidencia" data-node-context="Puerta y evidencias externas">
-          <title>Conformidad declarada · por componente, con evidencia · Puerta y evidencias externas</title>
+        <g id="node-conformidad" data-node-id="conformidad" data-node-label="Conformidad declarada" tabindex="0" role="button" aria-label="Enfocar Conformidad declarada, por componente, con evidencia, Puerta, acoplamiento y evidencias" aria-pressed="false" data-node-kind="frontend" data-node-sublabel="por componente, con evidencia" data-node-context="Puerta, acoplamiento y evidencias">
+          <title>Conformidad declarada · por componente, con evidencia · Puerta, acoplamiento y evidencias</title>
           <rect x="850" y="660" width="260" height="64" rx="8" class="c-mask"/>
           <rect x="850" y="660" width="260" height="64" rx="8" class="c-frontend" data-animate="node" style="--step:12" stroke-width="1.5"/>
           <g aria-hidden="true" data-semantic-sigil="frontend" class="semantic-sigil s-frontend" transform="translate(856 666) scale(0.6875)">
@@ -5527,6 +5532,18 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
           </g>
           <text data-node-label="" data-detail-anchor="" x="860" y="820" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">web-interface-visual-design</text>
         <text data-detail="context" x="860" y="836" class="t-muted" font-size="9" text-anchor="middle">consume el sistema y revisa el render</text>
+        </g>
+
+        <g id="node-implementacion" data-node-id="implementacion" data-node-label="CSS real" tabindex="0" role="button" aria-label="Enfocar CSS real, clases y valores, Puerta, acoplamiento y evidencias" aria-pressed="false" data-node-kind="database" data-node-sublabel="clases y valores" data-node-context="Puerta, acoplamiento y evidencias">
+          <title>CSS real · clases y valores · Puerta, acoplamiento y evidencias</title>
+          <rect x="710" y="540" width="130" height="64" rx="8" class="c-mask"/>
+          <rect x="710" y="540" width="130" height="64" rx="8" class="c-database" data-animate="node" style="--step:12" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="database" class="semantic-sigil s-database" transform="translate(716 546) scale(0.6875)">
+            <ellipse cx="8" cy="4" rx="5" ry="2"/>
+            <path d="M3 4v8c0 1.1 2.2 2 5 2s5-.9 5-2V4M3 8c0 1.1 2.2 2 5 2s5-.9 5-2"/>
+          </g>
+          <text data-node-label="" data-detail-anchor="" x="775" y="570" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">CSS real</text>
+        <text data-detail="context" x="775" y="586" class="t-muted" font-size="9" text-anchor="middle">clases y valores</text>
         </g>
 
         <!-- Connection labels -->
@@ -5567,16 +5584,16 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
           <text x="460" y="562" class="t-edge-emphasis" font-size="8" text-anchor="middle">cubre las rutas</text>
         </g>
         <g data-detail="context" data-edge-from="gate" data-edge-to="protegido" data-edge-label="sin rutas extra" data-edge-key="9" data-edge-id="aplica">
-          <rect x="734" y="552" width="82" height="14" rx="3" class="c-mask"/>
-          <text x="775" y="562" class="t-edge-emphasis" font-size="8" text-anchor="middle">sin rutas extra</text>
+          <rect x="754" y="496" width="82" height="14" rx="3" class="c-mask"/>
+          <text x="795" y="506" class="t-edge-emphasis" font-size="8" text-anchor="middle">sin rutas extra</text>
         </g>
         <g data-detail="context" data-edge-from="informes" data-edge-to="check" data-edge-label="informe declarado" data-edge-key="10" data-edge-id="informa">
           <rect x="414.2" y="672" width="91.6" height="14" rx="3" class="c-mask"/>
           <text x="460" y="682" class="t-edge-emphasis" font-size="8" text-anchor="middle">informe declarado</text>
         </g>
         <g data-detail="context" data-edge-from="check" data-edge-to="conformidad" data-edge-label="por componente" data-edge-key="11" data-edge-id="declara">
-          <rect x="736.4" y="672" width="77.2" height="14" rx="3" class="c-mask"/>
-          <text x="775" y="682" class="t-edge-emphasis" font-size="8" text-anchor="middle">por componente</text>
+          <rect x="736.4" y="709" width="77.2" height="14" rx="3" class="c-mask"/>
+          <text x="775" y="719" class="t-edge-emphasis" font-size="8" text-anchor="middle">por componente</text>
         </g>
         <g data-detail="context" data-edge-from="ds" data-edge-to="visual" data-edge-label="sistema aprobado" data-edge-key="12" data-edge-id="sistema">
           <rect x="576.6" y="840.05" width="86.8" height="14" rx="3" class="c-mask"/>
@@ -5585,6 +5602,10 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
         <g data-detail="context" data-edge-from="visual" data-edge-to="ds" data-edge-label="hallazgo de render" data-edge-key="13" data-edge-id="hallazgo">
           <rect x="571.8" y="795" width="96.39999999999999" height="14" rx="3" class="c-mask"/>
           <text x="620" y="805" class="t-edge-dashed" font-size="8" text-anchor="middle">hallazgo de render</text>
+        </g>
+        <g data-detail="context" data-edge-from="implementacion" data-edge-to="check" data-edge-label="clases reales" data-edge-key="14" data-edge-id="clases">
+          <rect x="701.3" y="662.9" width="72.4" height="14" rx="3" class="c-mask"/>
+          <text x="737.5" y="672.9" class="t-edge-emphasis" font-size="8" text-anchor="middle">clases reales</text>
         </g>
 
         <!-- Boundary labels (foreground masks keep routes out of titles) -->
@@ -5598,9 +5619,9 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
           <text data-boundary-label="" x="158" y="313" class="t-cloud" font-size="9" font-weight="600">Generación desde el contrato</text>
         </g>
 
-        <g data-graph-role="structural-frame-label" data-composition-frame-id="2" data-composition-frame-kind="region" data-composition-frame-label="Puerta y evidencias externas">
-          <rect data-graph-role="structural-frame-label-mask" x="154" y="520" width="161.2" height="16" rx="3" class="c-mask"/>
-          <text data-boundary-label="" x="158" y="533" class="t-cloud" font-size="9" font-weight="600">Puerta y evidencias externas</text>
+        <g data-graph-role="structural-frame-label" data-composition-frame-id="2" data-composition-frame-kind="region" data-composition-frame-label="Puerta, acoplamiento y evidencias">
+          <rect data-graph-role="structural-frame-label-mask" x="154" y="520" width="188.2" height="16" rx="3" class="c-mask"/>
+          <text data-boundary-label="" x="158" y="533" class="t-cloud" font-size="9" font-weight="600">Puerta, acoplamiento y evidencias</text>
         </g>
 
         <g data-graph-role="structural-frame-label" data-composition-frame-id="3" data-composition-frame-kind="region" data-composition-frame-label="Frontera de responsabilidad">
@@ -5812,35 +5833,35 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
       <div class="card">
         <div class="card-header">
           <div class="card-dot cyan"></div>
-          <h3>Una fuente canónica para tokens y componentes</h3>
+          <h3>La implementación manda; el contrato la describe</h3>
         </div>
         <ul>
-          <li>El contrato declara tokens embebidos o fuentes DTCG en tokenSources: un token definido en ambos sitios es un error de duplicidad</li>
-          <li>El catálogo consume los mismos tokens que el producto mediante tokens.css; no crea una segunda paleta ni un segundo componente</li>
-          <li>El manifiesto guarda las huellas del contrato, de cada fuente DTCG y de cada artefacto; editar el HTML o el CSS generados rompe la sincronía y check lo demuestra</li>
+          <li>El CSS, los componentes y el catálogo existente son la evidencia primaria; design-system.json es opcional y solo se escribe si habilita aprobaciones, consumidores, generación o puerta</li>
+          <li>Un DESIGN.md o un ADR es un contrato de pleno derecho: se lee como fuente canónica y no se duplica en otro formato</li>
+          <li>discover separa fuente de artefacto generado, clasifica packs de marca y devuelve el mapa de valores duplicados antes de declarar tokens</li>
         </ul>
       </div>
 
       <div class="card">
         <div class="card-header">
           <div class="card-dot rose"></div>
-          <h3>El validador comprueba el alcance, no la autenticidad de la aprobación</h3>
+          <h3>Dos regímenes: revisión por commit o aprobación externa</h3>
         </div>
         <ul>
-          <li>El agente no puede crear ni modificar el archivo de aprobaciones: lo aporta la persona o un sistema externo y solo se lee y se cita</li>
-          <li>gate exige id, path, approved_by, approved_at, source y reason; approved_by por sí solo no autoriza nada</li>
-          <li>No autentica la identidad, no demuestra que la aprobación venga de fuera y no impide forjar el archivo con permiso de escritura: Git y la revisión humana son el control real</li>
+          <li>En modo solo no hay archivo de aprobaciones y gate devuelve UNKNOWN ante un cambio protegido: la confirmación es la revisión y su commit</li>
+          <li>En modo approvals se exigen id, path, approved_by, approved_at, source y reason; approved_by por sí solo no autoriza nada</li>
+          <li>El agente no se aprueba a sí mismo y el validador comprueba el alcance, no la autenticidad</li>
         </ul>
       </div>
 
       <div class="card">
         <div class="card-header">
           <div class="card-dot emerald"></div>
-          <h3>Estructura, catálogo y render son evidencias distintas</h3>
+          <h3>Estructura, acoplamiento y render son evidencias distintas</h3>
         </div>
         <ul>
-          <li>check demuestra forma, tokens, referencias y sincronía del catálogo; no que el catálogo sea visualmente correcto</li>
-          <li>El informe del adaptador declara la conformidad de los componentes con su evidencia, pero el validador no ejecuta el framework que lo produjo</li>
+          <li>implementation-fidelity da FAIL si una muestra usa clases que no existen en el CSS del producto o si el catálogo externo define una capa ds-* propia</li>
+          <li>El catálogo externo importa la implementación y no recibe un tokens.css paralelo; el manifiesto solo sella el catálogo generado</li>
           <li>Contraste, foco, teclado, reflow y movimiento se miden en el render; sin medición quedan en UNKNOWN</li>
         </ul>
       </div>
