@@ -45,9 +45,19 @@ Una tarea **pequeña** puede ir directamente a `main`, sin rama. Es pequeña cua
 Y en todos los casos, también en `main`:
 
 5. Los cambios se dejan preparados en el stage con su mensaje Conventional Commits en inglés, y la confirmación llega después de revisar el diff.
-6. Antes de pedir esa confirmación se ha hecho el barrido previo: documentación, `CHANGELOG`, plantillas y referencias describen ya lo que va a quedar en el repositorio.
+6. Antes de pedir esa confirmación se ha hecho el barrido previo: documentación, enrutadores (local y global si existe), `CHANGELOG`, plantillas y referencias describen ya lo que va a quedar en el repositorio.
 
 Cualquier otra cosa entra por una rama corta. Ante la duda, rama.
+
+## Enrutadores de skills
+
+Cada skill de `src/<skill>/` se descubre por su enrutador en `.skills/<skill>/SKILL.md`: metadatos de disparo y una instrucción para leer el contrato completo. Al cambiar una skill, revisa su enrutador en el mismo cambio:
+
+- Si cambian los disparadores, el alcance, las referencias o los scripts, actualiza la descripción y las instrucciones del enrutador.
+- El enrutador no copia reglas: si enrutador y contrato difieren, manda el contrato. Corrige el enrutador.
+- La ruta al contrato es relativa a la carpeta del enrutador (`../../src/<skill>/SKILL.md`). `python scripts/check-repo.py` comprueba el nombre, esa ruta y que no haya enrutadores huérfanos ni skills sin enrutador.
+
+Si la skill tiene además un enrutador global en `~/.config/opencode/skills/<skill>/SKILL.md`, actualízalo también: misma descripción y mismo cuerpo, con la ruta absoluta a este repositorio y a su página de `docs/` si el enrutador local la menciona. Ese enrutador es estado local de la máquina: no se versiona, no es requisito para contribuir y `check-repo.py` no lo comprueba. Si existe y no se actualiza, el agente seguirá descubriendo la versión anterior de la skill. Las skills de terceros de `.skills/` no llevan enrutador global.
 
 ## Versiones de las skills
 
