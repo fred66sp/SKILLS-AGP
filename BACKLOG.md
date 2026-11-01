@@ -4,7 +4,7 @@ Lista única y priorizada del trabajo pendiente de este repositorio. Lo más imp
 
 La práctica viene de [Product backlog](https://www.atlassian.com/agile/scrum/backlogs) de Atlassian, adaptada a un repositorio personal de skills. Las reglas de trabajo y de integración están en [`CONTRIBUTING.md`](CONTRIBUTING.md).
 
-Última revisión: 2026-10-25. Se revisa al abrir una rama y, como mínimo, una vez al mes: se reordena, se refina lo que va a entrar y se mueve a **Descartado** lo que ya no se hará.
+Última revisión: 2026-11-01. Se revisa al abrir una rama y, como mínimo, una vez al mes: se reordena, se refina lo que va a entrar y se mueve a **Descartado** lo que ya no se hará.
 
 ## Norte
 
@@ -38,18 +38,6 @@ Un item se cierra como se cierran los cambios del repositorio: `python scripts/c
 - **Dependencias:** verificar en verde requiere `push`, que es una operación aparte con su propia confirmación.
 - **Revisado:** 2026-10-25
 
-### PBI-06: Contraste del botón primario en tema oscuro
-
-- **Tipo:** documentación · **Prioridad:** Should · **Tamaño:** S · **Estado:** listo
-- **Evidencia:** en las páginas escritas a mano de `docs/`, `.btn-primary` usa `color:#fff` sobre un degradado de `--accent` y `--accent-2`; en `data-theme="dark"` esos tokens son claros, así que el texto blanco queda por debajo de 2:1. La página `docs/playwright-cli-usage/index.html` ya lleva una corrección local para su botón.
-- **Resultado esperado:** el texto del botón primario se lee en ambos temas sin cambiar la identidad ni el acento de cada skill.
-- **Aceptación:**
-  - contraste calculado ≥4.5:1 en tema oscuro en todas las páginas escritas a mano;
-  - la corrección vive en la regla común o en un token de rol, no repetida por página;
-  - `python scripts/check-repo.py` en 0 y captura de una página con el botón legible.
-- **Dependencias:** ninguna.
-- **Revisado:** 2026-10-29
-
 ## Sin refinar
 
 ### PBI-05: Garantías de la documentación HTML
@@ -66,5 +54,6 @@ Un item se cierra como se cierran los cambios del repositorio: `python scripts/c
 
 | Item | Motivo | Fecha |
 |---|---|---|
+| Generar la documentación con Hugo | Los HTML son artefactos con recibo `sha256` y la puerta corre con solo Python; generar el sitio obliga a commitear la salida (vuelven los diffs de 20 ficheros) o a meter un build en la validación. El chrome duplicado se resolvió con `docs/assets/site.css` y `site.js`, sin toolchain nueva. | 2026-11-01 |
 | Migrar la planificación a GitHub Issues | Rompe la lista única y añade un segundo lugar que mantener; este repositorio ya publica el backlog en git. | 2026-10-25 |
 | Unificar todas las descripciones de skill en una sola fuente | Exigiría generar README y catálogo desde el contrato; hoy el coste supera el riesgo real de divergencia. | 2026-10-25 |

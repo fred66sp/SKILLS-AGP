@@ -168,7 +168,7 @@ Paleta de instrumento: neutros fríos de papel y tinta, un verde que mide y una 
 
 ### Acento por familia
 
-Cada página de skill declara su `--accent` y un `--accent-2` derivado. Los valores vivos:
+El acento de cada skill vive en `docs/assets/site.css`, en un bloque `:root[data-skill="…"]` con su variante oscura; la página solo declara su `data-skill` y toma el resto de tokens de la hoja común. Los valores vivos:
 
 | Skill | Acento | Segundo |
 |---|---|---|
@@ -183,16 +183,20 @@ Cada página de skill declara su `--accent` y un `--accent-2` derivado. Los valo
 | `go-testing-and-verification` | #15803d | #0d9488 |
 | `javascript-idiomatic-style` | #b45309 | #d97706 |
 | `javascript-testing-and-verification` | #0e7490 | #0891b2 |
+| `playwright-cli-usage` | #0e7490 | #2563eb |
 | `prd-cartographer` | #1e40af | #0ea5e9 |
 | `python-idiomatic-style` | #2b5b84 | #3b82f6 |
 | `python-testing-and-verification` | #a16207 | #d97706 |
 | `security-engineering` | #9f1239 | #be123c |
 | `skill-creator` | #6d28d9 | #2563eb |
+| `software-testing` | #4f46e5 | #2563eb |
 | `typescript-idiomatic-style` | #1d4ed8 | #2563eb |
 | `typescript-testing-and-verification` | #0f766e | #2563eb |
 | `web-interface-visual-design` | #1e40af | #2563eb |
 
 En tema oscuro el acento se aclara para sobrevivir al fondo: `#fcd34d` en `adr-software`, `#2dd4bf` en las de verde, `#fbbf24` en las ámbar.
+
+La guía `best-practices-create-skills` es la única página con acento en esta tabla que no toma la hoja común: mantiene su propio layout y su propia hoja en el `<head>`.
 
 ### Named Rules
 

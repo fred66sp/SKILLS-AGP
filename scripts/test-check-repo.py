@@ -39,7 +39,11 @@ def make_repo(root, router_ref="../../src/demo/SKILL.md", router_name="demo", sr
         root / "README.md",
         f"# Demo\n\nContrato completo: [`src/{src_name}/SKILL.md`](src/{src_name}/SKILL.md).\n",
     )
-    write(root / "docs" / src_name / "index.html", "<!doctype html><html><body>demo</body></html>\n")
+    write(
+        root / "docs" / src_name / "index.html",
+        f'<!doctype html><html data-skill="{src_name}"><head>'
+        f'<link rel="stylesheet" href="../assets/site.css"></head><body>demo</body></html>\n',
+    )
     write(root / "docs" / "index.html", f'<a href="{src_name}/index.html">{src_name}</a>\n')
 
 
@@ -108,6 +112,36 @@ class CheckRepoTest(unittest.TestCase):
         write(self.root / "README.md", "# Demo\n")
         errors = self.errors()
         self.assertTrue(any("no referencia 'src/demo/SKILL.md'" in item for item in errors))
+
+    def test_missing_data_skill_is_rejected(self):
+        make_repo(self.root)
+        write(
+            self.root / "docs" / "demo" / "index.html",
+            '<!doctype html><html><head><link rel="stylesheet" href="../assets/site.css">'
+            "</head><body>demo</body></html>\n",
+        )
+        errors = self.errors()
+        self.assertTrue(any('falta data-skill="demo"' in item for item in errors))
+
+    def test_missing_shared_sheet_is_rejected(self):
+        make_repo(self.root)
+        write(
+            self.root / "docs" / "demo" / "index.html",
+            '<!doctype html><html data-skill="demo"><body>demo</body></html>\n',
+        )
+        errors = self.errors()
+        self.assertTrue(any("no enlaza la hoja común" in item for item in errors))
+
+    def test_inline_style_is_rejected(self):
+        make_repo(self.root)
+        write(
+            self.root / "docs" / "demo" / "index.html",
+            '<!doctype html><html data-skill="demo"><head>'
+            '<link rel="stylesheet" href="../assets/site.css"><style>body{}</style>'
+            "</head><body>demo</body></html>\n",
+        )
+        errors = self.errors()
+        self.assertTrue(any("estilo inline" in item for item in errors))
 
     def test_bad_receipt_is_rejected(self):
         make_repo(self.root)

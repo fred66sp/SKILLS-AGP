@@ -319,6 +319,8 @@ Cada skill declara su versión independiente en `metadata.version`; el procedimi
 ## Documentación
 
 - [`docs/index.html`](docs/index.html): punto de entrada y catálogo: qué hace cada skill, dónde está su contrato, cómo se usa y cómo se verifica el repositorio.
+- [`docs/assets/site.css`](docs/assets/site.css): hoja común de las páginas de skill, con los tokens, los componentes y la tabla de acentos por skill.
+- [`docs/assets/site.js`](docs/assets/site.js): comportamiento común de esas páginas: tema, copiar código, vuelta arriba y entrada por scroll.
 - [`docs/best-practices-create-skills/index.html`](docs/best-practices-create-skills/index.html): guía de buenas prácticas en HTML, con los prompts de validación listos para copiar.
 - `docs/best-practices-create-skills/README.md`: fuente Markdown de la guía de buenas prácticas.
 - `docs/git-flow-management/index.html`: página principal de la skill `git-flow-management`.

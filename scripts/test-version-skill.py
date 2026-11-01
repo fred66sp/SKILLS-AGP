@@ -44,7 +44,11 @@ def make_repo(root, version="1.0.0"):
         root / "README.md",
         "# Demo\n\nContrato completo: [`src/demo/SKILL.md`](src/demo/SKILL.md).\n",
     )
-    write(root / "docs" / "demo" / "index.html", "<!doctype html><html><body>demo</body></html>\n")
+    write(
+        root / "docs" / "demo" / "index.html",
+        '<!doctype html><html data-skill="demo"><head>'
+        '<link rel="stylesheet" href="../assets/site.css"></head><body>demo</body></html>\n',
+    )
     write(root / "docs" / "index.html", '<a href="demo/index.html">demo</a>\n')
 
 
