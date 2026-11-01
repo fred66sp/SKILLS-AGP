@@ -10,17 +10,28 @@ READ → PROPOSE → APPROVE → APPLY → VERIFY
 
 | Paso | Qué produce | Qué no permite |
 |---|---|---|
-| READ | Contrato, fuentes, artefactos y evidencias leídos | Proponer sin haber leído |
+| READ | Contrato —documentado o JSON—, implementación viva, catálogo existente, fuentes, artefactos y evidencias leídos | Proponer sin haber leído el producto y el catálogo, no solo el contrato |
 | PROPOSE | Cambio con ruta, antes, después, motivo, impacto y clase | Aplicar durante la propuesta |
-| APPROVE | Confirmación de la persona o aprobación externa registrada | Que el agente se apruebe a sí mismo |
+| APPROVE | Confirmación de la persona o, en modo `approvals`, aprobación externa registrada | Que el agente se apruebe a sí mismo |
 | APPLY | Cambio solo en las rutas autorizadas | Cambiar el contrato para tapar un incumplimiento |
 | VERIFY | `check` o `gate` con su resultado | Declarar `PASS` lo que no se ejecutó |
+
+## Dos regímenes de gobernanza
+
+`governance.mode` decide cuánta ceremonia exige el proyecto:
+
+| Modo | Cuándo | Qué exige un cambio protegido |
+|---|---|---|
+| `solo` (por defecto) | Una persona revisa y commitea | El commit y su confirmación. Sin archivo de aprobaciones. El `gate` devuelve `UNKNOWN`, porque no puede comprobar esa confirmación |
+| `approvals` | Varias personas o un sistema externo revisan | Una aprobación externa con `id`, `path`, alcance y `source` |
+
+En los dos, el agente no puede aprobarse a sí mismo ni crear el registro de aprobación que lo cubre. La diferencia es que en `solo` ese registro no existe: inventarlo añade un archivo que nadie mantiene y una prueba de forma que no demuestra nada. Un proyecto solo con revisión por commit no necesita `approvals`.
 
 ## Qué está protegido
 
 | Categoría | Significado | Efecto |
 |---|---|---|
-| Protegido (`governance.protected`) | Identidad, tokens consolidados, contratos de componentes estables | Cambiar, añadir o eliminar exige aprobación externa |
+| Protegido (`governance.protected`) | Identidad, tokens consolidados, contratos de componentes estables | Cambiar, añadir o eliminar exige revisión; en modo `approvals`, aprobación externa |
 | Configurable (`governance.configurable`) | Valores pensados para adaptarse por proyecto o densidad | Se puede cambiar dentro del contrato sin aprobación, con evidencia |
 | Excepción (`governance.exceptions`) | Desviación declarada, con motivo y responsable | No convierte un `FAIL` en `PASS`; documenta una decisión aceptada |
 
@@ -43,7 +54,7 @@ La versión del contrato sigue SemVer: `MAJOR` para un cambio incompatible (reno
 
 ## Aprobaciones externas
 
-El agente **no puede crear ni modificar** el archivo de aprobaciones. Lo aporta la persona o un sistema externo; el agente solo lo lee y lo cita. Si el agente tiene permiso de escritura sobre ese archivo, la garantía es procedural, no criptográfica: Git y la revisión humana son el control real.
+Solo se usan con `governance.mode: approvals`. El agente **no puede crear ni modificar** el archivo de aprobaciones. Lo aporta la persona o un sistema externo; el agente solo lo lee y lo cita. Si el agente tiene permiso de escritura sobre ese archivo, la garantía es procedural, no criptográfica: Git y la revisión humana son el control real.
 
 ### Formato
 
@@ -85,7 +96,7 @@ Por eso una aprobación ausente, incompleta o dudosa devuelve `UNKNOWN` o `FAIL`
 
 1. Comprueba que la aprobación cubre exactamente las rutas que cambian.
 2. Edita solo esas rutas. Si aparece una ruta adicional, se detiene y se propone.
-3. Si hay catálogo, regenéralo. No edites el HTML, el CSS ni el manifiesto a mano.
+3. Si el catálogo es `generated`, regenéralo. Si es `external`, no lo regeneres: comprueba que sigue importando la implementación y que sus muestras usan clases existentes. No edites el HTML, el CSS ni el manifiesto generados a mano.
 4. Ejecuta `gate` con el mismo baseline y la misma aprobación. Guarda la salida.
 5. Si el resultado es `FAIL`, corrige la implementación o vuelve a proponer. No cambies el contrato para que el resultado pase.
 6. Si el resultado es `UNKNOWN`, falta evidencia: baseline, catálogo, informe o aprobación. No lo presentes como cierre.
@@ -123,6 +134,7 @@ Una decisión que cambia la forma del sistema se registra en `decisions` con su 
 ## Paradas
 
 - **Sin aprobación:** no se aplica el cambio protegido. Se devuelve la propuesta y se espera.
+- **Sin confirmación en modo `solo`:** no se declara el cambio cerrado. La revisión y el commit son la evidencia; el `gate` devuelve `UNKNOWN` y no se fabrica un archivo de aprobaciones para convertirlo en `PASS`.
 - **Aprobación incompleta:** se devuelve `UNKNOWN` con el campo que falta.
 - **Aprobación que no cubre la ruta:** se devuelve `FAIL` con la ruta no cubierta.
 - **Conflicto entre contrato y producto:** se detiene la implementación y se expone la divergencia. No se «arregla» el contrato a conveniencia.

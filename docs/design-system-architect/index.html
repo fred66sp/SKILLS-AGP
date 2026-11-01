@@ -40,7 +40,7 @@
 
 <section class="hero" id="top" aria-labelledby="titulo">
   <div class="hero-inner">
-    <span class="pill"><span class="dot" aria-hidden="true"></span>contrato primero · tokens DTCG · gobernanza explícita</span>
+    <span class="pill"><span class="dot" aria-hidden="true"></span>parte de la implementación · tokens DTCG · gobernanza explícita</span>
     <h1 id="titulo">El sistema se define <span class="grad">antes</span> que la pantalla</h1>
     <p class="lead">La skill <code>design-system-architect</code> descubre, define, documenta, gobierna y verifica el sistema visual de un producto. Los agentes pueden diseñar e implementar dentro de él; no pueden cambiar sus decisiones consolidadas sin autorización explícita.</p>
     <div class="hero-actions">
@@ -76,12 +76,12 @@
   <main id="contenido">
     <section id="que-hace" class="section">
       <div class="section-head"><span class="section-num">1</span><h2 class="title">Qué hace</h2></div>
-      <p class="sub">Convierte el sistema visual en un contrato legible por agentes y personas. Define identidad, tokens, temas, componentes, patrones, accesibilidad, movimiento y reglas de cambio; después genera el catálogo y comprueba que contrato y artefactos siguen siendo coherentes.</p>
+      <p class="sub">Convierte el sistema visual en un contrato legible por agentes y personas. Parte de la implementación y del catálogo que ya existen: si el producto tiene CSS y componentes, esa es la evidencia primaria. Define identidad, tokens, temas, componentes, patrones, accesibilidad, movimiento y reglas de cambio; después genera o audita el catálogo y comprueba que contrato e implementación siguen siendo coherentes.</p>
       <div class="grid">
-        <div class="card"><h3>Descubre</h3><p>Inventaría un proyecto existente sin escribirlo: documentos, tokens DTCG, variables CSS, componentes y dependencias. Separa lo observado de lo documentado, lo inferido y lo desconocido.</p></div>
+        <div class="card"><h3>Descubre</h3><p>Inventaría un proyecto existente sin escribirlo: documentos, tokens DTCG, packs de marca, variables CSS, componentes y dependencias. Separa lo observado de lo documentado, lo inferido y lo desconocido, marca qué es fuente y qué es artefacto generado, y devuelve un mapa de valores duplicados.</p></div>
         <div class="card"><h3>Define</h3><p>Escribe un contrato verificable con tokens en tres niveles cuando el tamaño lo justifica. Los componentes consumen tokens semánticos o de componente; los primitivos no se usan directamente.</p></div>
-        <div class="card"><h3>Gobierna</h3><p>Distingue lo protegido, lo configurable y las excepciones autorizadas. Un cambio protegido exige aprobación externa; el agente no puede crear ni modificar esa aprobación.</p></div>
-        <div class="card"><h3>Verifica</h3><p>Comprueba estructura, tokens, referencias, ciclos, cambios protegidos, consistencia del catálogo y informes de adaptadores. Separa <code>PASS</code>, <code>FAIL</code> y <code>UNKNOWN</code>.</p></div>
+        <div class="card"><h3>Gobierna</h3><p>Elige entre revisión por commit (<code>solo</code>) y aprobación externa con alcance (<code>approvals</code>). En los dos casos el agente no puede aprobarse a sí mismo; las rutas protegidas son opt-in.</p></div>
+        <div class="card"><h3>Verifica</h3><p>Comprueba estructura, tokens, referencias, ciclos, cambios protegidos, consistencia del catálogo, acoplamiento con la implementación e informes de adaptadores. Separa <code>PASS</code>, <code>FAIL</code> y <code>UNKNOWN</code>.</p></div>
       </div>
     </section>
 
@@ -98,7 +98,7 @@
 
     <section id="contrato" class="section">
       <div class="section-head"><span class="section-num">3</span><h2 class="title">El contrato</h2></div>
-      <p class="sub"><code>design-system.json</code> es un esquema propio (<code>design-system.v1</code>). Los tokens siguen un subconjunto declarado de DTCG 2025.10: <code>$value</code>, <code>$type</code>, grupos, herencia de tipo, alias con <code>{ruta}</code>, <code>$root</code> y <code>$deprecated</code>.</p>
+      <p class="sub"><code>design-system.json</code> es un esquema propio (<code>design-system.v1</code>). Los tokens siguen un subconjunto declarado de DTCG 2025.10: <code>$value</code>, <code>$type</code>, grupos, herencia de tipo, alias con <code>{ruta}</code>, <code>$root</code> y <code>$deprecated</code>. El JSON es opcional: un <code>DESIGN.md</code> o un ADR es un contrato de pleno derecho. Solo se escribe el JSON si habilita algo que el documento no da —aprobaciones con alcance, consumidores, generación o puerta—.</p>
       <div class="table-wrap">
         <table>
           <thead><tr><th>Parte</th><th>Qué declara</th></tr></thead>
@@ -107,8 +107,9 @@
             <tr><td><code>tokens</code> / <code>tokenSources</code></td><td>Tokens embebidos o fuentes DTCG externas. Una sola fuente canónica; duplicar valores es un error.</td></tr>
             <tr><td><code>themes</code></td><td>Modo por defecto y overrides por modo. Cada override apunta a un token existente.</td></tr>
             <tr><td><code>components</code></td><td>Propósito, cuándo y cuándo no, variantes, estados y ejemplo. Una variante sin regla de uso no está especificada.</td></tr>
-            <tr><td><code>governance</code></td><td>Rutas protegidas, parámetros configurables y excepciones declaradas.</td></tr>
-            <tr><td><code>catalog</code> / <code>adapters</code></td><td>Dónde vive el catálogo y qué informes externos declaran conformidad de componentes.</td></tr>
+            <tr><td><code>governance</code></td><td>Régimen (<code>solo</code> o <code>approvals</code>), rutas protegidas, parámetros configurables y excepciones declaradas.</td></tr>
+            <tr><td><code>catalog</code> / <code>adapters</code></td><td>Catálogo generado o externo con su entrada y sus fuentes, y qué informes externos declaran conformidad de componentes.</td></tr>
+            <tr><td><code>implementation</code></td><td>El CSS real del producto. Es lo que permite comprobar que el catálogo y las muestras están acoplados.</td></tr>
           </tbody>
         </table>
       </div>
@@ -119,22 +120,22 @@
 
     <section id="gobernanza" class="section">
       <div class="section-head"><span class="section-num">4</span><h2 class="title">Gobernanza</h2></div>
-      <p class="sub">El flujo es <code>READ → PROPOSE → APPROVE → APPLY → VERIFY</code>. Los cambios rutinarios compatibles no piden aprobación; los que tocan una decisión consolidada sí.</p>
+      <p class="sub">El flujo es <code>READ → PROPOSE → APPROVE → APPLY → VERIFY</code>, y el <code>READ</code> incluye la implementación y el catálogo, no solo el contrato. Los cambios rutinarios compatibles no piden aprobación; los que tocan una decisión consolidada siguen el régimen del proyecto.</p>
       <div class="grid">
-        <div class="card"><h3>Protegido</h3><p>Identidad, tokens consolidados y contratos estables. Cambiar, añadir o eliminar exige una aprobación externa que cubra la ruta.</p></div>
-        <div class="card"><h3>Configurable</h3><p>Valores pensados para adaptarse por proyecto o densidad. Se cambian dentro del contrato, con evidencia y sin reescribir la identidad.</p></div>
-        <div class="card"><h3>Aprobación externa</h3><p>Se aporta en un archivo aparte con <code>id</code>, <code>path</code>, <code>approved_by</code>, <code>approved_at</code>, <code>source</code> y <code>reason</code>. El agente no lo crea ni lo modifica.</p></div>
+        <div class="card"><h3>Modo <code>solo</code></h3><p>La revisión es el commit y la confirmación de la persona. No hay archivo de aprobaciones; el <code>gate</code> devuelve <code>UNKNOWN</code> ante un cambio protegido porque no puede comprobar esa confirmación.</p></div>
+        <div class="card"><h3>Modo <code>approvals</code></h3><p>Un cambio protegido exige una aprobación externa que cubra la ruta, con <code>id</code>, <code>path</code>, <code>approved_by</code>, <code>approved_at</code>, <code>source</code> y <code>reason</code>. El agente no la crea ni la modifica.</p></div>
+        <div class="card"><h3>Protegido y configurable</h3><p>Proteger rutas es opt-in: solo lo que no debe cambiar sin revisión. Lo configurable se adapta por proyecto o densidad, con evidencia y sin reescribir la identidad.</p></div>
         <div class="card"><h3>Límite honesto</h3><p>El validador comprueba el alcance de la aprobación, no su autenticidad. <code>approved_by</code> por sí solo no autoriza nada; la firma o el ticket son la fuente real cuando el proyecto los exige.</p></div>
       </div>
     </section>
 
     <section id="catalogo" class="section">
       <div class="section-head"><span class="section-num">5</span><h2 class="title">Catálogo</h2></div>
-      <p class="sub"><code>catalog</code> genera un catálogo estático desde el contrato: fundamentos, tokens, temas, componentes, patrones, restricciones, decisiones, gobernanza y evidencia. Consume los mismos tokens que el producto mediante <code>tokens.css</code>; no crea una segunda paleta ni un segundo componente.</p>
-      <div class="code"><pre><code class="language-bash">python3 scripts/design_system.py catalog design-system.json --out docs/design-system</code></pre></div>
-      <p class="sub">El manifiesto guarda las huellas del contrato, de cada fuente DTCG y de cada artefacto generado. Cambiar cualquiera de ellos invalida el catálogo y <code>check</code> lo demuestra. Todo el texto del contrato se escapa; los ejemplos se muestran en un <code>iframe</code> con <code>sandbox</code>.</p>
+      <p class="sub">El catálogo tiene dos modos. <code>generated</code> lo escribe <code>catalog</code> desde el contrato: fundamentos, tokens, temas, componentes, patrones, restricciones, decisiones, gobernanza y evidencia, con los mismos tokens que el producto. <code>external</code> es el catálogo escrito a mano que ya existe: declara su entrada y las fuentes de implementación que importa, y no se le genera un <code>tokens.css</code> paralelo.</p>
+      <div class="code"><pre><code class="language-bash">python3 tools/design-system/design_system.py catalog design-system.json --out docs/design-system</code></pre></div>
+      <p class="sub">El manifiesto del catálogo generado guarda las huellas del contrato, de cada fuente DTCG y de cada artefacto. Cambiar cualquiera de ellos invalida el catálogo y <code>check</code> lo demuestra. En modo externo, <code>check</code> comprueba que existen la entrada y sus fuentes, y <code>implementation-fidelity</code> que el catálogo importa la implementación, usa sus clases y no define una capa propia <code>ds-*</code>. Antes de generalizar, se entrega un componente real importado de la implementación y revisado por la persona.</p>
       <div class="note">
-        <p>La composición y la revisión visual del catálogo no son de esta skill. Se ejecutan con el contrato de calidad visual del proyecto, sin cambiar el contenido ni los tokens.</p>
+        <p>La composición y la revisión visual del catálogo no son de esta skill. Se entregan al contrato de calidad visual del proyecto, sin cambiar el contenido ni los tokens, y sin seguir iterando el catálogo hasta que la persona lo rechaza. Dos rechazos por la misma causa obligan a reconstruir desde la implementación, no a parchear.</p>
       </div>
     </section>
 
@@ -146,7 +147,7 @@
           <tbody>
             <tr><td>Descubre y clasifica el sistema existente.</td><td>Materializa la interfaz y los recursos gráficos.</td></tr>
             <tr><td>Define identidad, tokens, temas, componentes, patrones y gobernanza.</td><td>Aplica composición, jerarquía, tipografía, color y responsive dentro del sistema aprobado.</td></tr>
-            <tr><td>Genera el catálogo y verifica su fidelidad al contrato.</td><td>Revisa visualmente el catálogo y la interfaz renderizada.</td></tr>
+            <tr><td>Genera o audita el catálogo y verifica su acoplamiento con la implementación.</td><td>Revisa visualmente el catálogo y la interfaz renderizada.</td></tr>
             <tr><td>Ejecuta la puerta estructural y de cambios protegidos.</td><td>Declara lo que no puede verificar sin navegador o inspección humana.</td></tr>
           </tbody>
         </table>
@@ -156,19 +157,21 @@
 
     <section id="uso" class="section">
       <div class="section-head"><span class="section-num">7</span><h2 class="title">Cómo se usa</h2></div>
-      <div class="code"><pre><code class="language-bash"># Inventariar un proyecto existente sin escribir nada
-python3 scripts/design_system.py discover . --json
+      <div class="code"><pre><code class="language-bash"># El validador es un solo archivo sin dependencias: cópialo a tools/ del proyecto
+# o invócalo con su ruta absoluta desde el CI.
 
-# Comprobar el contrato
-python3 scripts/design_system.py check design-system.json
+# Inventariar un proyecto existente sin escribir nada
+python3 tools/design-system/design_system.py discover . --json
 
-# Generar el catálogo
-python3 scripts/design_system.py catalog design-system.json --out docs/design-system
+# Comprobar el contrato y su acoplamiento
+python3 tools/design-system/design_system.py check design-system.json
 
-# Puerta de un cambio protegido
-python3 scripts/design_system.py gate design-system.json \
-  --baseline .design-system.baseline.json \
-  --approvals approvals.json</code></pre></div>
+# Generar el catálogo (solo en modo generated)
+python3 tools/design-system/design_system.py catalog design-system.json --out docs/design-system
+
+# Puerta de un cambio protegido (--approvals solo en modo approvals)
+python3 tools/design-system/design_system.py gate design-system.json \
+  --baseline .design-system.baseline.json</code></pre></div>
       <div class="table-wrap">
         <table>
           <thead><tr><th>Código</th><th>Significado</th></tr></thead>
@@ -206,17 +209,18 @@ python3 scripts/design_system.py gate design-system.json \
       <div class="qa"><h3>¿Sustituye a la skill de diseño visual?</h3><p>No. Define el sistema que esa skill consume. La una posee el contrato; la otra, la ejecución y el juicio visual.</p></div>
       <div class="qa"><h3>¿Es un framework de componentes?</h3><p>No. Describe valores, contratos y reglas; no impone un stack ni genera una aplicación.</p></div>
       <div class="qa"><h3>¿Convierte un proyecto existente en uno nuevo?</h3><p>No. Descubre y conserva lo que existe. Si hay contradicciones, las declara; no las sobrescribe.</p></div>
-      <div class="qa"><h3>¿Una aprobación la puede crear el agente?</h3><p>No. El archivo de aprobaciones es externo. El validador comprueba su alcance, no su autenticidad; <code>approved_by</code> por sí solo no autoriza.</p></div>
+      <div class="qa"><h3>¿Una aprobación la puede crear el agente?</h3><p>No. En modo <code>approvals</code>, el archivo es externo; en modo <code>solo</code>, no hay archivo y la confirmación es la revisión y su commit. El validador comprueba el alcance, no la autenticidad; <code>approved_by</code> por sí solo no autoriza.</p></div>
       <div class="qa"><h3>¿Un <code>PASS</code> demuestra que el diseño se ve bien?</h3><p>No. Demuestra coherencia estructural. La calidad visual y la accesibilidad completa necesitan inspección renderizada y medición; sin ellas quedan en <code>UNKNOWN</code>.</p></div>
-      <div class="qa"><h3>¿El catálogo es otra implementación?</h3><p>No. Se genera desde el contrato y consume los mismos tokens. Editar el HTML o el CSS generados rompe la sincronía y <code>check</code> lo detecta.</p></div>
+      <div class="qa"><h3>¿El catálogo es otra implementación?</h3><p>No debe serlo. En modo <code>generated</code> consume los mismos tokens y editar sus artefactos rompe la sincronía. En modo <code>external</code> importa el CSS del producto y no define clases <code>ds-*</code> propias; <code>implementation-fidelity</code> lo comprueba.</p></div>
+      <div class="qa"><h3>¿Hace falta <code>design-system.json</code> si ya hay un <code>DESIGN.md</code>?</h3><p>No por defecto. El documento es un contrato de pleno derecho. El JSON solo se escribe si habilita aprobaciones con alcance, consumidores, generación o puerta; si no, duplica el documento sin añadir garantías.</p></div>
     </section>
 
     <section id="diagramas" class="section">
       <div class="section-head"><span class="section-num">10</span><h2 class="title">Los diagramas</h2></div>
-      <p class="sub">Dos vistas complementarias del contrato: el recorrido de gobierno y la relación entre el paquete, el contrato y la puerta.</p>
+      <p class="sub">Dos vistas complementarias: el recorrido de gobierno —del descubrimiento de la implementación al cierre verificado— y la relación entre el paquete, el contrato documentado o JSON, el CSS real, el validador y el catálogo.</p>
       <div class="grid cols-2">
-        <a class="card card-link" href="flujo-de-trabajo.html"><h3>Flujo de trabajo</h3><p>Del descubrimiento y la propuesta a la aprobación externa, la aplicación, la verificación y el cierre con el catálogo y los <code>UNKNOWN</code> declarados.</p><span class="go">Abrir el diagrama →</span></a>
-        <a class="card card-link" href="arquitectura.html"><h3>Arquitectura</h3><p>Cómo se relacionan el paquete canónico, el contrato, las fuentes DTCG, el validador, la puerta y la skill de diseño visual.</p><span class="go">Abrir el diagrama →</span></a>
+        <a class="card card-link" href="flujo-de-trabajo.html"><h3>Flujo de trabajo</h3><p>Del descubrimiento y la propuesta a la revisión o aprobación, la aplicación, la verificación y el cierre con el catálogo y los <code>UNKNOWN</code> declarados.</p><span class="go">Abrir el diagrama →</span></a>
+        <a class="card card-link" href="arquitectura.html"><h3>Arquitectura</h3><p>Cómo se relacionan el paquete canónico, el contrato —documentado o JSON—, el CSS real del producto, el validador, el catálogo y la skill de diseño visual.</p><span class="go">Abrir el diagrama →</span></a>
       </div>
       <div class="note"><p><strong>Documentación del repositorio.</strong> Los diagramas explican la skill; no son recursos que esta deba generar en cada encargo ni evidencia de su utilidad visual.</p></div>
       <p class="sub">En pantallas pequeñas, la vista general reduce las etiquetas. Usa el buscador de nodos del visor para consultar su detalle, o amplía y desplaza el diagrama.</p>
@@ -230,13 +234,13 @@ python3 scripts/design_system.py gate design-system.json \
           <thead><tr><th>Resultado</th><th>Significado</th></tr></thead>
           <tbody>
             <tr><td><code>PASS</code></td><td>La comprobación se ejecutó y no encontró incumplimientos.</td></tr>
-            <tr><td><code>FAIL</code></td><td>Hay un incumplimiento demostrado: token mal formado, referencia rota, ciclo, cambio protegido sin aprobación, catálogo desincronizado o adaptador que falla.</td></tr>
-            <tr><td><code>UNKNOWN</code></td><td>La comprobación no se ejecutó o la evidencia es insuficiente: falta baseline, catálogo, informe o medición. Nunca se redondea a <code>PASS</code>.</td></tr>
+            <tr><td><code>FAIL</code></td><td>Hay un incumplimiento demostrado: token mal formado, referencia rota, ciclo, cambio protegido sin la aprobación que exige su régimen, catálogo desincronizado, muestra con clases inexistentes en la implementación, capa <code>ds-*</code> propia o adaptador que falla.</td></tr>
+            <tr><td><code>UNKNOWN</code></td><td>La comprobación no se ejecutó o la evidencia es insuficiente: falta baseline, catálogo, implementación declarada, informe o medición. Nunca se redondea a <code>PASS</code>.</td></tr>
           </tbody>
         </table>
       </div>
-      <div class="code"><pre><code class="language-bash">python3 scripts/design_system.py check design-system.json
-python3 scripts/design_system.py gate design-system.json --baseline .design-system.baseline.json --approvals approvals.json</code></pre></div>
+      <div class="code"><pre><code class="language-bash">python3 tools/design-system/design_system.py check design-system.json
+python3 tools/design-system/design_system.py gate design-system.json --baseline .design-system.baseline.json</code></pre></div>
       <p class="sub">Un <code>PASS</code> estructural no demuestra calidad visual ni conformidad de accesibilidad. Contraste, foco, teclado, reflow y movimiento se miden en el render; sin esa evidencia quedan en <code>UNKNOWN</code>.</p>
     </section>
   </main>

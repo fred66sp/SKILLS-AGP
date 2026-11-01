@@ -5195,7 +5195,7 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
         <div class="pulse-dot"></div>
         <h1>Flujo de trabajo de design-system-architect</h1>
       </div>
-      <p class="subtitle">Del descubrimiento al cierre verificado: proponer el contrato, obtener la aprobación fuera del agente, aplicar, verificar y publicar el catálogo sin saltarse la gobernanza.</p>
+      <p class="subtitle">De la implementación al cierre verificado: decidir si hace falta contrato, proponerlo, revisarlo o aprobarlo, aplicar, comprobar el acoplamiento y cerrar sin saltarse la gobernanza.</p>
     </div>
 
 
@@ -5203,9 +5203,9 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
     <!-- Main Diagram -->
     <div class="diagram-container" data-detail-level="read"
          data-preset-badge-editorial-plate="ARCHIFY / LÁMINA 04">
-      <svg viewBox="0 0 1107 408" data-reader-fit="width-first" data-layout-contract="readable-v2" role="img" lang="es" aria-labelledby="archify-diagram-title archify-diagram-description" data-animation="trace" data-preset="signal-flow" data-quality-profile="showcase" data-node-ui="">
+      <svg viewBox="0 0 1215 628" data-reader-fit="width-first" data-layout-contract="readable-v2" role="img" lang="es" aria-labelledby="archify-diagram-title archify-diagram-description" data-animation="trace" data-preset="signal-flow" data-quality-profile="showcase" data-node-ui="">
         <title id="archify-diagram-title">Flujo de trabajo de design-system-architect</title>
-        <desc id="archify-diagram-description">Del descubrimiento al cierre verificado: proponer el contrato, obtener la aprobación fuera del agente, aplicar, verificar y publicar el catálogo sin saltarse la gobernanza.</desc>
+        <desc id="archify-diagram-description">De la implementación al cierre verificado: decidir si hace falta contrato, proponerlo, revisarlo o aprobarlo, aplicar, comprobar el acoplamiento y cerrar sin saltarse la gobernanza.</desc>
         <!-- Definitions -->
         <defs>
           <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
@@ -5250,256 +5250,279 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
         <rect width="100%" height="100%" fill="url(#grid)" />
 
         <!-- Swimlanes -->
-        <rect data-graph-role="structural-frame" data-composition-frame-kind="lane" data-composition-frame-id="lane-0" x="40" y="52" width="1035" height="106" rx="10" class="c-lane" stroke-width="1"/>
+        <rect data-graph-role="structural-frame" data-composition-frame-kind="lane" data-composition-frame-id="lane-0" x="40" y="52" width="1113" height="106" rx="10" class="c-lane" stroke-width="1"/>
         <text x="54" y="74" class="t-muted" font-size="10" font-weight="600">01 / Del sistema existente al cierre</text>
 
-        <rect data-graph-role="structural-frame" data-composition-frame-kind="lane" data-composition-frame-id="lane-1" x="40" y="178" width="1035" height="106" rx="10" class="c-lane" stroke-width="1"/>
-        <rect data-graph-role="structural-frame" data-composition-frame-kind="exception-lane" data-composition-frame-id="lane-1-exception" x="46" y="184" width="1023" height="94" rx="8" class="c-security-group" stroke-width="1"/>
+        <rect data-graph-role="structural-frame" data-composition-frame-kind="lane" data-composition-frame-id="lane-1" x="40" y="178" width="1113" height="326" rx="10" class="c-lane" stroke-width="1"/>
+        <rect data-graph-role="structural-frame" data-composition-frame-kind="exception-lane" data-composition-frame-id="lane-1-exception" x="46" y="184" width="1101" height="314" rx="8" class="c-security-group" stroke-width="1"/>
         <text x="54" y="200" class="t-security" font-size="10" font-weight="600">EX / Límites y paradas</text>
 
         <!-- Phase headers -->
-        <path d="M 80 35 H 156" class="a-default phase-rule" stroke-width="1" stroke-linecap="round" fill="none"/>
-        <rect x="78" y="27" width="80" height="16" rx="8" class="c-mask phase-chip"/>
-        <text x="118" y="38.5" class="t-muted" font-size="8" font-weight="600" text-anchor="middle" letter-spacing=".04em">A · Descubrir</text>
-        <path d="M 272 35 H 381.6" class="a-emphasis phase-rule" stroke-width="1" stroke-linecap="round" fill="none"/>
-        <rect x="270" y="27" width="113.6" height="16" rx="8" class="c-mask phase-chip"/>
-        <text x="326.8" y="38.5" class="t-backend" font-size="8" font-weight="600" text-anchor="middle" letter-spacing=".04em">B · Proponer contrato</text>
-        <path d="M 473.20000000000005 35 H 549.2" class="a-security phase-rule" stroke-width="1" stroke-linecap="round" fill="none"/>
-        <rect x="474.80000000000007" y="27" width="72.8" height="16" rx="8" class="c-mask phase-chip"/>
-        <text x="511.20000000000005" y="38.5" class="t-security" font-size="8" font-weight="600" text-anchor="middle" letter-spacing=".04em">C · Aprobar</text>
-        <path d="M 650 35 H 726" class="a-default phase-rule" stroke-width="1" stroke-linecap="round" fill="none"/>
-        <rect x="651.6" y="27" width="72.8" height="16" rx="8" class="c-mask phase-chip"/>
-        <text x="688" y="38.5" class="t-muted" font-size="8" font-weight="600" text-anchor="middle" letter-spacing=".04em">D · Aplicar</text>
-        <path d="M 796.8 35 H 872.8" class="a-security phase-rule" stroke-width="1" stroke-linecap="round" fill="none"/>
-        <rect x="794.8" y="27" width="80" height="16" rx="8" class="c-mask phase-chip"/>
-        <text x="834.8" y="38.5" class="t-security" font-size="8" font-weight="600" text-anchor="middle" letter-spacing=".04em">E · Verificar</text>
-        <path d="M 972.8 35 H 1082.3999999999999" class="a-default phase-rule" stroke-width="1" stroke-linecap="round" fill="none"/>
-        <rect x="970.8" y="27" width="113.6" height="16" rx="8" class="c-mask phase-chip"/>
-        <text x="1027.6" y="38.5" class="t-muted" font-size="8" font-weight="600" text-anchor="middle" letter-spacing=".04em">F · Catálogo y cierre</text>
+        <path d="M 74 35 H 150" class="a-default phase-rule" stroke-width="1" stroke-linecap="round" fill="none"/>
+        <rect x="72" y="27" width="80" height="16" rx="8" class="c-mask phase-chip"/>
+        <text x="112" y="38.5" class="t-muted" font-size="8" font-weight="600" text-anchor="middle" letter-spacing=".04em">A · Descubrir</text>
+        <path d="M 328.4 35 H 449.19999999999993" class="a-emphasis phase-rule" stroke-width="1" stroke-linecap="round" fill="none"/>
+        <rect x="326.4" y="27" width="124.79999999999998" height="16" rx="8" class="c-mask phase-chip"/>
+        <text x="388.79999999999995" y="38.5" class="t-backend" font-size="8" font-weight="600" text-anchor="middle" letter-spacing=".04em">B · Decidir el contrato</text>
+        <path d="M 531.5999999999999 35 H 641.1999999999999" class="a-security phase-rule" stroke-width="1" stroke-linecap="round" fill="none"/>
+        <rect x="529.5999999999999" y="27" width="113.6" height="16" rx="8" class="c-mask phase-chip"/>
+        <text x="586.3999999999999" y="38.5" class="t-security" font-size="8" font-weight="600" text-anchor="middle" letter-spacing=".04em">C · Revisar o aprobar</text>
+        <path d="M 728.3999999999999 35 H 804.3999999999999" class="a-default phase-rule" stroke-width="1" stroke-linecap="round" fill="none"/>
+        <rect x="729.9999999999999" y="27" width="72.8" height="16" rx="8" class="c-mask phase-chip"/>
+        <text x="766.3999999999999" y="38.5" class="t-muted" font-size="8" font-weight="600" text-anchor="middle" letter-spacing=".04em">D · Aplicar</text>
+        <path d="M 867.1999999999998 35 H 1004.7999999999998" class="a-security phase-rule" stroke-width="1" stroke-linecap="round" fill="none"/>
+        <rect x="865.1999999999998" y="27" width="141.6" height="16" rx="8" class="c-mask phase-chip"/>
+        <text x="935.9999999999998" y="38.5" class="t-security" font-size="8" font-weight="600" text-anchor="middle" letter-spacing=".04em">E · Verificar acoplamiento</text>
+        <path d="M 1048.7999999999997 35 H 1158.3999999999996" class="a-default phase-rule" stroke-width="1" stroke-linecap="round" fill="none"/>
+        <rect x="1046.7999999999997" y="27" width="113.6" height="16" rx="8" class="c-mask phase-chip"/>
+        <text x="1103.5999999999997" y="38.5" class="t-muted" font-size="8" font-weight="600" text-anchor="middle" letter-spacing=".04em">F · Catálogo y cierre</text>
 
         <!-- Workflow groups -->
 
 
         <!-- Edge paths -->
-        <path data-edge-from="aplica" data-edge-to="verifica" data-edge-label="puerta" data-edge-key="0" data-edge-id="aplica-cambio" data-composition-routing="workflow-v2-auto" data-edge-role="main" data-composition-points="734,120;780.8,120" d="M 734 120 L 780.8 120" class="a-emphasis" data-animate="edge" style="--step:3" stroke-width="1.8" marker-end="url(#arrowhead-emphasis)"/>
-        <path data-edge-from="aprueba" data-edge-to="aplica" data-edge-label="cubre rutas" data-edge-key="1" data-edge-id="autoriza" data-composition-routing="workflow-v2-auto" data-edge-role="main" data-composition-points="571.2,120;642,120" d="M 571.2 120 L 642 120" class="a-emphasis" data-animate="edge" style="--step:2" stroke-width="1.8" marker-end="url(#arrowhead-emphasis)"/>
-        <path data-edge-from="deriva" data-edge-to="propone" data-edge-label="propone cambio" data-edge-key="2" data-edge-id="cambio-propuesto" data-composition-routing="workflow-v2-auto" data-edge-role="return" data-composition-points="310,212;310,154" d="M 310 212 L 310 154" class="a-dashed" data-animate="edge" style="--step:8" stroke-width="1.4" marker-end="url(#arrowhead-dashed)"/>
-        <path data-edge-from="propone" data-edge-to="aplica" data-edge-label="compatible" data-edge-key="3" data-edge-id="compatible" data-composition-routing="workflow-v2-auto" data-edge-role="branch" data-composition-points="310,86;310,70;688,70;688,86" d="M 310 86 L 310 78 Q 310 70 318 70 L 680 70 Q 688 70 688 78 L 688 86" class="a-dashed" data-animate="edge" style="--step:9" stroke-width="1.4" marker-end="url(#arrowhead-dashed)"/>
-        <path data-edge-from="desconocido" data-edge-to="cierra" data-edge-label="declara UNKNOWN" data-edge-key="4" data-edge-id="declara-limite" data-composition-routing="workflow-v2-auto" data-edge-role="return" data-composition-points="1010.8,212;1010.8,154" d="M 1010.8 212 L 1010.8 154" class="a-dashed" data-animate="edge" style="--step:10" stroke-width="1.4" marker-end="url(#arrowhead-dashed)"/>
-        <path data-edge-from="descubre" data-edge-to="deriva" data-edge-label="deriva" data-edge-key="5" data-edge-id="divergencia" data-composition-routing="workflow-v2-auto" data-edge-role="return" data-composition-points="48,120;20,120;20,246;264,246" d="M 48 120 L 28 120 Q 20 120 20 128 L 20 238 Q 20 246 28 246 L 264 246" class="a-security" data-animate="edge" style="--step:11" stroke-width="1.4" marker-end="url(#arrowhead-security)"/>
-        <path data-edge-from="bloquea" data-edge-to="aprueba" data-edge-label="espera" data-edge-key="6" data-edge-id="espera" data-composition-routing="workflow-v2-auto" data-edge-role="return" data-composition-points="511.2,212;511.2,154" d="M 511.2 212 L 511.2 154" class="a-dashed" data-animate="edge" style="--step:12" stroke-width="1.4" marker-end="url(#arrowhead-dashed)"/>
-        <path data-edge-from="verifica" data-edge-to="cierra" data-edge-label="estructura" data-edge-key="7" data-edge-id="estructura" data-composition-routing="workflow-v2-auto" data-edge-role="main" data-composition-points="888.8,120;954.8,120" d="M 888.8 120 L 954.8 120" class="a-emphasis" data-animate="edge" style="--step:4" stroke-width="1.8" marker-end="url(#arrowhead-emphasis)"/>
-        <path data-edge-from="verifica" data-edge-to="desconocido" data-edge-label="falta evidencia" data-edge-key="8" data-edge-id="falta-evidencia" data-composition-routing="workflow-v2-auto" data-edge-role="return" data-composition-points="858.8,154;858.8,170;908.8,170;908.8,246;958.8,246" d="M 858.8 154 L 858.8 162 Q 858.8 170 866.8 170 L 900.8 170 Q 908.8 170 908.8 178 L 908.8 238 Q 908.8 246 916.8 246 L 958.8 246" class="a-security" data-animate="edge" style="--step:12" stroke-width="1.4" marker-end="url(#arrowhead-security)"/>
-        <path data-edge-from="verifica" data-edge-to="corrige" data-edge-label="FAIL" data-edge-key="9" data-edge-id="incumple" data-composition-routing="workflow-v2-auto" data-edge-role="return" data-composition-points="834.8,154;834.8,212" d="M 834.8 154 L 834.8 212" class="a-security" data-animate="edge" style="--step:12" stroke-width="1.4" marker-end="url(#arrowhead-security)"/>
-        <path data-edge-from="descubre" data-edge-to="propone" data-edge-label="inventario" data-edge-key="10" data-edge-id="inventaria" data-composition-routing="workflow-v2-auto" data-edge-role="main" data-composition-points="188,120;254,120" d="M 188 120 L 254 120" class="a-emphasis" data-animate="edge" style="--step:0" stroke-width="1.8" marker-end="url(#arrowhead-emphasis)"/>
-        <path data-edge-from="propone" data-edge-to="aprueba" data-edge-label="ruta protegida" data-edge-key="11" data-edge-id="propone-cambio" data-composition-routing="workflow-v2-auto" data-edge-role="main" data-composition-points="366,120;451.2,120" d="M 366 120 L 451.2 120" class="a-default" data-animate="edge" style="--step:1" stroke-width="1.4" marker-end="url(#arrowhead)"/>
-        <path data-edge-from="corrige" data-edge-to="aplica" data-edge-label="repite" data-edge-key="12" data-edge-id="repite" data-composition-routing="workflow-v2-auto" data-edge-role="return" data-composition-points="788.8,246;688,246;688,154" d="M 788.8 246 L 696 246 Q 688 246 688 238 L 688 154" class="a-dashed" data-animate="edge" style="--step:12" stroke-width="1.4" marker-end="url(#arrowhead-dashed)"/>
-        <path data-edge-from="aprueba" data-edge-to="bloquea" data-edge-label="sin aprobación" data-edge-key="13" data-edge-id="sin-aprobacion" data-composition-routing="workflow-v2-auto" data-edge-role="return" data-composition-points="535.2,154;535.2,180;577.2,180;577.2,246;561.2,246" d="M 535.2 154 L 535.2 172 Q 535.2 180 543.2 180 L 569.2 180 Q 577.2 180 577.2 188 L 577.2 238 Q 577.2 246 569.2 246 L 561.2 246" class="a-security" data-animate="edge" style="--step:12" stroke-width="1.4" marker-end="url(#arrowhead-security)"/>
+        <path data-edge-from="aplica" data-edge-to="verifica" data-edge-label="puerta" data-edge-key="0" data-edge-id="aplica-cambio" data-composition-routing="workflow-v2-auto" data-edge-role="main" data-composition-points="812.3999999999999,120;859.1999999999998,120" d="M 812.3999999999999 120 L 859.1999999999998 120" class="a-emphasis" data-animate="edge" style="--step:3" stroke-width="1.8" marker-end="url(#arrowhead-emphasis)"/>
+        <path data-edge-from="deriva" data-edge-to="soporte" data-edge-label="propone cambio" data-edge-key="1" data-edge-id="cambio-propuesto" data-composition-routing="workflow-v2-auto" data-edge-role="return" data-composition-points="366.4,322;366.4,154" d="M 366.4 322 L 366.4 154" class="a-dashed" data-animate="edge" style="--step:7" stroke-width="1.4" marker-end="url(#arrowhead-dashed)"/>
+        <path data-edge-from="soporte" data-edge-to="aplica" data-edge-label="compatible" data-edge-key="2" data-edge-id="compatible" data-composition-routing="workflow-v2-auto" data-edge-role="branch" data-composition-points="366.4,86;366.4,70;766.3999999999999,70;766.3999999999999,86" d="M 366.4 86 L 366.4 78 Q 366.4 70 374.4 70 L 758.3999999999999 70 Q 766.3999999999999 70 766.3999999999999 78 L 766.3999999999999 86" class="a-dashed" data-animate="edge" style="--step:8" stroke-width="1.4" marker-end="url(#arrowhead-dashed)"/>
+        <path data-edge-from="autoriza" data-edge-to="aplica" data-edge-label="confirma o cubre" data-edge-key="3" data-edge-id="confirma" data-composition-routing="workflow-v2-auto" data-edge-role="main" data-composition-points="625.5999999999999,120;720.3999999999999,120" d="M 625.5999999999999 120 L 720.3999999999999 120" class="a-emphasis" data-animate="edge" style="--step:2" stroke-width="1.8" marker-end="url(#arrowhead-emphasis)"/>
+        <path data-edge-from="desconocido" data-edge-to="cierra" data-edge-label="declara UNKNOWN" data-edge-key="4" data-edge-id="declara-limite" data-composition-routing="workflow-v2-auto" data-edge-role="return" data-composition-points="1086.7999999999997,322;1086.7999999999997,154" d="M 1086.7999999999997 322 L 1086.7999999999997 154" class="a-dashed" data-animate="edge" style="--step:10" stroke-width="1.4" marker-end="url(#arrowhead-dashed)"/>
+        <path data-edge-from="descubre" data-edge-to="deriva" data-edge-label="deriva" data-edge-key="5" data-edge-id="divergencia" data-composition-routing="workflow-v2-auto" data-edge-role="return" data-composition-points="48,120;20,120;20,356;316.4,356" d="M 48 120 L 28 120 Q 20 120 20 128 L 20 348 Q 20 356 28 356 L 316.4 356" class="a-security" data-animate="edge" style="--step:11" stroke-width="1.4" marker-end="url(#arrowhead-security)"/>
+        <path data-edge-from="bloquea" data-edge-to="autoriza" data-edge-label="espera" data-edge-key="6" data-edge-id="espera" data-composition-routing="workflow-v2-auto" data-edge-role="return" data-composition-points="569.5999999999999,322;569.5999999999999,154" d="M 569.5999999999999 322 L 569.5999999999999 154" class="a-dashed" data-animate="edge" style="--step:12" stroke-width="1.4" marker-end="url(#arrowhead-dashed)"/>
+        <path data-edge-from="verifica" data-edge-to="cierra" data-edge-label="estructura" data-edge-key="7" data-edge-id="estructura" data-composition-routing="workflow-v2-auto" data-edge-role="main" data-composition-points="951.1999999999998,120;1030.7999999999997,120" d="M 951.1999999999998 120 L 1030.7999999999997 120" class="a-emphasis" data-animate="edge" style="--step:4" stroke-width="1.8" marker-end="url(#arrowhead-emphasis)"/>
+        <path data-edge-from="verifica" data-edge-to="desconocido" data-edge-label="falta evidencia" data-edge-key="8" data-edge-id="falta-evidencia" data-composition-routing="workflow-v2-auto" data-edge-role="return" data-composition-points="951.1999999999998,127;989.9999999999998,127;989.9999999999998,356;1028.7999999999997,356" d="M 951.1999999999998 127 L 981.9999999999998 127 Q 989.9999999999998 127 989.9999999999998 135 L 989.9999999999998 348 Q 989.9999999999998 356 997.9999999999998 356 L 1028.7999999999997 356" class="a-security" data-animate="edge" style="--step:12" stroke-width="1.4" marker-end="url(#arrowhead-security)"/>
+        <path data-edge-from="verifica" data-edge-to="corrige" data-edge-label="FAIL" data-edge-key="9" data-edge-id="incumple" data-composition-routing="workflow-v2-auto" data-edge-role="return" data-composition-points="905.1999999999998,154;905.1999999999998,322" d="M 905.1999999999998 154 L 905.1999999999998 322" class="a-security" data-animate="edge" style="--step:12" stroke-width="1.4" marker-end="url(#arrowhead-security)"/>
+        <path data-edge-from="descubre" data-edge-to="soporte" data-edge-label="inventario y duplicados" data-edge-key="10" data-edge-id="inventaria" data-composition-routing="workflow-v2-auto" data-edge-role="main" data-composition-points="176,120;304.4,120" d="M 176 120 L 304.4 120" class="a-emphasis" data-animate="edge" style="--step:0" stroke-width="1.8" marker-end="url(#arrowhead-emphasis)"/>
+        <path data-edge-from="soporte" data-edge-to="autoriza" data-edge-label="ruta protegida" data-edge-key="11" data-edge-id="propone-cambio" data-composition-routing="workflow-v2-auto" data-edge-role="main" data-composition-points="428.4,120;513.5999999999999,120" d="M 428.4 120 L 513.5999999999999 120" class="a-default" data-animate="edge" style="--step:1" stroke-width="1.4" marker-end="url(#arrowhead)"/>
+        <path data-edge-from="cierra" data-edge-to="rehace" data-edge-label="dos rechazos" data-edge-key="12" data-edge-id="rechazo" data-composition-routing="workflow-v2-auto" data-edge-role="return" data-composition-points="1142.7999999999997,120;1196.4,120;1196.4,466;1132.7999999999997,466" d="M 1142.7999999999997 120 L 1188.4 120 Q 1196.4 120 1196.4 128 L 1196.4 458 Q 1196.4 466 1188.4 466 L 1132.7999999999997 466" class="a-security" data-animate="edge" style="--step:12" stroke-width="1.4" marker-end="url(#arrowhead-security)"/>
+        <path data-edge-from="rehace" data-edge-to="descubre" data-edge-label="reconstruye" data-edge-key="13" data-edge-id="reconstruye" data-composition-routing="workflow-v2-auto" data-edge-role="return" data-composition-points="1040.7999999999997,466;4,466;4,112;48,112" d="M 1040.7999999999997 466 L 12 466 Q 4 466 4 458 L 4 120 Q 4 112 12 112 L 48 112" class="a-dashed" data-animate="edge" style="--step:12" stroke-width="1.4" marker-end="url(#arrowhead-dashed)"/>
+        <path data-edge-from="corrige" data-edge-to="aplica" data-edge-label="repite" data-edge-key="14" data-edge-id="repite" data-composition-routing="workflow-v2-auto" data-edge-role="return" data-composition-points="857.1999999999998,356;766.3999999999999,356;766.3999999999999,154" d="M 857.1999999999998 356 L 774.3999999999999 356 Q 766.3999999999999 356 766.3999999999999 348 L 766.3999999999999 154" class="a-dashed" data-animate="edge" style="--step:12" stroke-width="1.4" marker-end="url(#arrowhead-dashed)"/>
+        <path data-edge-from="autoriza" data-edge-to="bloquea" data-edge-label="sin confirmación" data-edge-key="15" data-edge-id="sin-aprobacion" data-composition-routing="workflow-v2-auto" data-edge-role="return" data-composition-points="625.5999999999999,128;641.5999999999999,128;641.5999999999999,180;593.5999999999999,180;593.5999999999999,322" d="M 625.5999999999999 128 L 633.5999999999999 128 Q 641.5999999999999 128 641.5999999999999 136 L 641.5999999999999 172 Q 641.5999999999999 180 633.5999999999999 180 L 601.5999999999999 180 Q 593.5999999999999 180 593.5999999999999 188 L 593.5999999999999 322" class="a-security" data-animate="edge" style="--step:12" stroke-width="1.4" marker-end="url(#arrowhead-security)"/>
 
         <!-- Nodes -->
-        <g id="node-descubre" data-node-id="descubre" data-node-label="Descubrir" tabindex="0" role="button" aria-label="Enfocar Descubrir, docs · tokens · componentes, Del sistema existente al cierre › A · Descubrir" aria-pressed="false" data-node-kind="backend" data-node-sublabel="docs · tokens · componentes" data-node-tag="solo lectura" data-node-context="Del sistema existente al cierre › A · Descubrir">
-          <title>Descubrir · docs · tokens · componentes · Del sistema existente al cierre › A · Descubrir · solo lectura</title>
-          <rect x="48" y="86" width="140" height="68" rx="8" class="c-mask"/>
-          <rect x="48" y="86" width="140" height="68" rx="8" class="c-backend" data-animate="node" style="--step:0" stroke-width="1.5"/>
+        <g id="node-descubre" data-node-id="descubre" data-node-label="Descubrir" tabindex="0" role="button" aria-label="Enfocar Descubrir, implementación · catálogo, Del sistema existente al cierre › A · Descubrir" aria-pressed="false" data-node-kind="backend" data-node-sublabel="implementación · catálogo" data-node-tag="solo lectura" data-node-context="Del sistema existente al cierre › A · Descubrir">
+          <title>Descubrir · implementación · catálogo · Del sistema existente al cierre › A · Descubrir · solo lectura</title>
+          <rect x="48" y="86" width="128" height="68" rx="8" class="c-mask"/>
+          <rect x="48" y="86" width="128" height="68" rx="8" class="c-backend" data-animate="node" style="--step:0" stroke-width="1.5"/>
           <g aria-hidden="true" data-semantic-sigil="start" class="semantic-sigil s-backend" transform="translate(54 92) scale(0.6875)">
             <circle cx="8" cy="8" r="5"/>
             <path d="m7 5.4 3.6 2.6L7 10.6Z" class="sigil-fill"/>
           </g>
-          <text data-node-label="" data-detail-anchor="" x="118" y="107" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">Descubrir</text>
-          <text data-detail="context" x="118" y="124" class="t-muted" font-size="8" text-anchor="middle">docs · tokens · componentes</text>
-        <text data-detail="fine" x="118" y="142" class="t-backend" font-size="7" text-anchor="middle">solo lectura</text>
+          <text data-node-label="" data-detail-anchor="" x="112" y="107" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">Descubrir</text>
+          <text data-detail="context" x="112" y="124" class="t-muted" font-size="8" text-anchor="middle">implementación · catálogo</text>
+        <text data-detail="fine" x="112" y="142" class="t-backend" font-size="7" text-anchor="middle">solo lectura</text>
         </g>
 
-        <g id="node-propone" data-node-id="propone" data-node-label="Proponer contrato" tabindex="0" role="button" aria-label="Enfocar Proponer contrato, ruta · antes · después, Del sistema existente al cierre › B · Proponer contrato" aria-pressed="false" data-node-kind="backend" data-node-sublabel="ruta · antes · después" data-node-tag="aún no se aplica" data-node-context="Del sistema existente al cierre › B · Proponer contrato">
-          <title>Proponer contrato · ruta · antes · después · Del sistema existente al cierre › B · Proponer contrato · aún no se aplica</title>
-          <rect x="254" y="86" width="112" height="68" rx="8" class="c-mask"/>
-          <rect x="254" y="86" width="112" height="68" rx="8" class="c-backend" data-animate="node" style="--step:1" stroke-width="1.5"/>
-          <g aria-hidden="true" data-semantic-sigil="backend" class="semantic-sigil s-backend" transform="translate(260 92) scale(0.6875)">
+        <g id="node-soporte" data-node-id="soporte" data-node-label="Decidir el contrato" tabindex="0" role="button" aria-label="Enfocar Decidir el contrato, documento o JSON, Del sistema existente al cierre › B · Decidir el contrato" aria-pressed="false" data-node-kind="backend" data-node-sublabel="documento o JSON" data-node-tag="solo si habilita" data-node-context="Del sistema existente al cierre › B · Decidir el contrato">
+          <title>Decidir el contrato · documento o JSON · Del sistema existente al cierre › B · Decidir el contrato · solo si habilita</title>
+          <rect x="304.4" y="86" width="124" height="68" rx="8" class="c-mask"/>
+          <rect x="304.4" y="86" width="124" height="68" rx="8" class="c-backend" data-animate="node" style="--step:1" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="backend" class="semantic-sigil s-backend" transform="translate(310.4 92) scale(0.6875)">
             <path d="M6 3 3 8l3 5M10 3l3 5-3 5"/>
           </g>
-          <text data-node-label="" data-detail-anchor="" x="310" y="117.2" class="t-primary" font-size="10.1" font-weight="600" text-anchor="middle">Proponer contrato</text>
-          <text data-detail="context" x="310" y="131.6" class="t-muted" font-size="7.8" text-anchor="middle">ruta · antes · después</text>
-        <text data-detail="fine" x="310" y="144.4" class="t-backend" font-size="7" text-anchor="middle">aún no se aplica</text>
+          <text data-node-label="" data-detail-anchor="" x="366.4" y="117.2" class="t-primary" font-size="10.1" font-weight="600" text-anchor="middle">Decidir el contrato</text>
+          <text data-detail="context" x="366.4" y="131.9" class="t-muted" font-size="8" text-anchor="middle">documento o JSON</text>
+        <text data-detail="fine" x="366.4" y="144.7" class="t-backend" font-size="7" text-anchor="middle">solo si habilita</text>
         </g>
 
-        <g id="node-aprueba" data-node-id="aprueba" data-node-label="Aprobación externa" tabindex="0" role="button" aria-label="Enfocar Aprobación externa, id · path · source, Del sistema existente al cierre › C · Aprobar" aria-pressed="false" data-node-kind="external" data-node-sublabel="id · path · source" data-node-tag="el agente no la crea" data-node-context="Del sistema existente al cierre › C · Aprobar">
-          <title>Aprobación externa · id · path · source · Del sistema existente al cierre › C · Aprobar · el agente no la crea</title>
-          <rect x="451.2" y="86" width="120" height="68" rx="8" class="c-mask"/>
-          <rect x="451.2" y="86" width="120" height="68" rx="8" class="c-external" data-animate="node" style="--step:2" stroke-width="1.5"/>
-          <g aria-hidden="true" data-semantic-sigil="person" class="semantic-sigil s-external" transform="translate(457.2 92) scale(0.6875)">
+        <g id="node-autoriza" data-node-id="autoriza" data-node-label="Revisar o aprobar" tabindex="0" role="button" aria-label="Enfocar Revisar o aprobar, commit · id · source, Del sistema existente al cierre › C · Revisar o aprobar" aria-pressed="false" data-node-kind="external" data-node-sublabel="commit · id · source" data-node-tag="no se autoaprueba" data-node-context="Del sistema existente al cierre › C · Revisar o aprobar">
+          <title>Revisar o aprobar · commit · id · source · Del sistema existente al cierre › C · Revisar o aprobar · no se autoaprueba</title>
+          <rect x="513.5999999999999" y="86" width="112" height="68" rx="8" class="c-mask"/>
+          <rect x="513.5999999999999" y="86" width="112" height="68" rx="8" class="c-external" data-animate="node" style="--step:2" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="person" class="semantic-sigil s-external" transform="translate(519.5999999999999 92) scale(0.6875)">
             <circle cx="8" cy="4.5" r="2.5"/><path d="M3 14v-2a5 5 0 0 1 10 0v2"/>
           </g>
-          <text data-node-label="" data-detail-anchor="" x="511.2" y="117.4" class="t-primary" font-size="10.3" font-weight="600" text-anchor="middle">Aprobación externa</text>
-          <text data-detail="context" x="511.2" y="132.1" class="t-muted" font-size="8" text-anchor="middle">id · path · source</text>
-        <text data-detail="fine" x="511.2" y="144.9" class="t-external" font-size="7" text-anchor="middle">el agente no la crea</text>
+          <text data-node-label="" data-detail-anchor="" x="569.5999999999999" y="117.2" class="t-primary" font-size="10.1" font-weight="600" text-anchor="middle">Revisar o aprobar</text>
+          <text data-detail="context" x="569.5999999999999" y="131.9" class="t-muted" font-size="8" text-anchor="middle">commit · id · source</text>
+        <text data-detail="fine" x="569.5999999999999" y="144.7" class="t-external" font-size="7" text-anchor="middle">no se autoaprueba</text>
         </g>
 
         <g id="node-aplica" data-node-id="aplica" data-node-label="Aplicar" tabindex="0" role="button" aria-label="Enfocar Aplicar, rutas autorizadas, Del sistema existente al cierre › D · Aplicar" aria-pressed="false" data-node-kind="backend" data-node-sublabel="rutas autorizadas" data-node-tag="sin tocar el contrato" data-node-context="Del sistema existente al cierre › D · Aplicar">
           <title>Aplicar · rutas autorizadas · Del sistema existente al cierre › D · Aplicar · sin tocar el contrato</title>
-          <rect x="642" y="86" width="92" height="68" rx="8" class="c-mask"/>
-          <rect x="642" y="86" width="92" height="68" rx="8" class="c-backend" data-animate="node" style="--step:3" stroke-width="1.5"/>
-          <g aria-hidden="true" data-semantic-sigil="backend" class="semantic-sigil s-backend" transform="translate(648 92) scale(0.6875)">
+          <rect x="720.3999999999999" y="86" width="92" height="68" rx="8" class="c-mask"/>
+          <rect x="720.3999999999999" y="86" width="92" height="68" rx="8" class="c-backend" data-animate="node" style="--step:3" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="backend" class="semantic-sigil s-backend" transform="translate(726.3999999999999 92) scale(0.6875)">
             <path d="M6 3 3 8l3 5M10 3l3 5-3 5"/>
           </g>
-          <text data-node-label="" data-detail-anchor="" x="688" y="107" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">Aplicar</text>
-          <text data-detail="context" x="688" y="124" class="t-muted" font-size="8" text-anchor="middle">rutas autorizadas</text>
-        <text data-detail="fine" x="688" y="142" class="t-backend" font-size="6.6" text-anchor="middle">sin tocar el contrato</text>
+          <text data-node-label="" data-detail-anchor="" x="766.3999999999999" y="107" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">Aplicar</text>
+          <text data-detail="context" x="766.3999999999999" y="124" class="t-muted" font-size="8" text-anchor="middle">rutas autorizadas</text>
+        <text data-detail="fine" x="766.3999999999999" y="142" class="t-backend" font-size="6.6" text-anchor="middle">sin tocar el contrato</text>
         </g>
 
-        <g id="node-verifica" data-node-id="verifica" data-node-label="Verificar" tabindex="0" role="button" aria-label="Enfocar Verificar, check · gate · baseline, Del sistema existente al cierre › E · Verificar" aria-pressed="false" data-node-kind="security" data-node-sublabel="check · gate · baseline" data-node-tag="PASS · FAIL · UNKNOWN" data-node-context="Del sistema existente al cierre › E · Verificar">
-          <title>Verificar · check · gate · baseline · Del sistema existente al cierre › E · Verificar · PASS · FAIL · UNKNOWN</title>
-          <rect x="780.8" y="86" width="108" height="68" rx="8" class="c-mask"/>
-          <rect x="780.8" y="86" width="108" height="68" rx="8" class="c-security" data-animate="node" style="--step:4" stroke-width="1.5"/>
-          <g aria-hidden="true" data-semantic-sigil="security" class="semantic-sigil s-security" transform="translate(786.8 92) scale(0.6875)">
+        <g id="node-verifica" data-node-id="verifica" data-node-label="Verificar" tabindex="0" role="button" aria-label="Enfocar Verificar, check · fidelidad, Del sistema existente al cierre › E · Verificar acoplamiento" aria-pressed="false" data-node-kind="security" data-node-sublabel="check · fidelidad" data-node-tag="PASS · FAIL · UNKNOWN" data-node-context="Del sistema existente al cierre › E · Verificar acoplamiento">
+          <title>Verificar · check · fidelidad · Del sistema existente al cierre › E · Verificar acoplamiento · PASS · FAIL · UNKNOWN</title>
+          <rect x="859.1999999999998" y="86" width="92" height="68" rx="8" class="c-mask"/>
+          <rect x="859.1999999999998" y="86" width="92" height="68" rx="8" class="c-security" data-animate="node" style="--step:4" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="security" class="semantic-sigil s-security" transform="translate(865.1999999999998 92) scale(0.6875)">
             <path d="M8 2.2 13 4v3.5c0 3.1-1.8 5.4-5 6.5-3.2-1.1-5-3.4-5-6.5V4Z"/>
             <path d="m5.8 8 1.5 1.5 3-3"/>
           </g>
-          <text data-node-label="" data-detail-anchor="" x="834.8" y="107" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">Verificar</text>
-          <text data-detail="context" x="834.8" y="124" class="t-muted" font-size="7.2" text-anchor="middle">check · gate · baseline</text>
-        <text data-detail="fine" x="834.8" y="142" class="t-security" font-size="7" text-anchor="middle">PASS · FAIL · UNKNOWN</text>
+          <text data-node-label="" data-detail-anchor="" x="907.8999999999999" y="107" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">Verificar</text>
+          <text data-detail="context" x="905.1999999999998" y="124" class="t-muted" font-size="8" text-anchor="middle">check · fidelidad</text>
+        <text data-detail="fine" x="905.1999999999998" y="142" class="t-security" font-size="6.6" text-anchor="middle">PASS · FAIL · UNKNOWN</text>
         </g>
 
-        <g id="node-cierra" data-node-id="cierra" data-node-label="Catálogo y cierre" tabindex="0" role="button" aria-label="Enfocar Catálogo y cierre, artefactos y huellas, Del sistema existente al cierre › F · Catálogo y cierre" aria-pressed="false" data-node-kind="frontend" data-node-sublabel="artefactos y huellas" data-node-tag="huellas y límites" data-node-context="Del sistema existente al cierre › F · Catálogo y cierre">
-          <title>Catálogo y cierre · artefactos y huellas · Del sistema existente al cierre › F · Catálogo y cierre · huellas y límites</title>
-          <rect x="954.8" y="86" width="112" height="68" rx="8" class="c-mask"/>
-          <rect x="954.8" y="86" width="112" height="68" rx="8" class="c-frontend" data-animate="node" style="--step:5" stroke-width="1.5"/>
-          <g aria-hidden="true" data-semantic-sigil="success" class="semantic-sigil s-frontend" transform="translate(960.8 92) scale(0.6875)">
+        <g id="node-cierra" data-node-id="cierra" data-node-label="Catálogo y cierre" tabindex="0" role="button" aria-label="Enfocar Catálogo y cierre, catálogo acoplado, Del sistema existente al cierre › F · Catálogo y cierre" aria-pressed="false" data-node-kind="frontend" data-node-sublabel="catálogo acoplado" data-node-tag="huellas y límites" data-node-context="Del sistema existente al cierre › F · Catálogo y cierre">
+          <title>Catálogo y cierre · catálogo acoplado · Del sistema existente al cierre › F · Catálogo y cierre · huellas y límites</title>
+          <rect x="1030.7999999999997" y="86" width="112" height="68" rx="8" class="c-mask"/>
+          <rect x="1030.7999999999997" y="86" width="112" height="68" rx="8" class="c-frontend" data-animate="node" style="--step:5" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="success" class="semantic-sigil s-frontend" transform="translate(1036.7999999999997 92) scale(0.6875)">
             <circle cx="8" cy="8" r="5.3"/>
             <path d="m5.2 8 1.8 1.8 3.8-4"/>
           </g>
-          <text data-node-label="" data-detail-anchor="" x="1010.8" y="117.2" class="t-primary" font-size="10.1" font-weight="600" text-anchor="middle">Catálogo y cierre</text>
-          <text data-detail="context" x="1010.8" y="131.9" class="t-muted" font-size="8" text-anchor="middle">artefactos y huellas</text>
-        <text data-detail="fine" x="1010.8" y="144.7" class="t-frontend" font-size="7" text-anchor="middle">huellas y límites</text>
+          <text data-node-label="" data-detail-anchor="" x="1086.7999999999997" y="117.2" class="t-primary" font-size="10.1" font-weight="600" text-anchor="middle">Catálogo y cierre</text>
+          <text data-detail="context" x="1086.7999999999997" y="131.9" class="t-muted" font-size="8" text-anchor="middle">catálogo acoplado</text>
+        <text data-detail="fine" x="1086.7999999999997" y="144.7" class="t-frontend" font-size="7" text-anchor="middle">huellas y límites</text>
         </g>
 
-        <g id="node-deriva" data-node-id="deriva" data-node-label="Deriva" tabindex="0" role="button" aria-label="Enfocar Deriva, contrato y producto, Límites y paradas › B · Proponer contrato" aria-pressed="false" data-node-kind="security" data-node-sublabel="contrato y producto" data-node-tag="proponer el cambio" data-node-context="Límites y paradas › B · Proponer contrato">
-          <title>Deriva · contrato y producto · Límites y paradas › B · Proponer contrato · proponer el cambio</title>
-          <rect x="264" y="212" width="92" height="68" rx="8" class="c-mask"/>
-          <rect x="264" y="212" width="92" height="68" rx="8" class="c-security" data-animate="node" style="--step:12" stroke-width="1.5"/>
-          <g aria-hidden="true" data-semantic-sigil="security" class="semantic-sigil s-security" transform="translate(270 218) scale(0.6875)">
+        <g id="node-deriva" data-node-id="deriva" data-node-label="Deriva" tabindex="0" role="button" aria-label="Enfocar Deriva, contrato y producto, Límites y paradas › B · Decidir el contrato" aria-pressed="false" data-node-kind="security" data-node-sublabel="contrato y producto" data-node-tag="proponer el cambio" data-node-context="Límites y paradas › B · Decidir el contrato">
+          <title>Deriva · contrato y producto · Límites y paradas › B · Decidir el contrato · proponer el cambio</title>
+          <rect x="316.4" y="322" width="100" height="68" rx="8" class="c-mask"/>
+          <rect x="316.4" y="322" width="100" height="68" rx="8" class="c-security" data-animate="node" style="--step:12" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="security" class="semantic-sigil s-security" transform="translate(322.4 328) scale(0.6875)">
             <path d="M8 2.2 13 4v3.5c0 3.1-1.8 5.4-5 6.5-3.2-1.1-5-3.4-5-6.5V4Z"/>
             <path d="m5.8 8 1.5 1.5 3-3"/>
           </g>
-          <text data-node-label="" data-detail-anchor="" x="310" y="233" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">Deriva</text>
-          <text data-detail="context" x="310" y="250" class="t-muted" font-size="7.3" text-anchor="middle">contrato y producto</text>
-        <text data-detail="fine" x="310" y="268" class="t-security" font-size="7" text-anchor="middle">proponer el cambio</text>
+          <text data-node-label="" data-detail-anchor="" x="366.4" y="343" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">Deriva</text>
+          <text data-detail="context" x="366.4" y="360" class="t-muted" font-size="8" text-anchor="middle">contrato y producto</text>
+        <text data-detail="fine" x="366.4" y="378" class="t-security" font-size="7" text-anchor="middle">proponer el cambio</text>
         </g>
 
-        <g id="node-bloquea" data-node-id="bloquea" data-node-label="Bloquear" tabindex="0" role="button" aria-label="Enfocar Bloquear, sin aprobación válida, Límites y paradas › C · Aprobar" aria-pressed="false" data-node-kind="security" data-node-sublabel="sin aprobación válida" data-node-tag="no se aplica" data-node-context="Límites y paradas › C · Aprobar">
-          <title>Bloquear · sin aprobación válida · Límites y paradas › C · Aprobar · no se aplica</title>
-          <rect x="461.2" y="212" width="100" height="68" rx="8" class="c-mask"/>
-          <rect x="461.2" y="212" width="100" height="68" rx="8" class="c-security" data-animate="node" style="--step:12" stroke-width="1.5"/>
-          <g aria-hidden="true" data-semantic-sigil="stop" class="semantic-sigil s-security" transform="translate(467.2 218) scale(0.6875)">
+        <g id="node-bloquea" data-node-id="bloquea" data-node-label="Bloquear" tabindex="0" role="button" aria-label="Enfocar Bloquear, sin confirmación, Límites y paradas › C · Revisar o aprobar" aria-pressed="false" data-node-kind="security" data-node-sublabel="sin confirmación" data-node-tag="no se aplica" data-node-context="Límites y paradas › C · Revisar o aprobar">
+          <title>Bloquear · sin confirmación · Límites y paradas › C · Revisar o aprobar · no se aplica</title>
+          <rect x="523.5999999999999" y="322" width="92" height="68" rx="8" class="c-mask"/>
+          <rect x="523.5999999999999" y="322" width="92" height="68" rx="8" class="c-security" data-animate="node" style="--step:12" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="stop" class="semantic-sigil s-security" transform="translate(529.5999999999999 328) scale(0.6875)">
             <circle cx="8" cy="8" r="5.3"/>
             <rect x="6.1" y="6.1" width="3.8" height="3.8" rx=".5" class="sigil-fill"/>
           </g>
-          <text data-node-label="" data-detail-anchor="" x="511.2" y="233" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">Bloquear</text>
-          <text data-detail="context" x="511.2" y="250" class="t-muted" font-size="7.3" text-anchor="middle">sin aprobación válida</text>
-        <text data-detail="fine" x="511.2" y="268" class="t-security" font-size="7" text-anchor="middle">no se aplica</text>
+          <text data-node-label="" data-detail-anchor="" x="569.5999999999999" y="343" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">Bloquear</text>
+          <text data-detail="context" x="569.5999999999999" y="360" class="t-muted" font-size="8" text-anchor="middle">sin confirmación</text>
+        <text data-detail="fine" x="569.5999999999999" y="378" class="t-security" font-size="7" text-anchor="middle">no se aplica</text>
         </g>
 
-        <g id="node-corrige" data-node-id="corrige" data-node-label="Corregir" tabindex="0" role="button" aria-label="Enfocar Corregir, defecto demostrado, Límites y paradas › E · Verificar" aria-pressed="false" data-node-kind="security" data-node-sublabel="defecto demostrado" data-node-tag="nunca el contrato" data-node-context="Límites y paradas › E · Verificar">
-          <title>Corregir · defecto demostrado · Límites y paradas › E · Verificar · nunca el contrato</title>
-          <rect x="788.8" y="212" width="92" height="68" rx="8" class="c-mask"/>
-          <rect x="788.8" y="212" width="92" height="68" rx="8" class="c-security" data-animate="node" style="--step:12" stroke-width="1.5"/>
-          <g aria-hidden="true" data-semantic-sigil="security" class="semantic-sigil s-security" transform="translate(794.8 218) scale(0.6875)">
+        <g id="node-corrige" data-node-id="corrige" data-node-label="Corregir" tabindex="0" role="button" aria-label="Enfocar Corregir, defecto demostrado, Límites y paradas › E · Verificar acoplamiento" aria-pressed="false" data-node-kind="security" data-node-sublabel="defecto demostrado" data-node-tag="nunca el contrato" data-node-context="Límites y paradas › E · Verificar acoplamiento">
+          <title>Corregir · defecto demostrado · Límites y paradas › E · Verificar acoplamiento · nunca el contrato</title>
+          <rect x="857.1999999999998" y="322" width="96" height="68" rx="8" class="c-mask"/>
+          <rect x="857.1999999999998" y="322" width="96" height="68" rx="8" class="c-security" data-animate="node" style="--step:12" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="security" class="semantic-sigil s-security" transform="translate(863.1999999999998 328) scale(0.6875)">
             <path d="M8 2.2 13 4v3.5c0 3.1-1.8 5.4-5 6.5-3.2-1.1-5-3.4-5-6.5V4Z"/>
             <path d="m5.8 8 1.5 1.5 3-3"/>
           </g>
-          <text data-node-label="" data-detail-anchor="" x="834.8" y="233" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">Corregir</text>
-          <text data-detail="context" x="834.8" y="250" class="t-muted" font-size="7.7" text-anchor="middle">defecto demostrado</text>
-        <text data-detail="fine" x="834.8" y="268" class="t-security" font-size="7" text-anchor="middle">nunca el contrato</text>
+          <text data-node-label="" data-detail-anchor="" x="905.1999999999998" y="343" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">Corregir</text>
+          <text data-detail="context" x="905.1999999999998" y="360" class="t-muted" font-size="8" text-anchor="middle">defecto demostrado</text>
+        <text data-detail="fine" x="905.1999999999998" y="378" class="t-security" font-size="7" text-anchor="middle">nunca el contrato</text>
         </g>
 
         <g id="node-desconocido" data-node-id="desconocido" data-node-label="UNKNOWN" tabindex="0" role="button" aria-label="Enfocar UNKNOWN, evidencia insuficiente, Límites y paradas › F · Catálogo y cierre" aria-pressed="false" data-node-kind="security" data-node-sublabel="evidencia insuficiente" data-node-tag="no es PASS" data-node-context="Límites y paradas › F · Catálogo y cierre">
           <title>UNKNOWN · evidencia insuficiente · Límites y paradas › F · Catálogo y cierre · no es PASS</title>
-          <rect x="958.8" y="212" width="104" height="68" rx="8" class="c-mask"/>
-          <rect x="958.8" y="212" width="104" height="68" rx="8" class="c-security" data-animate="node" style="--step:12" stroke-width="1.5"/>
-          <g aria-hidden="true" data-semantic-sigil="security" class="semantic-sigil s-security" transform="translate(964.8 218) scale(0.6875)">
+          <rect x="1028.7999999999997" y="322" width="116" height="68" rx="8" class="c-mask"/>
+          <rect x="1028.7999999999997" y="322" width="116" height="68" rx="8" class="c-security" data-animate="node" style="--step:12" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="security" class="semantic-sigil s-security" transform="translate(1034.7999999999997 328) scale(0.6875)">
             <path d="M8 2.2 13 4v3.5c0 3.1-1.8 5.4-5 6.5-3.2-1.1-5-3.4-5-6.5V4Z"/>
             <path d="m5.8 8 1.5 1.5 3-3"/>
           </g>
-          <text data-node-label="" data-detail-anchor="" x="1010.8" y="233" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">UNKNOWN</text>
-          <text data-detail="context" x="1010.8" y="250" class="t-muted" font-size="7.2" text-anchor="middle">evidencia insuficiente</text>
-        <text data-detail="fine" x="1010.8" y="268" class="t-security" font-size="7" text-anchor="middle">no es PASS</text>
+          <text data-node-label="" data-detail-anchor="" x="1086.7999999999997" y="343" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">UNKNOWN</text>
+          <text data-detail="context" x="1086.7999999999997" y="360" class="t-muted" font-size="8" text-anchor="middle">evidencia insuficiente</text>
+        <text data-detail="fine" x="1086.7999999999997" y="378" class="t-security" font-size="7" text-anchor="middle">no es PASS</text>
+        </g>
+
+        <g id="node-rehace" data-node-id="rehace" data-node-label="Rehacer" tabindex="0" role="button" aria-label="Enfocar Rehacer, dos rechazos, Límites y paradas › F · Catálogo y cierre" aria-pressed="false" data-node-kind="security" data-node-sublabel="dos rechazos" data-node-tag="desde la implementación" data-node-context="Límites y paradas › F · Catálogo y cierre">
+          <title>Rehacer · dos rechazos · Límites y paradas › F · Catálogo y cierre · desde la implementación</title>
+          <rect x="1040.7999999999997" y="432" width="92" height="68" rx="8" class="c-mask"/>
+          <rect x="1040.7999999999997" y="432" width="92" height="68" rx="8" class="c-security" data-animate="node" style="--step:12" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="security" class="semantic-sigil s-security" transform="translate(1046.7999999999997 438) scale(0.6875)">
+            <path d="M8 2.2 13 4v3.5c0 3.1-1.8 5.4-5 6.5-3.2-1.1-5-3.4-5-6.5V4Z"/>
+            <path d="m5.8 8 1.5 1.5 3-3"/>
+          </g>
+          <text data-node-label="" data-detail-anchor="" x="1086.7999999999997" y="453" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">Rehacer</text>
+          <text data-detail="context" x="1086.7999999999997" y="470" class="t-muted" font-size="8" text-anchor="middle">dos rechazos</text>
+        <text data-detail="fine" x="1086.7999999999997" y="488" class="t-security" font-size="6" text-anchor="middle">desde la implementación</text>
         </g>
 
         <!-- Edge labels -->
         <g data-detail="context" data-edge-from="aplica" data-edge-to="verifica" data-edge-label="puerta" data-edge-key="0" data-edge-id="aplica-cambio">
-          <rect x="738" y="100" width="38.8" height="14" rx="3" class="c-mask"/>
-          <text x="757.4" y="110" class="t-edge-emphasis" font-size="8" text-anchor="middle">puerta</text>
+          <rect x="816.3999999999999" y="100" width="38.8" height="14" rx="3" class="c-mask"/>
+          <text x="835.7999999999998" y="110" class="t-edge-emphasis" font-size="8" text-anchor="middle">puerta</text>
         </g>
-        <g data-detail="context" data-edge-from="aprueba" data-edge-to="aplica" data-edge-label="cubre rutas" data-edge-key="1" data-edge-id="autoriza">
-          <rect x="575.2" y="100" width="62.8" height="14" rx="3" class="c-mask"/>
-          <text x="606.6" y="110" class="t-edge-emphasis" font-size="8" text-anchor="middle">cubre rutas</text>
+        <g data-detail="context" data-edge-from="deriva" data-edge-to="soporte" data-edge-label="propone cambio" data-edge-key="1" data-edge-id="cambio-propuesto">
+          <rect x="327.79999999999995" y="228" width="77.2" height="14" rx="3" class="c-mask"/>
+          <text x="366.4" y="238" class="t-edge-dashed" font-size="8" text-anchor="middle">propone cambio</text>
         </g>
-        <g data-detail="context" data-edge-from="deriva" data-edge-to="propone" data-edge-label="propone cambio" data-edge-key="2" data-edge-id="cambio-propuesto">
-          <rect x="271.4" y="173" width="77.2" height="14" rx="3" class="c-mask"/>
-          <text x="310" y="183" class="t-edge-dashed" font-size="8" text-anchor="middle">propone cambio</text>
+        <g data-detail="context" data-edge-from="soporte" data-edge-to="aplica" data-edge-label="compatible" data-edge-key="2" data-edge-id="compatible">
+          <rect x="537.3999999999999" y="50" width="58" height="14" rx="3" class="c-mask"/>
+          <text x="566.3999999999999" y="60" class="t-edge-dashed" font-size="8" text-anchor="middle">compatible</text>
         </g>
-        <g data-detail="context" data-edge-from="propone" data-edge-to="aplica" data-edge-label="compatible" data-edge-key="3" data-edge-id="compatible">
-          <rect x="470" y="50" width="58" height="14" rx="3" class="c-mask"/>
-          <text x="499" y="60" class="t-edge-dashed" font-size="8" text-anchor="middle">compatible</text>
+        <g data-detail="context" data-edge-from="autoriza" data-edge-to="aplica" data-edge-label="confirma o cubre" data-edge-key="3" data-edge-id="confirma">
+          <rect x="629.5999999999999" y="100" width="86.8" height="14" rx="3" class="c-mask"/>
+          <text x="672.9999999999999" y="110" class="t-edge-emphasis" font-size="8" text-anchor="middle">confirma o cubre</text>
         </g>
         <g data-detail="context" data-edge-from="desconocido" data-edge-to="cierra" data-edge-label="declara UNKNOWN" data-edge-key="4" data-edge-id="declara-limite">
-          <rect x="969.8" y="173" width="82" height="14" rx="3" class="c-mask"/>
-          <text x="1010.8" y="183" class="t-edge-dashed" font-size="8" text-anchor="middle">declara UNKNOWN</text>
+          <rect x="1045.7999999999997" y="228" width="82" height="14" rx="3" class="c-mask"/>
+          <text x="1086.7999999999997" y="238" class="t-edge-dashed" font-size="8" text-anchor="middle">declara UNKNOWN</text>
         </g>
         <g data-detail="context" data-edge-from="descubre" data-edge-to="deriva" data-edge-label="deriva" data-edge-key="5" data-edge-id="divergencia">
-          <rect x="122.6" y="226" width="38.8" height="14" rx="3" class="c-mask"/>
-          <text x="142" y="236" class="t-edge-security" font-size="8" text-anchor="middle">deriva</text>
+          <rect x="148.79999999999998" y="336" width="38.8" height="14" rx="3" class="c-mask"/>
+          <text x="168.2" y="346" class="t-edge-security" font-size="8" text-anchor="middle">deriva</text>
         </g>
-        <g data-detail="context" data-edge-from="bloquea" data-edge-to="aprueba" data-edge-label="espera" data-edge-key="6" data-edge-id="espera">
-          <rect x="491.8" y="173" width="38.8" height="14" rx="3" class="c-mask"/>
-          <text x="511.2" y="183" class="t-edge-dashed" font-size="8" text-anchor="middle">espera</text>
+        <g data-detail="context" data-edge-from="bloquea" data-edge-to="autoriza" data-edge-label="espera" data-edge-key="6" data-edge-id="espera">
+          <rect x="550.1999999999999" y="228" width="38.8" height="14" rx="3" class="c-mask"/>
+          <text x="569.5999999999999" y="238" class="t-edge-dashed" font-size="8" text-anchor="middle">espera</text>
         </g>
         <g data-detail="context" data-edge-from="verifica" data-edge-to="cierra" data-edge-label="estructura" data-edge-key="7" data-edge-id="estructura">
-          <rect x="892.8" y="100" width="58" height="14" rx="3" class="c-mask"/>
-          <text x="921.8" y="110" class="t-edge-emphasis" font-size="8" text-anchor="middle">estructura</text>
+          <rect x="961.9999999999998" y="100" width="58" height="14" rx="3" class="c-mask"/>
+          <text x="990.9999999999998" y="110" class="t-edge-emphasis" font-size="8" text-anchor="middle">estructura</text>
         </g>
         <g data-detail="context" data-edge-from="verifica" data-edge-to="desconocido" data-edge-label="falta evidencia" data-edge-key="8" data-edge-id="falta-evidencia">
-          <rect x="867.8" y="198" width="82" height="14" rx="3" class="c-mask"/>
-          <text x="908.8" y="208" class="t-edge-security" font-size="8" text-anchor="middle">falta evidencia</text>
+          <rect x="948.9999999999998" y="231.5" width="82" height="14" rx="3" class="c-mask"/>
+          <text x="989.9999999999998" y="241.5" class="t-edge-security" font-size="8" text-anchor="middle">falta evidencia</text>
         </g>
         <g data-detail="context" data-edge-from="verifica" data-edge-to="corrige" data-edge-label="FAIL" data-edge-key="9" data-edge-id="incumple">
-          <rect x="819.8" y="173" width="30" height="14" rx="3" class="c-mask"/>
-          <text x="834.8" y="183" class="t-edge-security" font-size="8" text-anchor="middle">FAIL</text>
+          <rect x="890.1999999999998" y="228" width="30" height="14" rx="3" class="c-mask"/>
+          <text x="905.1999999999998" y="238" class="t-edge-security" font-size="8" text-anchor="middle">FAIL</text>
         </g>
-        <g data-detail="context" data-edge-from="descubre" data-edge-to="propone" data-edge-label="inventario" data-edge-key="10" data-edge-id="inventaria">
-          <rect x="192" y="100" width="58" height="14" rx="3" class="c-mask"/>
-          <text x="221" y="110" class="t-edge-emphasis" font-size="8" text-anchor="middle">inventario</text>
+        <g data-detail="context" data-edge-from="descubre" data-edge-to="soporte" data-edge-label="inventario y duplicados" data-edge-key="10" data-edge-id="inventaria">
+          <rect x="180" y="100" width="120.39999999999999" height="14" rx="3" class="c-mask"/>
+          <text x="240.2" y="110" class="t-edge-emphasis" font-size="8" text-anchor="middle">inventario y duplicados</text>
         </g>
-        <g data-detail="context" data-edge-from="propone" data-edge-to="aprueba" data-edge-label="ruta protegida" data-edge-key="11" data-edge-id="propone-cambio">
-          <rect x="370" y="100" width="77.2" height="14" rx="3" class="c-mask"/>
-          <text x="408.6" y="110" class="t-muted" font-size="8" text-anchor="middle">ruta protegida</text>
+        <g data-detail="context" data-edge-from="soporte" data-edge-to="autoriza" data-edge-label="ruta protegida" data-edge-key="11" data-edge-id="propone-cambio">
+          <rect x="432.3999999999999" y="100" width="77.2" height="14" rx="3" class="c-mask"/>
+          <text x="470.99999999999994" y="110" class="t-muted" font-size="8" text-anchor="middle">ruta protegida</text>
         </g>
-        <g data-detail="context" data-edge-from="corrige" data-edge-to="aplica" data-edge-label="repite" data-edge-key="12" data-edge-id="repite">
-          <rect x="719" y="226" width="38.8" height="14" rx="3" class="c-mask"/>
-          <text x="738.4" y="236" class="t-edge-dashed" font-size="8" text-anchor="middle">repite</text>
+        <g data-detail="context" data-edge-from="cierra" data-edge-to="rehace" data-edge-label="dos rechazos" data-edge-key="12" data-edge-id="rechazo">
+          <rect x="1130.8" y="446" width="67.6" height="14" rx="3" class="c-mask"/>
+          <text x="1164.6" y="456" class="t-edge-security" font-size="8" text-anchor="middle">dos rechazos</text>
         </g>
-        <g data-detail="context" data-edge-from="aprueba" data-edge-to="bloquea" data-edge-label="sin aprobación" data-edge-key="13" data-edge-id="sin-aprobacion">
-          <rect x="517.6" y="160" width="77.2" height="14" rx="3" class="c-mask"/>
-          <text x="556.2" y="170" class="t-edge-security" font-size="8" text-anchor="middle">sin aprobación</text>
+        <g data-detail="context" data-edge-from="rehace" data-edge-to="descubre" data-edge-label="reconstruye" data-edge-key="13" data-edge-id="reconstruye">
+          <rect x="490.9999999999999" y="446" width="62.8" height="14" rx="3" class="c-mask"/>
+          <text x="522.3999999999999" y="456" class="t-edge-dashed" font-size="8" text-anchor="middle">reconstruye</text>
+        </g>
+        <g data-detail="context" data-edge-from="corrige" data-edge-to="aplica" data-edge-label="repite" data-edge-key="14" data-edge-id="repite">
+          <rect x="792.3999999999999" y="336" width="38.8" height="14" rx="3" class="c-mask"/>
+          <text x="811.7999999999998" y="346" class="t-edge-dashed" font-size="8" text-anchor="middle">repite</text>
+        </g>
+        <g data-detail="context" data-edge-from="autoriza" data-edge-to="bloquea" data-edge-label="sin confirmación" data-edge-key="15" data-edge-id="sin-aprobacion">
+          <rect x="574.1999999999999" y="160" width="86.8" height="14" rx="3" class="c-mask"/>
+          <text x="617.5999999999999" y="170" class="t-edge-security" font-size="8" text-anchor="middle">sin confirmación</text>
         </g>
 
         <!-- Legend -->
         <g data-legend="" data-legend-bridge="">
-          <text x="20" y="308" class="t-primary" font-size="12" font-weight="650">Leyenda</text>
-          <g data-legend-semantic-kind="frontend" data-legend-kind="frontend" data-legend-label="Interfaz de usuario" data-legend-x="20" data-legend-baseline="328" data-legend-width="132">
-            <rect x="20" y="320" width="14" height="9" rx="2" class="c-frontend" stroke-width="1"/>
-            <text x="42" y="328" class="t-muted" font-size="7.5" font-weight="500">Interfaz de usuario</text>
+          <text x="20" y="528" class="t-primary" font-size="12" font-weight="650">Leyenda</text>
+          <g data-legend-semantic-kind="frontend" data-legend-kind="frontend" data-legend-label="Interfaz de usuario" data-legend-x="20" data-legend-baseline="548" data-legend-width="132">
+            <rect x="20" y="540" width="14" height="9" rx="2" class="c-frontend" stroke-width="1"/>
+            <text x="42" y="548" class="t-muted" font-size="7.5" font-weight="500">Interfaz de usuario</text>
           </g>
-          <g data-legend-semantic-kind="backend" data-legend-kind="backend" data-legend-label="Lógica del agente" data-legend-x="159" data-legend-baseline="328" data-legend-width="123">
-            <rect x="159" y="320" width="14" height="9" rx="2" class="c-backend" stroke-width="1"/>
-            <text x="181" y="328" class="t-muted" font-size="7.5" font-weight="500">Lógica del agente</text>
+          <g data-legend-semantic-kind="backend" data-legend-kind="backend" data-legend-label="Lógica del agente" data-legend-x="159" data-legend-baseline="548" data-legend-width="123">
+            <rect x="159" y="540" width="14" height="9" rx="2" class="c-backend" stroke-width="1"/>
+            <text x="181" y="548" class="t-muted" font-size="7.5" font-weight="500">Lógica del agente</text>
           </g>
-          <g data-legend-semantic-kind="security" data-legend-kind="security" data-legend-label="Política" data-legend-x="289" data-legend-baseline="328" data-legend-width="81">
-            <rect x="289" y="320" width="14" height="9" rx="2" class="c-security" stroke-width="1"/>
-            <text x="311" y="328" class="t-muted" font-size="7.5" font-weight="500">Política</text>
+          <g data-legend-semantic-kind="security" data-legend-kind="security" data-legend-label="Política" data-legend-x="289" data-legend-baseline="548" data-legend-width="81">
+            <rect x="289" y="540" width="14" height="9" rx="2" class="c-security" stroke-width="1"/>
+            <text x="311" y="548" class="t-muted" font-size="7.5" font-weight="500">Política</text>
           </g>
-          <g data-legend-semantic-kind="external" data-legend-kind="external" data-legend-label="Sistema externo" data-legend-x="377" data-legend-baseline="328" data-legend-width="113">
-            <rect x="377" y="320" width="14" height="9" rx="2" class="c-external" stroke-width="1"/>
-            <text x="399" y="328" class="t-muted" font-size="7.5" font-weight="500">Sistema externo</text>
+          <g data-legend-semantic-kind="external" data-legend-kind="external" data-legend-label="Sistema externo" data-legend-x="377" data-legend-baseline="548" data-legend-width="113">
+            <rect x="377" y="540" width="14" height="9" rx="2" class="c-external" stroke-width="1"/>
+            <text x="399" y="548" class="t-muted" font-size="7.5" font-weight="500">Sistema externo</text>
           </g>
         </g>
       </svg>
@@ -5682,36 +5705,36 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
       <div class="card">
         <div class="card-header">
           <div class="card-dot cyan"></div>
-          <h3>El contrato antes que la pantalla</h3>
+          <h3>Se parte de la implementación, no del artefacto que la skill sabe producir</h3>
         </div>
         <ul>
-          <li>Un agente puede diseñar e implementar dentro del sistema, pero no puede cambiar sus decisiones consolidadas sin autorización explícita</li>
-          <li>Un contrato existente y bloqueado gana sobre cualquier preferencia estética; si hay que cambiarlo, se detiene la implementación y se sigue la gobernanza</li>
-          <li>El contrato posee la identidad, los tokens, los componentes y las reglas; la interfaz los consume</li>
+          <li>El CSS, los componentes y el catálogo existente son la evidencia primaria; el contrato se lee después como descripción de esos hechos</li>
+          <li>Un DESIGN.md o un ADR es un contrato de pleno derecho; design-system.json solo se escribe si habilita aprobaciones, consumidores, generación o puerta</li>
+          <li>Dos rechazos por la misma causa cambian el enfoque: se reconstruye desde la implementación, no se parchea una tercera vez</li>
         </ul>
       </div>
 
       <div class="card">
         <div class="card-header">
           <div class="card-dot rose"></div>
-          <h3>La aprobación es externa y se comprueba su alcance, no su autenticidad</h3>
+          <h3>Dos regímenes, y en ninguno el agente se aprueba a sí mismo</h3>
         </div>
         <ul>
-          <li>El agente no puede crear ni modificar el archivo de aprobaciones: solo lo lee y lo cita con su id y su source</li>
-          <li>Se exigen id, path, approved_by, approved_at, source y reason; approved_by por sí solo no autoriza nada</li>
-          <li>El validador comprueba que la aprobación cubre cada ruta protegida que cambió; no autentica la identidad ni demuestra que venga de fuera del agente</li>
+          <li>En modo solo la revisión es el commit y la confirmación de la persona: no hay archivo de aprobaciones y gate devuelve UNKNOWN ante un cambio protegido</li>
+          <li>En modo approvals se exigen id, path, approved_by, approved_at, source y reason; approved_by por sí solo no autoriza nada</li>
+          <li>El validador comprueba el alcance, no la autenticidad; Git y la revisión humana son el control real</li>
         </ul>
       </div>
 
       <div class="card">
         <div class="card-header">
           <div class="card-dot emerald"></div>
-          <h3>Un PASS estructural no demuestra calidad visual ni accesibilidad</h3>
+          <h3>El acoplamiento manda sobre la forma del contrato</h3>
         </div>
         <ul>
-          <li>La verificación separa estructura, visual y accesibilidad: contraste, foco, teclado, reflow y movimiento se miden en el render</li>
-          <li>UNKNOWN nunca se redondea a PASS: falta el baseline, el catálogo, el informe del adaptador o la medición</li>
-          <li>Un catálogo generado demuestra sincronía con el contrato, no que sea visualmente correcto</li>
+          <li>implementation-fidelity da FAIL si una muestra usa clases que no existen en el CSS del producto o si el catálogo externo define una capa ds-* propia</li>
+          <li>Un catálogo externo importa la implementación y no recibe un tokens.css paralelo; el iframe es una opción, no un requisito</li>
+          <li>UNKNOWN nunca se redondea a PASS: falta implementación declarada, baseline, catálogo o medición</li>
         </ul>
       </div>
     </div>

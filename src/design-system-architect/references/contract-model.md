@@ -2,11 +2,25 @@
 
 Forma y semántica de `design-system.json` (`design-system.v1`). El contrato describe el sistema; no es un formato de pantalla ni un volcado de Figma. Los tokens siguen un subconjunto declarado de DTCG 2025.10; el resto del documento es un esquema propio.
 
+## Contrato documentado o contrato máquina-legible
+
+Un documento del proyecto (`DESIGN.md`, un ADR, una guía con los tokens y las reglas) es un contrato de pleno derecho y se lee como fuente documentada. `design-system.json` es **opcional**: solo se crea si habilita algo que el documento no da. Antes de escribirlo, declara qué habilita:
+
+| Lo que habilita | ¿Justifica el JSON? |
+|---|---|
+| Aprobaciones con alcance comprobable por ruta | Sí |
+| Consumidores que leen tokens con tipos y alias | Sí |
+| Generación determinista del catálogo y su manifiesto | Sí |
+| Puerta de acoplamiento y de cambios contra un baseline | Sí |
+| Repetir en otro formato lo que el documento ya dice | No |
+
+Si no habilita nada de la columna «Sí», no se crea. Un documento con 50 tokens y una prueba de sincronía para tapar lo que `check` no ve es peor que el documento solo.
+
 ## Dos capas que no se confunden
 
 | Capa | Qué es | Quién manda |
 |---|---|---|
-| Contrato del sistema | Identidad, gobernanza, componentes, patrones, temas y decisiones | `design-system.json` |
+| Contrato del sistema | Identidad, gobernanza, componentes, patrones, temas y decisiones | `design-system.json` o un documento del proyecto (`DESIGN.md`, un ADR) |
 | Tokens | Valores y alias con `$value`/`$type` | El contrato (`tokens`) o una fuente DTCG (`tokenSources`) |
 
 El contrato puede incluir tokens embebidos o declarar fuentes externas. No se mantienen dos copias: un token definido en ambos sitios es un error de duplicidad.
@@ -28,8 +42,9 @@ El contrato puede incluir tokens embebidos o declarar fuentes externas. No se ma
 | `accessibility` | No | objeto | Reglas declaradas; no sustituye la medición |
 | `constraints` | No | objeto | Listas `always` y `never` |
 | `decisions` | No | lista | Decisiones con `id`, `decision` y `rationale` |
-| `governance` | Sí | objeto | `protected`, `configurable`, `exceptions` |
-| `catalog` | No | string u objeto | Ruta del catálogo generado (`path`) |
+| `governance` | Sí | objeto | `mode`, `protected`, `configurable`, `exceptions` |
+| `catalog` | No | string u objeto | Catálogo generado o externo: `path`, `mode`, `entry`, `sources`, `fingerprint` |
+| `implementation` | No | objeto | CSS real del producto: `styles`, que se usa para comprobar acoplamiento |
 | `adapters` | No | lista | Informes de conformidad de componentes |
 | `sources` | No | lista | Evidencia del descubrimiento |
 | `omitted` | No | lista | Secciones ausentes a propósito |
@@ -148,7 +163,7 @@ Cada override apunta a un token existente y puede ser un valor o una referencia.
 - Las propiedades son las del contrato de componentes del proyecto; las más habituales son `backgroundColor`, `textColor`, `typography`, `rounded`, `padding`, `size`, `height`, `width`, `borderColor`, `borderWidth`, `shadow`, `gap` y `opacity`.
 - Cada valor puede ser un literal o una referencia. Cuando el contrato distingue niveles, se prefieren tokens semánticos o de componente; los primitivos solo se usan con una excepción declarada. El validador comprueba existencia y tipo, no la intención del nivel.
 - `states` nombra los estados que el componente debe cubrir. Nombrarlos no demuestra que existan visualmente.
-- `example` es HTML de ejemplo. Se muestra en un `iframe` con `sandbox` y se escapa en el código; no se ejecuta.
+- `example` es HTML de ejemplo. Cuando el catálogo lo muestra, se escapa en el código y se aísla con `sandbox` si va en un `iframe`; ese aislamiento es una opción, no un requisito. Las clases que use el ejemplo deben existir en el CSS de la implementación declarada: `implementation-fidelity` lo comprueba.
 - Si el componente existe en código, declara el módulo o el adaptador que lo comprueba. El contrato no inventa una implementación.
 
 ## Patrones, restricciones y decisiones
@@ -159,14 +174,51 @@ Cada override apunta a un token existente y puede ser un valor o una referencia.
 
 ## Gobernanza
 
-`governance.protected` enumera rutas o prefijos que no cambian sin aprobación. `governance.configurable` enumera lo que se puede adaptar. `governance.exceptions` declara desviaciones autorizadas con su motivo y su responsable; una excepción no convierte un fallo de conformidad en un `PASS`.
+`governance.mode` elige el régimen: `solo` (por defecto) o `approvals`.
+
+- **`solo`:** la revisión es el commit y la confirmación de la persona. No hay archivo de aprobaciones y no se exige ninguno. El agente sigue sin poder aprobarse a sí mismo: si cambia una ruta protegida, el `gate` devuelve `UNKNOWN` porque no puede comprobar la confirmación; esa evidencia la aporta la persona.
+- **`approvals`:** un cambio en una ruta protegida exige una aprobación externa con alcance, como se describe en [governance](governance.md).
+
+`governance.protected` es opt-in: declara solo lo que de verdad no debe cambiar sin revisión. `governance.configurable` enumera lo que se puede adaptar. `governance.exceptions` declara desviaciones autorizadas con su motivo y su responsable; una excepción no convierte un fallo de conformidad en un `PASS`.
 
 El flujo, el alcance de las aprobaciones y sus límites están en [governance](governance.md).
 
 ## Catálogo y adaptadores
 
-- `catalog` puede ser una ruta (`"catalog": "docs/design-system"`) o un objeto (`{ "path": "docs/design-system" }`). El catálogo generado vive ahí y su manifiesto permite comprobar la sincronía.
-- `adapters` declara informes de conformidad de componentes. El contrato no ejecuta frameworks: lee el informe que produce el adaptador. El formato está en [validation](validation.md).
+El catálogo tiene dos modos. El contrato lo declara con `catalog.mode`:
+
+```json
+{
+  "catalog": {
+    "mode": "external",
+    "path": "docs/design-system",
+    "entry": "index.html",
+    "sources": ["web/src/styles/tokens.css", "web/src/styles/components.css"]
+  }
+}
+```
+
+| Modo | Quién lo mantiene | Qué comprueba `check` |
+|---|---|---|
+| `generated` | `catalog` lo escribe desde el contrato | Manifiesto y huellas de entradas y artefactos |
+| `external` | Una persona, a mano, consumiendo el CSS del producto | Existencia de la entrada y de `sources`, huella opcional y acoplamiento |
+
+Reglas del catálogo externo:
+
+- Declara `path`, `entry` (por defecto `index.html`) y `sources`: los archivos de implementación que importa. No se le genera un `tokens.css` paralelo; `catalog` se niega a generarlo.
+- La entrada debe importar al menos una de sus `sources`. Un catálogo que no importa la implementación no es fiel aunque se parezca.
+- Prohibido que defina sus propias clases de componente. El validador toma como señal la capa `ds-*` y la devuelve como `FAIL`; una capa con otro prefijo exige revisión humana. Las clases que usa el catálogo deben existir en el CSS del producto.
+- `fingerprint` es opcional: un mapa `ruta → sha256` para fijar los archivos que el catálogo consume. `check` compara las huellas y falla si no coinciden.
+- Las muestras del contrato que usan clases inexistentes en la implementación también son `FAIL`.
+
+Sin `implementation.styles` (ni `catalog.sources` en modo externo), la fidelidad no se puede medir: `implementation-fidelity` devuelve `UNKNOWN`, no `PASS`.
+
+`adapters` declara informes de conformidad de componentes. El contrato no ejecuta frameworks: lee el informe que produce el adaptador. El formato está en [validation](validation.md).
+
+## Evidencia y límites del contrato
+
+- La prueba de acoplamiento del catálogo manda sobre `check`: demuestra que el catálogo consume la implementación; `check` solo demuestra que el contrato es coherente consigo mismo.
+- `tokenSources` queda fuera de `protected-changes`: el `gate` compara el contrato, no las fuentes DTCG en disco. Si los tokens deben protegerse, embébelos en `tokens` o extiende la puerta. No asumas que la protección los cubre.
 
 ## Evidencia del descubrimiento
 

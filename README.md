@@ -230,7 +230,7 @@ El método, el diseño de casos y el informe son de `software-testing`; la suite
 
 ### `design-system-architect`
 
-Define, descubre, documenta, gobierna y verifica el sistema visual de un producto. Separa la identidad, los tokens —en un subconjunto declarado de DTCG—, los temas, los contratos de componentes, los patrones, la accesibilidad y el movimiento del código que los consume. Un contrato protegido no cambia sin una aprobación externa que cubra la ruta; el agente no puede crear ni modificar esa aprobación. Incluye `scripts/design_system.py` con `discover`, `check`, `gate` y `catalog`, y un catálogo generado que consume los mismos tokens y guarda las huellas de sus entradas y artefactos. Declara `PASS`, `FAIL` y `UNKNOWN` con semántica estricta: un `PASS` estructural no demuestra calidad visual ni accesibilidad.
+Define, descubre, documenta, gobierna y verifica el sistema visual de un producto. Separa la identidad, los tokens —en un subconjunto declarado de DTCG—, los temas, los contratos de componentes, los patrones, la accesibilidad y el movimiento del código que los consume. Parte de la implementación y del catálogo que ya existen: un `DESIGN.md` o un ADR es un contrato de pleno derecho y el JSON es opcional. El catálogo puede generarse desde el contrato o mantenerse a mano consumiendo el CSS del producto; en ambos casos se comprueba que importa la implementación en vez de redibujarla. La gobernanza elige entre revisión por commit (`solo`) y aprobación externa con alcance (`approvals`); el agente no puede aprobarse a sí mismo. Incluye `scripts/design_system.py` con `discover`, `check`, `gate` y `catalog`, y declara `PASS`, `FAIL` y `UNKNOWN` con semántica estricta: un `PASS` estructural no demuestra calidad visual ni accesibilidad.
 
 Contrato completo: [`src/design-system-architect/SKILL.md`](src/design-system-architect/SKILL.md).
 
@@ -392,7 +392,7 @@ Cada skill declara su versión independiente en `metadata.version`; el procedimi
 - `docs/security-engineering/arquitectura.html`: diagrama del paquete, la superficie revisada y la puerta.
 - `docs/playwright-cli-usage/index.html`: página de entrada a la skill del navegador, con la puerta de confirmación, la escalera de uso, el paquete y el reconocimiento del entorno.
 - `docs/playwright-cli-usage/flujo-de-trabajo.html`: diagrama del flujo, de la pregunta al cierre con la puerta de confirmación.
-- `docs/playwright-cli-usage/arquitectura.html`: diagrama del contrato, las cuatro referencias y la sesión confirmada.
+- `docs/playwright-cli-usage/arquitectura.html`: diagrama del contrato, sus referencias y la sesión confirmada.
 
 Los diagramas son artefactos de [archify](https://github.com/tt-a1i/archify) 3.2.0. Cada uno tiene su especificación (`*.json`) y su recibo de entrega (`*.delivery.json`) con el `sha256` del HTML y del spec. Para regenerarlos hace falta archify 3.2.0 y el checkout local en `archify/`, ignorado por Git, con los ajustes de ancho descritos en `archify/LOCAL-PATCH.md`; el comando es el mismo en todas las carpetas de `docs/<skill>/`:
 

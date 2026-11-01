@@ -123,6 +123,7 @@ ALLOWED_TOP_LEVEL = {
     "constraints",
     "decisions",
     "catalog",
+    "implementation",
     "adapters",
     "sources",
     "omitted",
@@ -146,7 +147,31 @@ SKIP_DIRS = {
 }
 DISCOVERY_CSS_LIMIT = 200
 DISCOVERY_COMPONENT_LIMIT = 120
+DISCOVERY_JSON_LIMIT = 800
 DISCOVERY_TOKEN_SAMPLE = 12
+DUPLICATE_LIMIT = 25
+CLASS_ATTR_RE = re.compile(r"class\s*=\s*[\"']([^\"']*)[\"']", re.IGNORECASE)
+CLASS_SELECTOR_RE = re.compile(r"\.(-?[A-Za-z_][A-Za-z0-9_-]*)")
+REFERENCE_RE = re.compile(
+    r"""(?:href|src)\s*=\s*["']([^"']+)["']|@import\s+(?:url\(\s*)?["']([^"']+)["']""",
+    re.IGNORECASE,
+)
+BRAND_PACK_KEYS = {
+    "brand",
+    "color",
+    "colors",
+    "colour",
+    "colours",
+    "palette",
+    "radius",
+    "rounded",
+    "shadow",
+    "shadows",
+    "spacing",
+    "typography",
+}
+CATALOG_MODES = {"generated", "external"}
+GOVERNANCE_MODES = {"solo", "approvals"}
 
 
 class UsageError(Exception):
@@ -661,6 +686,9 @@ def check_structure(contract: dict[str, Any]) -> tuple[list[str], list[str]]:
     if not isinstance(governance, dict):
         errors.append("governance debe ser un objeto")
     else:
+        mode = governance.get("mode", "solo")
+        if mode not in GOVERNANCE_MODES:
+            errors.append("governance.mode debe ser solo o approvals")
         for field in ("protected", "configurable"):
             value = governance.get(field, [])
             if not isinstance(value, list) or not all(isinstance(item, str) and item for item in value):
@@ -740,8 +768,38 @@ def check_structure(contract: dict[str, Any]) -> tuple[list[str], list[str]]:
         elif isinstance(catalog, dict):
             if not isinstance(catalog.get("path"), str) or not catalog["path"].strip():
                 errors.append("catalog.path debe ser una ruta no vacía")
+            mode = catalog.get("mode", "generated")
+            if mode not in CATALOG_MODES:
+                errors.append("catalog.mode debe ser generated o external")
+            elif mode == "external":
+                sources = catalog.get("sources")
+                if not isinstance(sources, list) or not all(
+                    isinstance(item, str) and item.strip() for item in sources
+                ) or not sources:
+                    errors.append("un catálogo external debe declarar catalog.sources con la implementación que consume")
+                if "entry" in catalog and (
+                    not isinstance(catalog["entry"], str) or not catalog["entry"].strip()
+                ):
+                    errors.append("catalog.entry debe ser una ruta no vacía")
+                fingerprint = catalog.get("fingerprint")
+                if fingerprint is not None and (
+                    not isinstance(fingerprint, dict)
+                    or not all(isinstance(value, str) for value in fingerprint.values())
+                ):
+                    errors.append("catalog.fingerprint debe ser un objeto ruta → sha256")
         else:
             errors.append("catalog debe ser una ruta o un objeto con path")
+
+    implementation = contract.get("implementation")
+    if implementation is not None:
+        if not isinstance(implementation, dict):
+            errors.append("implementation debe ser un objeto")
+        else:
+            styles = implementation.get("styles")
+            if not isinstance(styles, list) or not all(
+                isinstance(item, str) and item.strip() for item in styles
+            ) or not styles:
+                errors.append("implementation.styles debe ser una lista no vacía de rutas CSS")
 
     adapters = contract.get("adapters")
     if adapters is not None:
@@ -918,6 +976,7 @@ def check_protected_changes(
 ) -> tuple[str, str]:
     governance = contract.get("governance")
     protected = governance.get("protected", []) if isinstance(governance, dict) else []
+    mode = governance.get("mode", "solo") if isinstance(governance, dict) else "solo"
     if not isinstance(protected, list) or not protected:
         return UNKNOWN, "el contrato no declara rutas protegidas; no hay nada que comparar"
     protected = [pattern for pattern in protected if isinstance(pattern, str) and pattern]
@@ -946,6 +1005,13 @@ def check_protected_changes(
         return PASS, "ninguna ruta protegida ha cambiado" + suffix
 
     if approvals_path is None:
+        if mode != "approvals":
+            return UNKNOWN, (
+                "governance.mode es solo: la revisión es el commit y la confirmación de la persona; "
+                "el validador no puede comprobarla. Rutas cambiadas: "
+                + ", ".join(path for path, _, _ in changed)
+                + suffix
+            )
         return FAIL, "cambios protegidos sin archivo de aprobaciones: " + ", ".join(
             path for path, _, _ in changed
         ) + suffix
@@ -990,6 +1056,27 @@ def catalog_target(contract: dict[str, Any], contract_path: Path, override: str 
     return target
 
 
+def catalog_mode(contract: dict[str, Any]) -> str:
+    catalog = contract.get("catalog")
+    if isinstance(catalog, dict) and isinstance(catalog.get("mode"), str):
+        return catalog["mode"]
+    return "generated"
+
+
+def implementation_styles(contract: dict[str, Any]) -> list[str]:
+    implementation = contract.get("implementation")
+    if isinstance(implementation, dict):
+        styles = implementation.get("styles")
+        if isinstance(styles, list):
+            return [item for item in styles if isinstance(item, str) and item.strip()]
+    if catalog_mode(contract) == "external":
+        catalog = contract.get("catalog")
+        sources = catalog.get("sources") if isinstance(catalog, dict) else None
+        if isinstance(sources, list):
+            return [item for item in sources if isinstance(item, str) and item.strip()]
+    return []
+
+
 def check_catalog(
     contract: dict[str, Any],
     contract_path: Path,
@@ -999,6 +1086,9 @@ def check_catalog(
     catalog_dir = catalog_target(contract, contract_path, override)
     if catalog_dir is None:
         return None
+    if catalog_mode(contract) == "external":
+        return check_external_catalog(contract, contract_path, catalog_dir)
+
     manifest_path = catalog_dir / "catalog.json"
     if not manifest_path.is_file():
         return UNKNOWN, f"catálogo declarado pero no generado: {manifest_path}"
@@ -1040,6 +1130,111 @@ def check_catalog(
         if sha256_file(path) != artifact.get("sha256"):
             return FAIL, f"el artefacto '{artifact['path']}' no coincide con el manifiesto"
     return PASS, f"catálogo sincronizado con {len(current_inputs)} entrada(s)"
+
+
+def check_external_catalog(
+    contract: dict[str, Any], contract_path: Path, catalog_dir: Path
+) -> tuple[str, str]:
+    if not catalog_dir.is_dir():
+        return FAIL, f"catálogo externo declarado pero ausente: {catalog_dir}"
+    catalog = contract.get("catalog")
+    entry = "index.html"
+    if isinstance(catalog, dict) and isinstance(catalog.get("entry"), str):
+        entry = catalog["entry"]
+    entry_path = catalog_dir / entry
+    if not entry_path.is_file():
+        return FAIL, f"falta la entrada del catálogo externo: {entry_path}"
+
+    sources = implementation_styles(contract)
+    missing = [rel for rel in sources if not (contract_path.parent / rel).is_file()]
+    if missing:
+        return FAIL, "fuentes de implementación ausentes: " + ", ".join(missing)
+
+    fingerprint = catalog.get("fingerprint") if isinstance(catalog, dict) else None
+    if isinstance(fingerprint, dict):
+        for rel, digest in fingerprint.items():
+            path = contract_path.parent / rel
+            if not path.is_file():
+                return FAIL, f"falta el archivo con huella declarada: {rel}"
+            if sha256_file(path) != digest:
+                return FAIL, f"la huella de '{rel}' no coincide con la declarada"
+    return PASS, f"catálogo externo verificado: {entry} y {len(sources)} fuente(s) de implementación"
+
+
+def css_classes(text: str) -> set[str]:
+    return {match.group(1) for match in CLASS_SELECTOR_RE.finditer(text)}
+
+
+def referenced_paths(text: str) -> set[str]:
+    found = set()
+    for match in REFERENCE_RE.finditer(text):
+        value = (match.group(1) or match.group(2) or "").strip()
+        if value:
+            found.add(value)
+    return found
+
+
+def example_classes(contract: dict[str, Any]) -> list[tuple[str, str]]:
+    found: list[tuple[str, str]] = []
+    components = contract.get("components")
+    if not isinstance(components, dict):
+        return found
+    for name, component in components.items():
+        if not isinstance(component, dict) or not isinstance(component.get("example"), str):
+            continue
+        for attribute in CLASS_ATTR_RE.finditer(component["example"]):
+            found.extend((name, token) for token in attribute.group(1).split())
+    return found
+
+
+def check_implementation_fidelity(
+    contract: dict[str, Any], contract_path: Path
+) -> tuple[str, str] | None:
+    if contract.get("catalog") is None and contract.get("implementation") is None:
+        return None
+    styles = implementation_styles(contract)
+    if not styles:
+        return UNKNOWN, "no hay implementación declarada; la fidelidad del catálogo no se puede comprobar"
+
+    texts: list[str] = []
+    for rel in styles:
+        path = contract_path.parent / rel
+        if not path.is_file():
+            return FAIL, f"falta la fuente de implementación '{rel}'"
+        texts.append(read_text(path))
+    classes = set().union(*(css_classes(text) for text in texts))
+
+    missing = sorted(
+        {f"{name}:{token}" for name, token in example_classes(contract) if token not in classes}
+    )
+    if missing:
+        return FAIL, "muestras con clases ausentes del CSS del producto: " + ", ".join(missing[:12])
+
+    catalog_dir = catalog_target(contract, contract_path, None)
+    if catalog_mode(contract) == "external" and catalog_dir is not None:
+        catalog = contract.get("catalog")
+        entry = "index.html"
+        if isinstance(catalog, dict) and isinstance(catalog.get("entry"), str):
+            entry = catalog["entry"]
+        entry_path = catalog_dir / entry
+        if entry_path.is_file():
+            references = referenced_paths(read_text(entry_path))
+            imported = any(
+                any(ref.endswith(rel) or ref.endswith(Path(rel).name) for ref in references)
+                for rel in styles
+            )
+            if not imported:
+                return FAIL, f"el catálogo externo no importa la implementación declarada: {entry}"
+        layer = []
+        for path in sorted(catalog_dir.rglob("*.css")):
+            if relpath(path, contract_path.parent) in styles:
+                continue
+            own = sorted(name for name in css_classes(read_text(path)) if name.startswith("ds-"))
+            if own:
+                layer.append(f"{relpath(path, contract_path.parent)} ({len(own)} clase(s) ds-*)")
+        if layer:
+            return FAIL, "el catálogo externo declara una capa propia de componentes: " + "; ".join(layer)
+    return PASS, f"{len(classes)} clase(s) de implementación; las muestras están acopladas"
 
 
 def check_adapters(contract: dict[str, Any], contract_path: Path) -> tuple[str, str] | None:
@@ -1587,6 +1782,17 @@ def iter_files(root: Path, suffix: str, limit: int = 500) -> Iterable[Path]:
                     return
 
 
+def is_generated_artifact(path: Path) -> bool:
+    manifest = path.parent / "catalog.json"
+    if not manifest.is_file():
+        return False
+    try:
+        document = json.loads(read_text(manifest))
+    except (OSError, json.JSONDecodeError):
+        return False
+    return isinstance(document, dict) and document.get("schema") == CATALOG_SCHEMA
+
+
 def discover_project(root: Path) -> dict[str, Any]:
     facts: list[dict[str, Any]] = []
     unknown: list[dict[str, str]] = []
@@ -1633,28 +1839,72 @@ def discover_project(root: Path) -> dict[str, Any]:
         if (root / rel).exists():
             add(rel, "observed", "configuración de interfaz")
 
-    token_files: list[Path] = []
+    value_sites: dict[str, set[str]] = {}
+    seen_json: set[Path] = set()
+
+    def record_color_values(document: Any, site: str) -> None:
+        stack = [document]
+        while stack:
+            current = stack.pop()
+            if isinstance(current, dict):
+                stack.extend(current.values())
+            elif isinstance(current, list):
+                stack.extend(current)
+            elif isinstance(current, str):
+                value = current.strip().lower()
+                if len(value) > 3 and value.startswith(("#", "rgb", "hsl", "oklch")):
+                    value_sites.setdefault(value, set()).add(site)
+
+    candidates: list[Path] = []
     for pattern in ("*.tokens.json", "tokens/*.json", "tokens.json", "design-tokens.json", "src/tokens/*.json"):
-        token_files.extend(path for path in root.glob(pattern) if path.is_file())
-    token_files = sorted(set(token_files))
+        candidates.extend(path for path in root.glob(pattern) if path.is_file())
+    for path in iter_files(root, ".json", DISCOVERY_JSON_LIMIT):
+        if re.search(r"(token|brand|palette|colou?r|theme|design|catalog)", path.name.lower()):
+            candidates.append(path)
+
     token_found = False
-    for path in token_files:
+    brand_packs: list[str] = []
+    for path in sorted(set(candidates)):
+        if path in seen_json:
+            continue
+        seen_json.add(path)
+        rel = relpath(path, root)
         try:
             document = json.loads(read_text(path))
-            errors: list[str] = []
-            tokens = collect_tokens(document, errors, str(path))
-            if tokens:
-                token_found = True
-                add(
-                    relpath(path, root),
-                    "observed",
-                    f"{len(tokens)} token(s) DTCG",
-                    {"sample": sorted(tokens)[:DISCOVERY_TOKEN_SAMPLE]},
-                )
-            else:
-                add(relpath(path, root), "observed", "JSON sin tokens DTCG reconocibles")
         except (OSError, json.JSONDecodeError) as exc:
-            add(relpath(path, root), "observed", f"archivo de tokens ilegible: {exc}")
+            add(rel, "observed", f"archivo de tokens ilegible: {exc}")
+            continue
+        if isinstance(document, dict) and document.get("schema") in {
+            SCHEMA,
+            CATALOG_SCHEMA,
+            ADAPTER_SCHEMA,
+            APPROVAL_SCHEMA,
+        }:
+            if document.get("schema") == CATALOG_SCHEMA:
+                add(rel, "observed", "catálogo generado existente", {"role": "generated"})
+            continue
+        errors: list[str] = []
+        tokens = collect_tokens(document, errors, str(path)) if isinstance(document, dict) else {}
+        if tokens:
+            token_found = True
+            add(
+                rel,
+                "observed",
+                f"{len(tokens)} token(s) DTCG",
+                {"sample": sorted(tokens)[:DISCOVERY_TOKEN_SAMPLE]},
+            )
+            record_color_values(document, rel)
+        elif isinstance(document, dict) and BRAND_PACK_KEYS & {str(key).lower() for key in document}:
+            brand_packs.append(rel)
+            add(
+                rel,
+                "observed",
+                "pack de marca sin DTCG (brand-pack)",
+                {"keys": sorted(str(key) for key in document)[:8]},
+            )
+            record_color_values(document, rel)
+        else:
+            add(rel, "observed", "JSON sin tokens DTCG reconocibles")
 
     css_found = False
     for index, path in enumerate(iter_files(root, ".css", DISCOVERY_CSS_LIMIT)):
@@ -1662,15 +1912,21 @@ def discover_project(root: Path) -> dict[str, Any]:
             text = read_text(path)
         except OSError:
             continue
-        variables = sorted({match.group(1) for match in CSS_VAR_RE.finditer(text)})
+        variables = [match for match in CSS_VAR_RE.finditer(text)]
         if variables:
             css_found = True
+            rel = relpath(path, root)
+            role = "generated" if is_generated_artifact(path) else "source"
             add(
-                relpath(path, root),
+                rel,
                 "observed",
                 f"{len(variables)} variable(s) CSS",
-                {"sample": variables[:DISCOVERY_TOKEN_SAMPLE]},
+                {"role": role, "sample": sorted({match.group(1) for match in variables})[:DISCOVERY_TOKEN_SAMPLE]},
             )
+            for match in variables:
+                value = match.group(2).strip().lower()
+                if len(value) > 3:
+                    value_sites.setdefault(value, set()).add(f"{rel}#--{match.group(1)}")
         if index >= DISCOVERY_CSS_LIMIT:
             break
 
@@ -1723,12 +1979,27 @@ def discover_project(root: Path) -> dict[str, Any]:
         except (OSError, json.JSONDecodeError):
             add("package.json", "observed", "package.json ilegible")
 
+    duplicates = [
+        {"value": value, "count": len(sites), "sites": sorted(sites)[:8]}
+        for value, sites in value_sites.items()
+        if len({site.split("#")[0] for site in sites}) > 1
+    ]
+    duplicates.sort(key=lambda item: (-item["count"], item["value"]))
+    duplicates = duplicates[:DUPLICATE_LIMIT]
+
     if token_found and not contract_found:
         add(
             ".",
             "inferred",
             "posible sistema de tokens sin contrato canónico",
             "Confirmar la fuente y proponer un contrato antes de escribir.",
+        )
+    if brand_packs and not token_found:
+        add(
+            brand_packs[0],
+            "inferred",
+            "pack de marca probablemente canónico fuera de DTCG",
+            "Confirmar si es la fuente o un artefacto de marca antes de convertirlo en tokens DTCG.",
         )
     if component_files and not (root / "design-system.json").is_file():
         add(
@@ -1743,6 +2014,13 @@ def discover_project(root: Path) -> dict[str, Any]:
             "inferred",
             "posible duplicidad entre variables CSS y tokens",
             "Confirmar cuál es la fuente canónica antes de copiar valores.",
+        )
+    if duplicates:
+        add(
+            ".",
+            "inferred",
+            f"{len(duplicates)} valor(es) repetido(s) en más de un sitio",
+            "Distinguir la fuente del artefacto generado antes de declarar tokens; ver 'duplicates'.",
         )
     if css_found and not token_found:
         add(
@@ -1761,8 +2039,13 @@ def discover_project(root: Path) -> dict[str, Any]:
 
     if not any(fact["kind"] in {"observed", "documented"} for fact in facts):
         unknown.append({"what": "sistema visual", "reason": "no se encontró evidencia en el proyecto"})
-    if not token_found:
-        unknown.append({"what": "tokens", "reason": "no se encontraron archivos de tokens reconocibles"})
+    if not token_found and not brand_packs:
+        unknown.append(
+            {
+                "what": "tokens",
+                "reason": "no se encontraron tokens DTCG ni packs de marca reconocibles",
+            }
+        )
     if not component_files:
         unknown.append({"what": "componentes", "reason": "no se encontraron directorios de componentes reconocibles"})
     if not any(fact.get("path", "").endswith(".md") for fact in facts):
@@ -1778,7 +2061,13 @@ def discover_project(root: Path) -> dict[str, Any]:
     if not motion:
         unknown.append({"what": "movimiento y accesibilidad", "reason": "no se encontró evidencia de reduced motion"})
 
-    return {"root": str(root.resolve()), "mode": "read-only", "facts": facts, "unknown": unknown}
+    return {
+        "root": str(root.resolve()),
+        "mode": "read-only",
+        "facts": facts,
+        "duplicates": duplicates,
+        "unknown": unknown,
+    }
 
 
 # ---------------------------------------------------------------------------
@@ -1859,6 +2148,9 @@ def command_check(args: argparse.Namespace) -> int:
     catalog = check_catalog(contract, contract_path, token_inputs, args.catalog)
     if catalog is not None:
         report.add("catalog-consistency", catalog[0], catalog[1])
+    fidelity = check_implementation_fidelity(contract, contract_path)
+    if fidelity is not None:
+        report.add("implementation-fidelity", fidelity[0], fidelity[1])
     adapters = check_adapters(contract, contract_path)
     if adapters is not None:
         report.add("component-conformance", adapters[0], adapters[1])
@@ -1877,6 +2169,9 @@ def command_gate(args: argparse.Namespace) -> int:
     catalog = check_catalog(contract, contract_path, token_inputs, args.catalog)
     if catalog is not None:
         report.add("catalog-consistency", catalog[0], catalog[1])
+    fidelity = check_implementation_fidelity(contract, contract_path)
+    if fidelity is not None:
+        report.add("implementation-fidelity", fidelity[0], fidelity[1])
     adapters = check_adapters(contract, contract_path)
     if adapters is not None:
         report.add("component-conformance", adapters[0], adapters[1])
@@ -1912,6 +2207,11 @@ def command_catalog(args: argparse.Namespace) -> int:
     contract = load_json(contract_path)
     if not isinstance(contract, dict):
         raise ContractError("el contrato debe ser un objeto JSON")
+    if catalog_mode(contract) == "external":
+        raise UsageError(
+            "catalog.mode es external: el catálogo se mantiene a mano y consume la implementación; "
+            "no se genera un tokens.css paralelo"
+        )
     report, tokens, token_inputs = static_report(contract, contract_path)
     if report.result() == FAIL:
         print_report(report, args.json, contract_path, token_inputs)
@@ -2004,6 +2304,8 @@ def command_discover(args: argparse.Namespace) -> int:
         if "detail" in fact:
             detail = f" ({fact['detail']})" if isinstance(fact["detail"], str) else f" ({canonical(fact['detail'])})"
         print(f"{labels.get(fact['kind'], fact['kind'])} {fact['path']}: {fact['what']}{detail}")
+    for item in inventory.get("duplicates", []):
+        print(f"DUPLICADO {item['value']} en {item['count']} sitios: " + ", ".join(item["sites"]))
     for item in inventory["unknown"]:
         print(f"DESCONOCIDO {item['what']}: {item['reason']}")
     print("MODO: solo lectura; no se escribió ningún archivo")
