@@ -4,7 +4,7 @@
 Uso:
     python scripts/redactor.py check <fichero|-> [--json] [--strict]
 
-Comprueba, fuera del frontmatter y de los bloques de código:
+Comprueba, fuera del frontmatter, de los bloques de código y de los comentarios HTML:
 - defectos deterministas de tipografía española: comillas curvas, raya con
   espacios al estilo inglés, doble guion, falta de ¿ o ¡, emojis en el cuerpo;
 - señales de escritura de IA que exigen criterio: paralelismo negativo,
@@ -103,6 +103,28 @@ CONNECTOR_RE = re.compile(
 DASH_RE = re.compile(r"\u2014")
 
 
+def mask_html_comments(line, in_comment):
+    """Enmascara un comentario HTML con espacios y devuelve (línea, estado)."""
+    out, index = [], 0
+    while index < len(line):
+        if in_comment:
+            end = line.find("-->", index)
+            stop = len(line) if end == -1 else end + 3
+            out.append(" " * (stop - index))
+            index = stop
+            in_comment = end == -1
+        else:
+            start = line.find("<!--", index)
+            if start == -1:
+                out.append(line[index:])
+                index = len(line)
+            else:
+                out.append(line[index:start] + "    ")
+                index = start + 4
+                in_comment = True
+    return "".join(out), in_comment
+
+
 def prose_without_code(text):
     """Devuelve las líneas de prosa con código, frontmatter y URLs enmascarados."""
     lines = text.splitlines()
@@ -112,7 +134,7 @@ def prose_without_code(text):
             if lines[index].strip() in ("---", "..."):
                 start = index + 1
                 break
-    out, fence = [], None
+    out, fence, comment = [], None, False
     for index, line in enumerate(lines):
         match = FENCE_RE.match(line)
         if fence is None:
@@ -120,6 +142,7 @@ def prose_without_code(text):
                 fence = match.group(1)[0] * 3
                 out.append("")
                 continue
+            line, comment = mask_html_comments(line, comment)
             masked = INLINE_CODE_RE.sub(lambda m: " " * len(m.group(0)), line)
             masked = URL_RE.sub(lambda m: " " * len(m.group(0)), masked)
             out.append(masked)
