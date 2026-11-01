@@ -27,14 +27,14 @@ Repositorio personal de skills para agentes: cada skill enseña a un agente a ha
 - Se trabaja con OpenCode y sus agentes; las skills se descubren por enrutadores, no copiándolas al directorio global de cada máquina.
 - Cada skill vive en `src/<skill>/`: `SKILL.md` con versión, `references/` de carga justo a tiempo, `assets/` y `scripts/` deterministas.
 - Las skills de terceros se fijan a una revisión en `.skills/`, junto a los enrutadores de las propias.
-- La puerta local es `python scripts/check-repo.py` más diez suites de `scripts/` y `src/*/scripts/`; la CI (`.github/workflows/validate.yml`) ejecuta lo mismo en cada push y pull request.
+- La puerta local es `python scripts/check-repo.py` más trece suites de `scripts/` y `src/*/scripts/`; la CI (`.github/workflows/validate.yml`) ejecuta lo mismo en cada push y pull request.
 - La documentación es HTML estático en `docs/`: catálogo, una página por skill y diagramas. No hay build ni servidor de aplicación.
 - El idioma de la documentación es castellano; los nombres de fichero y de directorio, inglés. Los ficheros de texto usan LF.
 - El repositorio se versiona en git; el trabajo pendiente vive en `BACKLOG.md` y las decisiones de integración en `CONTRIBUTING.md`.
 
 ## Capabilities and Constraints
 
-- 19 skills propias en `src/`, cada una con versión independiente en `metadata.version`, más `skill-creator` de terceros fijado en `.skills/`.
+- 20 skills propias en `src/`, cada una con versión independiente en `metadata.version`, más `skill-creator` de terceros fijado en `.skills/`.
 - Especificación de referencia: [agentskills.io](https://agentskills.io/), aplicada de forma estricta a estructura, metadatos y divulgación progresiva.
 - La validación es determinista y local; un fallo debe indicar qué script falló.
 - El sitio de documentación no descarga dependencias, tipografías ni scripts de terceros: HTML, CSS y JavaScript propios.

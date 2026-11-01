@@ -1,0 +1,310 @@
+{
+  "schema_version": 2,
+  "diagram_type": "workflow",
+  "meta": {
+    "title": "Flujo de trabajo de design-system-architect",
+    "subtitle": "Del descubrimiento al cierre verificado: proponer el contrato, obtener la aprobación fuera del agente, aplicar, verificar y publicar el catálogo sin saltarse la gobernanza.",
+    "locale": "es",
+    "output": "docs/design-system-architect/flujo-de-trabajo.html",
+    "visual_preset": "signal-flow",
+    "quality_profile": "showcase"
+  },
+  "lanes": [
+    {
+      "id": "principal",
+      "label": "Del sistema existente al cierre"
+    },
+    {
+      "id": "limites",
+      "label": "Límites y paradas",
+      "variant": "exception"
+    }
+  ],
+  "phases": [
+    {
+      "id": "a",
+      "label": "A · Descubrir",
+      "fromCol": 0,
+      "toCol": 0
+    },
+    {
+      "id": "b",
+      "label": "B · Proponer contrato",
+      "fromCol": 1,
+      "toCol": 1,
+      "variant": "emphasis"
+    },
+    {
+      "id": "c",
+      "label": "C · Aprobar",
+      "fromCol": 2,
+      "toCol": 2,
+      "variant": "security"
+    },
+    {
+      "id": "d",
+      "label": "D · Aplicar",
+      "fromCol": 3,
+      "toCol": 3
+    },
+    {
+      "id": "e",
+      "label": "E · Verificar",
+      "fromCol": 4,
+      "toCol": 4,
+      "variant": "security"
+    },
+    {
+      "id": "f",
+      "label": "F · Catálogo y cierre",
+      "fromCol": 5,
+      "toCol": 5
+    }
+  ],
+  "mainPath": [
+    "descubre",
+    "propone",
+    "aprueba",
+    "aplica",
+    "verifica",
+    "cierra"
+  ],
+  "nodes": [
+    {
+      "id": "descubre",
+      "lane": "principal",
+      "col": 0,
+      "type": "backend",
+      "label": "Descubrir",
+      "sublabel": "docs · tokens · componentes",
+      "tag": "solo lectura",
+      "icon": "start"
+    },
+    {
+      "id": "propone",
+      "lane": "principal",
+      "col": 1,
+      "type": "backend",
+      "label": "Proponer contrato",
+      "sublabel": "ruta · antes · después",
+      "tag": "aún no se aplica"
+    },
+    {
+      "id": "aprueba",
+      "lane": "principal",
+      "col": 2,
+      "type": "external",
+      "label": "Aprobación externa",
+      "sublabel": "id · path · source",
+      "tag": "el agente no la crea",
+      "icon": "person"
+    },
+    {
+      "id": "aplica",
+      "lane": "principal",
+      "col": 3,
+      "type": "backend",
+      "label": "Aplicar",
+      "sublabel": "rutas autorizadas",
+      "tag": "sin tocar el contrato"
+    },
+    {
+      "id": "verifica",
+      "lane": "principal",
+      "col": 4,
+      "type": "security",
+      "label": "Verificar",
+      "sublabel": "check · gate · baseline",
+      "tag": "PASS · FAIL · UNKNOWN"
+    },
+    {
+      "id": "cierra",
+      "lane": "principal",
+      "col": 5,
+      "type": "frontend",
+      "label": "Catálogo y cierre",
+      "sublabel": "artefactos y huellas",
+      "tag": "huellas y límites",
+      "icon": "success"
+    },
+    {
+      "id": "deriva",
+      "lane": "limites",
+      "col": 1,
+      "type": "security",
+      "label": "Deriva",
+      "sublabel": "contrato y producto",
+      "tag": "proponer el cambio"
+    },
+    {
+      "id": "bloquea",
+      "lane": "limites",
+      "col": 2,
+      "type": "security",
+      "label": "Bloquear",
+      "sublabel": "sin aprobación válida",
+      "tag": "no se aplica",
+      "icon": "stop"
+    },
+    {
+      "id": "corrige",
+      "lane": "limites",
+      "col": 4,
+      "type": "security",
+      "label": "Corregir",
+      "sublabel": "defecto demostrado",
+      "tag": "nunca el contrato"
+    },
+    {
+      "id": "desconocido",
+      "lane": "limites",
+      "col": 5,
+      "type": "security",
+      "label": "UNKNOWN",
+      "sublabel": "evidencia insuficiente",
+      "tag": "no es PASS"
+    }
+  ],
+  "edges": [
+    {
+      "id": "inventaria",
+      "from": "descubre",
+      "to": "propone",
+      "label": "inventario",
+      "role": "main",
+      "variant": "emphasis"
+    },
+    {
+      "id": "propone-cambio",
+      "from": "propone",
+      "to": "aprueba",
+      "label": "ruta protegida",
+      "role": "main"
+    },
+    {
+      "id": "compatible",
+      "from": "propone",
+      "to": "aplica",
+      "label": "compatible",
+      "role": "branch",
+      "variant": "dashed"
+    },
+    {
+      "id": "autoriza",
+      "from": "aprueba",
+      "to": "aplica",
+      "label": "cubre rutas",
+      "role": "main",
+      "variant": "emphasis"
+    },
+    {
+      "id": "aplica-cambio",
+      "from": "aplica",
+      "to": "verifica",
+      "label": "puerta",
+      "role": "main",
+      "variant": "emphasis"
+    },
+    {
+      "id": "estructura",
+      "from": "verifica",
+      "to": "cierra",
+      "label": "estructura",
+      "role": "main",
+      "variant": "emphasis"
+    },
+    {
+      "id": "divergencia",
+      "from": "descubre",
+      "to": "deriva",
+      "label": "deriva",
+      "role": "return",
+      "variant": "security"
+    },
+    {
+      "id": "cambio-propuesto",
+      "from": "deriva",
+      "to": "propone",
+      "label": "propone cambio",
+      "role": "return",
+      "variant": "dashed"
+    },
+    {
+      "id": "sin-aprobacion",
+      "from": "aprueba",
+      "to": "bloquea",
+      "label": "sin aprobación",
+      "role": "return",
+      "variant": "security"
+    },
+    {
+      "id": "espera",
+      "from": "bloquea",
+      "to": "aprueba",
+      "label": "espera",
+      "role": "return",
+      "variant": "dashed"
+    },
+    {
+      "id": "incumple",
+      "from": "verifica",
+      "to": "corrige",
+      "label": "FAIL",
+      "role": "return",
+      "variant": "security"
+    },
+    {
+      "id": "repite",
+      "from": "corrige",
+      "to": "aplica",
+      "label": "repite",
+      "role": "return",
+      "variant": "dashed"
+    },
+    {
+      "id": "falta-evidencia",
+      "from": "verifica",
+      "to": "desconocido",
+      "label": "falta evidencia",
+      "role": "return",
+      "variant": "security"
+    },
+    {
+      "id": "declara-limite",
+      "from": "desconocido",
+      "to": "cierra",
+      "label": "declara UNKNOWN",
+      "role": "return",
+      "variant": "dashed"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "El contrato antes que la pantalla",
+      "items": [
+        "Un agente puede diseñar e implementar dentro del sistema, pero no puede cambiar sus decisiones consolidadas sin autorización explícita",
+        "Un contrato existente y bloqueado gana sobre cualquier preferencia estética; si hay que cambiarlo, se detiene la implementación y se sigue la gobernanza",
+        "El contrato posee la identidad, los tokens, los componentes y las reglas; la interfaz los consume"
+      ]
+    },
+    {
+      "dot": "rose",
+      "title": "La aprobación es externa y se comprueba su alcance, no su autenticidad",
+      "items": [
+        "El agente no puede crear ni modificar el archivo de aprobaciones: solo lo lee y lo cita con su id y su source",
+        "Se exigen id, path, approved_by, approved_at, source y reason; approved_by por sí solo no autoriza nada",
+        "El validador comprueba que la aprobación cubre cada ruta protegida que cambió; no autentica la identidad ni demuestra que venga de fuera del agente"
+      ]
+    },
+    {
+      "dot": "emerald",
+      "title": "Un PASS estructural no demuestra calidad visual ni accesibilidad",
+      "items": [
+        "La verificación separa estructura, visual y accesibilidad: contraste, foco, teclado, reflow y movimiento se miden en el render",
+        "UNKNOWN nunca se redondea a PASS: falta el baseline, el catálogo, el informe del adaptador o la medición",
+        "Un catálogo generado demuestra sincronía con el contrato, no que sea visualmente correcto"
+      ]
+    }
+  ]
+}

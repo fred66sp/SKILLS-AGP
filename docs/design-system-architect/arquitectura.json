@@ -1,0 +1,427 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "Arquitectura de design-system-architect",
+    "subtitle": "El paquete canónico, el contrato y sus fuentes de tokens, la puerta determinista y la frontera con la skill de diseño visual.",
+    "locale": "es",
+    "output": "docs/design-system-architect/arquitectura.html",
+    "quality_profile": "showcase"
+  },
+  "components": [
+    {
+      "id": "agente",
+      "type": "external",
+      "label": "Agente anfitrión",
+      "sublabel": "recibe el encargo",
+      "icon": "person",
+      "pos": [
+        40,
+        60
+      ],
+      "size": [
+        170,
+        64
+      ]
+    },
+    {
+      "id": "router",
+      "type": "frontend",
+      "label": "Enrutador",
+      "sublabel": ".skills/",
+      "pos": [
+        280,
+        60
+      ],
+      "size": [
+        180,
+        64
+      ]
+    },
+    {
+      "id": "skill",
+      "type": "frontend",
+      "label": "SKILL.md",
+      "sublabel": "precedencia · procedimiento",
+      "pos": [
+        530,
+        60
+      ],
+      "size": [
+        180,
+        64
+      ]
+    },
+    {
+      "id": "refs",
+      "type": "database",
+      "label": "references/",
+      "sublabel": "contract · governance · validation",
+      "tag": "se abren según la tarea",
+      "pos": [
+        790,
+        60
+      ],
+      "size": [
+        220,
+        64
+      ]
+    },
+    {
+      "id": "assets",
+      "type": "database",
+      "label": "assets/",
+      "sublabel": "plantilla · catalog.html · catalog.css",
+      "pos": [
+        790,
+        170
+      ],
+      "size": [
+        220,
+        64
+      ]
+    },
+    {
+      "id": "contrato",
+      "type": "database",
+      "label": "design-system.json",
+      "sublabel": "identidad · componentes · gobernanza",
+      "pos": [
+        180,
+        320
+      ],
+      "size": [
+        220,
+        64
+      ]
+    },
+    {
+      "id": "fuentes",
+      "type": "database",
+      "label": "tokenSources",
+      "sublabel": "fuentes DTCG externas",
+      "pos": [
+        180,
+        420
+      ],
+      "size": [
+        220,
+        64
+      ]
+    },
+    {
+      "id": "script",
+      "type": "security",
+      "label": "design_system.py",
+      "sublabel": "discover · check · catalog · gate",
+      "tag": "puerta determinista",
+      "pos": [
+        520,
+        370
+      ],
+      "size": [
+        200,
+        64
+      ]
+    },
+    {
+      "id": "catalogo",
+      "type": "frontend",
+      "label": "Catálogo generado",
+      "sublabel": "index · tokens.css · catalog.css · catalog.json",
+      "pos": [
+        850,
+        370
+      ],
+      "size": [
+        260,
+        64
+      ]
+    },
+    {
+      "id": "aprobaciones",
+      "type": "external",
+      "label": "Aprobaciones externas",
+      "sublabel": "id · path · source · reason",
+      "icon": "person",
+      "pos": [
+        180,
+        540
+      ],
+      "size": [
+        220,
+        64
+      ]
+    },
+    {
+      "id": "gate",
+      "type": "security",
+      "label": "gate",
+      "sublabel": "contrato actual vs baseline",
+      "tag": "con aprobación",
+      "pos": [
+        520,
+        540
+      ],
+      "size": [
+        180,
+        64
+      ]
+    },
+    {
+      "id": "protegido",
+      "type": "backend",
+      "label": "Cambio protegido",
+      "sublabel": "aplicado y cubierto",
+      "pos": [
+        850,
+        540
+      ],
+      "size": [
+        260,
+        64
+      ]
+    },
+    {
+      "id": "informes",
+      "type": "database",
+      "label": "Informes de adaptadores",
+      "sublabel": "design-system.adapter.v1",
+      "pos": [
+        180,
+        660
+      ],
+      "size": [
+        220,
+        64
+      ]
+    },
+    {
+      "id": "check",
+      "type": "security",
+      "label": "check",
+      "sublabel": "conformidad de componentes",
+      "tag": "PASS · FAIL · UNKNOWN",
+      "pos": [
+        520,
+        660
+      ],
+      "size": [
+        180,
+        64
+      ]
+    },
+    {
+      "id": "conformidad",
+      "type": "frontend",
+      "label": "Conformidad declarada",
+      "sublabel": "por componente, con evidencia",
+      "pos": [
+        850,
+        660
+      ],
+      "size": [
+        260,
+        64
+      ]
+    },
+    {
+      "id": "ds",
+      "type": "backend",
+      "label": "design-system-architect",
+      "sublabel": "define y gobierna el contrato",
+      "pos": [
+        280,
+        790
+      ],
+      "size": [
+        260,
+        64
+      ]
+    },
+    {
+      "id": "visual",
+      "type": "external",
+      "label": "web-interface-visual-design",
+      "sublabel": "consume el sistema y revisa el render",
+      "pos": [
+        700,
+        790
+      ],
+      "size": [
+        320,
+        64
+      ]
+    }
+  ],
+  "boundaries": [
+    {
+      "kind": "region",
+      "label": "Paquete canónico en src/",
+      "wraps": [
+        "skill",
+        "refs",
+        "assets"
+      ]
+    },
+    {
+      "kind": "region",
+      "label": "Generación desde el contrato",
+      "wraps": [
+        "contrato",
+        "fuentes",
+        "script",
+        "catalogo"
+      ]
+    },
+    {
+      "kind": "region",
+      "label": "Puerta y evidencias externas",
+      "wraps": [
+        "aprobaciones",
+        "gate",
+        "protegido",
+        "informes",
+        "check",
+        "conformidad"
+      ]
+    },
+    {
+      "kind": "region",
+      "label": "Frontera de responsabilidad",
+      "wraps": [
+        "ds",
+        "visual"
+      ]
+    }
+  ],
+  "connections": [
+    {
+      "id": "encarga",
+      "from": "agente",
+      "to": "router",
+      "label": "descubre",
+      "variant": "emphasis"
+    },
+    {
+      "id": "carga",
+      "from": "router",
+      "to": "skill",
+      "label": "lee completo",
+      "variant": "emphasis"
+    },
+    {
+      "id": "especializa",
+      "from": "skill",
+      "to": "refs",
+      "label": "según la tarea",
+      "variant": "dashed"
+    },
+    {
+      "id": "plantilla",
+      "from": "skill",
+      "to": "assets",
+      "label": "plantilla del catálogo",
+      "variant": "dashed"
+    },
+    {
+      "id": "ejecuta",
+      "from": "skill",
+      "to": "script",
+      "label": "ejecuta la puerta",
+      "variant": "emphasis"
+    },
+    {
+      "id": "estructura",
+      "from": "contrato",
+      "to": "script",
+      "label": "estructura y tokens",
+      "variant": "emphasis"
+    },
+    {
+      "id": "huellas",
+      "from": "fuentes",
+      "to": "script",
+      "label": "huellas DTCG",
+      "variant": "emphasis"
+    },
+    {
+      "id": "genera",
+      "from": "script",
+      "to": "catalogo",
+      "label": "genera y sella",
+      "variant": "emphasis"
+    },
+    {
+      "id": "cubre",
+      "from": "aprobaciones",
+      "to": "gate",
+      "label": "cubre las rutas",
+      "variant": "emphasis"
+    },
+    {
+      "id": "aplica",
+      "from": "gate",
+      "to": "protegido",
+      "label": "sin rutas extra",
+      "variant": "emphasis"
+    },
+    {
+      "id": "informa",
+      "from": "informes",
+      "to": "check",
+      "label": "informe declarado",
+      "variant": "emphasis"
+    },
+    {
+      "id": "declara",
+      "from": "check",
+      "to": "conformidad",
+      "label": "por componente",
+      "variant": "emphasis"
+    },
+    {
+      "id": "sistema",
+      "from": "ds",
+      "to": "visual",
+      "label": "sistema aprobado",
+      "variant": "emphasis"
+    },
+    {
+      "id": "hallazgo",
+      "from": "visual",
+      "to": "ds",
+      "label": "hallazgo de render",
+      "variant": "dashed"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "Una fuente canónica para tokens y componentes",
+      "items": [
+        "El contrato declara tokens embebidos o fuentes DTCG en tokenSources: un token definido en ambos sitios es un error de duplicidad",
+        "El catálogo consume los mismos tokens que el producto mediante tokens.css; no crea una segunda paleta ni un segundo componente",
+        "El manifiesto guarda las huellas del contrato, de cada fuente DTCG y de cada artefacto; editar el HTML o el CSS generados rompe la sincronía y check lo demuestra"
+      ]
+    },
+    {
+      "dot": "rose",
+      "title": "El validador comprueba el alcance, no la autenticidad de la aprobación",
+      "items": [
+        "El agente no puede crear ni modificar el archivo de aprobaciones: lo aporta la persona o un sistema externo y solo se lee y se cita",
+        "gate exige id, path, approved_by, approved_at, source y reason; approved_by por sí solo no autoriza nada",
+        "No autentica la identidad, no demuestra que la aprobación venga de fuera y no impide forjar el archivo con permiso de escritura: Git y la revisión humana son el control real"
+      ]
+    },
+    {
+      "dot": "emerald",
+      "title": "Estructura, catálogo y render son evidencias distintas",
+      "items": [
+        "check demuestra forma, tokens, referencias y sincronía del catálogo; no que el catálogo sea visualmente correcto",
+        "El informe del adaptador declara la conformidad de los componentes con su evidencia, pero el validador no ejecuta el framework que lo produjo",
+        "Contraste, foco, teclado, reflow y movimiento se miden en el render; sin medición quedan en UNKNOWN"
+      ]
+    }
+  ]
+}

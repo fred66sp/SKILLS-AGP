@@ -2,7 +2,7 @@
 name: web-interface-visual-design
 description: "Diseña, implementa y revisa la calidad visual y comunicativa de interfaces web, componentes, SVG, iconografía, infografías y diagramas. Se activa al diseñar o mejorar páginas, paneles, dashboards o aplicaciones; revisar composición, tipografía, color y jerarquía; crear o revisar SVG e iconos; explicar procesos visualmente; o corregir presentación responsive. Respeta la marca y el sistema de diseño existentes, no impone frameworks y exige inspeccionar el resultado renderizado cuando haya herramientas disponibles. No se usa para backend, bases de datos, lógica de negocio o pruebas puramente funcionales, ni sustituye arquitectura, seguridad o programación idiomática."
 metadata:
-  version: "0.1.1"
+  version: "0.2.0"
 ---
 
 # Diseño visual de interfaces web
@@ -11,7 +11,7 @@ Produce una interfaz que comunique mejor, no más decoración. La fuente de verd
 
 ## Responsabilidad y límites
 
-- Posee composición, dirección de arte, sistemas visuales, componentes reutilizables, recursos gráficos y revisión visual. En una revisión sin encargo de implementación, informa de defectos sin editar.
+- Posee composición, dirección de arte, materialización de componentes, recursos gráficos y revisión visual. El sistema visual —identidad, tokens, contratos de componentes y gobernanza— pertenece a `design-system-architect`; esta skill lo consume. Si esa skill no está disponible y el encargo exige cambiarlo, declara el hueco y pide autorización antes de introducir una identidad nueva. En una revisión sin encargo de implementación, informa de defectos sin editar.
 - Conserva marca, tokens, componentes, contenido y comportamiento válidos. No introduce una identidad nueva ni un rediseño fuera del alcance sin autorización.
 - Trabaja sobre el stack presente: HTML/CSS, HTMX, Alpine.js, React, Vue, Svelte u otro. Delega arquitectura, lenguaje, lógica, seguridad y pruebas funcionales a sus contratos especializados; una captura no los sustituye.
 - No inventa métricas, datos, relaciones, identidad de marca ni derechos de uso de recursos. Distingue contenido real, muestras proporcionadas y decisiones propuestas.

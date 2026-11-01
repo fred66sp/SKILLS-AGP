@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="light" data-skill="design-system-architect">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Qué hace design-system-architect, cuándo usarla, cómo se gobierna un sistema de diseño, cómo se genera su catálogo y cómo se verifica. El contrato vive en SKILL.md; esta página orienta sin duplicarlo.">
+<meta name="color-scheme" content="light dark">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%236d28d9'/%3E%3Cpath d='M8 10h16M8 16h10M8 22h13' fill='none' stroke='%23ffffff' stroke-width='2.4' stroke-linecap='round'/%3E%3Ccircle cx='24' cy='16' r='3' fill='%23ffffff'/%3E%3C/svg%3E">
+<title>design-system-architect · El contrato antes que la pantalla</title>
+<script>
+(function () {
+  var skill = document.documentElement.getAttribute("data-skill") || "skills";
+  try {
+    var p = JSON.parse(localStorage.getItem(skill + ":prefs") || "{}");
+    var t = p.theme || (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+    document.documentElement.setAttribute("data-theme", t);
+  } catch (e) { document.documentElement.setAttribute("data-theme", "light"); }
+})();
+</script>
+<link rel="stylesheet" href="../assets/site.css">
+</head>
+<body>
+<a class="skip-link" href="#contenido">Saltar al contenido</a>
+<header class="topbar">
+  <a class="brand" href="#top">
+    <span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 32 32"><rect width="32" height="32" rx="8" fill="#6d28d9"/><path d="M8 10h16M8 16h10M8 22h13" fill="none" stroke="#ffffff" stroke-width="2.4" stroke-linecap="round"/><circle cx="24" cy="16" r="3" fill="#ffffff"/></svg></span>
+    <span class="brand-name">design-system-architect<small>sistema, tokens y gobernanza</small></span>
+  </a>
+  <span class="topbar-spacer"></span>
+  <a class="icon-btn catalog-btn" href="../index.html" aria-label="Volver al catálogo" title="Volver al catálogo">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5V6a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2z"></path><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H19"></path></svg>
+    <span>Catálogo</span>
+  </a>
+  <button class="icon-btn" id="theme-toggle" type="button" aria-label="Cambiar a tema oscuro">
+    <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+    <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+    <span>Tema</span>
+  </button>
+</header>
+
+<section class="hero" id="top" aria-labelledby="titulo">
+  <div class="hero-inner">
+    <span class="pill"><span class="dot" aria-hidden="true"></span>contrato primero · tokens DTCG · gobernanza explícita</span>
+    <h1 id="titulo">El sistema se define <span class="grad">antes</span> que la pantalla</h1>
+    <p class="lead">La skill <code>design-system-architect</code> descubre, define, documenta, gobierna y verifica el sistema visual de un producto. Los agentes pueden diseñar e implementar dentro de él; no pueden cambiar sus decisiones consolidadas sin autorización explícita.</p>
+    <div class="hero-actions">
+      <a class="btn btn-primary" href="#que-hace">Qué hace</a>
+      <a class="btn btn-ghost" href="#contrato">El contrato</a>
+      <a class="btn btn-ghost" href="#gobernanza">Gobernanza</a>
+      <a class="btn btn-ghost" href="#verificacion">Verificación</a>
+      <a class="btn btn-ghost" href="../index.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 19l-7-7 7-7"></path></svg>
+        Volver al catálogo
+      </a>
+    </div>
+  </div>
+</section>
+
+<div class="layout">
+  <nav class="toc" aria-label="Índice de la página">
+    <h2>En esta página</h2>
+    <a href="#que-hace">1. Qué hace</a>
+    <a href="#cuando">2. Cuándo se activa</a>
+    <a href="#contrato">3. El contrato</a>
+    <a href="#gobernanza">4. Gobernanza</a>
+    <a href="#catalogo">5. Catálogo</a>
+    <a href="#relacion">6. Relación con diseño visual</a>
+    <a href="#uso">7. Cómo se usa</a>
+    <a href="#paquete">8. Qué contiene el paquete</a>
+    <a href="#preguntas">9. Preguntas cortas</a>
+    <a href="#diagramas">10. Los diagramas</a>
+    <a href="#verificacion">11. Verificación</a>
+    <div class="toc-extra"><a href="../index.html">Volver al catálogo</a></div>
+  </nav>
+
+  <main id="contenido">
+    <section id="que-hace" class="section">
+      <div class="section-head"><span class="section-num">1</span><h2 class="title">Qué hace</h2></div>
+      <p class="sub">Convierte el sistema visual en un contrato legible por agentes y personas. Define identidad, tokens, temas, componentes, patrones, accesibilidad, movimiento y reglas de cambio; después genera el catálogo y comprueba que contrato y artefactos siguen siendo coherentes.</p>
+      <div class="grid">
+        <div class="card"><h3>Descubre</h3><p>Inventaría un proyecto existente sin escribirlo: documentos, tokens DTCG, variables CSS, componentes y dependencias. Separa lo observado de lo documentado, lo inferido y lo desconocido.</p></div>
+        <div class="card"><h3>Define</h3><p>Escribe un contrato verificable con tokens en tres niveles cuando el tamaño lo justifica. Los componentes consumen tokens semánticos o de componente; los primitivos no se usan directamente.</p></div>
+        <div class="card"><h3>Gobierna</h3><p>Distingue lo protegido, lo configurable y las excepciones autorizadas. Un cambio protegido exige aprobación externa; el agente no puede crear ni modificar esa aprobación.</p></div>
+        <div class="card"><h3>Verifica</h3><p>Comprueba estructura, tokens, referencias, ciclos, cambios protegidos, consistencia del catálogo y informes de adaptadores. Separa <code>PASS</code>, <code>FAIL</code> y <code>UNKNOWN</code>.</p></div>
+      </div>
+    </section>
+
+    <section id="cuando" class="section">
+      <div class="section-head"><span class="section-num">2</span><h2 class="title">Cuándo se activa</h2></div>
+      <div class="grid">
+        <div class="card"><h3>Úsala para</h3><p>Crear un sistema visual; auditar uno existente; proponer su evolución; generar tokens o contratos de componentes; publicar un catálogo; comprobar que una implementación respeta el sistema aprobado.</p></div>
+        <div class="card"><h3>No la uses para</h3><p>Construir pantallas, componentes o recursos gráficos —eso pertenece al contrato de diseño visual de interfaces— ni para sustituir arquitectura, lógica, seguridad o pruebas funcionales. Tampoco inventa un sistema nuevo cuando ya existe uno que debe conservarse.</p></div>
+      </div>
+      <div class="note">
+        <p>La diferencia es de propiedad, no de tema: esta skill define el contrato; la de diseño visual lo consume y materializa la interfaz. Si el encargo exige cambiar el sistema, se detiene la implementación y se sigue el flujo de gobernanza.</p>
+      </div>
+    </section>
+
+    <section id="contrato" class="section">
+      <div class="section-head"><span class="section-num">3</span><h2 class="title">El contrato</h2></div>
+      <p class="sub"><code>design-system.json</code> es un esquema propio (<code>design-system.v1</code>). Los tokens siguen un subconjunto declarado de DTCG 2025.10: <code>$value</code>, <code>$type</code>, grupos, herencia de tipo, alias con <code>{ruta}</code>, <code>$root</code> y <code>$deprecated</code>.</p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Parte</th><th>Qué declara</th></tr></thead>
+          <tbody>
+            <tr><td><code>identity</code></td><td>Propósito y principios. Es la parte que una implementación no puede reinterpretar.</td></tr>
+            <tr><td><code>tokens</code> / <code>tokenSources</code></td><td>Tokens embebidos o fuentes DTCG externas. Una sola fuente canónica; duplicar valores es un error.</td></tr>
+            <tr><td><code>themes</code></td><td>Modo por defecto y overrides por modo. Cada override apunta a un token existente.</td></tr>
+            <tr><td><code>components</code></td><td>Propósito, cuándo y cuándo no, variantes, estados y ejemplo. Una variante sin regla de uso no está especificada.</td></tr>
+            <tr><td><code>governance</code></td><td>Rutas protegidas, parámetros configurables y excepciones declaradas.</td></tr>
+            <tr><td><code>catalog</code> / <code>adapters</code></td><td>Dónde vive el catálogo y qué informes externos declaran conformidad de componentes.</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="note">
+        <p>No se afirma conformidad DTCG completa. No se implementan <code>$extends</code>, JSON Pointer, todos los tipos compuestos ni todas las reglas de la especificación. Los límites están escritos en el contrato y en la referencia del modelo.</p>
+      </div>
+    </section>
+
+    <section id="gobernanza" class="section">
+      <div class="section-head"><span class="section-num">4</span><h2 class="title">Gobernanza</h2></div>
+      <p class="sub">El flujo es <code>READ → PROPOSE → APPROVE → APPLY → VERIFY</code>. Los cambios rutinarios compatibles no piden aprobación; los que tocan una decisión consolidada sí.</p>
+      <div class="grid">
+        <div class="card"><h3>Protegido</h3><p>Identidad, tokens consolidados y contratos estables. Cambiar, añadir o eliminar exige una aprobación externa que cubra la ruta.</p></div>
+        <div class="card"><h3>Configurable</h3><p>Valores pensados para adaptarse por proyecto o densidad. Se cambian dentro del contrato, con evidencia y sin reescribir la identidad.</p></div>
+        <div class="card"><h3>Aprobación externa</h3><p>Se aporta en un archivo aparte con <code>id</code>, <code>path</code>, <code>approved_by</code>, <code>approved_at</code>, <code>source</code> y <code>reason</code>. El agente no lo crea ni lo modifica.</p></div>
+        <div class="card"><h3>Límite honesto</h3><p>El validador comprueba el alcance de la aprobación, no su autenticidad. <code>approved_by</code> por sí solo no autoriza nada; la firma o el ticket son la fuente real cuando el proyecto los exige.</p></div>
+      </div>
+    </section>
+
+    <section id="catalogo" class="section">
+      <div class="section-head"><span class="section-num">5</span><h2 class="title">Catálogo</h2></div>
+      <p class="sub"><code>catalog</code> genera un catálogo estático desde el contrato: fundamentos, tokens, temas, componentes, patrones, restricciones, decisiones, gobernanza y evidencia. Consume los mismos tokens que el producto mediante <code>tokens.css</code>; no crea una segunda paleta ni un segundo componente.</p>
+      <div class="code"><pre><code class="language-bash">python3 scripts/design_system.py catalog design-system.json --out docs/design-system</code></pre></div>
+      <p class="sub">El manifiesto guarda las huellas del contrato, de cada fuente DTCG y de cada artefacto generado. Cambiar cualquiera de ellos invalida el catálogo y <code>check</code> lo demuestra. Todo el texto del contrato se escapa; los ejemplos se muestran en un <code>iframe</code> con <code>sandbox</code>.</p>
+      <div class="note">
+        <p>La composición y la revisión visual del catálogo no son de esta skill. Se ejecutan con el contrato de calidad visual del proyecto, sin cambiar el contenido ni los tokens.</p>
+      </div>
+    </section>
+
+    <section id="relacion" class="section">
+      <div class="section-head"><span class="section-num">6</span><h2 class="title">Relación con diseño visual</h2></div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th><code>design-system-architect</code></th><th><code>web-interface-visual-design</code></th></tr></thead>
+          <tbody>
+            <tr><td>Descubre y clasifica el sistema existente.</td><td>Materializa la interfaz y los recursos gráficos.</td></tr>
+            <tr><td>Define identidad, tokens, temas, componentes, patrones y gobernanza.</td><td>Aplica composición, jerarquía, tipografía, color y responsive dentro del sistema aprobado.</td></tr>
+            <tr><td>Genera el catálogo y verifica su fidelidad al contrato.</td><td>Revisa visualmente el catálogo y la interfaz renderizada.</td></tr>
+            <tr><td>Ejecuta la puerta estructural y de cambios protegidos.</td><td>Declara lo que no puede verificar sin navegador o inspección humana.</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="sub">La primera define el contrato; la segunda lo consume. Si la tarea exige cambiar el sistema, la implementación se detiene y se sigue el flujo de gobernanza.</p>
+    </section>
+
+    <section id="uso" class="section">
+      <div class="section-head"><span class="section-num">7</span><h2 class="title">Cómo se usa</h2></div>
+      <div class="code"><pre><code class="language-bash"># Inventariar un proyecto existente sin escribir nada
+python3 scripts/design_system.py discover . --json
+
+# Comprobar el contrato
+python3 scripts/design_system.py check design-system.json
+
+# Generar el catálogo
+python3 scripts/design_system.py catalog design-system.json --out docs/design-system
+
+# Puerta de un cambio protegido
+python3 scripts/design_system.py gate design-system.json \
+  --baseline .design-system.baseline.json \
+  --approvals approvals.json</code></pre></div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Código</th><th>Significado</th></tr></thead>
+          <tbody>
+            <tr><td><code>0</code></td><td><code>PASS</code>: todas las comprobaciones ejecutadas pasaron.</td></tr>
+            <tr><td><code>1</code></td><td><code>FAIL</code>: hay un incumplimiento demostrado.</td></tr>
+            <tr><td><code>2</code></td><td><code>UNKNOWN</code>: una comprobación necesaria no se pudo ejecutar.</td></tr>
+            <tr><td><code>3</code></td><td>Error de uso o de entrada/salida.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="paquete" class="section">
+      <div class="section-head"><span class="section-num">8</span><h2 class="title">Qué contiene el paquete</h2></div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Ruta</th><th>Responsabilidad</th></tr></thead>
+          <tbody>
+            <tr><td><code>SKILL.md</code></td><td>Contrato operativo, precedencia, modos y procedimiento.</td></tr>
+            <tr><td><code>references/contract-model.md</code></td><td>Forma del contrato, subconjunto DTCG y modelo de evidencia.</td></tr>
+            <tr><td><code>references/governance.md</code></td><td>Rutas protegidas, aprobaciones externas, excepciones y límites.</td></tr>
+            <tr><td><code>references/validation.md</code></td><td>Matriz de comprobaciones, catálogo, adaptadores y resultados.</td></tr>
+            <tr><td><code>assets/design-system.template.json</code></td><td>Contrato mínimo que pasa <code>check</code>.</td></tr>
+            <tr><td><code>assets/catalog.html</code> y <code>assets/catalog.css</code></td><td>Plantilla y presentación del catálogo generado.</td></tr>
+            <tr><td><code>scripts/design_system.py</code></td><td><code>discover</code>, <code>check</code>, <code>gate</code> y <code>catalog</code>; solo biblioteca estándar.</td></tr>
+            <tr><td><code>scripts/test-design-system.py</code></td><td>Pruebas de aceptación de la puerta, del catálogo y del descubrimiento.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="preguntas" class="section">
+      <div class="section-head"><span class="section-num">9</span><h2 class="title">Preguntas cortas</h2></div>
+      <div class="qa"><h3>¿Sustituye a la skill de diseño visual?</h3><p>No. Define el sistema que esa skill consume. La una posee el contrato; la otra, la ejecución y el juicio visual.</p></div>
+      <div class="qa"><h3>¿Es un framework de componentes?</h3><p>No. Describe valores, contratos y reglas; no impone un stack ni genera una aplicación.</p></div>
+      <div class="qa"><h3>¿Convierte un proyecto existente en uno nuevo?</h3><p>No. Descubre y conserva lo que existe. Si hay contradicciones, las declara; no las sobrescribe.</p></div>
+      <div class="qa"><h3>¿Una aprobación la puede crear el agente?</h3><p>No. El archivo de aprobaciones es externo. El validador comprueba su alcance, no su autenticidad; <code>approved_by</code> por sí solo no autoriza.</p></div>
+      <div class="qa"><h3>¿Un <code>PASS</code> demuestra que el diseño se ve bien?</h3><p>No. Demuestra coherencia estructural. La calidad visual y la accesibilidad completa necesitan inspección renderizada y medición; sin ellas quedan en <code>UNKNOWN</code>.</p></div>
+      <div class="qa"><h3>¿El catálogo es otra implementación?</h3><p>No. Se genera desde el contrato y consume los mismos tokens. Editar el HTML o el CSS generados rompe la sincronía y <code>check</code> lo detecta.</p></div>
+    </section>
+
+    <section id="diagramas" class="section">
+      <div class="section-head"><span class="section-num">10</span><h2 class="title">Los diagramas</h2></div>
+      <p class="sub">Dos vistas complementarias del contrato: el recorrido de gobierno y la relación entre el paquete, el contrato y la puerta.</p>
+      <div class="grid cols-2">
+        <a class="card card-link" href="flujo-de-trabajo.html"><h3>Flujo de trabajo</h3><p>Del descubrimiento y la propuesta a la aprobación externa, la aplicación, la verificación y el cierre con el catálogo y los <code>UNKNOWN</code> declarados.</p><span class="go">Abrir el diagrama →</span></a>
+        <a class="card card-link" href="arquitectura.html"><h3>Arquitectura</h3><p>Cómo se relacionan el paquete canónico, el contrato, las fuentes DTCG, el validador, la puerta y la skill de diseño visual.</p><span class="go">Abrir el diagrama →</span></a>
+      </div>
+      <div class="note"><p><strong>Documentación del repositorio.</strong> Los diagramas explican la skill; no son recursos que esta deba generar en cada encargo ni evidencia de su utilidad visual.</p></div>
+      <p class="sub">En pantallas pequeñas, la vista general reduce las etiquetas. Usa el buscador de nodos del visor para consultar su detalle, o amplía y desplaza el diagrama.</p>
+    </section>
+
+    <section id="verificacion" class="section">
+      <div class="section-head"><span class="section-num">11</span><h2 class="title">Verificación</h2></div>
+      <p class="sub">La puerta distingue lo que demuestra de lo que solo declara.</p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Resultado</th><th>Significado</th></tr></thead>
+          <tbody>
+            <tr><td><code>PASS</code></td><td>La comprobación se ejecutó y no encontró incumplimientos.</td></tr>
+            <tr><td><code>FAIL</code></td><td>Hay un incumplimiento demostrado: token mal formado, referencia rota, ciclo, cambio protegido sin aprobación, catálogo desincronizado o adaptador que falla.</td></tr>
+            <tr><td><code>UNKNOWN</code></td><td>La comprobación no se ejecutó o la evidencia es insuficiente: falta baseline, catálogo, informe o medición. Nunca se redondea a <code>PASS</code>.</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="code"><pre><code class="language-bash">python3 scripts/design_system.py check design-system.json
+python3 scripts/design_system.py gate design-system.json --baseline .design-system.baseline.json --approvals approvals.json</code></pre></div>
+      <p class="sub">Un <code>PASS</code> estructural no demuestra calidad visual ni conformidad de accesibilidad. Contraste, foco, teclado, reflow y movimiento se miden en el render; sin esa evidencia quedan en <code>UNKNOWN</code>.</p>
+    </section>
+  </main>
+</div>
+
+<footer class="footer">
+  <span><code>design-system-architect</code> · documento en español</span>
+  <span><a href="../index.html">Catálogo</a> · <a href="flujo-de-trabajo.html">Flujo de trabajo</a> · <a href="arquitectura.html">Arquitectura</a> · <a href="../../src/design-system-architect/SKILL.md">SKILL.md</a> · <a href="#top">Volver arriba</a></span>
+  <span>Página estática: no envía datos ni carga recursos externos.</span>
+</footer>
+
+<a class="to-top" id="to-top" href="#top" aria-label="Volver arriba" title="Volver arriba">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 15l6-6 6 6"></path></svg>
+</a>
+
+<script src="../assets/site.js"></script>
+</body>
+</html>

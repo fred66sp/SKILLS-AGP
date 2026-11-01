@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "100d8f3c-ce2b-4952-b47b-9e2db9d0da35",
+  "status": "current",
+  "command": "deliver",
+  "type": "architecture",
+  "input": "/home/desarrollo/PROJECTS/SKILLS-AGP/docs/design-system-architect/arquitectura.json",
+  "output": "/home/desarrollo/PROJECTS/SKILLS-AGP/docs/design-system-architect/arquitectura.html",
+  "specification": {
+    "sha256": "51e1d037245605676df775f7a70214fcb1e0820209f361e2cc92c59f534cbbea",
+    "bytes": 9245
+  },
+  "artifact": {
+    "sha256": "98cf19021e01ccaec8d6f5415db0a170b8a7c27657d89392b6500983f76e2781",
+    "bytes": 849004
+  }
+}

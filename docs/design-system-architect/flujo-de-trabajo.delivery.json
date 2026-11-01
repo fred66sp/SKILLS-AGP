@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "0cdc11cc-d745-4ecd-b9ad-c4c0f213c58e",
+  "status": "current",
+  "command": "deliver",
+  "type": "workflow",
+  "input": "/home/desarrollo/PROJECTS/SKILLS-AGP/docs/design-system-architect/flujo-de-trabajo.json",
+  "output": "/home/desarrollo/PROJECTS/SKILLS-AGP/docs/design-system-architect/flujo-de-trabajo.html",
+  "specification": {
+    "sha256": "03a3570dfa8be4dabd2aa772be2f86edeedf9b22420cd2bfdd65b3fd0a7a8889",
+    "bytes": 7680
+  },
+  "artifact": {
+    "sha256": "e5e5e3f9873f1844cb444824415fac086beede5329c70b70e4fa2bf5510bca34",
+    "bytes": 836580
+  }
+}
