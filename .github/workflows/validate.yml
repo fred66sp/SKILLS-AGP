@@ -35,6 +35,9 @@ jobs:
       - name: Test the documentation inventory
         run: python3 src/document-management-software/scripts/test-doc-inventory.py
 
+      - name: Test the ADR contract gate
+        run: python3 src/adr-software/scripts/test-adr.py
+
       - name: Test the Go verification gate
         run: python3 src/go-testing-and-verification/scripts/test-verify-go.py
 
@@ -58,3 +61,6 @@ jobs:
 
       - name: Test the test-document gate
         run: python3 src/software-testing/scripts/test-case-check.py
+
+      - name: Test the design-system contract gate
+        run: python3 src/design-system-architect/scripts/test-design-system.py

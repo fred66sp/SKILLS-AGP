@@ -97,6 +97,14 @@ class RedactorTest(unittest.TestCase):
         body = "---\ntitle: “Prueba”\n---\n\nTexto limpio y corto.\n"
         self.assertEqual(self.rules(body), [])
 
+    def test_html_comments_are_ignored(self) -> None:
+        body = (
+            "<!-- impeccable:product-schema 1 -->\n\n"
+            "<!--\n¿Y este comentario?\n-->\n\n"
+            "Texto limpio y corto.\n"
+        )
+        self.assertEqual(self.rules(body), [])
+
     def test_title_case_heading(self) -> None:
         self.assertIn("P17", self.rules("# Negociaciones Estratégicas Y Alianzas Globales\n"))
 

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Catálogo generado desde el contrato del sistema de diseño. No editar a mano.">
+<meta name="color-scheme" content="light dark">
+<title>{{NAME}} · catálogo del sistema de diseño</title>
+<link rel="stylesheet" href="tokens.css">
+<link rel="stylesheet" href="catalog.css">
+</head>
+<body>
+<a class="skip" href="#contenido">Saltar al contenido</a>
+<header class="top">
+  <div>
+    <p class="eyebrow">Catálogo generado</p>
+    <h1>{{NAME}}</h1>
+    <p class="meta">v{{VERSION}} · {{STATUS}} · {{CONTRACT}}</p>
+  </div>
+  <button id="theme-toggle" type="button" aria-label="Cambiar entre tema claro y oscuro">Tema</button>
+</header>
+<div class="shell">
+  <nav class="toc" aria-label="Índice del catálogo">
+    <h2>En esta página</h2>
+    {{NAV}}
+  </nav>
+  <main id="contenido">
+    {{SECTIONS}}
+  </main>
+</div>
+<footer class="footer">
+  <p>Generado desde <code>{{CONTRACT}}</code>. No editar a mano: cambia el contrato y vuelve a generar.</p>
+  <p>Huella de las entradas efectivas: <code>{{HASH}}</code></p>
+</footer>
+<script>
+(function () {
+  var root = document.documentElement;
+  var button = document.getElementById("theme-toggle");
+  if (!button) return;
+  button.addEventListener("click", function () {
+    root.setAttribute("data-theme", root.getAttribute("data-theme") === "dark" ? "light" : "dark");
+  });
+})();
+</script>
+</body>
+</html>

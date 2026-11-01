@@ -149,7 +149,7 @@ Paleta de instrumento: neutros fríos de papel y tinta, un verde que mide y una 
 ### Tertiary
 
 - **Cian de instrumento** (#0891b2): tercer halo del hero y acento de `javascript-testing-and-verification`. En oscuro `#22d3ee`.
-- **Violeta de registro** (#7c3aed): cuarto halo del catálogo y acento de `go-idiomatic-style` y `skill-creator`. En oscuro `#a78bfa`.
+- **Violeta de registro** (#7c3aed): cuarto halo del catálogo y acento de la tarjeta de `go-idiomatic-style`; su página y las de `skill-creator` y `design-system-architect` usan `#6d28d9`. En oscuro `#a78bfa`.
 
 ### Neutral
 
@@ -174,6 +174,7 @@ El acento de cada skill vive en `docs/assets/site.css`, en un bloque `:root[data
 |---|---|---|
 | `adr-software` | #92400e | #d97706 |
 | `best-practices-create-skills` | #0f766e | #2563eb |
+| `design-system-architect` | #6d28d9 | #2563eb |
 | `document-management-software` | #1e40af | #0ea5e9 |
 | `document-redactor` | #9b2c4a | #b45309 |
 | `git-flow-management` | #0f766e | #2563eb |

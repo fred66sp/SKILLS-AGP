@@ -29,6 +29,7 @@
 - [`security-engineering`](src/security-engineering/SKILL.md)
 - [`playwright-cli-usage`](src/playwright-cli-usage/SKILL.md)
 - [`software-testing`](src/software-testing/SKILL.md)
+- [`design-system-architect`](src/design-system-architect/SKILL.md)
 - [`web-interface-visual-design`](src/web-interface-visual-design/SKILL.md)
 
 ## Terceros

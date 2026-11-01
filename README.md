@@ -228,6 +228,16 @@ Documentación: [`docs/software-testing/index.html`](docs/software-testing/index
 
 El método, el diseño de casos y el informe son de `software-testing`; la suite y la puerta del lenguaje siguen en la skill de verificación de cada lenguaje, la conducción del navegador en `playwright-cli-usage`, el juicio visual en `web-interface-visual-design` y las pruebas de seguridad en `security-engineering`. Diseñar la prueba no autoriza a ejecutar la puerta del proyecto: cada contrato manda en su capa.
 
+### `design-system-architect`
+
+Define, descubre, documenta, gobierna y verifica el sistema visual de un producto. Separa la identidad, los tokens —en un subconjunto declarado de DTCG—, los temas, los contratos de componentes, los patrones, la accesibilidad y el movimiento del código que los consume. Un contrato protegido no cambia sin una aprobación externa que cubra la ruta; el agente no puede crear ni modificar esa aprobación. Incluye `scripts/design_system.py` con `discover`, `check`, `gate` y `catalog`, y un catálogo generado que consume los mismos tokens y guarda las huellas de sus entradas y artefactos. Declara `PASS`, `FAIL` y `UNKNOWN` con semántica estricta: un `PASS` estructural no demuestra calidad visual ni accesibilidad.
+
+Contrato completo: [`src/design-system-architect/SKILL.md`](src/design-system-architect/SKILL.md).
+
+Documentación: [`docs/design-system-architect/index.html`](docs/design-system-architect/index.html), con diagramas de flujo de trabajo y arquitectura.
+
+Precedencia con `web-interface-visual-design`: esta skill define el sistema y su gobernanza; la de diseño visual materializa interfaces, componentes, SVG e infografías dentro del sistema aprobado y revisa el resultado renderizado. Si la tarea exige cambiar el sistema, la implementación se detiene y se sigue el flujo de gobernanza.
+
 ### `web-interface-visual-design`
 
 Diseña, implementa y revisa la calidad visual de interfaces web sin imponer un framework ni sustituir el sistema de diseño existente. Cubre composición, tipografía, color, responsive, accesibilidad, SVG, iconografía e infografías. Exige inspeccionar el resultado renderizado cuando hay herramientas disponibles y distingue esa evidencia de compilar o validar XML. Reconoce los límites de fidelidad del SVG y no inventa datos para completar una composición.
@@ -236,7 +246,7 @@ Contrato completo: [`src/web-interface-visual-design/SKILL.md`](src/web-interfac
 
 Documentación: [`docs/web-interface-visual-design/index.html`](docs/web-interface-visual-design/index.html), con diagramas de flujo de trabajo y arquitectura.
 
-La calidad visual pertenece a esta skill; arquitectura, lenguaje, lógica de negocio, seguridad y pruebas funcionales conservan sus contratos especializados. En una revisión sin autorización de cambios, solo informa de hallazgos.
+La calidad visual pertenece a esta skill; arquitectura, lenguaje, lógica de negocio, seguridad y pruebas funcionales conservan sus contratos especializados. En una revisión sin autorización de cambios, solo informa de hallazgos. El sistema visual que consume pertenece a `design-system-architect`.
 
 ## Skills en uso
 
@@ -271,6 +281,7 @@ Documentación: [`docs/skill-creator/index.html`](docs/skill-creator/index.html)
 | [`.skills/python-idiomatic-style/SKILL.md`](.skills/python-idiomatic-style/SKILL.md) | [`src/python-idiomatic-style/SKILL.md`](src/python-idiomatic-style/SKILL.md) |
 | [`.skills/python-testing-and-verification/SKILL.md`](.skills/python-testing-and-verification/SKILL.md) | [`src/python-testing-and-verification/SKILL.md`](src/python-testing-and-verification/SKILL.md) |
 | [`.skills/web-interface-visual-design/SKILL.md`](.skills/web-interface-visual-design/SKILL.md) | [`src/web-interface-visual-design/SKILL.md`](src/web-interface-visual-design/SKILL.md) |
+| [`.skills/design-system-architect/SKILL.md`](.skills/design-system-architect/SKILL.md) | [`src/design-system-architect/SKILL.md`](src/design-system-architect/SKILL.md) |
 | [`.skills/security-engineering/SKILL.md`](.skills/security-engineering/SKILL.md) | [`src/security-engineering/SKILL.md`](src/security-engineering/SKILL.md) |
 | [`.skills/playwright-cli-usage/SKILL.md`](.skills/playwright-cli-usage/SKILL.md) | [`src/playwright-cli-usage/SKILL.md`](src/playwright-cli-usage/SKILL.md) |
 
@@ -309,7 +320,9 @@ python src/javascript-testing-and-verification/scripts/test-verify-js.py
 python src/python-testing-and-verification/scripts/test-verify-python.py
 python src/security-engineering/scripts/test-security_scan.py
 python src/playwright-cli-usage/scripts/test-preflight.py
+python src/document-redactor/scripts/test-redactor.py
 python src/software-testing/scripts/test-case-check.py
+python src/design-system-architect/scripts/test-design-system.py
 ```
 
 `check-repo.py` valida metadatos, estructura, enrutadores, enlaces Markdown, recibos de los diagramas, versiones y etiquetas de skills, la página de cada skill en `docs/` con su enlace en el catálogo y su referencia en este README, y sintaxis de los scripts. Las pruebas unitarias se ejecutan aparte para que un fallo indique qué script falló. La CI (`.github/workflows/validate.yml`) ejecuta los mismos comandos en cada push y pull request.
@@ -368,6 +381,9 @@ Cada skill declara su versión independiente en `metadata.version`; el procedimi
 - `docs/python-testing-and-verification/index.html`: página principal de la skill `python-testing-and-verification`.
 - `docs/python-testing-and-verification/flujo-de-trabajo.html`: diagrama del flujo, del riesgo al informe ejecutado.
 - `docs/python-testing-and-verification/arquitectura.html`: diagrama del paquete, las capas de prueba y la puerta.
+- `docs/design-system-architect/index.html`: página de entrada a la skill de arquitectura del sistema de diseño.
+- `docs/design-system-architect/flujo-de-trabajo.html`: diagrama del descubrimiento, la gobernanza y el cierre verificado.
+- `docs/design-system-architect/arquitectura.html`: diagrama del contrato, las fuentes de tokens, la puerta y la frontera con diseño visual.
 - `docs/web-interface-visual-design/index.html`: página de entrada a la skill de diseño visual web.
 - `docs/web-interface-visual-design/flujo-de-trabajo.html`: diagrama de la inspección, implementación y verificación visual.
 - `docs/web-interface-visual-design/arquitectura.html`: diagrama del contrato, sus referencias y la evidencia renderizada.
