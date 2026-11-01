@@ -1,0 +1,36 @@
+# SKILLS-AGP
+
+> Skills de ingeniería para agentes de IA, como contratos verificables. Cada skill tiene una única fuente canónica: su `SKILL.md` en `src/`, con referencias, plantillas y scripts de verificación propios. Los enrutadores de descubrimiento viven en `.skills/`. Este fichero solo enlaza: las descripciones están en la propia fuente y no se duplican aquí.
+
+## Documentación
+
+- [Catálogo de skills](docs/index.html)
+- [README del repositorio](README.md)
+- [Guía para crear skills](docs/best-practices-create-skills/index.html)
+- [Landing](index.html)
+
+## Contratos de las skills
+
+- [`git-flow-management`](src/git-flow-management/SKILL.md)
+- [`document-management-software`](src/document-management-software/SKILL.md)
+- [`document-redactor`](src/document-redactor/SKILL.md)
+- [`prd-cartographer`](src/prd-cartographer/SKILL.md)
+- [`adr-software`](src/adr-software/SKILL.md)
+- [`go-cli-ai-first`](src/go-cli-ai-first/SKILL.md)
+- [`go-idiomatic-style`](src/go-idiomatic-style/SKILL.md)
+- [`go-errors-and-lifecycle`](src/go-errors-and-lifecycle/SKILL.md)
+- [`go-testing-and-verification`](src/go-testing-and-verification/SKILL.md)
+- [`typescript-idiomatic-style`](src/typescript-idiomatic-style/SKILL.md)
+- [`typescript-testing-and-verification`](src/typescript-testing-and-verification/SKILL.md)
+- [`javascript-idiomatic-style`](src/javascript-idiomatic-style/SKILL.md)
+- [`javascript-testing-and-verification`](src/javascript-testing-and-verification/SKILL.md)
+- [`python-idiomatic-style`](src/python-idiomatic-style/SKILL.md)
+- [`python-testing-and-verification`](src/python-testing-and-verification/SKILL.md)
+- [`security-engineering`](src/security-engineering/SKILL.md)
+- [`playwright-cli-usage`](src/playwright-cli-usage/SKILL.md)
+- [`software-testing`](src/software-testing/SKILL.md)
+- [`web-interface-visual-design`](src/web-interface-visual-design/SKILL.md)
+
+## Terceros
+
+- [`skill-creator`](.skills/skill-creator/SKILL.md) (fijado en `.skills/`, sin contrato en `src/`)
