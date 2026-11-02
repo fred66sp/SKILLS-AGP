@@ -93,6 +93,8 @@ Las categorías —Añadido, Corregido, Modificado— vienen de [Keep a Changelo
 
 ### Corregido
 
+- `typescript-testing-and-verification`: `scripts/test-verify-ts.py` comparaba la ruta de `tsc` sin resolver. En los runners de Windows `TEMP` llega en forma corta (`RUNNER~1`) y el script resuelve la raíz, así que la llamada esperada no coincidía con la real y el job de Windows fallaba; en local no se veía porque la ruta temporal no tenía alias corto. La expectativa usa ahora `tsc.resolve()`, la misma forma que produce el script, y la prueba se reproduce y pasa con `TEMP` en forma corta.
+
 - Tres defectos de portabilidad que aparecían al ejecutar las suites en Windows, antes de abrir el job de esa plataforma.
   - `design-system-architect`: la comprobación de `tokenSources` en `scripts/design_system.py` usa `PurePosixPath` y `PureWindowsPath` en vez de `Path`. Con `Path`, `/tmp/tokens.json` no era absoluta en Windows y «C:\tokens\tokens.json» no lo era en Linux: el validador aceptaba en un sistema lo que rechazaba en el otro. El comportamiento declarado no cambia; en Windows pasa a rechazar lo que ya decía rechazar. La prueba rechaza ahora las dos formas absolutas en cualquier plataforma.
   - `playwright-cli-usage`: `scripts/test-preflight.py` fabricaba el falso `playwright-cli` como guion `#!/bin/sh` con `chmod 0o755`, que no arranca en Windows y dejaba cinco pruebas fallando. Ahora genera un `.bat` en Windows y conserva el guion POSIX; el helper se declara por lo que imprime, lo que escribe en stderr y el código con el que sale, no por un cuerpo de shell.
