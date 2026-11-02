@@ -72,7 +72,7 @@ class VerifyTsTest(unittest.TestCase):
 
         self.assertEqual(code, 0, stdout + stderr)
         runner.assert_called_once_with(
-            ["/usr/bin/node", str(tsc), "--noEmit"], project.resolve(), 600
+            ["/usr/bin/node", str(tsc.resolve()), "--noEmit"], project.resolve(), 600
         )
 
     def test_missing_typescript_fails_with_actionable_message(self):
