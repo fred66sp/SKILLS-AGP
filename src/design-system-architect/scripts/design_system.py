@@ -28,7 +28,7 @@ import json
 import os
 import re
 import sys
-from pathlib import Path
+from pathlib import Path, PurePosixPath, PureWindowsPath
 from typing import Any, Iterable
 
 SKILL_ROOT = Path(__file__).resolve().parents[1]
@@ -520,7 +520,7 @@ def load_tokens(
         if not isinstance(raw, str) or not raw.strip():
             errors.append("tokenSources contiene una ruta vacía o inválida")
             continue
-        if Path(raw).is_absolute():
+        if PurePosixPath(raw).is_absolute() or PureWindowsPath(raw).is_absolute():
             errors.append(f"tokenSources debe ser relativo al contrato: {raw}")
             continue
         source_path = (contract_path.parent / raw).resolve()

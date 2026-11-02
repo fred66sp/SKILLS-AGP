@@ -8,6 +8,7 @@ Uso:
 from __future__ import annotations
 
 import json
+import os
 import subprocess
 import sys
 import tempfile
@@ -61,6 +62,9 @@ class AdrTest(unittest.TestCase):
             capture_output=True,
             text=True,
             encoding="utf-8",
+            # El hijo hereda el entorno: sin UTF-8 forzado escribe en la página de código
+            # local de Windows y el `encoding="utf-8"` de arriba revienta al descodificar.
+            env={**os.environ, "PYTHONUTF8": "1"},
         )
 
     def repo_with_adr(self, name: str = "0001-adoptar-postgresql-16.md", body: str = CLEAN_ADR) -> Path:

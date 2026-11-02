@@ -21,10 +21,32 @@ def write(path, content):
     path.write_text(content, encoding="utf-8")
 
 
-def fake_binary(root, body='echo "1.2.3"', code=0):
-    path = root / "fake-playwright-cli"
-    write(path, f"#!/bin/sh\n{body}\nexit {code}\n")
-    path.chmod(0o755)
+def fake_binary(root, out="1.2.3", err=None, code=None):
+    """Finge un playwright-cli: lo que imprime, lo que escribe en stderr y con qué sale.
+
+    En Windows el ejecutable es un `.bat`; un guion `#!/bin/sh` no arranca ahí.
+    """
+    if os.name == "nt":
+        lines = ["@echo off"]
+        if out is not None:
+            lines.append(f"echo {out}")
+        if err is not None:
+            lines.append(f"echo {err} 1>&2")
+        if code is not None:
+            lines.append(f"exit /b {code}")
+        path = root / "fake-playwright-cli.bat"
+    else:
+        lines = ["#!/bin/sh"]
+        if out is not None:
+            lines.append(f"echo {out}")
+        if err is not None:
+            lines.append(f"echo {err} >&2")
+        if code is not None:
+            lines.append(f"exit {code}")
+        path = root / "fake-playwright-cli"
+    write(path, "\n".join(lines) + "\n")
+    if os.name != "nt":
+        path.chmod(0o755)
     return path
 
 
@@ -48,13 +70,13 @@ class PreflightTest(unittest.TestCase):
         self.assertTrue(any("no se encontró" in note for note in report["notes"]))
 
     def test_failing_binary_is_not_ready(self):
-        binary = fake_binary(self.root, body='echo "boom" >&2', code=3)
+        binary = fake_binary(self.root, out=None, err="boom", code=3)
         report = PREFLIGHT.check_environment(self.root, str(binary))
         self.assertFalse(report["ready"])
         self.assertTrue(any("devolvió 3" in note for note in report["notes"]))
 
     def test_empty_version_is_not_ready(self):
-        binary = fake_binary(self.root, body="true")
+        binary = fake_binary(self.root, out=None)
         report = PREFLIGHT.check_environment(self.root, str(binary))
         self.assertFalse(report["ready"])
         self.assertTrue(any("no imprimió versión" in note for note in report["notes"]))
