@@ -49,3 +49,11 @@ Cada artefacto responde a una sola pregunta. Si dos documentos responden a la mi
 ## Convención del repositorio
 
 Antes de proponer una estructura, comprueba si el repositorio ya declara una: carpeta `docs/`, convención de ADR, formato de CHANGELOG, un `AGENTS.md` o un README con secciones fijas. Respétala aunque no sea la que usarías. Proponer un cambio de convención es un encargo aparte y explícito.
+
+## Alcance del inventario
+
+El script lee `.doc-inventory-ignore` en la raíz, si existe. Un patrón por línea, con `#` para comentarios y líneas vacías ignoradas. Cada patrón es una ruta relativa a la raíz: `a.md` solo excluye el fichero de la raíz y no un `sub/a.md`, y `docs/` solo excluye esa carpeta, no un `sub/docs/`. Lo que cuelga de una ruta excluida queda fuera con ella. `/` final marca una carpeta; sin él, la ruta puede ser un fichero o una carpeta. Se admiten globs simples (`*`, `?`, `[...]`) dentro de un segmento, una barra inicial se ignora y los patrones distinguen mayúsculas en cualquier sistema. No hay negación. El informe dice cuántas rutas quedaron fuera y las enumera; si el archivo existe pero no se puede leer, avisa por la salida de error y sigue sin exclusiones.
+
+El archivo responde a una pregunta de alcance: qué artefactos no son documentación del repositorio y no deben revisarse. Por ejemplo, estado de la máquina, exportaciones generadas, copias que viajan intactas desde su origen o plantillas que solo existen al instalar. No responde a una pregunta de contenido: un hallazgo dentro de un documento revisado se decide, no se ignora.
+
+Las exclusiones de directorio de `--exclude-dir` siguen existiendo para ejecuciones puntuales. El archivo de ignorados se suma a ellas y no las sustituye.

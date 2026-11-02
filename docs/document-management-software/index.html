@@ -133,6 +133,10 @@
 
       <div class="code"><pre><code class="language-bash">python3 scripts/doc-inventory.py --root &lt;directorio&gt; [--glob "*.md"] [--json]</code></pre></div>
 
+      <div class="note">
+        <p><strong>Alcance del inventario.</strong> Si la raíz tiene <code>.doc-inventory-ignore</code>, sus patrones son rutas relativas a la raíz y se aplican antes de analizar: <code>a.md</code> solo excluye ese fichero en la raíz y <code>docs/</code> solo esa carpeta. El informe dice cuántas rutas quedaron fuera.</p>
+      </div>
+
       <div class="qa"><h3>El script sale con 0</h3><p>Inventario completo sin hallazgos. Esa lista es la línea base antes de tocar nada.</p></div>
       <div class="qa"><h3>El script sale con 3</h3><p>Hay hallazgos: enlaces relativos rotos, documentos sin título, documentos vacíos, encabezados repetidos entre documentos o referencias vivas escritas como documentación. Es una salida esperada. Para cada uno se decide si se corrige en este encargo o se reporta con evidencia.</p></div>
       <div class="qa"><h3>El script sale con 2</h3><p>Error de uso: la ruta no existe, no es un directorio o el patrón incluye separadores. Se corrige el argumento; no se sustituye el script por una revisión a ojo.</p></div>

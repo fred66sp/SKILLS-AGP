@@ -20,6 +20,8 @@ Las categorías —Añadido, Corregido, Modificado— vienen de [Keep a Changelo
 
 ### Añadido
 
+- Skill `document-management-software`: el inventario lee un `.doc-inventory-ignore` en la raíz y excluye lo que coincida antes de analizar. Cada patrón es una ruta relativa a la raíz: `a.md` no alcanza a `sub/a.md` y `docs/` no alcanza a `sub/docs/`. Admite `/` final para carpetas, globs simples dentro de un segmento y `#` para comentarios, y no admite negación. El informe enumera las rutas ignoradas y avisa por la salida de error si el archivo existe pero no se puede leer; las exclusiones de `--exclude-dir` siguen siendo independientes. La semántica queda escrita en `references/document-inventory.md` y cubierta por pruebas de anclaje a la raíz.
+
 - `AGENTS.md`: mapa de enrutado para agentes. No define reglas, comandos ni estados: remite a la fuente canónica de cada materia y declara que esa fuente prevalece cuando difieren.
 
 - `CONTRIBUTING.md`: sección «Unidad de trabajo» con la escalera que se recorre antes de proponer una skill nueva —nada, instrucciones del agente, script, skill, viaje (metaskill)—, con qué corresponde a cada peldaño y qué arrastra cada uno, más las dos reglas de aplicación: la escalera decide qué se escribe, no qué se usa primero, y subir un peldaño exige evidencia de que el inferior no cubre el caso. Vive aquí y no en una guía nueva porque `README.md` ya remite a este fichero en «Flujo de trabajo»: la precedencia queda en el sitio donde se decide antes de añadir contenido. El viaje aún no existe; la fila lo declara y remite a PBI-10.
