@@ -1,0 +1,36 @@
+# AGENTS.md
+
+Este repositorio es una colección de skills para agentes. La descripción canónica, el catálogo y la forma de usar una skill están en [`README.md`](README.md).
+
+Este fichero solo enruta: no define reglas, comandos, recuentos ni estados. Si contradice a otra fuente, manda la otra fuente y se corrige este mapa.
+
+## Fuentes canónicas
+
+| Qué se busca | Dónde vive |
+|---|---|
+| Qué es el repositorio, catálogo, estructura, uso de una skill, validación, empaquetado y skills de terceros | [`README.md`](README.md) |
+| Ramas, commits, integración, versiones y enrutadores | [`CONTRIBUTING.md`](CONTRIBUTING.md) |
+| Contrato de una skill: activación, procedimiento, referencias, scripts y cierre | `src/<skill>/SKILL.md` |
+| Qué skill aplica a un encargo | [`README.md`](README.md), sección «Skills disponibles», y la descripción de cada `.skills/<skill>/SKILL.md` |
+| Enrutador de una skill propia | `.skills/<skill>/SKILL.md` |
+| Trabajo pendiente y prioridad | [`BACKLOG.md`](BACKLOG.md) |
+| Contexto de producto y sistema visual | [`PRODUCT.md`](PRODUCT.md), [`DESIGN.md`](DESIGN.md) |
+| Documentación pública, diagramas, recibos y fin de línea | `docs/` y [`README.md`](README.md), sección «Documentación» |
+| La puerta que ejecuta la CI | [`.github/workflows/validate.yml`](.github/workflows/validate.yml); los mismos comandos en [`README.md`](README.md), sección «Validación» |
+
+## Punto de entrada por encargo
+
+| Encargo | Lee antes | Cierre |
+|---|---|---|
+| Crear o editar una skill | [`docs/best-practices-create-skills/README.md`](docs/best-practices-create-skills/README.md), [`.skills/skill-creator/SKILL.md`](.skills/skill-creator/SKILL.md), [`README.md`](README.md) secciones «Regla de empaquetado» y «Enrutadores de skills propias», y [`CONTRIBUTING.md`](CONTRIBUTING.md) secciones «Enrutadores de skills» y «Versiones de las skills» | La verificación de [`README.md`](README.md), sección «Validación» |
+| Operación Git | [`src/git-flow-management/SKILL.md`](src/git-flow-management/SKILL.md) y [`CONTRIBUTING.md`](CONTRIBUTING.md) | El script que fije el contrato |
+| Escribir o actualizar documentación | [`src/document-management-software/SKILL.md`](src/document-management-software/SKILL.md) | El inventario que fije el contrato |
+| Redactar o corregir prosa | [`src/document-redactor/SKILL.md`](src/document-redactor/SKILL.md) | La puerta que fije el contrato |
+| Regenerar un diagrama | [`README.md`](README.md), sección «Documentación» | El recibo del artefacto |
+| Trabajar en interfaz o sistema visual | [`src/design-system-architect/SKILL.md`](src/design-system-architect/SKILL.md) o [`src/web-interface-visual-design/SKILL.md`](src/web-interface-visual-design/SKILL.md) | Lo que fije el contrato |
+
+## Mantenimiento de este fichero
+
+- Enlaza la fuente; no copies su contenido.
+- Añade una fila solo cuando el punto de entrada no se deduzca del catálogo.
+- Si una ruta deja de existir, este mapa está obsoleto: corrígelo en lugar de reconstruir aquí lo que decía.
