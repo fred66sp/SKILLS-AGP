@@ -7,6 +7,23 @@ Política de este repositorio. Prevalece sobre cualquier Git Flow genérico: no 
 - `main` es la única rama de larga vida. Contiene lo que está listo para usarse.
 - No hay `develop`, `release/*` ni `hotfix/*`. Introducirlos exige cambiar esta política antes.
 
+## Unidad de trabajo
+
+Antes de proponer una skill nueva, se decide qué unidad resuelve la necesidad. La escalera va de menos a más coste y se toma la primera que cubre el caso hoy, no la que cubría un caso hipotético mañana.
+
+| Unidad | Cuándo corresponde | Qué arrastra |
+|---|---|---|
+| Nada | Problema puntual que no se repite. | Nada. |
+| Instrucciones del agente | Comportamiento permanente, que debe aplicarse en cualquier proyecto. | El fichero de instrucciones de cada máquina. No es contenido publicable de este repositorio. |
+| Script | Operación determinista: misma entrada, misma salida, sin criterio. | Fichero en `scripts/` o `src/<skill>/scripts/` con su prueba. |
+| Skill | Conocimiento especializado que se necesita bajo demanda y con criterio. | Contrato en `src/<skill>/SKILL.md`, enrutador en `.skills/`, página en `docs/`, puerta con prueba si trae scripts. |
+| Viaje (metaskill) | Recorrido con varias fases y decisiones humanas que hay que poder retomar en otra sesión. | No existe todavía: lo decide PBI-10 de `BACKLOG.md`. Mientras no exista, se invocan las skills en orden y el orden se documenta en el item. |
+
+Dos reglas de aplicación:
+
+- La escalera decide **qué se escribe**, no qué se usa primero: una necesidad real se cubre con la unidad más baja que la resuelva ya.
+- Subir un peldaño se justifica con evidencia de que el inferior no cubre el caso. La anticipación de que quizá lo cubra más adelante no sube nada.
+
 ## Ramas de trabajo
 
 Se crean desde `main` y viven lo mínimo posible. Nombres en minúsculas, con palabras separadas por guiones.
