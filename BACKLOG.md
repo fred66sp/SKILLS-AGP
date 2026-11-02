@@ -20,25 +20,11 @@ La práctica viene de [Product backlog](https://www.atlassian.com/agile/scrum/ba
 - **Estado:** listo · sin refinar · bloqueado.
 - **Evidencia:** el hecho observable que justifica el item, con ruta y línea o comando.
 - **Aceptación:** una comprobación ejecutable. Sin ella, el item no está listo.
-- **ID:** numeración continua que no se reutiliza jamás. Un item cerrado por implementación pasa a **Retirados** con el commit que lo cerró; uno que ya no se hará, a **Descartado**. La regla existe porque el ID se cita fuera de este fichero, en `CHANGELOG.md`, en notas de máquina y en memorias de sesión, y reutilizarlo hace que dos épocas del backlog signifiquen cosas distintas bajo el mismo número.
+- **ID:** numeración continua que no se reutiliza jamás. Un item cerrado por implementación pasa a **Retirados** con su fecha; el commit que lo cerró no se copia, porque es estado de Git que el historial ya guarda. Uno que ya no se hará, a **Descartado**. La regla existe porque el ID se cita fuera de este fichero, en `CHANGELOG.md`, en notas de máquina y en memorias de sesión, y reutilizarlo hace que dos épocas del backlog signifiquen cosas distintas bajo el mismo número.
 
 Un item se cierra como se cierran los cambios del repositorio: `python scripts/check-repo.py` en `0 errores`, las suites de `scripts/` y de `src/*/scripts/` en verde, `CHANGELOG.md` con su entrada y `README.md`/`CONTRIBUTING.md` sincronizados si cambia una convención. El incremento de versión y la etiqueta solo se tocan si cambia el contrato de una skill.
 
 ## Listo para trabajar
-
-### PBI-03: Validar en los dos sistemas donde se trabaja
-
-- **Tipo:** CI · **Prioridad:** Should · **Tamaño:** M · **Estado:** bloqueado
-- **Evidencia:** `.github/workflows/validate.yml` fijaba `ubuntu-latest` y Python 3.12; el entorno de trabajo es Windows con Python 3.13. El repositorio existe para que todas las máquinas trabajen igual. El daño no era hipotético: al ejecutar las trece suites en Windows antes de abrir el job de esa plataforma ya fallaban tres, y una tapaba un defecto real del validador: `design_system.py` aceptaba en Windows una ruta absoluta POSIX que rechazaba en Linux, porque `Path(raw).is_absolute()` no es portable. Los tres corregidos en esta rama y verificados en Windows y en Linux.
-- **Resultado esperado:** la puerta y las suites se ejecutan en Linux y en Windows, sobre Python 3.12 y 3.13, y fallan en cualquiera de los dos cuando el repositorio se rompe.
-- **Aceptación:**
-  - matriz `os: [ubuntu-latest, windows-latest]` con `python-version: ["3.12", "3.13"]` y `fail-fast: false`: cuatro jobs, ninguno cancela a los demás.
-  - ningún paso invoca `python3` a secas, que no existe en los runners de Windows.
-  - las siete comprobaciones que declara `scripts/check-repo.py:8-24` se ejecutan en los cuatro jobs.
-  - los cuatro jobs quedan en verde en una rama probada; los minutos de CI quedan anotados en este item.
-- **Verificado ya:** la puerta y las trece suites, en verde en Windows con Python 3.13.9; la puerta y las tres suites corregidas, en verde en Linux (WSL, Python 3.14.4). Esto no sustituye a los runners: ni el `bash` de Git para Windows del `check_scripts` de la puerta ni el `python` del runner se han ejercitado.
-- **Dependencias:** cerrar este item requiere `push`, que es una operación aparte con su propia confirmación. Sin él queda bloqueado en el verde de los cuatro jobs.
-- **Revisado:** 2026-11-02
 
 ### PBI-08: Recibos de procedencia para skills de terceros
 
@@ -143,12 +129,13 @@ Un item se cierra como se cierran los cambios del repositorio: `python scripts/c
 
 Cerrados por implementación. El ID queda consumido y no vuelve a usarse.
 
-| ID | Item | Cerrado en |
+| ID | Item | Cerrado |
 |---|---|---|
-| PBI-01 | Que una skill no entre sin documentación (puerta de catálogo) | [`b21cedb`](https://github.com/fred66sp/SKILLS-AGP/commit/b21cedb) · 2026-10-25 |
-| PBI-02 | Declarar el fin de línea dentro del repositorio | [`0e6b6ee`](https://github.com/fred66sp/SKILLS-AGP/commit/0e6b6ee) · 2026-10-25 |
-| PBI-04 | `CHANGELOG` con las versiones publicadas | [`fc905b9`](https://github.com/fred66sp/SKILLS-AGP/commit/fc905b9) · 2026-10-25 |
-| PBI-06 | Contraste del botón primario en tema oscuro | [`31d0f80`](https://github.com/fred66sp/SKILLS-AGP/commit/31d0f80) · 2026-11-01 |
+| PBI-01 | Que una skill no entre sin documentación (puerta de catálogo) | 2026-10-25 |
+| PBI-02 | Declarar el fin de línea dentro del repositorio | 2026-10-25 |
+| PBI-03 | Validar en los dos sistemas donde se trabaja. La matriz de `validate.yml` ejecuta la puerta y las suites en Ubuntu y Windows sobre Python 3.12 y 3.13; una ejecución completa tarda 76 s de reloj. | 2026-11-02 |
+| PBI-04 | `CHANGELOG` con las versiones publicadas | 2026-10-25 |
+| PBI-06 | Contraste del botón primario en tema oscuro | 2026-11-01 |
 
 ## Descartado
 
