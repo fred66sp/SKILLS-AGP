@@ -269,11 +269,15 @@ class DesignSystemTest(unittest.TestCase):
     def test_absolute_token_source_fails(self) -> None:
         contract_data = base_contract()
         del contract_data["tokens"]
-        contract_data["tokenSources"] = ["/tmp/tokens.json"]
+        contract_data["tokenSources"] = ["/tmp/tokens.json", "C:\\tokens\\tokens.json"]
         contract = self.write("design-system.json", contract_data)
         code, out, _ = self.run_cli("check", str(contract))
         self.assertEqual(code, ds.EXIT_FAIL)
         self.assertIn("relativo al contrato", out)
+        # Las dos formas absolutas se rechazan en cualquier sistema: `Path().is_absolute()`
+        # daría por válida `/tmp/...` en Windows y `C:\\...` en Linux.
+        for raw in ("/tmp/tokens.json", "C:\\tokens\\tokens.json"):
+            self.assertIn(raw, out)
 
     def test_theme_override_type_mismatch_fails(self) -> None:
         contract_data = base_contract()
