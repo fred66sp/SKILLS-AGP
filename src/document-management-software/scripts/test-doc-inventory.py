@@ -242,5 +242,129 @@ class ClasesPreexistentes(Base):
         self.assertEqual(run(["--root", self.root, "--glob", "src/*.md"]).returncode, 2)
 
 
+class ArchivoDeIgnorados(Base):
+    """El alcance del inventario se define en .doc-inventory-ignore."""
+
+    def ignore(self, *lines):
+        self.write(".doc-inventory-ignore", "\n".join(lines) + "\n")
+
+    def payload(self):
+        proc = run(["--root", self.root, "--json"])
+        self.assertIn(proc.returncode, (0, 3), proc.stderr)
+        return json.loads(proc.stdout)
+
+    def test_carpeta_ignorada(self):
+        self.write("a.md", "# A\n\nTexto.\n")
+        self.write("generado/b.md", "Sin título.\n")
+        self.ignore("# comentario", "generado/")
+        data = self.payload()
+        self.assertEqual(data["ignored"], ["generado/"])
+        self.assertEqual(data["findings"]["missing_h1"], [])
+        self.assertEqual([doc["path"] for doc in data["documents"]], ["a.md"])
+        self.assertEqual(data["exit_code"], 0)
+
+    def test_archivo_ignorado(self):
+        self.write("a.md", "# A\n\nTexto.\n")
+        self.write("b.md", "Sin título.\n")
+        self.ignore("b.md")
+        data = self.payload()
+        self.assertEqual(data["ignored"], ["b.md"])
+        self.assertEqual(data["findings"]["missing_h1"], [])
+        self.assertEqual(data["exit_code"], 0)
+
+    def test_archivo_anidado_ignorado(self):
+        self.write("a.md", "# A\n\nTexto.\n")
+        self.write("internal/install/agent.md", "Sin título.\n")
+        self.ignore("internal/install/agent.md")
+        data = self.payload()
+        self.assertEqual(data["ignored"], ["internal/install/agent.md"])
+        self.assertEqual(data["findings"]["missing_h1"], [])
+
+    def test_glob_de_carpeta(self):
+        self.write("a.md", "# A\n\nTexto.\n")
+        self.write("skills/uno/SKILL.md", "Sin título.\n")
+        self.write("skills/README.md", "# Skills\n\nTexto.\n")
+        self.ignore("skills/*/")
+        data = self.payload()
+        self.assertIn("skills/uno/", data["ignored"])
+        self.assertEqual([doc["path"] for doc in data["documents"]], ["a.md", "skills/README.md"])
+        self.assertEqual(data["findings"]["missing_h1"], [])
+
+    def test_comentarios_y_lineas_vacias(self):
+        self.write("a.md", "# A\n\nTexto.\n")
+        self.ignore("# comentario", "", "a.md")
+        data = self.payload()
+        self.assertEqual(data["ignored"], ["a.md"])
+        self.assertEqual(data["documents"], [])
+        self.assertEqual(data["exit_code"], 0)
+
+    def test_ignorado_relativo_a_la_raiz(self):
+        self.write("a.md", "# A\n\nTexto.\n")
+        self.ignore("a.md")
+        other = tempfile.mkdtemp(prefix="docinv-cwd-")
+        try:
+            proc = run(["--root", self.root, "--json"], cwd=other)
+        finally:
+            shutil.rmtree(other, ignore_errors=True)
+        self.assertEqual(json.loads(proc.stdout)["ignored"], ["a.md"])
+
+    def test_patron_sin_barra_solo_casa_en_la_raiz(self):
+        self.write("a.md", "Sin título.\n")
+        self.write("sub/a.md", "Sin título.\n")
+        self.ignore("a.md")
+        data = self.payload()
+        self.assertEqual(data["ignored"], ["a.md"])
+        self.assertEqual([doc["path"] for doc in data["documents"]], ["sub/a.md"])
+
+    def test_glob_sin_barra_no_cruza_carpetas(self):
+        self.write("a.md", "# A\n\nTexto.\n")
+        self.write("sub/b.md", "Sin título.\n")
+        self.ignore("*.md")
+        data = self.payload()
+        self.assertEqual(data["ignored"], ["a.md"])
+        self.assertEqual([doc["path"] for doc in data["documents"]], ["sub/b.md"])
+
+    def test_patron_de_carpeta_solo_casa_en_la_raiz(self):
+        self.write("a.md", "# A\n\nTexto.\n")
+        self.write("docs/x.md", "Sin título.\n")
+        self.write("sub/docs/y.md", "Sin título.\n")
+        self.ignore("docs/")
+        data = self.payload()
+        self.assertEqual(data["ignored"], ["docs/"])
+        self.assertEqual([doc["path"] for doc in data["documents"]], ["a.md", "sub/docs/y.md"])
+
+    def test_barra_final_no_ignora_fichero_homonimo(self):
+        self.write("foo.md", "Sin título.\n")
+        self.write("foo/bar.md", "# Bar\n\nTexto.\n")
+        self.ignore("foo.md/")
+        data = self.payload()
+        self.assertEqual(data["ignored"], [])
+        self.assertEqual([doc["path"] for doc in data["documents"]], ["foo.md", "foo/bar.md"])
+        self.assertEqual(data["findings"]["missing_h1"], ["foo.md"])
+
+    def test_archivo_ilegible_avisa(self):
+        self.write("a.md", "# A\n\nTexto.\n")
+        os.makedirs(os.path.join(self.root, ".doc-inventory-ignore"))
+        proc = run(["--root", self.root, "--json"])
+        self.assertEqual(proc.returncode, 0, proc.stdout)
+        self.assertIn("aviso: no se pudo leer .doc-inventory-ignore", proc.stderr)
+
+    def test_sin_archivo_no_cambia(self):
+        self.write("a.md", "# A\n\nTexto.\n")
+        data = self.payload()
+        self.assertIsNone(data["ignore_file"])
+        self.assertEqual(data["ignored"], [])
+        self.assertEqual(data["exit_code"], 0)
+
+    def test_salida_de_texto_informa_ignorados(self):
+        self.write("a.md", "# A\n\nTexto.\n")
+        self.write("generado/b.md", "Sin título.\n")
+        self.ignore("generado/")
+        proc = run(["--root", self.root])
+        self.assertEqual(proc.returncode, 0, proc.stdout)
+        self.assertIn("Ignorados por .doc-inventory-ignore: 1", proc.stdout)
+        self.assertIn("- generado/", proc.stdout)
+
+
 if __name__ == "__main__":
     unittest.main(verbosity=2)

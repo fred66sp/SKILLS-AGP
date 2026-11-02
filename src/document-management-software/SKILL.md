@@ -2,7 +2,7 @@
 name: document-management-software
 description: "Gestiona la documentación de un proyecto de software como conocimiento verificable: decide qué artefactos merecen existir, los redacta desde evidencia, evita duplicar la fuente de verdad y demuestra con comprobaciones que lo afirmado sigue siendo cierto. Úsala cuando el agente vaya a crear, revisar, actualizar o auditar README, guías de contribución, PRD, SDD, arquitectura, ADR, API, instalación, operación, runbooks, notas de release, documentación de features u otra documentación técnica de un proyecto de software, y también cuando detecte documentación obsoleta, contradictoria o duplicada. No la uses para contenido comercial, artículos, material de marketing, documentación de producto no técnica, la descripción de una skill de agente, ni para sustituir tests, contratos ejecutables, comentarios de código o mensajes de commit."
 metadata:
-  version: "1.0.1"
+  version: "1.1.0"
 ---
 
 # Gestión documental de software
@@ -32,7 +32,7 @@ Gestiona la documentación como conocimiento con fuente de verdad, no como texto
 4. Si falta una fuente imprescindible o el encargo mezcla intención y estado sin aclararlo, formula una sola pregunta concreta y detente. No interrogues para rellenar una plantilla.
 
 **Paso 2: Inventariar antes de decidir.**
-1. Ejecuta `python3 scripts/doc-inventory.py --root <ruta>` sobre el árbol documental afectado. Devuelve el inventario y los hallazgos deterministas: enlaces relativos rotos, documentos sin título, documentos vacíos, encabezados repetidos entre documentos y referencias vivas escritas como documentación (estado de Git, rutas de una máquina concreta y recuentos de artefactos).
+1. Ejecuta `python3 scripts/doc-inventory.py --root <ruta>` sobre el árbol documental afectado. Devuelve el inventario y los hallazgos deterministas: enlaces relativos rotos, documentos sin título, documentos vacíos, encabezados repetidos entre documentos y referencias vivas escritas como documentación (estado de Git, rutas de una máquina concreta y recuentos de artefactos). Si la raíz contiene `.doc-inventory-ignore`, el script lo lee y aplica sus patrones —rutas relativas a la raíz— antes de analizar; el informe dice cuántas rutas ignoró. El archivo define el alcance del inventario: no sustituye la decisión sobre un hallazgo dentro de un documento revisado.
 2. Lee `references/document-inventory.md` para asignar responsabilidad a cada artefacto existente y decidir si hace falta uno nuevo.
 3. Resume la cobertura actual: qué responsabilidad documental ya está cubierta, cuál falta y cuál está cubierta dos veces.
 

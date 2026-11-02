@@ -21,6 +21,13 @@ demás familias se buscan también ahí, porque una referencia viva no se vuelve
 portable por estar en un registro. Un SHA enlazado a la página de su commit es la
 fijación de un tercero y no es hallazgo.
 
+Si la raíz tiene `.doc-inventory-ignore`, el script lee sus patrones y excluye lo
+que coincida antes de analizar. El archivo define el alcance: un patrón por línea,
+`#` para comentarios, `/` final para carpetas, globs simples y rutas relativas a
+la raíz —un patrón sin barra solo casa en la raíz—; no admite negación. Acota qué
+documentos se revisan; no exime de decidir un hallazgo dentro de un documento
+revisado.
+
 Códigos de salida:
     0  inventario completo sin hallazgos
     3  inventario completo con hallazgos
@@ -40,6 +47,8 @@ DEFAULT_EXCLUDES = (
     ".git", "node_modules", "vendor", "dist", "build", "target",
     "__pycache__", ".venv", "venv", ".next", ".nuxt", ".output",
 )
+
+IGNORE_FILE = ".doc-inventory-ignore"
 
 HEADING_RE = re.compile(r"^(#{1,6})\s+(.+?)\s*#*\s*$")
 LINK_RE = re.compile(r"!?\[[^\]]*\]\(\s*([^)\s]+)(?:\s+\"[^\"]*\")?\s*\)")
@@ -174,17 +183,76 @@ def resolve(target, source, root):
     return (target, os.path.normpath(resolved), os.path.exists(os.path.normpath(resolved)))
 
 
-def collect(root, pattern, excludes):
+def load_ignores(root):
+    """Lee los patrones de .doc-inventory-ignore en la raíz, si existe."""
+    path = os.path.join(root, IGNORE_FILE)
+    try:
+        with open(path, encoding="utf-8") as handle:
+            lines = handle.read().splitlines()
+    except FileNotFoundError:
+        return []
+    except OSError as error:
+        print(f"aviso: no se pudo leer {IGNORE_FILE}: {error}", file=sys.stderr)
+        return []
+
+    patterns = []
+    for line in lines:
+        line = line.strip()
+        if not line or line.startswith("#"):
+            continue
+        patterns.append(line.replace("\\", "/"))
+    return patterns
+
+
+def ignored(relative, patterns, is_dir=False):
+    """Indica si una ruta relativa cae bajo algún patrón del archivo de ignorados."""
+    relative = relative.replace(os.sep, "/").strip("/")
+    if not relative:
+        return False
+
+    parts = relative.split("/")
+    for pattern in patterns:
+        dir_only = pattern.endswith("/")
+        raw = pattern.strip("/")
+        if not raw:
+            continue
+
+        depth = raw.count("/") + 1
+        if len(parts) < depth:
+            continue
+        if not fnmatch.fnmatchcase("/".join(parts[:depth]), raw):
+            continue
+        if depth < len(parts):
+            return True
+        if dir_only and not is_dir:
+            continue
+        return True
+    return False
+
+
+def collect(root, pattern, excludes, ignores):
     pattern = pattern.lower()
-    documents = []
+    documents, skipped = [], []
     for dirpath, dirnames, filenames in os.walk(root):
-        dirnames[:] = sorted(
-            name for name in dirnames if name.lower() not in excludes
-        )
+        kept = []
+        for name in sorted(dirnames):
+            if name.lower() in excludes:
+                continue
+            relative = os.path.relpath(os.path.join(dirpath, name), root).replace(os.sep, "/")
+            if ignored(relative, ignores, is_dir=True):
+                skipped.append(relative + "/")
+                continue
+            kept.append(name)
+        dirnames[:] = kept
         for name in sorted(filenames):
-            if fnmatch.fnmatch(name.lower(), pattern):
-                documents.append(os.path.join(dirpath, name))
-    return documents
+            if not fnmatch.fnmatch(name.lower(), pattern):
+                continue
+            relative = os.path.relpath(os.path.join(dirpath, name), root).replace(os.sep, "/")
+            if ignored(relative, ignores):
+                skipped.append(relative)
+                continue
+            documents.append(os.path.join(dirpath, name))
+    return documents, sorted(skipped)
 
 
 def main(argv=None):
@@ -215,7 +283,9 @@ def main(argv=None):
         return 2
 
     excludes = {item.lower() for item in (args.exclude_dir or DEFAULT_EXCLUDES)}
-    results = [analyze(path, root) for path in collect(root, args.glob, excludes)]
+    ignores = load_ignores(root)
+    paths, ignored_paths = collect(root, args.glob, excludes, ignores)
+    results = [analyze(path, root) for path in paths]
 
     h2_index = {}
     for document in results:
@@ -248,6 +318,8 @@ def main(argv=None):
         payload = {
             "root": root.replace(os.sep, "/"),
             "glob": args.glob,
+            "ignore_file": IGNORE_FILE if ignores else None,
+            "ignored": ignored_paths,
             "documents": [
                 {key: document[key] for key in ("path", "lines", "title", "links", "live")}
                 for document in results
@@ -267,6 +339,11 @@ def main(argv=None):
     print("|---|---|---|---|")
     for document in results:
         print(f"| {document['path']} | {document['lines']} | {document['title'] or '—'} | {len(document['links'])} |")
+
+    if ignores:
+        print(f"\nIgnorados por {IGNORE_FILE}: {len(ignored_paths)}")
+        for path in ignored_paths:
+            print(f"- {path}")
 
     print("\nHallazgos")
     if not has_findings:
