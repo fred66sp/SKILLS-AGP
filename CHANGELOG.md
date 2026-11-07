@@ -20,6 +20,8 @@ Las categorías —Añadido, Corregido, Modificado— vienen de [Keep a Changelo
 
 ### Añadido
 
+- Tablero tasks-ai en `.tasks-ai/`: referencias `sk-N`, instrucciones, contrato de etiquetas y ajustes versionados, y una base, un binario y unas extensiones que `tasks-ai init` restaura en cada clon. `serve.sh` lo deja en segundo plano en 127.0.0.1:8892, con pid y registro en `.run/`.
+
 - Skill `document-management-software`: el inventario lee un `.doc-inventory-ignore` en la raíz y excluye lo que coincida antes de analizar. Cada patrón es una ruta relativa a la raíz: `a.md` no alcanza a `sub/a.md` y `docs/` no alcanza a `sub/docs/`. Admite `/` final para carpetas, globs simples dentro de un segmento y `#` para comentarios, y no admite negación. El informe enumera las rutas ignoradas y avisa por la salida de error si el archivo existe pero no se puede leer; las exclusiones de `--exclude-dir` siguen siendo independientes. La semántica queda escrita en `references/document-inventory.md` y cubierta por pruebas de anclaje a la raíz.
 
 - `AGENTS.md`: mapa de enrutado para agentes. No define reglas, comandos ni estados: remite a la fuente canónica de cada materia y declara que esa fuente prevalece cuando difieren.

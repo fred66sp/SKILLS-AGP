@@ -13,7 +13,9 @@ Este fichero solo enruta: no define reglas, comandos, recuentos ni estados. Si c
 | Contrato de una skill: activación, procedimiento, referencias, scripts y cierre | `src/<skill>/SKILL.md` |
 | Qué skill aplica a un encargo | [`README.md`](README.md), sección «Skills disponibles», y la descripción de cada `.skills/<skill>/SKILL.md` |
 | Enrutador de una skill propia | `.skills/<skill>/SKILL.md` |
-| Trabajo pendiente y prioridad | [`BACKLOG.md`](BACKLOG.md) |
+| Trabajo pendiente y prioridad | [`.tasks-ai/AGENTS.md`](.tasks-ai/AGENTS.md), sección «Cuándo se usa qué» |
+| Etiquetas del tablero: clases, asignación y catálogo | [`.tasks-ai/CONTRATO_ETIQUETAS.md`](.tasks-ai/CONTRATO_ETIQUETAS.md) → «1. Las clases y su convivencia», «2. Asignación correcta a una tarea», «3. Gestión del catálogo» |
+| Servidor del tablero | [`serve.sh`](serve.sh) |
 | Contexto de producto y sistema visual | [`PRODUCT.md`](PRODUCT.md), [`DESIGN.md`](DESIGN.md) |
 | Documentación pública, diagramas, recibos y fin de línea | `docs/` y [`README.md`](README.md), sección «Documentación» |
 | La puerta que ejecuta la CI | [`.github/workflows/validate.yml`](.github/workflows/validate.yml); los mismos comandos en [`README.md`](README.md), sección «Validación» |
@@ -24,6 +26,7 @@ Este fichero solo enruta: no define reglas, comandos, recuentos ni estados. Si c
 |---|---|---|
 | Crear o editar una skill | [`docs/best-practices-create-skills/README.md`](docs/best-practices-create-skills/README.md), [`.skills/skill-creator/SKILL.md`](.skills/skill-creator/SKILL.md), [`README.md`](README.md) secciones «Regla de empaquetado» y «Enrutadores de skills propias», y [`CONTRIBUTING.md`](CONTRIBUTING.md) secciones «Enrutadores de skills» y «Versiones de las skills» | La verificación de [`README.md`](README.md), sección «Validación» |
 | Operación Git | [`src/git-flow-management/SKILL.md`](src/git-flow-management/SKILL.md) y [`CONTRIBUTING.md`](CONTRIBUTING.md) | El script que fije el contrato |
+| Crear o etiquetar una tarea | [`.tasks-ai/CONTRATO_ETIQUETAS.md`](.tasks-ai/CONTRATO_ETIQUETAS.md) sección 2 | La tarea nace con su tipo y su estructural (`task` o `epic`); el catálogo vivo, en `tasks-ai tags` |
 | Escribir o actualizar documentación | [`src/document-management-software/SKILL.md`](src/document-management-software/SKILL.md) | El inventario que fije el contrato |
 | Redactar o corregir prosa | [`src/document-redactor/SKILL.md`](src/document-redactor/SKILL.md) | La puerta que fije el contrato |
 | Regenerar un diagrama | [`README.md`](README.md), sección «Documentación» | El recibo del artefacto |
