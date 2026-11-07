@@ -35,3 +35,8 @@
 ## Terceros
 
 - [`skill-creator`](.skills/skill-creator/SKILL.md) (fijado en `.skills/`, sin contrato en `src/`)
+
+## Desarrollo
+
+- [Tablero de tareas](.tasks-ai/AGENTS.md): instrucciones, contrato de etiquetas y ajustes versionados; la base, el binario y las extensiones son estado local que `tasks-ai init` restaura.
+- [serve.sh](serve.sh): `start`, `status` y `stop` del servidor en segundo plano; pid y registro en `.run/`, escucha en 127.0.0.1:8892.

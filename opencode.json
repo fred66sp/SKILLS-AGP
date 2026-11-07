@@ -1,5 +1,6 @@
 {
   "$schema": "https://opencode.ai/config.json",
+  "plugins": ["./.tasks-ai/extensions/opencode"],
   "agent": {
     "Planner": {
       "model": "nan/glm5.3-flash"

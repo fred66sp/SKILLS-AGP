@@ -1,0 +1,12 @@
+{
+  "prefix": "sk",
+  "person": "Alfredo González Portero",
+  "db": "tasks.db",
+  "http": {
+    "host": "127.0.0.1",
+    "port": 8892
+  },
+  "log": {
+    "level": "info"
+  }
+}

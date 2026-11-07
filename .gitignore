@@ -58,6 +58,17 @@ env/
 .ruff_cache/
 .ipynb_checkpoints/
 
+# --- Tablero tasks-ai ----------------------------------------------------------
+# Instrucciones, contrato y ajustes se versionan; la base, el binario y las
+# extensiones son estado local que `tasks-ai init` restaura.
+.tasks-ai/tasks.db
+.tasks-ai/tasks.db-wal
+.tasks-ai/tasks.db-shm
+.tasks-ai/bin/
+.tasks-ai/extensions/
+# Estado local de serve.sh: pid y registro.
+.run/
+
 # --- Secrets and credentials ------------------------------------------------
 # Environment files: the example is the only one that belongs in git.
 .env
