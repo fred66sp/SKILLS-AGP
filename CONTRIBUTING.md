@@ -17,7 +17,7 @@ Antes de proponer una skill nueva, se decide qué unidad resuelve la necesidad. 
 | Instrucciones del agente | Comportamiento permanente, que debe aplicarse en cualquier proyecto. | El fichero de instrucciones de cada máquina. No es contenido publicable de este repositorio. |
 | Script | Operación determinista: misma entrada, misma salida, sin criterio. | Fichero en `scripts/` o `src/<skill>/scripts/` con su prueba. |
 | Skill | Conocimiento especializado que se necesita bajo demanda y con criterio. | Contrato en `src/<skill>/SKILL.md`, enrutador en `.skills/`, página en `docs/`, puerta con prueba si trae scripts. |
-| Viaje (metaskill) | Recorrido con varias fases y decisiones humanas que hay que poder retomar en otra sesión. | No existe todavía: lo decide PBI-10 de `BACKLOG.md`. Mientras no exista, se invocan las skills en orden y el orden se documenta en el item. |
+| Viaje (metaskill) | Recorrido con varias fases y decisiones humanas que hay que poder retomar en otra sesión. | No existe todavía: lo decide la tarea sk-5 del tablero. Mientras no exista, se invocan las skills en orden y el orden se documenta en la tarea. |
 
 Dos reglas de aplicación:
 
@@ -65,6 +65,10 @@ Y en todos los casos, también en `main`:
 6. Antes de pedir esa confirmación se ha hecho el barrido previo: documentación, enrutadores (local y global si existe), `CHANGELOG`, plantillas y referencias describen ya lo que va a quedar en el repositorio.
 
 Cualquier otra cosa entra por una rama corta. Ante la duda, rama.
+
+## Tareas
+
+El tablero tasks-ai de `.tasks-ai/` es el registro del trabajo pendiente y en curso; sustituye a `BACKLOG.md`, retirado. Se trabaja en una tarea por cambio y la tarea se crea antes de tocar ficheros. Al empezar, pasa a `in_progress`; los avances, las decisiones y los bloqueos van en comentarios en el momento en que surgen. El commit va antes que el cierre: el tablero no guarda estado de Git, así que no registra ramas, hashes ni si el cambio está publicado. Las órdenes están en [`.tasks-ai/AGENTS.md`](.tasks-ai/AGENTS.md) y las reglas de etiquetas en [`.tasks-ai/CONTRATO_ETIQUETAS.md`](.tasks-ai/CONTRATO_ETIQUETAS.md).
 
 ## Enrutadores de skills
 
@@ -132,7 +136,8 @@ Crear un remoto, publicar o hacer `push` es una operación aparte, con su propio
 
 - `README.md`: qué es el repositorio y cómo se usa una skill.
 - `CHANGELOG.md`: historial del repositorio, con las categorías de Keep a Changelog y sin secciones de versión; qué cambió entre dos versiones de una skill lo responde el historial de Git.
-- `BACKLOG.md`: trabajo pendiente priorizado; es la única lista de planificación del repositorio.
+- `.tasks-ai/`: tablero del repositorio. Se versionan las instrucciones, el contrato de etiquetas y los ajustes; la base, el binario y las extensiones son estado local y `tasks-ai init` las restaura.
+- `serve.sh`: servidor del tablero en segundo plano, en el puerto 8892, con pid y registro en `.run/`.
 - `PRODUCT.md`: contexto de producto que lee el trabajo de diseño antes de tocar una interfaz: plataforma, usuarios, propósito, límites y las ausencias que no se deben rellenar.
 - `DESIGN.md`: sistema visual del catálogo y de las páginas de skill. Los tokens del frontmatter son normativos y el cuerpo explica dónde se aplica cada uno.
 - `.gitattributes`: fin de línea del repositorio. Todo texto viaja en LF (`* text=auto eol=lf`); lo que se compara byte a byte se declara con `-text`.

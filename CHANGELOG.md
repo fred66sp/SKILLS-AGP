@@ -8,6 +8,8 @@ Las categorías —Añadido, Corregido, Modificado— vienen de [Keep a Changelo
 
 ### Modificado
 
+- `BACKLOG.md` retirado: el trabajo pendiente y en curso vive en el tablero de `.tasks-ai/`, con referencias `sk-N`. El mapa de migración conserva la correspondencia PBI-05→sk-7, PBI-07→sk-3, PBI-08→sk-2, PBI-09→sk-4, PBI-10→sk-5 y PBI-11→sk-6, con su descripción, sus dependencias y una nota con el origen de cada uno. Lo retirado y lo descartado quedan en el historial de Git.
+
 - `BACKLOG.md`: PBI-03 pasa a **Retirados** con su fecha de cierre. La tabla registra la fecha y no el commit de cada item: el commit es estado de Git que el historial ya guarda, y la regla del item lo dice ahora.
 
 - CI de validación: `.github/workflows/validate.yml` ejecuta ahora una matriz de cuatro jobs, `os: [ubuntu-latest, windows-latest]` por `python-version: ["3.12", "3.13"]`; antes había un único job `ubuntu-latest` con Python 3.12. `fail-fast: false` hace que un sistema roto en una plataforma no cancele el veredicto de la otra. Todos los pasos invocan `python`, nunca `python3`, que no existe en los runners de Windows.

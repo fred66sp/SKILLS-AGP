@@ -30,7 +30,7 @@ Repositorio personal de skills para agentes: cada skill enseña a un agente a ha
 - La puerta local es `python scripts/check-repo.py` más trece suites de `scripts/` y `src/*/scripts/`; la CI (`.github/workflows/validate.yml`) ejecuta lo mismo en cada push y pull request.
 - La documentación es HTML estático en `docs/`: catálogo, una página por skill y diagramas. No hay build ni servidor de aplicación.
 - El idioma de la documentación es castellano; los nombres de fichero y de directorio, inglés. Los ficheros de texto usan LF.
-- El repositorio se versiona en git; el trabajo pendiente vive en `BACKLOG.md` y las decisiones de integración en `CONTRIBUTING.md`.
+- El repositorio se versiona en git; el trabajo pendiente vive en el tablero tasks-ai de `.tasks-ai/` y las decisiones de integración en `CONTRIBUTING.md`.
 
 ## Capabilities and Constraints
 
@@ -38,7 +38,7 @@ Repositorio personal de skills para agentes: cada skill enseña a un agente a ha
 - Especificación de referencia: [agentskills.io](https://agentskills.io/), aplicada de forma estricta a estructura, metadatos y divulgación progresiva.
 - La validación es determinista y local; un fallo debe indicar qué script falló.
 - El sitio de documentación no descarga dependencias, tipografías ni scripts de terceros: HTML, CSS y JavaScript propios.
-- La CI actual corre en `ubuntu-latest` con Python 3.12; la paridad con Windows es trabajo pendiente (`PBI-03`), no una garantía presente.
+- La CI (`.github/workflows/validate.yml`) ejecuta la puerta y las suites en Ubuntu y Windows con Python 3.12 y 3.13.
 - **Decisión abierta:** no hay fichero `LICENSE`. Otros desarrolladores pueden leer el repositorio, pero la reutilización y redistribución no están autorizadas explícitamente. No inventar una licencia ni afirmar permisos.
 - **Decisión abierta:** el alcance de publicación para terceros (solo lectura o reutilización) no está fijado.
 
@@ -55,7 +55,7 @@ Repositorio personal de skills para agentes: cada skill enseña a un agente a ha
 - `README.md`: catálogo completo de skills, procedencia de cada familia, uso, validación y documentación.
 - `CONTRIBUTING.md`: ramas, commits, versiones y publicación.
 - `CHANGELOG.md`: historial de cambios por versión.
-- `BACKLOG.md`: trabajo pendiente priorizado con evidencia y criterio de aceptación.
+- `.tasks-ai/`: tablero del trabajo pendiente y en curso, con referencias `sk-N`, evidencia y criterio de aceptación.
 - `docs/index.html` y `docs/<skill>/index.html`: catálogo, páginas y diagramas con recibo.
 - `src/*/SKILL.md` y sus `scripts/`: los contratos y sus puertas.
 - `.opencode/context.md`: bitácora de misiones del repositorio.

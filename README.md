@@ -35,6 +35,14 @@ Este repositorio se inspira y se basa en dos fuentes externas:
 Queda fuera de git por ser estado local de cada máquina: `.atl/`, `.codegraph/`, `.engram/`, `.impeccable/`, `.pi/`, el estado del tablero (`.tasks-ai/tasks.db*`, `.tasks-ai/bin/`, `.tasks-ai/extensions/`), `.run/`, además de los secretos que cubre el `.gitignore`. Sí se versiona `.skills/`, porque contiene las skills de terceros que necesita el entorno de trabajo y los enrutadores de las skills propias de `src/`.
 
 
+## Tablero de tareas
+
+El trabajo pendiente y en curso vive en el tablero tasks-ai de `.tasks-ai/`, con referencias `sk-N`. Sustituye a `BACKLOG.md`, que se retiró: su contenido pasó a las tareas del tablero y lo retirado o descartado queda en el historial de Git. Las instrucciones de uso están en [`.tasks-ai/AGENTS.md`](.tasks-ai/AGENTS.md) y el contrato de etiquetas en [`.tasks-ai/CONTRATO_ETIQUETAS.md`](.tasks-ai/CONTRATO_ETIQUETAS.md).
+
+Tras un clon, el tablero se restaura desde la raíz con un binario de tasks-ai de cualquier instalación: `tasks-ai init` completa la base, el binario y las extensiones sin tocar lo versionado.
+
+`./serve.sh start` deja la interfaz en http://127.0.0.1:8892; `./serve.sh status` dice si sigue en marcha y `./serve.sh stop` la para. El pid y el registro se guardan en `.run/`, fuera de Git.
+
 ## Skills disponibles
 
 ### `git-flow-management`
