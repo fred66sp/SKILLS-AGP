@@ -84,6 +84,7 @@
             <tr><td>«Dame un informe del estado», «explícame cómo funciona X».</td><td>Elige la familia adecuada y genera un único <code>.explanations/&lt;slug&gt;.html</code> con el material verificado del proyecto.</td></tr>
             <tr><td>«Prototipa este botón», «dame deslizadores para probar la animación».</td><td>Genera un prototipo interactivo que termina en un botón «copiar como prompt» para devolver los valores a la sesión.</td></tr>
             <tr><td>«Compárame tres enfoques», «no sé qué dirección dar».</td><td>Genera una exploración comparativa lado a lado, cada opción con su concesión anotada.</td></tr>
+            <tr><td>El encargo es vago o el territorio es desconocido.</td><td>Ofrece proactivamente un pase de puntos ciegos, una entrevista o el artefacto de desconocidos más pequeño que desbloquee la siguiente decisión.</td></tr>
             <tr><td>«Hazme un editor para reordenar estos tickets».</td><td>Genera un editor desechable sobre el dato concreto, con exportación del resultado.</td></tr>
             <tr><td>«Usa los colores de este proyecto».</td><td>Copia los valores de su sistema visual en el <code>:root</code> del artefacto —intención de la persona → proyecto → plantilla— sin enlazar CSS.</td></tr>
             <tr><td>«Esto son varios pasos: explora, planea, enséñame los mockups».</td><td>Genera un bucle de artefactos hermanos enlazados con rutas relativas; el índice muestra la relación y cada página pasa la puerta.</td></tr>
@@ -107,7 +108,7 @@
         <table>
           <thead><tr><th>Se activa para</th><th>No se activa para</th></tr></thead>
           <tbody>
-            <tr><td>Informes y estados, explicadores, cuestionarios, diagramas, presentaciones, prototipos y editores a medida como HTML de revisión.</td><td>Documentación duradera del repositorio, ADR, runbooks o guías (eso es <code>document-management-software</code>).</td></tr>
+            <tr><td>Informes y estados, explicadores, cuestionarios, diagramas, presentaciones, prototipos, editores a medida, pases de puntos ciegos y entrevistas como HTML de revisión.</td><td>Documentación duradera del repositorio, ADR, runbooks o guías (eso es <code>document-management-software</code>).</td></tr>
             <tr><td>Exploraciones y comparaciones de alternativas que hay que ver lado a lado para elegir.</td><td>La identidad o el sistema visual de un producto (<code>design-system-architect</code>).</td></tr>
             <tr><td>Artefactos interactivos con retorno: «copiar como prompt», «copiar diff», «copiar resultado».</td><td>Implementar una interfaz real de la aplicación (<code>web-interface-visual-design</code>).</td></tr>
             <tr><td>Artefactos que se abren por <code>file://</code> o por un servidor estático ya existente.</td><td>Publicar en red, autenticar o mantener un catálogo de informes publicado.</td></tr>
@@ -123,13 +124,14 @@
       <div class="flow">
         <div class="flow-step"><code>paso 1</code><strong>Fijar el encargo</strong><p>Propósito, audiencia y momento de uso: qué debe poder hacer la persona —leer, comparar, decidir, interactuar, copiar—.</p></div>
         <div class="flow-step"><code>paso 2</code><strong>Reunir el material</strong><p>Fuentes del proyecto: código, documentación, historial, salidas de comandos. Cada dato verificado lleva su fuente; lo demás va a «Desconocidos».</p></div>
-        <div class="flow-step"><code>paso 3</code><strong>Elegir familia</strong><p>Comparación, explicador, informe, diagrama, prototipo, cuestionario, editor o presentación; luego la sección de esa familia en <code>references/artifact-patterns.md</code>.</p></div>
+        <div class="flow-step"><code>paso 3</code><strong>Elegir familia</strong><p>Comparación, explicador, informe, diagrama, prototipo, cuestionario, editor, presentación, pase de puntos ciegos o entrevista; si nadie sabe aún qué preguntar, el bloque «Descubrir los desconocidos» de <code>SKILL.md</code> decide el artefacto más pequeño que desbloquee la siguiente decisión. Luego, la sección de esa familia en <code>references/artifact-patterns.md</code>.</p></div>
         <div class="flow-step"><code>paso 4</code><strong>Generar</strong><p>Copia la plantilla de la familia elegida, rellena el bloque de procedencia —prompt, fecha, familia y fuentes— y guarda un único <code>.explanations/&lt;slug&gt;.html</code>; si el encargo es rutinario, <code>render-quick.py</code> lo renderiza desde un JSON validado. Si el proyecto declara su sistema visual, <code>tokens-from-project.py</code> copia sus valores en el <code>:root</code>; si muestra código, <code>highlight.py</code> lo resalta; si forma un bucle, cada página hermana se declara en <code>enlaces</code>.</p></div>
         <div class="flow-step"><code>paso 5</code><strong>Verificar e indexar</strong><p><code>check-artifact.py</code> comprueba autocontención, HTML bien formado, título y procedencia, y avisa del contraste bajo y de ficheros de más de 100 KB; <code>build-index.py</code> regenera el índice de <code>.explanations/</code> con la relación de enlaces. Un artefacto con recursos externos, HTML roto o procedencia vacía no se entrega.</p></div>
         <div class="flow-step"><code>paso 6</code><strong>Abrir, revisar a ojo y cerrar</strong><p><code>open-artifact.sh</code> lo abre en el navegador y la verificación perceptiva revisa el render —o lo revisa la persona si no hay navegador automatizable—; <code>lifecycle.py</code> conserva las últimas versiones de cada artefacto. El cierre informa ruta, familia, tokens, bucle, revisión y cómo pedir cambios.</p></div>
       </div>
 
       <div class="qa"><h3>Falta material verificado suficiente</h3><p>El artefacto se genera igualmente con lo verificado y una sección «Desconocidos» explícita, con la pregunta o la prueba que desbloquearía cada hueco. Nunca se rellena con lo plausible.</p></div>
+      <div class="qa"><h3>El encargo es vago o el territorio es desconocido</h3><p>No se elige familia a ciegas: se ofrece proactivamente un pase de puntos ciegos, una entrevista o el artefacto de descubrimiento más pequeño que desbloquee la siguiente decisión. Estos artefactos no representan conocimiento, lo descubren; suele bastar uno, no tres. El catálogo y el momento de cada uno —antes, durante o después de implementar— está en «Descubrir los desconocidos» de <code>SKILL.md</code>.</p></div>
       <div class="qa"><h3>¿Qué es el bloque de procedencia?</h3><p>Un comentario HTML al inicio del body con el prompt del encargo, la fecha, la familia y las fuentes. No se renderiza, sobrevive a cualquier editor y <code>check-artifact.py</code> lo exige completo: sin él, el índice no puede fechar el artefacto y el cierre no puede decir de dónde salió.</p></div>
       <div class="qa"><h3>¿Cuándo se usa el modo rápido?</h3><p>Solo para artefactos rutinarios de texto, listas, tablas, cifras y notas. <code>render-quick.py</code> valida un JSON acotado y lo renderiza de forma determinista; si no valida, se cae a la generación a medida con la plantilla de la familia, que es la vía normal para composiciones propias.</p></div>
       <div class="qa"><h3>El encargo es una nueva vuelta sobre un artefacto anterior</h3><p>Se genera un artefacto nuevo con versión en el nombre y se conserva el anterior. <code>lifecycle.py</code> conserva por defecto las últimas tres versiones de cada <code>&lt;slug&gt;-v&lt;N&gt;.html</code> y nunca borra la vigente ni nada fuera de <code>.explanations/</code>.</p></div>
@@ -147,12 +149,13 @@
       <div class="code"><pre><code class="language-bash">explain-html/
 ├── SKILL.md                        # límites, familias, procedimiento y cierre
 ├── references/
-│   ├── artifact-patterns.md        # estructura de cada familia, para leer por sección
+│   ├── artifact-patterns.md        # estructura de cada familia y de los artefactos de desconocidos
 │   └── visual-language.md          # matriz de representación, tipografía, accesibilidad
 ├── assets/
 │   ├── plantilla-artefacto.html    # esqueleto base, para encargos sin familia
 │   └── plantilla-&lt;familia&gt;.html    # una por familia: exploracion, explicador, informe,
-│                                   # diagrama, prototipo, cuestionario, editor, presentacion
+│                                   # diagrama, prototipo, cuestionario, editor, presentacion,
+│                                   # blindspots y entrevista
 └── scripts/
     ├── artifact_meta.py            # familias, procedencia y enlaces del bucle
     ├── check-artifact.py           # autocontención, HTML, procedencia y avisos
@@ -168,7 +171,7 @@
           <thead><tr><th>Fichero</th><th>Cuándo lo abre el agente</th></tr></thead>
           <tbody>
             <tr><td><code>SKILL.md</code></td><td>Siempre, al disparar la skill.</td></tr>
-            <tr><td><code>references/artifact-patterns.md</code></td><td>Paso 3, la sección de la familia elegida; no el fichero entero.</td></tr>
+            <tr><td><code>references/artifact-patterns.md</code></td><td>Paso 3, la sección de la familia elegida —o la de los artefactos de desconocidos—; no el fichero entero.</td></tr>
             <tr><td><code>references/visual-language.md</code></td><td>Paso 4, antes de generar el HTML.</td></tr>
             <tr><td><code>assets/plantilla-&lt;familia&gt;.html</code></td><td>Paso 4, como estructura que se copia; el esqueleto base solo si ninguna familia encaja.</td></tr>
             <tr><td><code>scripts/render-quick.py</code></td><td>Paso 4, solo si el artefacto es rutinario y cabe en el esquema.</td></tr>
@@ -192,7 +195,7 @@
           <thead><tr><th>Pregunta</th><th>Se responde en</th></tr></thead>
           <tbody>
             <tr><td>Qué no se puede saltar, qué límites tiene y cómo se cierra.</td><td><code>SKILL.md</code></td></tr>
-            <tr><td>Cómo se estructura cada familia de artefacto.</td><td><code>references/artifact-patterns.md</code></td></tr>
+            <tr><td>Cómo se estructura cada familia de artefacto y los artefactos de descubrimiento.</td><td><code>references/artifact-patterns.md</code></td></tr>
             <tr><td>Qué técnica usa cada tipo de contenido y qué invariantes visuales.</td><td><code>references/visual-language.md</code></td></tr>
             <tr><td>Con qué plantilla se genera, cómo se copian los tokens, cómo se resalta el código, cómo se indexa, cuándo se usa el modo rápido y cómo se podan versiones.</td><td><code>assets/plantilla-&lt;familia&gt;.html</code>, <code>scripts/</code></td></tr>
           </tbody>
@@ -212,6 +215,7 @@
       <div class="qa"><h3>¿Por qué sin CDN?</h3><p>Porque la autocontención es la promesa del formato: el artefacto funciona igual por <code>file://</code> que servido, sin conexión y sin sorpresas de versión. Todo CSS, JS y SVG va en línea; <code>check-artifact.py</code> lo impone.</p></div>
       <div class="qa"><h3>¿Qué significa «copiar como prompt»?</h3><p>El cierre del bucle: el artefacto interactivo termina en un botón que copia al portapapeles el estado resultante —valores elegidos, orden propuesto, resultado del cuestionario— como texto listo para pegar de vuelta en la conversación con el agente.</p></div>
       <div class="qa"><h3>¿Dónde quedan los artefactos y cuánto viven?</h3><p>En <code>.explanations/</code> del proyecto. Son desechables: se regeneran tras el feedback como versión nueva y se pueden borrar sin pérdida, porque lo verificado vuelve al proyecto por la conversación o por la exportación.</p></div>
+      <div class="qa"><h3>¿Qué son los artefactos de desconocidos?</h3><p>Pases de puntos ciegos y entrevistas —y variantes con familia prestada, como la bitácora de desviaciones o el cuestionario previo a un merge— que sacan a la superficie lo que aún no se sabe antes de implementar. La skill los ofrece proactivamente cuando el encargo llega vago, el territorio es nuevo para el agente, el plan se desvía o se acerca un merge. Su cierre habitual es la exportación «copiar como prompt»: el descubrimiento vuelve a la conversación como prompt de implementación, decisiones acordadas o preguntas pendientes.</p></div>
       <div class="qa"><h3>¿Y si el gráfico no tiene datos reales?</h3><p>No se dibuja. Las cifras, fechas y estados salen del material fuente o quedan en «Desconocidos»; una tabla sin datos verificados es más honesta que un gráfico decorativo.</p></div>
     </section>
 
@@ -267,10 +271,10 @@ python3 scripts/check-repo.py</code></pre></div>
 
     <section id="catalogo" class="section">
       <div class="section-head"><span class="section-num">9</span><h2 class="title">El catálogo demostrativo</h2><span class="chip-repo">9 artefactos</span></div>
-      <p class="sub">La portada y una demo real por familia, generadas con las plantillas y los tokens del repositorio. El diagrama muestra cómo se agrupan; el botón abre el catálogo completo. Es la forma más rápida de ver la skill funcionando antes de encargarle un artefacto.</p>
+      <p class="sub">La portada y ocho demos reales —una de cada familia con demo—, generadas con las plantillas y los tokens del repositorio. El diagrama muestra cómo se agrupan; el botón abre el catálogo completo. Es la forma más rápida de ver la skill funcionando antes de encargarle un artefacto.</p>
 
       <figure class="diagram">
-        <svg viewBox="0 0 920 790" role="img" aria-label="Diagrama del catálogo demostrativo: el nodo central reúne la portada y las ocho familias, de la exploración comparativa a la presentación.">
+        <svg viewBox="0 0 920 790" role="img" aria-label="Diagrama del catálogo demostrativo: el nodo central reúne la portada y las ocho demos, de la exploración comparativa a la presentación.">
           <defs>
             <linearGradient id="gCat" x1="0" y1="0" x2="1" y2="1">
               <stop offset="0" style="stop-color:var(--accent)"/>
@@ -303,7 +307,7 @@ python3 scripts/check-repo.py</code></pre></div>
           <text x="460" y="138" text-anchor="middle" font-size="23" font-weight="700" fill="var(--text)">CATÁLOGO</text>
           <text x="460" y="158" text-anchor="middle" font-size="12.5" fill="var(--muted)">explain-html</text>
           <rect x="370" y="170" width="180" height="24" rx="12" fill="url(#gCat)"/>
-          <text x="460" y="186" text-anchor="middle" font-size="10" font-weight="700" fill="var(--bg)" letter-spacing=".3">9 ARTEFACTOS · 8 FAMILIAS</text>
+          <text x="460" y="186" text-anchor="middle" font-size="10" font-weight="700" fill="var(--bg)" letter-spacing=".3">9 ARTEFACTOS · 8 DEMOS</text>
           <text x="460" y="216" text-anchor="middle" font-size="10.5" fill="var(--muted)">demo/index.html</text>
 
           <g>
@@ -372,10 +376,10 @@ python3 scripts/check-repo.py</code></pre></div>
             <text x="576" y="708" font-size="11.5" fill="var(--muted)">7 diapositivas con teclado</text>
           </g>
         </svg>
-        <figcaption>La portada y las ocho demos: exploración comparativa, explicador, informe, diagrama, prototipo, cuestionario, editor a medida y presentación. Cada familia tiene su artefacto autocontenido; el botón abre el catálogo completo.</figcaption>
+        <figcaption>La portada y las ocho demos: exploración comparativa, explicador, informe, diagrama, prototipo, cuestionario, editor a medida y presentación. Cada demo es un artefacto autocontenido; el botón abre el catálogo completo.</figcaption>
       </figure>
 
-      <p class="diagram-cta"><a class="btn btn-primary" href="demo/index.html">Catálogo demostrativo · 8 familias · 9 artefactos
+      <p class="diagram-cta"><a class="btn btn-primary" href="demo/index.html">Catálogo demostrativo · 8 demos · 9 artefactos
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 5l7 7-7 7"/></svg></a></p>
 
       <div class="note">
