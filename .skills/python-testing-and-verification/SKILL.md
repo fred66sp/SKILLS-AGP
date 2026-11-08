@@ -1,6 +1,6 @@
 ---
 name: python-testing-and-verification
-description: "Enrutador de la skill `python-testing-and-verification` del repositorio: pruebas por capas y puerta de verificación en Python. Úsalo al escribir o revisar pruebas, validar una frontera no confiable, comprobar una regresión o declarar un cambio terminado. No contiene el contrato: la fuente canónica vive en el paquete homónimo del repositorio, que se lee completo antes de trabajar."
+description: "Pruebas por capas y puerta de verificación en Python. Úsalo al escribir o revisar pruebas, validar una frontera no confiable, comprobar una regresión o declarar un cambio terminado. No para estilo, diseño de módulos, empaquetado ni el contrato de la CLI, que son de `python-idiomatic-style`."
 ---
 
 # Enrutador de la skill de pruebas y verificación Python

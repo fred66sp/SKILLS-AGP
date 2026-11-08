@@ -1,6 +1,6 @@
 ---
 name: design-system-architect
-description: "Enrutador de design-system-architect: define, descubre, documenta, gobierna y verifica sistemas de diseño —identidad, tokens DTCG, temas, contratos de componentes, patrones, accesibilidad, movimiento y catálogo—. Se activa al crear un sistema visual, auditar uno existente, proponer su evolución, generar tokens o contratos, publicar un catálogo o comprobar que una implementación respeta el sistema aprobado. No se usa para construir pantallas o recursos gráficos ni para sustituir arquitectura, lógica, seguridad o pruebas funcionales. El contrato canónico se lee completo antes de trabajar."
+description: "Define, descubre, documenta, gobierna y verifica sistemas de diseño —identidad, tokens DTCG, temas, contratos de componentes, patrones, accesibilidad, movimiento y catálogo—. Se activa al crear un sistema visual, auditar uno existente, proponer su evolución, generar tokens o contratos, publicar un catálogo o comprobar que una implementación respeta el sistema aprobado. No se usa para construir pantallas o recursos gráficos ni para sustituir arquitectura, lógica, seguridad o pruebas funcionales."
 ---
 
 # Enrutador de la skill de arquitectura del sistema de diseño

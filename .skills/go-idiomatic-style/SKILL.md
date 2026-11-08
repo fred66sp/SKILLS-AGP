@@ -1,6 +1,6 @@
 ---
 name: go-idiomatic-style
-description: "Enrutador de la skill `go-idiomatic-style` del repositorio: escribe y revisa Go idiomático con formato gofmt, nombres y paquetes claros, estructura mínima, funciones pequeñas, datos correctos, interfaces del consumidor y dependencias justificadas. Úsalo cuando haya que crear, refactorizar o revisar código Go y su diseño. No contiene el contrato: la fuente canónica vive en el paquete homónimo del repositorio, que se lee completo antes de trabajar."
+description: "Escribe y revisa Go idiomático con formato gofmt, nombres y paquetes claros, estructura mínima, funciones pequeñas, datos correctos, interfaces del consumidor y dependencias justificadas. Úsalo cuando haya que crear, refactorizar o revisar código Go y su diseño. No para el contrato de una CLI, la estrategia de errores, contextos, concurrencia, pruebas o linting, que tienen sus propias skills."
 ---
 
 # Enrutador de la skill de estilo Go

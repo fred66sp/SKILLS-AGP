@@ -1,6 +1,6 @@
 ---
 name: document-redactor
-description: "Enrutador de la skill `document-redactor` del repositorio: redacción y edición de prosa en castellano, tics de escritura de IA, tipografía, ritmo y voz. Úsalo al redactar o editar artículos, guías, README, notas, correos o propuestas, al quitar el tono de IA de un texto o al adaptarlo a la voz de un autor. No contiene el contrato: la fuente canónica vive en el paquete homónimo del repositorio, que se lee completo antes de trabajar."
+description: "Redacción y edición de prosa en castellano, tics de escritura de IA, tipografía, ritmo y voz. Úsalo al redactar o editar artículos, guías, README, notas, correos o propuestas, al quitar el tono de IA de un texto o al adaptarlo a la voz de un autor. No para decidir qué documentos debe tener un proyecto, ni para PRD o ADR, ni para revisar código."
 ---
 
 # Enrutador de la skill de redacción

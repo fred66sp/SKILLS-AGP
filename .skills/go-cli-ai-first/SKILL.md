@@ -1,6 +1,6 @@
 ---
 name: go-cli-ai-first
-description: "Enrutador de la skill `go-cli-ai-first` del repositorio: fija el contrato de una CLI Go para agentes —comandos, flags, stdin/stdout/stderr, JSON, códigos de salida, modo no interactivo, `--dry-run`, `--yes`, idempotencia, cancelación y salida acotada— antes de implementarla. Úsalo cuando haya que crear, cambiar o auditar una CLI automatizable. No contiene el contrato: la fuente canónica vive en el paquete homónimo del repositorio, que se lee completo antes de trabajar."
+description: "Fija el contrato de una CLI Go para agentes —comandos, flags, stdin/stdout/stderr, JSON, códigos de salida, modo no interactivo, `--dry-run`, `--yes`, idempotencia, cancelación y salida acotada— antes de implementarla. Úsalo cuando haya que crear, cambiar o auditar una CLI automatizable. No para diseño de producto, interfaces gráficas, APIs HTTP, arquitectura de microservicios, ni para reglas generales de estilo, errores o pruebas de Go, que tienen sus propias skills."
 ---
 
 # Enrutador de la skill de CLI Go para agentes

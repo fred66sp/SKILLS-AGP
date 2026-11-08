@@ -1,6 +1,6 @@
 ---
 name: typescript-idiomatic-style
-description: "Enrutador de la skill `typescript-idiomatic-style` del repositorio: escribe y revisa TypeScript type-first con tsconfig estricto, uniones discriminadas, tipos branded, type guards, genéricos, satisfies, módulos y dependencias justificadas, y reglas para una CLI con citty y @clack/prompts. Úsalo cuando haya que crear, refactorizar o revisar tipos y código TypeScript, elegir estructura de módulos o construir una CLI. No contiene el contrato: la fuente canónica vive en el paquete homónimo del repositorio, que se lee completo antes de trabajar."
+description: "Escribe y revisa TypeScript type-first con tsconfig estricto, uniones discriminadas, tipos branded, type guards, genéricos, satisfies, módulos y dependencias justificadas, y reglas para una CLI con citty y @clack/prompts. Úsalo cuando haya que crear, refactorizar o revisar tipos y código TypeScript, elegir estructura de módulos o construir una CLI. No para validación de datos en runtime, pruebas ni gates de CI, que tienen su propia skill."
 ---
 
 # Enrutador de la skill de estilo TypeScript

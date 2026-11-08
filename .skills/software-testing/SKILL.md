@@ -1,6 +1,6 @@
 ---
 name: software-testing
-description: "Enrutador de la skill `software-testing` del repositorio: aplica método de prueba al software, del análisis de riesgo al informe honesto, con técnicas de diseño de casos, criterio de salida y puerta de forma para casos e informes. Úsalo al planificar una ronda de pruebas, diseñar casos, fijar prioridades, triar fallos o escribir informes de pruebas y defectos. No ejecuta la puerta del lenguaje ni sustituye al runner del proyecto. No contiene el contrato: la fuente canónica vive en el paquete homónimo del repositorio, que se lee completo antes de trabajar."
+description: "Aplica método de prueba al software, del análisis de riesgo al informe honesto, con técnicas de diseño de casos, criterio de salida y puerta de forma para casos e informes. Úsalo al planificar una ronda de pruebas, diseñar casos, fijar prioridades, triar fallos o escribir informes de pruebas y defectos. No ejecuta la puerta del lenguaje ni sustituye al runner del proyecto."
 ---
 
 # Enrutador de la skill de pruebas de software

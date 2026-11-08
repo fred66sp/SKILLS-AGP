@@ -1,6 +1,6 @@
 ---
 name: prd-cartographer
-description: "Enrutador de la skill `prd-cartographer` del repositorio: convierte una idea, investigación o concepto de producto en un PRD verificable y trazable, separa evidencia de inferencias, propuestas, hipótesis y desconocidos, y exige métricas medibles, alcance con exclusiones y criterios de aceptación observables. Úsalo cuando haya que crear, revisar o auditar un PRD para producto, diseño, ingeniería y QA. No contiene el contrato: la fuente canónica vive en el paquete homónimo del repositorio, que se lee completo antes de trabajar."
+description: "Convierte una idea, investigación o concepto de producto en un PRD verificable y trazable, separa evidencia de inferencias, propuestas, hipótesis y desconocidos, y exige métricas medibles, alcance con exclusiones y criterios de aceptación observables. Úsalo cuando haya que crear, revisar o auditar un PRD para producto, diseño, ingeniería y QA. No para diseño técnico, arquitectura de software, especificación de implementación, documentación técnica general, contenido comercial ni material de marketing."
 ---
 
 # Enrutador de la skill de PRD

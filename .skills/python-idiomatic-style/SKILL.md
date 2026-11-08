@@ -1,6 +1,6 @@
 ---
 name: python-idiomatic-style
-description: "Enrutador de la skill `python-idiomatic-style` del repositorio: estilo, tipos y empaquetado de Python. Úsalo al crear, refactorizar o revisar módulos `.py`, al decidir layout, dependencias o build, o al construir una CLI de Python. No contiene el contrato: la fuente canónica vive en el paquete homónimo del repositorio, que se lee completo antes de trabajar."
+description: "Estilo, tipos y empaquetado de Python. Úsalo al crear, refactorizar o revisar módulos `.py`, al decidir layout, dependencias o build, o al construir una CLI de Python. No para pruebas, cobertura ni puertas de verificación, que tienen su propia skill, ni para validación de datos en runtime."
 ---
 
 # Enrutador de la skill de estilo Python

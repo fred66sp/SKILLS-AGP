@@ -1,6 +1,6 @@
 ---
 name: document-management-software
-description: "Enrutador de la skill `document-management-software` del repositorio: gestión documental de un proyecto de software como conocimiento verificable. Úsalo cuando el agente vaya a crear, revisar, actualizar o auditar README, guías de contribución, PRD, SDD, arquitectura, ADR, API, instalación, operación, runbooks, notas de release, documentación de features u otra documentación técnica, y también cuando detecte documentación obsoleta, contradictoria o duplicada. No contiene el contrato: la fuente canónica vive en el paquete homónimo del repositorio, que se lee completo antes de trabajar."
+description: "Gestión documental de un proyecto de software como conocimiento verificable. Úsalo cuando el agente vaya a crear, revisar, actualizar o auditar README, guías de contribución, PRD, SDD, arquitectura, ADR, API, instalación, operación, runbooks, notas de release, documentación de features u otra documentación técnica, y también cuando detecte documentación obsoleta, contradictoria o duplicada. No para contenido comercial, artículos, material de marketing, documentación de producto no técnica, la descripción de una skill de agente, ni para sustituir tests, contratos ejecutables, comentarios de código o mensajes de commit."
 ---
 
 # Enrutador de la skill de gestión documental

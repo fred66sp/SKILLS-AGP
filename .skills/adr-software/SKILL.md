@@ -1,6 +1,6 @@
 ---
 name: adr-software
-description: "Enrutador de la skill `adr-software` del repositorio: creación y mantenimiento de Architecture Decision Records con contrato de agente. Úsalo cuando haya que proponer, redactar, revisar, aceptar, rechazar, deprecar o sustituir un ADR, inicializar el directorio y el índice, o comprobar sus convenciones. No contiene el contrato: la fuente canónica vive en el paquete homónimo del repositorio, que se lee completo antes de trabajar."
+description: "Creación y mantenimiento de Architecture Decision Records con contrato de agente. Úsalo cuando haya que proponer, redactar, revisar, aceptar, rechazar, deprecar o sustituir un ADR, inicializar el directorio y el índice, o comprobar sus convenciones. No para diseñar la arquitectura, para PRD o requisitos de producto, ni para documentación general del proyecto."
 ---
 
 # Enrutador de la skill de ADR

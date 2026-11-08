@@ -1,6 +1,6 @@
 ---
 name: typescript-testing-and-verification
-description: "Enrutador de la skill `typescript-testing-and-verification` del repositorio: valida las fronteras con Zod 4 y tipos inferidos, comprueba los tipos con tsc --noEmit, cubre la lógica con pruebas y la CLI de extremo a extremo, y cierra con typecheck, lint, test y build mediante scripts/verify-ts.py. Úsalo cuando haya que escribir o revisar pruebas, validar entradas no confiables, comprobar una regresión o declarar un cambio terminado. No contiene el contrato: la fuente canónica vive en el paquete homónimo del repositorio, que se lee completo antes de trabajar."
+description: "Valida las fronteras con Zod 4 y tipos inferidos, comprueba los tipos con tsc --noEmit, cubre la lógica con pruebas y la CLI de extremo a extremo, y cierra con typecheck, lint, test y build mediante scripts/verify-ts.py. Úsalo cuando haya que escribir o revisar pruebas, validar entradas no confiables, comprobar una regresión o declarar un cambio terminado. No para diseño de tipos, estilo general ni arquitectura de la CLI, que tienen su propia skill."
 ---
 
 # Enrutador de la skill de verificación TypeScript

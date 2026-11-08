@@ -1,6 +1,6 @@
 ---
 name: git-flow-management
-description: "Enrutador de la skill `git-flow-management` del repositorio: operaciones Git con ceremonia proporcional al tamaño y al riesgo, verificadas con comandos de solo lectura. Úsalo para cualquier operación Git —commit, preparación de ramas, integración, resolución de conflictos, borrado de ramas, push, etiquetas, release, hotfix o auditoría de historial— y cuando haga falta comprobar ascendencia y contención entre referencias con scripts/verify-branch.sh. No contiene el contrato: la fuente canónica vive en el paquete homónimo del repositorio, que se lee completo antes de ejecutar nada."
+description: "Operaciones Git con ceremonia proporcional al tamaño y al riesgo, verificadas con comandos de solo lectura. Úsalo para cualquier operación Git —commit, preparación de ramas, integración, resolución de conflictos, borrado de ramas, push, etiquetas, release, hotfix o auditoría de historial— y cuando haga falta comprobar ascendencia y contención entre referencias con scripts/verify-branch.sh. No para operaciones ajenas a Git ni para migrar una política de ramas sin encargo explícito."
 ---
 
 # Enrutador de la skill de operaciones Git

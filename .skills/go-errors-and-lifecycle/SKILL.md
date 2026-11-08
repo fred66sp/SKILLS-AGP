@@ -1,6 +1,6 @@
 ---
 name: go-errors-and-lifecycle
-description: "Enrutador de la skill `go-errors-and-lifecycle` del repositorio: define el contrato de errores, la envoltura e inspección con errors.Is y errors.As, el mapeo a códigos de salida, la propagación de context, la cancelación, las señales, la concurrencia con propietario y el cierre ordenado. Úsalo cuando haya que diseñar o revisar errores y el ciclo de vida de un programa Go. No contiene el contrato: la fuente canónica vive en el paquete homónimo del repositorio, que se lee completo antes de trabajar."
+description: "Define el contrato de errores, la envoltura e inspección con errors.Is y errors.As, el mapeo a códigos de salida, la propagación de context, la cancelación, las señales, la concurrencia con propietario y el cierre ordenado. Úsalo cuando haya que diseñar o revisar errores y el ciclo de vida de un programa Go. No para el contrato de la CLI, estilo general ni pruebas, que tienen sus propias skills."
 ---
 
 # Enrutador de la skill de errores y ciclo de vida
