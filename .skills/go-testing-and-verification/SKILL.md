@@ -1,6 +1,6 @@
 ---
 name: go-testing-and-verification
-description: "Enrutador de la skill `go-testing-and-verification` del repositorio: cubre la lógica con pruebas unitarias y de tabla, fija la salida con golden files, prueba el binario de extremo a extremo con stdout, stderr y código de salida separados, y cierra con la puerta gofmt, build, test, vet, race y lint. Úsalo cuando haya que escribir pruebas, comprobar una regresión o declarar un cambio terminado. No contiene el contrato: la fuente canónica vive en el paquete homónimo del repositorio, que se lee completo antes de trabajar."
+description: "Cubre la lógica con pruebas unitarias y de tabla, fija la salida con golden files, prueba el binario de extremo a extremo con stdout, stderr y código de salida separados, y cierra con la puerta gofmt, build, test, vet, race y lint. Úsalo cuando haya que escribir pruebas, comprobar una regresión o declarar un cambio terminado. No para benchmarks de rendimiento, estrategia de errores, diseño de la CLI ni estilo general, que tienen sus propias skills."
 ---
 
 # Enrutador de la skill de pruebas y verificación

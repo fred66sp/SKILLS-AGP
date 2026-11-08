@@ -1,6 +1,6 @@
 ---
 name: playwright-cli-usage
-description: "Enrutador de la skill `playwright-cli-usage` del repositorio: conduce un navegador real desde la terminal para comprobar comportamiento renderizado, con confirmación explícita antes de abrirlo, alcance declarado, presupuesto de contexto y cierre con evidencia. Úsalo al explorar una interfaz, reproducir un flujo, localizar elementos o verificar un cambio visual o funcional con playwright-cli. No se usa para escribir suites de regresión ni para decidir calidad visual. No contiene el contrato: la fuente canónica vive en el paquete homónimo del repositorio, que se lee completo antes de trabajar."
+description: "Conduce un navegador real desde la terminal para comprobar comportamiento renderizado, con confirmación explícita antes de abrirlo, alcance declarado, presupuesto de contexto y cierre con evidencia. Úsalo al explorar una interfaz, reproducir un flujo, localizar elementos o verificar un cambio visual o funcional con playwright-cli. No se usa para escribir suites de regresión ni para decidir calidad visual."
 ---
 
 # Enrutador de la skill de uso de playwright-cli

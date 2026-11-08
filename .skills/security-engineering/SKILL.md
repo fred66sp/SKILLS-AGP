@@ -1,6 +1,6 @@
 ---
 name: security-engineering
-description: "Enrutador de la skill `security-engineering` del repositorio: ingeniería de seguridad para software y agentes. Úsalo al diseñar una función sensible, revisar seguridad, auditar una dependencia o skill de terceros, investigar una exposición o declarar riesgo residual. No contiene el contrato: la fuente canónica vive en el paquete homónimo del repositorio, que se lee completo antes de trabajar."
+description: "Ingeniería de seguridad para software y agentes. Úsalo al diseñar una función sensible, revisar seguridad, auditar una dependencia o skill de terceros, investigar una exposición o declarar riesgo residual. No para cumplimiento formal, pentesting ofensivo, gestión de incidentes en curso ni para sustituir la revisión legal o de privacidad."
 ---
 
 # Enrutador de la skill de seguridad

@@ -1,6 +1,6 @@
 ---
 name: javascript-testing-and-verification
-description: "Enrutador de la skill `javascript-testing-and-verification` del repositorio: elección de capa de prueba, `node:test`, runner de navegador sin dependencias, dobles de red y reloj, pruebas de proceso y la puerta `verify-js.py`. Úsalo cuando haya que escribir o revisar pruebas de JavaScript vanilla, comprobar una regresión o declarar un cambio terminado. No contiene el contrato: la fuente canónica vive en el paquete homónimo del repositorio, que se lee completo antes de trabajar."
+description: "Elección de capa de prueba, `node:test`, runner de navegador sin dependencias, dobles de red y reloj, pruebas de proceso y la puerta `verify-js.py`. Úsalo cuando haya que escribir o revisar pruebas de JavaScript vanilla, comprobar una regresión o declarar un cambio terminado. No para estilo, módulos, diseño de DOM ni arquitectura, que son de javascript-idiomatic-style."
 ---
 
 # Enrutador de la skill de verificación JavaScript

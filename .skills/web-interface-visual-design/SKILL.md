@@ -1,6 +1,6 @@
 ---
 name: web-interface-visual-design
-description: "Enrutador de web-interface-visual-design: diseña, implementa y revisa interfaces web, composición, tipografía, color, jerarquía y presentación responsive; crea o revisa SVG, iconografía, infografías y diagramas visuales. Se activa al mejorar la estética de páginas, dashboards o aplicaciones y sus recursos gráficos. Respeta el sistema de diseño y exige inspección renderizada cuando sea posible. No se usa para backend, bases de datos, lógica de negocio ni pruebas sin componente visual. El contrato canónico se lee completo antes de trabajar."
+description: "Diseña, implementa y revisa interfaces web, composición, tipografía, color, jerarquía y presentación responsive; crea o revisa SVG, iconografía, infografías y diagramas visuales. Se activa al mejorar la estética de páginas, dashboards o aplicaciones y sus recursos gráficos. Respeta el sistema de diseño y exige inspección renderizada cuando sea posible. No se usa para backend, bases de datos, lógica de negocio ni pruebas sin componente visual."
 ---
 
 # Enrutador de la skill de diseño visual web

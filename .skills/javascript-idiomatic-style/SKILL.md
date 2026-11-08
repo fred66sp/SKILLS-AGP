@@ -1,6 +1,6 @@
 ---
 name: javascript-idiomatic-style
-description: "Enrutador de la skill `javascript-idiomatic-style` del repositorio: escritura y revisión de JavaScript vanilla para navegador y Node, con baseline declarado, igualdad estricta, módulos ESM o CJS, asincronía cancelable, DOM seguro y un único adaptador de plataforma. Úsalo cuando haya que crear, refactorizar o revisar `.js`, `.mjs` o `.cjs` sin tipos. No contiene el contrato: la fuente canónica vive en el paquete homónimo del repositorio, que se lee completo antes de trabajar."
+description: "Escritura y revisión de JavaScript vanilla para navegador y Node, con baseline declarado, igualdad estricta, módulos ESM o CJS, asincronía cancelable, DOM seguro y un único adaptador de plataforma. Úsalo cuando haya que crear, refactorizar o revisar `.js`, `.mjs` o `.cjs` sin tipos. No para TypeScript ni JSX, para frameworks de interfaz, para escribir o ejecutar pruebas, ni para calidad visual y CSS."
 ---
 
 # Enrutador de la skill de estilo JavaScript
