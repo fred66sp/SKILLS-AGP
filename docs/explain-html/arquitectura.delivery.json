@@ -1,17 +1,17 @@
 {
   "schemaVersion": 1,
-  "receiptId": "bf02d3ae-0467-40da-afca-506432fac6d0",
+  "receiptId": "e06635e4-a543-44f6-8c00-2c36d8262b82",
   "status": "current",
   "command": "deliver",
   "type": "architecture",
   "input": "/home/alfredo/PROJECTS/SKILLS-AGP/docs/explain-html/arquitectura.json",
   "output": "/home/alfredo/PROJECTS/SKILLS-AGP/docs/explain-html/arquitectura.html",
   "specification": {
-    "sha256": "3e4a815a44c553bf680fd9daa1b81823237476f7bd3ce0b10a287f43ac972fee",
-    "bytes": 6417
+    "sha256": "52e0dc00fe9858ae401660f5f2d778c40c75318b4ef725c2c3be35e629127910",
+    "bytes": 6433
   },
   "artifact": {
-    "sha256": "d86ecace8cfbb4306c15e3f721bcce40d00971df02ab590eac3f4b6cfc369366",
-    "bytes": 835448
+    "sha256": "d3a1f94fb7179a6f026b0cf97524710edc575c8fb72023e64152aa91c4c16c29",
+    "bytes": 835467
   }
 }

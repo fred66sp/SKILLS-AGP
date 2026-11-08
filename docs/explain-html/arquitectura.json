@@ -55,7 +55,7 @@
     {
       "id": "familias",
       "type": "security",
-      "label": "8 familias",
+      "label": "10 familias",
       "sublabel": "exploración · explicador · informe",
       "icon": "decision",
       "pos": [
@@ -265,7 +265,7 @@
       "dot": "cyan",
       "title": "El paquete instalado",
       "items": [
-        "SKILL.md es el cuerpo normativo: límites, ocho familias, procedimiento de cuatro fases y cierre",
+        "SKILL.md es el cuerpo normativo: límites, diez familias y desconocidos, procedimiento de cuatro fases y cierre",
         "references/ se carga justo a tiempo: la sección de la familia elegida y el lenguaje visual antes de generar",
         "assets/plantilla-artefacto.html trae tokens, temas claro/oscuro y el botón «copiar como prompt» ya resueltos"
       ]
