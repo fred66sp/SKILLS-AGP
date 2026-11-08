@@ -1,0 +1,292 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "Arquitectura de la skill explain-html",
+    "subtitle": "Qué piezas la componen, qué invariantes impone y sobre qué superficie actúa: el paquete instalado, la generación autocontenida y el artefacto que se abre en el navegador.",
+    "locale": "es",
+    "output": "docs/explain-html/arquitectura.html",
+    "quality_profile": "showcase"
+  },
+  "components": [
+    {
+      "id": "persona",
+      "type": "external",
+      "label": "Persona",
+      "sublabel": "pide y revisa",
+      "icon": "person",
+      "pos": [
+        40,
+        80
+      ],
+      "size": [
+        130,
+        60
+      ]
+    },
+    {
+      "id": "agente",
+      "type": "external",
+      "label": "Agente anfitrión",
+      "sublabel": "Pi · OpenCode · Claude Code",
+      "pos": [
+        240,
+        80
+      ],
+      "size": [
+        170,
+        64
+      ]
+    },
+    {
+      "id": "skill",
+      "type": "frontend",
+      "label": "SKILL.md",
+      "sublabel": "límites · familias · pasos",
+      "pos": [
+        480,
+        80
+      ],
+      "size": [
+        170,
+        64
+      ]
+    },
+    {
+      "id": "familias",
+      "type": "security",
+      "label": "8 familias",
+      "sublabel": "exploración · explicador · informe",
+      "icon": "decision",
+      "pos": [
+        740,
+        80
+      ],
+      "size": [
+        170,
+        64
+      ]
+    },
+    {
+      "id": "autocontencion",
+      "type": "security",
+      "label": "Autocontención",
+      "sublabel": "sin CDN · todo en línea",
+      "pos": [
+        1000,
+        80
+      ],
+      "size": [
+        170,
+        64
+      ]
+    },
+    {
+      "id": "refs",
+      "type": "database",
+      "label": "references/",
+      "sublabel": "patrones · lenguaje visual",
+      "tag": "se leen cuando toca",
+      "pos": [
+        480,
+        280
+      ],
+      "size": [
+        170,
+        64
+      ]
+    },
+    {
+      "id": "assets",
+      "type": "database",
+      "label": "assets/",
+      "sublabel": "plantilla base con tokens",
+      "pos": [
+        480,
+        480
+      ],
+      "size": [
+        170,
+        64
+      ]
+    },
+    {
+      "id": "scripts",
+      "type": "database",
+      "label": "scripts/",
+      "sublabel": "check-artifact · open-artifact",
+      "tag": "puerta y apertura",
+      "pos": [
+        480,
+        680
+      ],
+      "size": [
+        170,
+        64
+      ]
+    },
+    {
+      "id": "artefacto",
+      "type": "database",
+      "label": ".explanations/",
+      "sublabel": "un .html por encargo",
+      "pos": [
+        1000,
+        280
+      ],
+      "size": [
+        170,
+        64
+      ]
+    },
+    {
+      "id": "navegador",
+      "type": "frontend",
+      "label": "Navegador",
+      "sublabel": "file:// · revisar e interactuar",
+      "tag": "copiar como prompt",
+      "pos": [
+        1000,
+        460
+      ],
+      "size": [
+        170,
+        64
+      ]
+    }
+  ],
+  "boundaries": [
+    {
+      "kind": "region",
+      "label": "Paquete instalado",
+      "wraps": [
+        "skill",
+        "refs",
+        "assets",
+        "scripts"
+      ]
+    },
+    {
+      "kind": "region",
+      "label": "Decisión de formato",
+      "wraps": [
+        "familias",
+        "autocontencion"
+      ]
+    },
+    {
+      "kind": "security-group",
+      "label": "Salida desechable · fuera del paquete",
+      "wraps": [
+        "artefacto",
+        "navegador"
+      ]
+    }
+  ],
+  "connections": [
+    {
+      "id": "encarga",
+      "from": "persona",
+      "to": "agente",
+      "label": "encarga",
+      "variant": "emphasis"
+    },
+    {
+      "id": "carga",
+      "from": "agente",
+      "to": "skill",
+      "label": "carga el contrato",
+      "variant": "emphasis"
+    },
+    {
+      "id": "elige",
+      "from": "skill",
+      "to": "familias",
+      "label": "elige familia",
+      "variant": "emphasis"
+    },
+    {
+      "id": "impone",
+      "from": "familias",
+      "to": "autocontencion",
+      "label": "bajo invariantes",
+      "variant": "emphasis"
+    },
+    {
+      "id": "consulta",
+      "from": "skill",
+      "to": "refs",
+      "label": "lee la sección",
+      "variant": "dashed"
+    },
+    {
+      "id": "copia",
+      "from": "skill",
+      "to": "assets",
+      "label": "copia el esqueleto",
+      "variant": "dashed"
+    },
+    {
+      "id": "genera",
+      "from": "autocontencion",
+      "to": "artefacto",
+      "label": "escribe"
+    },
+    {
+      "id": "verifica",
+      "from": "scripts",
+      "to": "artefacto",
+      "label": "verifica antes de abrir"
+    },
+    {
+      "id": "abre",
+      "from": "artefacto",
+      "to": "navegador",
+      "label": "abre",
+      "variant": "emphasis"
+    },
+    {
+      "id": "retorna",
+      "from": "navegador",
+      "to": "persona",
+      "label": "revisa · interactúa",
+      "variant": "emphasis"
+    },
+    {
+      "id": "devuelve",
+      "from": "navegador",
+      "to": "agente",
+      "label": "copiar como prompt",
+      "variant": "dashed"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "El paquete instalado",
+      "items": [
+        "SKILL.md es el cuerpo normativo: límites, ocho familias, procedimiento de cuatro fases y cierre",
+        "references/ se carga justo a tiempo: la sección de la familia elegida y el lenguaje visual antes de generar",
+        "assets/plantilla-artefacto.html trae tokens, temas claro/oscuro y el botón «copiar como prompt» ya resueltos"
+      ]
+    },
+    {
+      "dot": "rose",
+      "title": "La puerta de la autocontención",
+      "items": [
+        "check-artifact.py rechaza cualquier recurso externo: sin CDN, sin fuentes remotas, sin imágenes por URL",
+        "El artefacto funciona igual por file:// que servido: la promesa del formato se verifica, no se supone",
+        "Un artefacto que no pasa no se entrega ni se abre; el marcador de plantilla en <title> también falla"
+      ]
+    },
+    {
+      "dot": "emerald",
+      "title": "Lo que la skill no hace",
+      "items": [
+        "No escribe nada fuera de .explanations/: el conocimiento verificado vuelve por la conversación o la exportación",
+        "No produce documentación duradera ni define el sistema visual de un producto: eso es de otras skills",
+        "No mantiene catálogo ni servidor: los artefactos son desechables, se regeneran, no se versionan"
+      ]
+    }
+  ]
+}

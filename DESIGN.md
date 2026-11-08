@@ -177,6 +177,7 @@ El acento de cada skill vive en `docs/assets/site.css`, en un bloque `:root[data
 | `design-system-architect` | #6d28d9 | #2563eb |
 | `document-management-software` | #1e40af | #0ea5e9 |
 | `document-redactor` | #9b2c4a | #b45309 |
+| `explain-html` | #4f46e5 | #2563eb |
 | `git-flow-management` | #0f766e | #2563eb |
 | `go-cli-ai-first` | #0369a1 | #2563eb |
 | `go-errors-and-lifecycle` | #c2410c | #b91c1c |

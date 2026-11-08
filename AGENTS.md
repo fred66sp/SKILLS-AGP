@@ -16,6 +16,7 @@ Este fichero solo enruta: no define reglas, comandos, recuentos ni estados. Si c
 | Trabajo pendiente y prioridad | [`.tasks-ai/AGENTS.md`](.tasks-ai/AGENTS.md), sección «Cuándo se usa qué» |
 | Etiquetas del tablero: clases, asignación y catálogo | [`.tasks-ai/CONTRATO_ETIQUETAS.md`](.tasks-ai/CONTRATO_ETIQUETAS.md) → «1. Las clases y su convivencia», «2. Asignación correcta a una tarea», «3. Gestión del catálogo» |
 | Servidor del tablero | [`serve.sh`](serve.sh) |
+| Servidor de la documentación HTML | [`serve-web.sh`](serve-web.sh) |
 | Contexto de producto y sistema visual | [`PRODUCT.md`](PRODUCT.md), [`DESIGN.md`](DESIGN.md) |
 | Documentación pública, diagramas, recibos y fin de línea | `docs/` y [`README.md`](README.md), sección «Documentación» |
 | La puerta que ejecuta la CI | [`.github/workflows/validate.yml`](.github/workflows/validate.yml); los mismos comandos en [`README.md`](README.md), sección «Validación» |

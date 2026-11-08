@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- Plantilla de la familia «cuestionario» de explain-html.
+     Cópiala para el artefacto, sustituye los marcadores y rellena la
+     procedencia. Estructura: references/artifact-patterns.md. Sin recursos
+     externos: todo CSS, JS y SVG en línea. -->
+<title>ASUNTO DEL ARTEFACTO</title>
+<style>
+:root {
+  --bg: #fafaf9; --surface: #ffffff; --border: #e2e1de; --text: #1c1b1a;
+  --text-dim: #5d5b58; --accent: #0f766e; --ok: #15803d; --warn: #b45309; --err: #b91c1c;
+  --mono: ui-monospace, "Cascadia Mono", "JetBrains Mono", Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root { --bg: #141413; --surface: #1e1e1d; --border: #333231; --text: #ecebea;
+    --text-dim: #9d9b98; --accent: #2dd4bf; --ok: #4ade80; --warn: #fbbf24; --err: #f87171; }
+}
+* { box-sizing: border-box; }
+html { font-size: 16px; }
+body { margin: 0; background: var(--bg); color: var(--text);
+  font: 400 1rem/1.6 system-ui, "Segoe UI", sans-serif; }
+header { padding: 2.5rem 1.5rem 1.5rem; border-bottom: 1px solid var(--border); }
+h1 { font-size: 1.75rem; line-height: 1.25; margin: 0 0 .5rem; text-wrap: balance; }
+h2 { font-size: 1.25rem; margin: 2.5rem 0 .75rem; text-wrap: balance; }
+p, li { max-width: 65ch; }
+.lead { color: var(--text-dim); font-size: 1.05rem; margin: 0; }
+main { padding: 0 1.5rem 3rem; max-width: 72rem; }
+section { margin-top: 2.5rem; }
+button { font: inherit; color: var(--text); background: var(--surface);
+  border: 1px solid var(--border); border-radius: 6px; padding: .5rem 1rem; cursor: pointer; }
+button:focus-visible, input:focus-visible, a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+fieldset { border: 1px solid var(--border); border-radius: 8px; background: var(--surface);
+  padding: 1rem 1.25rem; margin: 0 0 1rem; }
+legend { font-weight: 600; padding: 0 .35rem; }
+label { display: block; padding: .25rem 0; cursor: pointer; }
+.feedback { display: none; margin: .75rem 0 0; padding-left: .75rem;
+  border-left: 3px solid var(--border); font-size: .95rem; }
+.feedback.show { display: block; }
+.feedback.ok { border-color: var(--ok); }
+.feedback.bad { border-color: var(--err); }
+.result { background: var(--surface); border: 1px solid var(--border); border-radius: 8px;
+  padding: 1rem 1.25rem; }
+.score { font-size: 1.5rem; font-weight: 700; color: var(--accent); }
+.copy-prompt { margin-top: 1rem; }
+.copy-prompt.ok { border-color: var(--ok); color: var(--ok); }
+</style>
+</head>
+<body>
+<!-- Bloque de procedencia — obligatorio; lo exige check-artifact.py.
+     Rellena prompt, fecha (AAAA-MM-DD), familia y fuentes. No se renderiza
+     y sobrevive a cualquier editor. Familias válidas: exploracion,
+     explicador, informe, diagrama, prototipo, cuestionario, editor,
+     presentacion. -->
+<!-- procedencia: {"prompt": "", "fecha": "", "familia": "", "fuentes": []} -->
+<header>
+  <h1>ASUNTO DEL ARTEFACTO</h1>
+  <p class="lead">Tema del cuestionario, número de preguntas y fecha.</p>
+</header>
+<main>
+
+  <section id="preguntas">
+    <h2>Preguntas</h2>
+
+    <fieldset data-correct="b" data-question="Alcance de la primera pregunta"
+      data-explanation="Explicación verificada de por qué esa opción es la correcta.">
+      <legend>1. Enunciado de la pregunta</legend>
+      <label><input type="radio" name="p1" value="a"> Opción incorrecta A</label>
+      <label><input type="radio" name="p1" value="b"> Opción correcta</label>
+      <label><input type="radio" name="p1" value="c"> Opción incorrecta C</label>
+      <p class="feedback" aria-live="polite"></p>
+    </fieldset>
+
+    <fieldset data-correct="c" data-question="Alcance de la segunda pregunta"
+      data-explanation="Explicación verificada de por qué esa opción es la correcta.">
+      <legend>2. Enunciado de la pregunta</legend>
+      <label><input type="radio" name="p2" value="a"> Opción incorrecta A</label>
+      <label><input type="radio" name="p2" value="b"> Opción incorrecta B</label>
+      <label><input type="radio" name="p2" value="c"> Opción correcta</label>
+      <p class="feedback" aria-live="polite"></p>
+    </fieldset>
+  </section>
+
+  <section id="resultado">
+    <h2>Resultado</h2>
+    <div class="result">
+      <p class="score" id="score" aria-live="polite">0 / 2</p>
+      <p id="detail">Responde para ver la corrección y la explicación de cada pregunta.</p>
+      <p class="copy-prompt"><button type="button" id="copy-result">Copiar resultado</button></p>
+    </div>
+  </section>
+
+  <section id="desconocidos">
+    <h2>Desconocidos</h2>
+    <p>Solo si el cuestionario cubre material verificable: qué no se pudo comprobar.</p>
+  </section>
+
+</main>
+<script>
+(function () {
+  var sets = Array.prototype.slice.call(document.querySelectorAll("fieldset[data-correct]"));
+  var score = document.getElementById("score");
+  var detail = document.getElementById("detail");
+
+  function explanation(set) {
+    return set.getAttribute("data-explanation")
+      || "La respuesta correcta es la opción " + set.getAttribute("data-correct").toUpperCase() + ".";
+  }
+
+  function update() {
+    var correct = 0;
+    var missed = [];
+    sets.forEach(function (set, index) {
+      var checked = set.querySelector("input:checked");
+      var feedback = set.querySelector(".feedback");
+      if (!checked) {
+        feedback.className = "feedback";
+        feedback.textContent = "";
+        return;
+      }
+      var isCorrect = checked.value === set.getAttribute("data-correct");
+      feedback.className = "feedback show " + (isCorrect ? "ok" : "bad");
+      feedback.textContent = (isCorrect ? "Correcto. " : "Incorrecto. ") + explanation(set);
+      if (isCorrect) {
+        correct += 1;
+      } else {
+        missed.push((index + 1) + ". " + set.getAttribute("data-question"));
+      }
+    });
+    score.textContent = correct + " / " + sets.length;
+    detail.textContent = missed.length
+      ? "Falladas: " + missed.join(" · ")
+      : (correct === sets.length ? "Todas correctas." : "Responde las preguntas que faltan.");
+  }
+
+  sets.forEach(function (set) {
+    set.addEventListener("change", update);
+  });
+
+  document.getElementById("copy-result").addEventListener("click", async function () {
+    var text = "Resultado del cuestionario: " + score.textContent + ". " + detail.textContent;
+    try {
+      await navigator.clipboard.writeText(text);
+      this.textContent = "Copiado";
+      this.classList.add("ok");
+      setTimeout(function (b) { b.textContent = "Copiar resultado"; b.classList.remove("ok"); }, 1000, this);
+    } catch (e) {
+      this.textContent = "No se pudo copiar: copia el texto a mano";
+    }
+  });
+})();
+</script>
+</body>
+</html>

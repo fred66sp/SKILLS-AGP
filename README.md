@@ -27,6 +27,7 @@ Este repositorio se inspira y se basa en dos fuentes externas:
 | `CHANGELOG.md` | Historial de cambios |
 | `.tasks-ai/` | Tablero de tareas del repositorio: instrucciones, contrato de etiquetas y ajustes versionados; base, binario y extensiones como estado local |
 | `serve.sh` | Servidor del tablero en segundo plano: start, status y stop, con pid y registro en `.run/` |
+| `serve-web.sh` | Servidor HTTP de la documentación HTML en segundo plano: start, status y stop, con pid y registro en `.run/` |
 | `PRODUCT.md` | Contexto de producto que consume el trabajo de diseño: usuarios, propósito, límites y ausencias declaradas |
 | `DESIGN.md` | Sistema visual del catálogo y de las páginas de skill: tokens, tipografía, componentes y reglas |
 | `.gitattributes` | Fin de línea del repositorio: todo texto en LF, sin depender de la máquina que clona |
@@ -258,6 +259,16 @@ Documentación: [`docs/web-interface-visual-design/index.html`](docs/web-interfa
 
 La calidad visual pertenece a esta skill; arquitectura, lenguaje, lógica de negocio, seguridad y pruebas funcionales conservan sus contratos especializados. En una revisión sin autorización de cambios, solo informa de hallazgos. El sistema visual que consume pertenece a `design-system-architect`.
 
+### `explain-html`
+
+Genera artefactos HTML explicativos para revisar fuera de la terminal: informes y estados, explicadores de código o de concepto, cuestionarios interactivos, comparaciones de alternativas lado a lado, diagramas, presentaciones, prototipos con controles y editores desechables a medida. Cada encargo produce un único fichero autocontenido en `.explanations/` del proyecto —sin CDN, todo CSS, JS y SVG en línea, funcional por `file://`— que la skill abre en el navegador. Ocho plantillas, una por familia, traen la estructura completa; el artefacto nace con un bloque de procedencia —prompt, fecha, familia y fuentes— que `check-artifact.py` exige, y puede declarar `enlaces` a otros artefactos hermanos para formar un bucle de exploración, plan y mockups con rutas relativas. Si el proyecto declara su sistema visual, `tokens-from-project.py` extrae sus custom properties de `DESIGN.md` o `design-system.json` y el artefacto copia los valores —nunca enlaza CSS— con la precedencia persona → proyecto → plantilla; `highlight.py` resalta el código mostrado con clases propias y deterministas. La puerta comprueba además que el HTML esté bien formado y avisa del contraste de los tokens por debajo de WCAG AA y de ficheros de más de 100 KB. El índice `.explanations/index.html` se regenera tras cada artefacto —con la relación de los enlaces—, el modo rápido `render-quick.py` renderiza de forma determinista los encargos rutinarios desde un JSON validado y `lifecycle.py` conserva las últimas versiones de cada artefacto versionado. Antes de entregar, el agente hace una verificación perceptiva del artefacto renderizado si tiene navegador automatizable o pide a la persona que lo revise. Separa hechos verificados, con su fuente, de una sección «Desconocidos» explícita; los artefactos interactivos terminan en un botón «copiar como prompt» que devuelve el resultado a la sesión. Los artefactos son desechables: se regeneran, no se versionan con Git.
+
+Contrato completo: [`src/explain-html/SKILL.md`](src/explain-html/SKILL.md).
+
+Documentación: [`docs/explain-html/index.html`](docs/explain-html/index.html).
+
+Precedencia: la documentación duradera del repositorio es de `document-management-software`; la identidad y el sistema visual de un producto, de `design-system-architect`; la implementación de una interfaz real, de `web-interface-visual-design`. `explain-html` cubre el paso previo: explorar, decidir, probar y comunicar.
+
 ## Skills en uso
 
 Skills de terceros fijadas a una versión concreta, para que todas las máquinas trabajen con lo mismo. No son de autoría propia: no se editan aquí, se actualizan sustituyéndolas.
@@ -294,6 +305,7 @@ Documentación: [`docs/skill-creator/index.html`](docs/skill-creator/index.html)
 | [`.skills/design-system-architect/SKILL.md`](.skills/design-system-architect/SKILL.md) | [`src/design-system-architect/SKILL.md`](src/design-system-architect/SKILL.md) |
 | [`.skills/security-engineering/SKILL.md`](.skills/security-engineering/SKILL.md) | [`src/security-engineering/SKILL.md`](src/security-engineering/SKILL.md) |
 | [`.skills/playwright-cli-usage/SKILL.md`](.skills/playwright-cli-usage/SKILL.md) | [`src/playwright-cli-usage/SKILL.md`](src/playwright-cli-usage/SKILL.md) |
+| [`.skills/explain-html/SKILL.md`](.skills/explain-html/SKILL.md) | [`src/explain-html/SKILL.md`](src/explain-html/SKILL.md) |
 
 `python scripts/check-repo.py` comprueba que cada enrutador resuelve su contrato desde su propio directorio, que el nombre del enrutador y el del contrato coinciden y que no hay enrutadores huérfanos ni skills canónicas sin enrutador.
 
@@ -333,6 +345,12 @@ python src/playwright-cli-usage/scripts/test-preflight.py
 python src/document-redactor/scripts/test-redactor.py
 python src/software-testing/scripts/test-case-check.py
 python src/design-system-architect/scripts/test-design-system.py
+python src/explain-html/scripts/test-check-artifact.py
+python src/explain-html/scripts/test-build-index.py
+python src/explain-html/scripts/test-render-quick.py
+python src/explain-html/scripts/test-lifecycle.py
+python src/explain-html/scripts/test-tokens-from-project.py
+python src/explain-html/scripts/test-highlight.py
 ```
 
 `check-repo.py` valida metadatos, estructura, enrutadores, enlaces Markdown, recibos de los diagramas, versiones y etiquetas de skills, la página de cada skill en `docs/` con su enlace en el catálogo y su referencia en este README, y sintaxis de los scripts. Las pruebas unitarias se ejecutan aparte para que un fallo indique qué script falló. La CI (`.github/workflows/validate.yml`) ejecuta los mismos comandos en cada push y pull request.
@@ -400,6 +418,9 @@ Cada skill declara su versión independiente en `metadata.version`; el procedimi
 - `docs/security-engineering/index.html`: página de entrada a la skill de seguridad, con el alcance, el procedimiento, el paquete y el escáner.
 - `docs/security-engineering/flujo-de-trabajo.html`: diagrama del flujo, del encargo al riesgo residual.
 - `docs/security-engineering/arquitectura.html`: diagrama del paquete, la superficie revisada y la puerta.
+- `docs/explain-html/index.html`: página de entrada a la skill `explain-html`, con las familias de artefacto, el procedimiento y el paquete.
+- `docs/explain-html/flujo-de-trabajo.html`: diagrama del flujo, del encargo al artefacto abierto en el navegador.
+- `docs/explain-html/arquitectura.html`: diagrama del paquete, la puerta de la autocontención y la salida desechable.
 - `docs/playwright-cli-usage/index.html`: página de entrada a la skill del navegador, con la puerta de confirmación, la escalera de uso, el paquete y el reconocimiento del entorno.
 - `docs/playwright-cli-usage/flujo-de-trabajo.html`: diagrama del flujo, de la pregunta al cierre con la puerta de confirmación.
 - `docs/playwright-cli-usage/arquitectura.html`: diagrama del contrato, sus referencias y la sesión confirmada.

@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- Plantilla de la familia «editor a medida» de explain-html.
+     Cópiala para el artefacto, sustituye los marcadores y rellena la
+     procedencia. Estructura: references/artifact-patterns.md. Sin recursos
+     externos: todo CSS, JS y SVG en línea. -->
+<title>ASUNTO DEL ARTEFACTO</title>
+<style>
+:root {
+  --bg: #fafaf9; --surface: #ffffff; --border: #e2e1de; --text: #1c1b1a;
+  --text-dim: #5d5b58; --accent: #0f766e; --ok: #15803d; --warn: #b45309; --err: #b91c1c;
+  --mono: ui-monospace, "Cascadia Mono", "JetBrains Mono", Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root { --bg: #141413; --surface: #1e1e1d; --border: #333231; --text: #ecebea;
+    --text-dim: #9d9b98; --accent: #2dd4bf; --ok: #4ade80; --warn: #fbbf24; --err: #f87171; }
+}
+* { box-sizing: border-box; }
+html { font-size: 16px; }
+body { margin: 0; background: var(--bg); color: var(--text);
+  font: 400 1rem/1.6 system-ui, "Segoe UI", sans-serif; }
+header { padding: 2.5rem 1.5rem 1.5rem; border-bottom: 1px solid var(--border); }
+h1 { font-size: 1.75rem; line-height: 1.25; margin: 0 0 .5rem; text-wrap: balance; }
+h2 { font-size: 1.25rem; margin: 2.5rem 0 .75rem; text-wrap: balance; }
+p, li { max-width: 65ch; }
+.lead { color: var(--text-dim); font-size: 1.05rem; margin: 0; }
+main { padding: 0 1.5rem 3rem; max-width: 72rem; }
+section { margin-top: 2.5rem; }
+button { font: inherit; color: var(--text); background: var(--surface);
+  border: 1px solid var(--border); border-radius: 6px; padding: .4rem .8rem; cursor: pointer; }
+button:focus-visible, input:focus-visible, select:focus-visible, a:focus-visible {
+  outline: 2px solid var(--accent); outline-offset: 2px; }
+#items { list-style: none; padding: 0; margin: 0; display: grid; gap: .5rem; }
+#items li { display: grid; grid-template-columns: 1fr max-content max-content;
+  gap: .5rem; align-items: center; background: var(--surface);
+  border: 1px solid var(--border); border-radius: 8px; padding: .5rem .75rem; }
+#items .moves { display: flex; gap: .25rem; }
+.warning { border-left: 3px solid var(--warn); background: var(--surface);
+  padding: .5rem .75rem; margin: 1rem 0; display: none; }
+.warning.show { display: block; }
+.warning strong { color: var(--warn); }
+.copy-prompt { margin-top: 1.5rem; }
+.copy-prompt.ok { border-color: var(--ok); color: var(--ok); }
+</style>
+</head>
+<body>
+<!-- Bloque de procedencia — obligatorio; lo exige check-artifact.py.
+     Rellena prompt, fecha (AAAA-MM-DD), familia y fuentes. No se renderiza
+     y sobrevive a cualquier editor. Familias válidas: exploracion,
+     explicador, informe, diagrama, prototipo, cuestionario, editor,
+     presentacion. -->
+<!-- procedencia: {"prompt": "", "fecha": "", "familia": "", "fuentes": []} -->
+<header>
+  <h1>ASUNTO DEL ARTEFACTO</h1>
+  <p class="lead">Qué dato se edita y qué decisión hay que devolver, con la fecha.</p>
+</header>
+<main>
+
+  <section id="editor">
+    <h2>Reordenar y clasificar</h2>
+    <p>Cambia el orden con las flechas y asigna una prioridad; el aviso aparece si el estado es incoherente.</p>
+    <ol id="items">
+      <li>
+        <span>Elemento uno del dato concreto</span>
+        <select aria-label="Prioridad de elemento uno">
+          <option value="alta">alta</option>
+          <option value="media" selected>media</option>
+          <option value="baja">baja</option>
+          <option value="sin">sin clasificar</option>
+        </select>
+        <span class="moves">
+          <button type="button" data-move="up" aria-label="Subir elemento uno">↑</button>
+          <button type="button" data-move="down" aria-label="Bajar elemento uno">↓</button>
+        </span>
+      </li>
+      <li>
+        <span>Elemento dos del dato concreto</span>
+        <select aria-label="Prioridad de elemento dos">
+          <option value="alta">alta</option>
+          <option value="media" selected>media</option>
+          <option value="baja">baja</option>
+          <option value="sin">sin clasificar</option>
+        </select>
+        <span class="moves">
+          <button type="button" data-move="up" aria-label="Subir elemento dos">↑</button>
+          <button type="button" data-move="down" aria-label="Bajar elemento dos">↓</button>
+        </span>
+      </li>
+      <li>
+        <span>Elemento tres del dato concreto</span>
+        <select aria-label="Prioridad de elemento tres">
+          <option value="alta">alta</option>
+          <option value="media" selected>media</option>
+          <option value="baja">baja</option>
+          <option value="sin">sin clasificar</option>
+        </select>
+        <span class="moves">
+          <button type="button" data-move="up" aria-label="Subir elemento tres">↑</button>
+          <button type="button" data-move="down" aria-label="Bajar elemento tres">↓</button>
+        </span>
+      </li>
+    </ol>
+    <p class="warning" id="warning" role="status"></p>
+    <p class="copy-prompt"><button type="button" id="copy-prompt">Copiar diff</button></p>
+  </section>
+
+  <section id="desconocidos">
+    <h2>Desconocidos</h2>
+    <p>Restricciones del dato que no constan y qué las desbloquearía.</p>
+  </section>
+
+</main>
+<script>
+(function () {
+  var list = document.getElementById("items");
+  var warning = document.getElementById("warning");
+
+  function items() {
+    return Array.prototype.slice.call(list.children);
+  }
+
+  function validate() {
+    var missing = items().filter(function (item) {
+      return item.querySelector("select").value === "sin";
+    }).length;
+    warning.classList.toggle("show", missing > 0);
+    warning.textContent = missing
+      ? "Aviso: " + missing + " elemento(s) sin clasificar. El prompt de retorno lo dirá."
+      : "";
+    return missing;
+  }
+
+  list.addEventListener("click", function (event) {
+    var button = event.target.closest("button[data-move]");
+    if (!button) {
+      return;
+    }
+    var item = button.closest("li");
+    if (button.dataset.move === "up" && item.previousElementSibling) {
+      list.insertBefore(item, item.previousElementSibling);
+    } else if (button.dataset.move === "down" && item.nextElementSibling) {
+      list.insertBefore(item.nextElementSibling, item);
+    }
+  });
+
+  list.addEventListener("change", validate);
+  validate();
+
+  document.getElementById("copy-prompt").addEventListener("click", async function () {
+    var lines = items().map(function (item, index) {
+      return (index + 1) + ". " + item.querySelector("span").textContent.trim()
+        + " — " + item.querySelector("select").value;
+    });
+    var text = "Aplica este orden y clasificación al dato:\n" + lines.join("\n");
+    try {
+      await navigator.clipboard.writeText(text);
+      this.textContent = "Copiado";
+      this.classList.add("ok");
+      setTimeout(function (b) { b.textContent = "Copiar diff"; b.classList.remove("ok"); }, 1000, this);
+    } catch (e) {
+      this.textContent = "No se pudo copiar: copia el texto a mano";
+    }
+  });
+})();
+</script>
+</body>
+</html>

@@ -138,6 +138,7 @@ Crear un remoto, publicar o hacer `push` es una operación aparte, con su propio
 - `CHANGELOG.md`: historial del repositorio, con las categorías de Keep a Changelog y sin secciones de versión; qué cambió entre dos versiones de una skill lo responde el historial de Git.
 - `.tasks-ai/`: tablero del repositorio. Se versionan las instrucciones, el contrato de etiquetas y los ajustes; la base, el binario y las extensiones son estado local y `tasks-ai init` las restaura.
 - `serve.sh`: servidor del tablero en segundo plano, en el puerto 8892, con pid y registro en `.run/`.
+- `serve-web.sh`: servidor HTTP de la documentación HTML en segundo plano, en el puerto 8766, con pid y registro en `.run/`.
 - `PRODUCT.md`: contexto de producto que lee el trabajo de diseño antes de tocar una interfaz: plataforma, usuarios, propósito, límites y las ausencias que no se deben rellenar.
 - `DESIGN.md`: sistema visual del catálogo y de las páginas de skill. Los tokens del frontmatter son normativos y el cuerpo explica dónde se aplica cada uno.
 - `.gitattributes`: fin de línea del repositorio. Todo texto viaja en LF (`* text=auto eol=lf`); lo que se compara byte a byte se declara con `-text`.

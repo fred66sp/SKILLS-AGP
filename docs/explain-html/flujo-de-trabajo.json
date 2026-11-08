@@ -1,0 +1,297 @@
+{
+  "schema_version": 2,
+  "diagram_type": "workflow",
+  "meta": {
+    "title": "Flujo de trabajo de Explain HTML",
+    "subtitle": "Del encargo al artefacto abierto en el navegador: cómo se fija el encargo, qué material se verifica, cómo se elige la familia, qué comprueba la autocontención y cuándo el artefacto se entrega o se regenera.",
+    "locale": "es",
+    "output": "docs/explain-html/flujo-de-trabajo.html",
+    "visual_preset": "signal-flow",
+    "quality_profile": "showcase"
+  },
+  "lanes": [
+    {
+      "id": "persona",
+      "label": "Persona y encargo"
+    },
+    {
+      "id": "skill",
+      "label": "La skill: fijar y generar"
+    },
+    {
+      "id": "fuentes",
+      "label": "Fuentes y material"
+    },
+    {
+      "id": "control",
+      "label": "Verificación y entrega",
+      "variant": "exception"
+    }
+  ],
+  "phases": [
+    {
+      "id": "encargo",
+      "label": "Fijar el encargo",
+      "fromCol": 0,
+      "toCol": 1
+    },
+    {
+      "id": "material",
+      "label": "Verificar el material",
+      "fromCol": 2,
+      "toCol": 2,
+      "variant": "emphasis"
+    },
+    {
+      "id": "generacion",
+      "label": "Elegir y generar",
+      "fromCol": 3,
+      "toCol": 4
+    },
+    {
+      "id": "entrega",
+      "label": "Verificar y abrir",
+      "fromCol": 5,
+      "toCol": 5,
+      "variant": "security"
+    }
+  ],
+  "groups": [
+    {
+      "id": "sin-relleno",
+      "label": "Sin datos inventados",
+      "lane": "skill",
+      "fromCol": 2,
+      "toCol": 3,
+      "variant": "emphasis"
+    },
+    {
+      "id": "puerta-salida",
+      "label": "Nada se abre sin pasar",
+      "lane": "control",
+      "fromCol": 4,
+      "toCol": 5,
+      "variant": "security"
+    }
+  ],
+  "mainPath": [
+    "peticion",
+    "fija",
+    "material",
+    "familia",
+    "genera",
+    "check",
+    "abre"
+  ],
+  "nodes": [
+    {
+      "id": "peticion",
+      "lane": "persona",
+      "col": 0,
+      "type": "external",
+      "label": "Encargo",
+      "sublabel": "informe · prototipo · diagrama",
+      "tag": "un artefacto nuevo",
+      "icon": "start"
+    },
+    {
+      "id": "fija",
+      "lane": "skill",
+      "col": 0,
+      "type": "backend",
+      "label": "Fijar",
+      "sublabel": "propósito · audiencia · momento",
+      "tag": "una pregunta si bloquea"
+    },
+    {
+      "id": "material",
+      "lane": "skill",
+      "col": 2,
+      "type": "backend",
+      "label": "Reunir y verificar",
+      "sublabel": "código · docs · git",
+      "tag": "verificado con fuente"
+    },
+    {
+      "id": "familia",
+      "lane": "skill",
+      "col": 3,
+      "type": "backend",
+      "label": "Familia",
+      "sublabel": "8 tipos · patrón de la sección",
+      "tag": "se lee JiT"
+    },
+    {
+      "id": "genera",
+      "lane": "skill",
+      "col": 4,
+      "type": "backend",
+      "label": "Generar",
+      "sublabel": "plantilla · lenguaje visual",
+      "tag": "sin CDN · todo en línea"
+    },
+    {
+      "id": "fuentes",
+      "lane": "fuentes",
+      "col": 2,
+      "type": "database",
+      "label": "Proyecto",
+      "sublabel": "ficheros · historial · salidas"
+    },
+    {
+      "id": "artefacto",
+      "lane": "fuentes",
+      "col": 5,
+      "type": "database",
+      "label": ".explanations/",
+      "sublabel": "un único <slug>.html",
+      "tag": "desechable · v2 conserva v1"
+    },
+    {
+      "id": "desconocidos",
+      "lane": "control",
+      "col": 2,
+      "type": "security",
+      "label": "Desconocidos",
+      "sublabel": "hueco explícito",
+      "tag": "nunca relleno plausible",
+      "icon": "stop"
+    },
+    {
+      "id": "check",
+      "lane": "control",
+      "col": 4,
+      "type": "security",
+      "label": "check-artifact.py",
+      "sublabel": "autocontención y título",
+      "tag": "falla: no se entrega"
+    },
+    {
+      "id": "abre",
+      "lane": "control",
+      "col": 5,
+      "type": "frontend",
+      "label": "Navegador",
+      "sublabel": "open-artifact.sh",
+      "tag": "o ruta completa",
+      "icon": "success"
+    }
+  ],
+  "edges": [
+    {
+      "id": "pide",
+      "from": "peticion",
+      "to": "fija",
+      "label": "pide",
+      "variant": "emphasis",
+      "role": "main"
+    },
+    {
+      "id": "alcance",
+      "from": "fija",
+      "to": "material",
+      "label": "propósito claro",
+      "role": "main"
+    },
+    {
+      "id": "lee",
+      "from": "material",
+      "to": "fuentes",
+      "label": "reúne",
+      "variant": "dashed",
+      "role": "branch"
+    },
+    {
+      "id": "huele",
+      "from": "material",
+      "to": "familia",
+      "label": "verificado",
+      "variant": "emphasis",
+      "role": "main"
+    },
+    {
+      "id": "sin-datos",
+      "from": "material",
+      "to": "desconocidos",
+      "label": "material insuficiente",
+      "variant": "security",
+      "role": "return"
+    },
+    {
+      "id": "desbloquea",
+      "from": "desconocidos",
+      "to": "familia",
+      "label": "va en el artefacto",
+      "variant": "dashed",
+      "role": "branch"
+    },
+    {
+      "id": "patron",
+      "from": "familia",
+      "to": "genera",
+      "label": "estructura de la sección",
+      "variant": "emphasis",
+      "role": "main"
+    },
+    {
+      "id": "escribe",
+      "from": "genera",
+      "to": "check",
+      "label": "antes de abrir",
+      "role": "main"
+    },
+    {
+      "id": "pasa",
+      "from": "check",
+      "to": "artefacto",
+      "label": "queda en .explanations/",
+      "variant": "emphasis",
+      "role": "main"
+    },
+    {
+      "id": "entrega",
+      "from": "check",
+      "to": "abre",
+      "label": "verificado",
+      "variant": "emphasis",
+      "role": "main"
+    },
+    {
+      "id": "feedback",
+      "from": "abre",
+      "to": "peticion",
+      "label": "nueva vuelta: v2",
+      "variant": "dashed",
+      "role": "branch"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "Qué se verifica antes de escribir",
+      "items": [
+        "Propósito, audiencia y momento de uso: qué debe poder hacer la persona —leer, comparar, decidir, interactuar, copiar—",
+        "Cada cifra, estado, fecha y relación sale del material fuente con su referencia: fichero y línea o comando ejecutado",
+        "El material que no se pudo verificar va a la sección «Desconocidos» con la pregunta que lo desbloquearía"
+      ]
+    },
+    {
+      "dot": "rose",
+      "title": "Dónde se detiene",
+      "items": [
+        "No se inventan datos: un gráfico sin datos reales no se dibuja, y un hueco se declara, no se rellena",
+        "check-artifact.py falla: el artefacto no se entrega ni se abre hasta corregir recursos externos o título ausente",
+        "No se sobrescribe un artefacto anterior sin instrucción explícita: la nueva vuelta es un fichero nuevo"
+      ]
+    },
+    {
+      "dot": "emerald",
+      "title": "Qué se prueba al cerrar",
+      "items": [
+        "Un único .html en .explanations/ sin ningún recurso externo: funciona igual por file:// que servido",
+        "El botón «copiar como prompt» copia texto listo para pegar en la conversación, con feedback visible",
+        "El cierre informa ruta, familia, qué se verificó de cada bloque y cómo pedir cambios"
+      ]
+    }
+  ]
+}

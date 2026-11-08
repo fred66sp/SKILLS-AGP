@@ -74,3 +74,21 @@ jobs:
 
       - name: Test the design-system contract gate
         run: python src/design-system-architect/scripts/test-design-system.py
+
+      - name: Test the artifact containment gate
+        run: python src/explain-html/scripts/test-check-artifact.py
+
+      - name: Test the artifact index builder
+        run: python src/explain-html/scripts/test-build-index.py
+
+      - name: Test the quick artifact renderer
+        run: python src/explain-html/scripts/test-render-quick.py
+
+      - name: Test the artifact lifecycle
+        run: python src/explain-html/scripts/test-lifecycle.py
+
+      - name: Test the project-token extractor
+        run: python src/explain-html/scripts/test-tokens-from-project.py
+
+      - name: Test the code highlighter
+        run: python src/explain-html/scripts/test-highlight.py

@@ -14,6 +14,7 @@
 - [`git-flow-management`](src/git-flow-management/SKILL.md)
 - [`document-management-software`](src/document-management-software/SKILL.md)
 - [`document-redactor`](src/document-redactor/SKILL.md)
+- [`explain-html`](src/explain-html/SKILL.md)
 - [`prd-cartographer`](src/prd-cartographer/SKILL.md)
 - [`adr-software`](src/adr-software/SKILL.md)
 - [`go-cli-ai-first`](src/go-cli-ai-first/SKILL.md)
