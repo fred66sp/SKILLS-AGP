@@ -57,6 +57,8 @@
 :root[data-skill="go-cli-ai-first"][data-theme="dark"] {--accent: #38bdf8;--accent-2: #60a5fa;--accent-3: #22d3ee;--accent-soft: rgba(56, 189, 248, .14)}
 :root[data-skill="go-errors-and-lifecycle"] {--accent: #c2410c;--accent-2: #b91c1c;--accent-3: #0f766e;--accent-soft: rgba(194, 65, 12, .10)}
 :root[data-skill="go-errors-and-lifecycle"][data-theme="dark"] {--accent: #fb923c;--accent-2: #60a5fa;--accent-3: #22d3ee;--accent-soft: rgba(251, 146, 60, .14)}
+:root[data-skill="explain-html"] {--accent: #4f46e5;--accent-2: #2563eb;--accent-3: #0891b2;--accent-soft: rgba(79, 70, 229, .10)}
+:root[data-skill="explain-html"][data-theme="dark"] {--accent: #818cf8;--accent-2: #93c5fd;--accent-3: #67e8f9;--accent-soft: rgba(129, 140, 248, .14)}
 :root[data-skill="go-idiomatic-style"] {--accent: #6d28d9;--accent-2: #2563eb;--accent-3: #c026d3;--accent-soft: rgba(109, 40, 217, .10)}
 :root[data-skill="go-idiomatic-style"][data-theme="dark"] {--accent: #a78bfa;--accent-2: #60a5fa;--accent-3: #22d3ee;--accent-soft: rgba(167, 139, 250, .14)}
 :root[data-skill="go-testing-and-verification"] {--accent: #15803d;--accent-2: #0d9488;--accent-3: #0369a1;--accent-soft: rgba(21, 128, 61, .10)}

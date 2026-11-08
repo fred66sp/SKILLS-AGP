@@ -74,3 +74,6 @@ jobs:
 
       - name: Test the design-system contract gate
         run: python src/design-system-architect/scripts/test-design-system.py
+
+      - name: Test the artifact containment gate
+        run: python src/explain-html/scripts/test-check-artifact.py

@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "e35971df-8625-48b8-a60d-089239b6fdaa",
+  "status": "current",
+  "command": "deliver",
+  "type": "workflow",
+  "input": "/home/alfredo/PROJECTS/SKILLS-AGP/docs/explain-html/flujo-de-trabajo.json",
+  "output": "/home/alfredo/PROJECTS/SKILLS-AGP/docs/explain-html/flujo-de-trabajo.html",
+  "specification": {
+    "sha256": "76c31c8c2d1afedfa259ade00f13cbfc7bc1f73de672cbd2ed3ad30f63adc789",
+    "bytes": 7235
+  },
+  "artifact": {
+    "sha256": "c5f701eff872a64b53ae06364132c1f9a19c595ee9fd057c3b181b0c1696ffb1",
+    "bytes": 835470
+  }
+}

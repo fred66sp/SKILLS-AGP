@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="light" data-skill="explain-html">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Entrada a la skill explain-html: qué hace, cuándo se activa, cómo se usa, dónde vive cada regla y qué contiene el paquete. Las reglas están en SKILL.md y en las referencias, no copiadas en esta página.">
+<meta name="color-scheme" content="light dark">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%234f46e5'/%3E%3Crect x='7' y='9' width='18' height='14' rx='2' fill='none' stroke='%23ffffff' stroke-width='2'/%3E%3Cpath d='M7 13h18' stroke='%23ffffff' stroke-width='2'/%3E%3Cpath d='M12 19l3 3 5-5' fill='none' stroke='%23ffffff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+<title>explain-html · Artefactos HTML explicativos</title>
+<script>
+(function () {
+  var skill = document.documentElement.getAttribute("data-skill") || "skills";
+  try {
+    var p = JSON.parse(localStorage.getItem(skill + ":prefs") || "{}");
+    var t = p.theme || (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+    document.documentElement.setAttribute("data-theme", t);
+  } catch (e) { document.documentElement.setAttribute("data-theme", "light"); }
+})();
+</script>
+<link rel="stylesheet" href="../assets/site.css">
+<link rel="stylesheet" href="../assets/microlighter/microlighter-docs.css">
+</head>
+<body>
+<a class="skip-link" href="#contenido">Saltar al contenido</a>
+<header class="topbar">
+  <a class="brand" href="#top">
+    <span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 32 32" role="presentation"><rect width="32" height="32" rx="8" fill="#4f46e5"/><rect x="7" y="9" width="18" height="14" rx="2" fill="none" stroke="#ffffff" stroke-width="2"/><path d="M7 13h18" stroke="#ffffff" stroke-width="2"/><path d="M12 19l3 3 5-5" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+    <span class="brand-name">explain-html<small>Artefactos HTML explicativos</small></span>
+  </a>
+  <span class="topbar-spacer"></span>
+  <a class="icon-btn catalog-btn" href="../index.html" aria-label="Volver al catálogo" title="Volver al catálogo">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5V6a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2z"></path><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H19"></path></svg>
+    <span>Catálogo</span>
+  </a>
+  <button class="icon-btn" id="theme-toggle" type="button" aria-label="Cambiar a tema oscuro">
+    <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"></path></svg>
+    <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"></path></svg>
+    <span>Tema</span>
+  </button>
+</header>
+
+<section class="hero" id="top">
+  <div class="hero-inner">
+    <span class="pill"><span class="dot" aria-hidden="true"></span>un encargo · un único .html · abierto en el navegador</span>
+    <h1>Del encargo al artefacto que <span class="grad">se abre y se lee</span></h1>
+    <p class="lead">La skill <code>explain-html</code> convierte un informe, un cuestionario, un prototipo interactivo, un diagrama, una presentación o un editor a medida en un único fichero HTML autocontenido en <code>.explanations/</code> del proyecto y lo abre en el navegador. Un documento que se navega y se interactúa comunica mejor que un muro de Markdown: cambia el medio y cambia la probabilidad de que alguien lo lea.</p>
+    <div class="hero-actions">
+      <a class="btn btn-primary" href="#que-hace">Qué hace</a>
+      <a class="btn btn-ghost" href="#cuando">Cuándo se activa</a>
+      <a class="btn btn-ghost" href="#uso">Cómo se usa</a>
+      <a class="btn btn-ghost" href="#paquete">El paquete</a>
+      <a class="btn btn-ghost" href="../index.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 19l-7-7 7-7"></path></svg>
+        Volver al catálogo
+      </a>
+    </div>
+  </div>
+</section>
+
+<div class="layout">
+  <nav class="toc" aria-label="Índice de la página">
+    <h2>En esta página</h2>
+    <a href="#que-hace">1. Qué hace</a>
+    <a href="#cuando">2. Cuándo se activa</a>
+    <a href="#uso">3. Cómo se usa</a>
+    <a href="#paquete">4. Qué contiene el paquete</a>
+    <a href="#reglas">5. Dónde están las reglas</a>
+    <a href="#preguntas">6. Preguntas cortas</a>
+    <a href="#diagramas">7. Los diagramas</a>
+    <a href="#verificacion">8. Verificación</a>
+    <div class="toc-extra"><a href="../index.html">Volver al catálogo</a></div>
+  </nav>
+
+  <main id="contenido">
+    <section id="que-hace" class="section">
+      <div class="section-head"><span class="section-num">1</span><h2 class="title">Qué hace</h2></div>
+      <p class="sub">Un muro de Markdown de cien líneas no se lee; un HTML que se abre sí. La skill produce artefactos de revisión: se abren, se interactúan y se descartan.</p>
+
+      <div class="table-wrap wrap-cells">
+        <table>
+          <thead><tr><th>Situación</th><th>Qué hace la skill</th></tr></thead>
+          <tbody>
+            <tr><td>«Dame un informe del estado», «explícame cómo funciona X».</td><td>Elige la familia adecuada y genera un único <code>.explanations/&lt;slug&gt;.html</code> con el material verificado del proyecto.</td></tr>
+            <tr><td>«Prototipa este botón», «dame deslizadores para probar la animación».</td><td>Genera un prototipo interactivo que termina en un botón «copiar como prompt» para devolver los valores a la sesión.</td></tr>
+            <tr><td>«Compárame tres enfoques», «no sé qué dirección dar».</td><td>Genera una exploración comparativa lado a lado, cada opción con su concesión anotada.</td></tr>
+            <tr><td>«Hazme un editor para reordenar estos tickets».</td><td>Genera un editor desechable sobre el dato concreto, con exportación del resultado.</td></tr>
+            <tr><td>Parte del material no se pudo verificar.</td><td>Lo declara en la sección «Desconocidos» del artefacto; no rellena con lo plausible.</td></tr>
+            <tr><td>El artefacto está listo.</td><td>Verifica su autocontención con el script, lo abre en el navegador e informa ruta, familia y grados de certeza.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="note">
+        <p><strong>Lo que no hace.</strong> No toca nada fuera de <code>.explanations/</code>, no produce documentación duradera, no define el sistema visual de una interfaz de producto y no mantiene un catálogo de informes publicado. Los artefactos son desechables: se regeneran, no se versionan.</p>
+      </div>
+    </section>
+
+    <section id="cuando" class="section">
+      <div class="section-head"><span class="section-num">2</span><h2 class="title">Cuándo se activa</h2></div>
+      <p class="sub">La columna izquierda activa la skill. La derecha queda fuera de su descripción para que no se active donde no aporta.</p>
+
+      <div class="table-wrap wrap-cells">
+        <table>
+          <thead><tr><th>Se activa para</th><th>No se activa para</th></tr></thead>
+          <tbody>
+            <tr><td>Informes y estados, explicadores, cuestionarios, diagramas, presentaciones, prototipos y editores a medida como HTML de revisión.</td><td>Documentación duradera del repositorio, ADR, runbooks o guías (eso es <code>document-management-software</code>).</td></tr>
+            <tr><td>Exploraciones y comparaciones de alternativas que hay que ver lado a lado para elegir.</td><td>La identidad o el sistema visual de un producto (<code>design-system-architect</code>).</td></tr>
+            <tr><td>Artefactos interactivos con retorno: «copiar como prompt», «copiar diff», «copiar resultado».</td><td>Implementar una interfaz real de la aplicación (<code>web-interface-visual-design</code>).</td></tr>
+            <tr><td>Artefactos que se abren por <code>file://</code> o por un servidor estático ya existente.</td><td>Publicar en red, autenticar o mantener un catálogo de informes publicado.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="uso" class="section">
+      <div class="section-head"><span class="section-num">3</span><h2 class="title">Cómo se usa</h2></div>
+      <p class="sub">Un encargo, un procedimiento. El orden es fijo; la profundidad de cada paso la marca el tamaño del encargo.</p>
+
+      <div class="flow">
+        <div class="flow-step"><code>paso 1</code><strong>Fijar el encargo</strong><p>Propósito, audiencia y momento de uso: qué debe poder hacer la persona —leer, comparar, decidir, interactuar, copiar—.</p></div>
+        <div class="flow-step"><code>paso 2</code><strong>Reunir el material</strong><p>Fuentes del proyecto: código, documentación, historial, salidas de comandos. Cada dato verificado lleva su fuente; lo demás va a «Desconocidos».</p></div>
+        <div class="flow-step"><code>paso 3</code><strong>Elegir familia</strong><p>Comparación, explicador, informe, diagrama, prototipo, cuestionario, editor o presentación; luego la sección de esa familia en <code>references/artifact-patterns.md</code>.</p></div>
+        <div class="flow-step"><code>paso 4</code><strong>Generar</strong><p>Un único <code>.explanations/&lt;slug&gt;.html</code> desde la plantilla y el lenguaje visual: sin CDN, todo en línea, por <code>file://</code>.</p></div>
+        <div class="flow-step"><code>paso 5</code><strong>Verificar</strong><p><code>check-artifact.py</code> pasa antes de abrir; un artefacto con recursos externos o sin título no se entrega.</p></div>
+        <div class="flow-step"><code>paso 6</code><strong>Abrir y cerrar</strong><p><code>open-artifact.sh</code> lo abre en el navegador; el cierre informa ruta, familia, qué se verificó y cómo pedir cambios.</p></div>
+      </div>
+
+      <div class="qa"><h3>Falta material verificado suficiente</h3><p>El artefacto se genera igualmente con lo verificado y una sección «Desconocidos» explícita, con la pregunta o la prueba que desbloquearía cada hueco. Nunca se rellena con lo plausible.</p></div>
+      <div class="qa"><h3>El encargo es una nueva vuelta sobre un artefacto anterior</h3><p>Se genera un artefacto nuevo con versión en el nombre y se conserva el anterior. No se sobrescribe sin instrucción explícita.</p></div>
+      <div class="qa"><h3>El encargo no encaja en ninguna familia</h3><p>Se elige la más cercana y se declara en el cierre. Si es claramente otro dominio —documentación, identidad visual, interfaz real—, se delega y se dice a quién.</p></div>
+      <div class="qa"><h3>No hay navegador disponible</h3><p>Se informa la ruta completa y la alternativa de servir el proyecto con <code>serve-web.sh</code> si existe. No se reintenta la apertura.</p></div>
+    </section>
+
+    <section id="paquete" class="section">
+      <div class="section-head"><span class="section-num">4</span><h2 class="title">Qué contiene el paquete</h2></div>
+      <p class="sub">El agente lee <code>SKILL.md</code> al activarse y abre el resto solo cuando el paso en curso lo pide.</p>
+
+      <div class="code"><pre><code class="language-bash">explain-html/
+├── SKILL.md                        # límites, familias, procedimiento y cierre
+├── references/
+│   ├── artifact-patterns.md        # estructura de cada familia, para leer por sección
+│   └── visual-language.md          # matriz de representación, tipografía, accesibilidad
+├── assets/
+│   └── plantilla-artefacto.html    # esqueleto base: tokens, temas, «copiar como prompt»
+└── scripts/
+    ├── check-artifact.py           # verifica la autocontención del artefacto
+    └── open-artifact.sh            # lo abre en el navegador del entorno (WSL o Linux)</code></pre></div>
+
+      <div class="table-wrap wrap-cells">
+        <table>
+          <thead><tr><th>Fichero</th><th>Cuándo lo abre el agente</th></tr></thead>
+          <tbody>
+            <tr><td><code>SKILL.md</code></td><td>Siempre, al disparar la skill.</td></tr>
+            <tr><td><code>references/artifact-patterns.md</code></td><td>Paso 3, la sección de la familia elegida; no el fichero entero.</td></tr>
+            <tr><td><code>references/visual-language.md</code></td><td>Paso 4, antes de generar el HTML.</td></tr>
+            <tr><td><code>assets/plantilla-artefacto.html</code></td><td>Paso 4, como esqueleto que se copia, no se improvisa.</td></tr>
+            <tr><td><code>scripts/check-artifact.py</code></td><td>Paso 5, antes de abrir el artefacto.</td></tr>
+            <tr><td><code>scripts/open-artifact.sh</code></td><td>Paso 6, tras pasar la verificación.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="reglas" class="section">
+      <div class="section-head"><span class="section-num">5</span><h2 class="title">Dónde están las reglas</h2></div>
+      <p class="sub">Las reglas están en los ficheros del paquete, no en esta página. Aquí solo se indica cuál responde a cada pregunta.</p>
+
+      <div class="table-wrap wrap-cells">
+        <table>
+          <thead><tr><th>Pregunta</th><th>Se responde en</th></tr></thead>
+          <tbody>
+            <tr><td>Qué no se puede saltar, qué límites tiene y cómo se cierra.</td><td><code>SKILL.md</code></td></tr>
+            <tr><td>Cómo se estructura cada familia de artefacto.</td><td><code>references/artifact-patterns.md</code></td></tr>
+            <tr><td>Qué técnica usa cada tipo de contenido y qué invariantes visuales.</td><td><code>references/visual-language.md</code></td></tr>
+            <tr><td>Con qué esqueleto se genera y cómo se verifica y se abre.</td><td><code>assets/plantilla-artefacto.html</code>, <code>scripts/</code></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="note">
+        <p><strong>Si esta página y el paquete no coinciden, manda el paquete.</strong> Es lo que el agente ejecuta. Esta página no añade normas.</p>
+      </div>
+    </section>
+
+    <section id="preguntas" class="section">
+      <div class="section-head"><span class="section-num">6</span><h2 class="title">Preguntas cortas</h2></div>
+      <p class="sub">Lo que se pregunta antes de usar la skill por primera vez.</p>
+
+      <div class="qa"><h3>¿Por qué HTML y no Markdown?</h3><p>Un HTML transporta tablas, diseño, SVG, código, interacción, flujos, datos espaciales e imágenes en un solo fichero; Markdown aplana eso en prosa y diagramas ASCII. Y un HTML es un enlace que se abre y se comparte; un muro de cien líneas de Markdown no se lee.</p></div>
+      <div class="qa"><h3>¿Por qué sin CDN?</h3><p>Porque la autocontención es la promesa del formato: el artefacto funciona igual por <code>file://</code> que servido, sin conexión y sin sorpresas de versión. Todo CSS, JS y SVG va en línea; <code>check-artifact.py</code> lo impone.</p></div>
+      <div class="qa"><h3>¿Qué significa «copiar como prompt»?</h3><p>El cierre del bucle: el artefacto interactivo termina en un botón que copia al portapapeles el estado resultante —valores elegidos, orden propuesto, resultado del cuestionario— como texto listo para pegar de vuelta en la conversación con el agente.</p></div>
+      <div class="qa"><h3>¿Dónde quedan los artefactos y cuánto viven?</h3><p>En <code>.explanations/</code> del proyecto. Son desechables: se regeneran tras el feedback como versión nueva y se pueden borrar sin pérdida, porque lo verificado vuelve al proyecto por la conversación o por la exportación.</p></div>
+      <div class="qa"><h3>¿Y si el gráfico no tiene datos reales?</h3><p>No se dibuja. Las cifras, fechas y estados salen del material fuente o quedan en «Desconocidos»; una tabla sin datos verificados es más honesta que un gráfico decorativo.</p></div>
+    </section>
+
+    <section id="diagramas" class="section">
+      <div class="section-head"><span class="section-num">7</span><h2 class="title">Los diagramas</h2><span class="chip-repo">de este repositorio</span></div>
+      <p class="sub">Dos vistas del mismo procedimiento: el recorrido del encargo al artefacto abierto en el navegador, y las piezas que sostienen la skill.</p>
+
+      <div class="grid cols-2">
+        <a class="card card-link" href="flujo-de-trabajo.html">
+          <div class="card-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h6v5H4zM14 13h6v5h-6z"></path><path d="M10 8.5h2a2 2 0 0 1 2 2v5"></path></svg></div>
+          <h3>Flujo de trabajo</h3>
+          <p>Cómo se fija el encargo, qué material se verifica, cómo se elige la familia, dónde se detiene el flujo ante datos inventados y qué se comprueba antes de abrir.</p>
+          <span class="go">Abrir el diagrama →</span>
+        </a>
+        <a class="card card-link" href="arquitectura.html">
+          <div class="card-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1.5"></rect><rect x="14" y="3" width="7" height="7" rx="1.5"></rect><rect x="3" y="14" width="7" height="7" rx="1.5"></rect><rect x="14" y="14" width="7" height="7" rx="1.5"></rect></svg></div>
+          <h3>Arquitectura</h3>
+          <p>El paquete, la puerta de la autocontención y la superficie sobre la que actúa: <code>SKILL.md</code>, las referencias, la plantilla, los scripts y <code>.explanations/</code>.</p>
+          <span class="go">Abrir el diagrama →</span>
+        </a>
+      </div>
+
+      <div class="note">
+        <p><strong>Es un convenio de este repositorio, no un mandato de la skill:</strong> <code>docs/&lt;skill&gt;/index.html</code>, los diagramas y sus recibos <code>.delivery.json</code> son cómo SKILLS-AGP documenta sus skills. Los genera archify desde el <code>.json</code> que está junto a cada HTML; el comando y la comprobación del recibo están en la sección Documentación del <code>README.md</code>. Otro repositorio documenta la skill como le parezca: la política documental del repositorio prevalece, y esta página se somete a la de este.</p>
+      </div>
+    </section>
+    <section id="verificacion" class="section">
+      <div class="section-head"><span class="section-num">8</span><h2 class="title">Verificación</h2></div>
+      <p class="sub">Cada artefacto pasa su verificación antes de abrirse; el repositorio entero pasa su puerta antes de cerrar un cambio.</p>
+
+      <div class="code"><pre><code class="language-bash"># por artefacto, desde la carpeta de la skill
+python3 scripts/check-artifact.py ../../.explanations/&lt;slug&gt;.html
+
+# puerta del repositorio
+python3 scripts/check-repo.py</code></pre></div>
+
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Código</th><th>Significado</th></tr></thead>
+          <tbody>
+            <tr><td><code>0</code></td><td>Artefacto autocontenido con título, o repositorio sin hallazgos.</td></tr>
+            <tr><td><code>distinto de 0</code></td><td>Recurso externo, marcador de plantilla o hallazgo estructural; se corrige antes de cerrar.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="note">
+        <p>El script comprueba autocontención y título, no la calidad del contenido ni la accesibilidad: eso es criterio del agente según <code>references/visual-language.md</code>. Un artefacto que el script no pasa no se entrega ni se abre.</p>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<footer class="footer">
+  <span><code>docs/explain-html/</code> · skill <code>explain-html</code> · documento en español</span>
+  <span><a href="../index.html">Catálogo</a> · <a href="#top">Volver arriba</a> · <a href="../../src/explain-html/SKILL.md">SKILL.md</a> · <a href="flujo-de-trabajo.html">Flujo</a> · <a href="arquitectura.html">Arquitectura</a></span>
+  <span>Página estática: no envía datos ni carga recursos externos · <code>docs/explain-html/index.html</code></span>
+</footer>
+
+<a class="to-top" id="to-top" href="#top" aria-label="Volver arriba" title="Volver arriba">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 15l6-6 6 6"></path></svg>
+</a>
+
+<script src="../assets/site.js"></script>
+<script src="../assets/microlighter/microlighter-docs.js"></script>
+</body>
+</html>
