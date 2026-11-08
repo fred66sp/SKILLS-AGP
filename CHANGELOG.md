@@ -22,6 +22,8 @@ Las categorías —Añadido, Corregido, Modificado— vienen de [Keep a Changelo
 
 ### Añadido
 
+- `serve-web.sh`: servidor HTTP en segundo plano para revisar la documentación HTML del repositorio con sus estilos y enlaces resueltos, que por `file://` no cargan. Sirve la raíz en 127.0.0.1:8766 (`PORT` la cambia), con los mismos subcomandos y convenios de pid y registro en `.run/` que `serve.sh`: reconoce el servidor por el puerto que escucha, aunque lo hayan arrancado a mano, y no toca un proceso ajeno.
+
 - Tablero tasks-ai en `.tasks-ai/`: referencias `sk-N`, instrucciones, contrato de etiquetas y ajustes versionados, y una base, un binario y unas extensiones que `tasks-ai init` restaura en cada clon. `serve.sh` lo deja en segundo plano en 127.0.0.1:8892, con pid y registro en `.run/`.
 
 - Skill `document-management-software`: el inventario lee un `.doc-inventory-ignore` en la raíz y excluye lo que coincida antes de analizar. Cada patrón es una ruta relativa a la raíz: `a.md` no alcanza a `sub/a.md` y `docs/` no alcanza a `sub/docs/`. Admite `/` final para carpetas, globs simples dentro de un segmento y `#` para comentarios, y no admite negación. El informe enumera las rutas ignoradas y avisa por la salida de error si el archivo existe pero no se puede leer; las exclusiones de `--exclude-dir` siguen siendo independientes. La semántica queda escrita en `references/document-inventory.md` y cubierta por pruebas de anclaje a la raíz.

@@ -153,3 +153,6 @@ tmp/
 *.db-journal
 *.sqlite
 *.sqlite3
+
+# Artefactos explicativos de explain-html: desechables, se regeneran, no se versionan
+.explanations/

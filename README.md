@@ -27,6 +27,7 @@ Este repositorio se inspira y se basa en dos fuentes externas:
 | `CHANGELOG.md` | Historial de cambios |
 | `.tasks-ai/` | Tablero de tareas del repositorio: instrucciones, contrato de etiquetas y ajustes versionados; base, binario y extensiones como estado local |
 | `serve.sh` | Servidor del tablero en segundo plano: start, status y stop, con pid y registro en `.run/` |
+| `serve-web.sh` | Servidor HTTP de la documentación HTML en segundo plano: start, status y stop, con pid y registro en `.run/` |
 | `PRODUCT.md` | Contexto de producto que consume el trabajo de diseño: usuarios, propósito, límites y ausencias declaradas |
 | `DESIGN.md` | Sistema visual del catálogo y de las páginas de skill: tokens, tipografía, componentes y reglas |
 | `.gitattributes` | Fin de línea del repositorio: todo texto en LF, sin depender de la máquina que clona |
