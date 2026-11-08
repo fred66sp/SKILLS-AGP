@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- Plantilla de la familia «presentación» de explain-html.
+     Cópiala para el artefacto, sustituye los marcadores y rellena la
+     procedencia. Estructura: references/artifact-patterns.md. Sin recursos
+     externos: todo CSS, JS y SVG en línea. Sin JS sigue siendo una página
+     con scroll: cada sección apilada es contenido completo. -->
+<title>ASUNTO DEL ARTEFACTO</title>
+<style>
+:root {
+  --bg: #fafaf9; --surface: #ffffff; --border: #e2e1de; --text: #1c1b1a;
+  --text-dim: #5d5b58; --accent: #0f766e; --ok: #15803d; --warn: #b45309; --err: #b91c1c;
+  --mono: ui-monospace, "Cascadia Mono", "JetBrains Mono", Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root { --bg: #141413; --surface: #1e1e1d; --border: #333231; --text: #ecebea;
+    --text-dim: #9d9b98; --accent: #2dd4bf; --ok: #4ade80; --warn: #fbbf24; --err: #f87171; }
+}
+* { box-sizing: border-box; }
+html { font-size: 16px; }
+body { margin: 0; background: var(--bg); color: var(--text);
+  font: 400 1rem/1.6 system-ui, "Segoe UI", sans-serif; }
+h1 { font-size: clamp(2rem, 6vw, 4rem); line-height: 1.1; margin: 0 0 1rem; text-wrap: balance; }
+h2 { font-size: clamp(1.5rem, 4vw, 2.5rem); line-height: 1.2; margin: 0 0 1rem; text-wrap: balance; }
+p, li { max-width: 60ch; }
+.lead { color: var(--text-dim); font-size: 1.15rem; margin: 0; }
+a:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.progress { position: fixed; inset: 0 0 auto; height: 3px; background: var(--border); z-index: 2; }
+.progress span { display: block; height: 100%; width: 0; background: var(--accent); }
+.counter { position: fixed; top: .75rem; right: 1rem; z-index: 2; font-family: var(--mono);
+  font-size: .875rem; color: var(--text-dim); }
+.deck-index { position: fixed; top: .5rem; left: 1rem; z-index: 2; display: flex; gap: .5rem;
+  font-size: .875rem; }
+.deck-index a { color: var(--text-dim); text-decoration: none; padding: .25rem .4rem; border-radius: 4px; }
+.deck-index a[aria-current="true"] { color: var(--accent); border: 1px solid var(--border); }
+.slide { min-height: 100dvh; display: grid; place-content: center; padding: 4rem 1.5rem;
+  border-bottom: 1px solid var(--border); }
+.slide > * { margin-left: auto; margin-right: auto; width: min(100%, 64rem); }
+.slide figure { margin: 1.5rem 0; }
+.slide svg { width: 100%; height: auto; }
+figcaption { color: var(--text-dim); font-size: .875rem; margin-top: .5rem; }
+@media (max-width: 40rem) {
+  .deck-index { display: none; }
+}
+</style>
+</head>
+<body>
+<!-- Bloque de procedencia — obligatorio; lo exige check-artifact.py.
+     Rellena prompt, fecha (AAAA-MM-DD), familia y fuentes. No se renderiza
+     y sobrevive a cualquier editor. Familias válidas: exploracion,
+     explicador, informe, diagrama, prototipo, cuestionario, editor,
+     presentacion. -->
+<!-- procedencia: {"prompt": "", "fecha": "", "familia": "", "fuentes": []} -->
+<div class="progress" role="presentation"><span id="progress-bar"></span></div>
+<span class="counter" id="counter" aria-live="polite">1 / 3</span>
+<nav class="deck-index" aria-label="Diapositivas">
+  <a href="#diapo-1" aria-current="true">1</a>
+  <a href="#diapo-2">2</a>
+  <a href="#diapo-3">3</a>
+</nav>
+<main>
+
+  <section class="slide" id="diapo-1">
+    <h1>ASUNTO DEL ARTEFACTO</h1>
+    <p class="lead">Una idea por diapositiva; esta abre con la pregunta y la fecha.</p>
+  </section>
+
+  <section class="slide" id="diapo-2">
+    <h2>La idea central</h2>
+    <p>El contenido mínimo que sostiene la idea; el detalle vive en la conversación.</p>
+    <figure>
+      <svg viewBox="0 0 640 200" role="img" aria-label="Esquema de la idea central">
+        <rect x="40" y="60" width="160" height="80" rx="8" fill="none" stroke="currentColor"/>
+        <rect x="440" y="60" width="160" height="80" rx="8" fill="none" stroke="currentColor"/>
+        <path d="M200 100h240" stroke="currentColor" stroke-width="2" marker-end="url(#a)"/>
+        <defs><marker id="a" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
+          <path d="M0 0l8 4-8 4z" fill="currentColor"/></marker></defs>
+      </svg>
+      <figcaption>Los diagramas ocupan su propia diapositiva.</figcaption>
+    </figure>
+  </section>
+
+  <section class="slide" id="diapo-3">
+    <h2>Qué sigue</h2>
+    <ul>
+      <li>Decisión o acción que se pide.</li>
+      <li>Quién la toma y cuándo.</li>
+    </ul>
+  </section>
+
+</main>
+<script>
+(function () {
+  var slides = Array.prototype.slice.call(document.querySelectorAll(".slide"));
+  var counter = document.getElementById("counter");
+  var bar = document.getElementById("progress-bar");
+  var links = Array.prototype.slice.call(document.querySelectorAll(".deck-index a"));
+  var current = 0;
+
+  function show(index) {
+    current = Math.max(0, Math.min(slides.length - 1, index));
+    slides[current].scrollIntoView({ block: "start", behavior: "auto" });
+    counter.textContent = (current + 1) + " / " + slides.length;
+    bar.style.width = ((current + 1) / slides.length * 100) + "%";
+    links.forEach(function (link, i) {
+      link.setAttribute("aria-current", i === current ? "true" : "false");
+    });
+  }
+
+  document.addEventListener("keydown", function (event) {
+    if (event.key === "ArrowRight" || event.key === "ArrowDown" || event.key === "PageDown" || event.key === " ") {
+      event.preventDefault();
+      show(current + 1);
+    } else if (event.key === "ArrowLeft" || event.key === "ArrowUp" || event.key === "PageUp") {
+      event.preventDefault();
+      show(current - 1);
+    } else if (event.key === "Home") {
+      event.preventDefault();
+      show(0);
+    } else if (event.key === "End") {
+      event.preventDefault();
+      show(slides.length - 1);
+    }
+  });
+
+  links.forEach(function (link, index) {
+    link.addEventListener("click", function (event) {
+      event.preventDefault();
+      show(index);
+    });
+  });
+
+  if ("IntersectionObserver" in window) {
+    var observer = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) {
+          var index = slides.indexOf(entry.target);
+          if (index >= 0) {
+            current = index;
+            counter.textContent = (current + 1) + " / " + slides.length;
+            bar.style.width = ((current + 1) / slides.length * 100) + "%";
+            links.forEach(function (link, i) {
+              link.setAttribute("aria-current", i === current ? "true" : "false");
+            });
+          }
+        }
+      });
+    }, { threshold: 0.5 });
+    slides.forEach(function (slide) { observer.observe(slide); });
+  }
+})();
+</script>
+</body>
+</html>

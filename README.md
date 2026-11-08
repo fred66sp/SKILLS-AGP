@@ -261,7 +261,7 @@ La calidad visual pertenece a esta skill; arquitectura, lenguaje, lógica de neg
 
 ### `explain-html`
 
-Genera artefactos HTML explicativos para revisar fuera de la terminal: informes y estados, explicadores de código o de concepto, cuestionarios interactivos, comparaciones de alternativas lado a lado, diagramas, presentaciones, prototipos con controles y editores desechables a medida. Cada encargo produce un único fichero autocontenido en `.explanations/` del proyecto —sin CDN, todo CSS, JS y SVG en línea, funcional por `file://`— que la skill abre en el navegador. Separa hechos verificados, con su fuente, de una sección «Desconocidos» explícita; los artefactos interactivos terminan en un botón «copiar como prompt» que devuelve el resultado a la sesión. Los artefactos son desechables: se regeneran, no se versionan.
+Genera artefactos HTML explicativos para revisar fuera de la terminal: informes y estados, explicadores de código o de concepto, cuestionarios interactivos, comparaciones de alternativas lado a lado, diagramas, presentaciones, prototipos con controles y editores desechables a medida. Cada encargo produce un único fichero autocontenido en `.explanations/` del proyecto —sin CDN, todo CSS, JS y SVG en línea, funcional por `file://`— que la skill abre en el navegador. Ocho plantillas, una por familia, traen la estructura completa; el artefacto nace con un bloque de procedencia —prompt, fecha, familia y fuentes— que `check-artifact.py` exige. El índice `.explanations/index.html` se regenera tras cada artefacto, el modo rápido `render-quick.py` renderiza de forma determinista los encargos rutinarios desde un JSON validado y `lifecycle.py` conserva las últimas versiones de cada artefacto versionado. Separa hechos verificados, con su fuente, de una sección «Desconocidos» explícita; los artefactos interactivos terminan en un botón «copiar como prompt» que devuelve el resultado a la sesión. Los artefactos son desechables: se regeneran, no se versionan con Git.
 
 Contrato completo: [`src/explain-html/SKILL.md`](src/explain-html/SKILL.md).
 
@@ -345,6 +345,10 @@ python src/playwright-cli-usage/scripts/test-preflight.py
 python src/document-redactor/scripts/test-redactor.py
 python src/software-testing/scripts/test-case-check.py
 python src/design-system-architect/scripts/test-design-system.py
+python src/explain-html/scripts/test-check-artifact.py
+python src/explain-html/scripts/test-build-index.py
+python src/explain-html/scripts/test-render-quick.py
+python src/explain-html/scripts/test-lifecycle.py
 ```
 
 `check-repo.py` valida metadatos, estructura, enrutadores, enlaces Markdown, recibos de los diagramas, versiones y etiquetas de skills, la página de cada skill en `docs/` con su enlace en el catálogo y su referencia en este README, y sintaxis de los scripts. Las pruebas unitarias se ejecutan aparte para que un fallo indique qué script falló. La CI (`.github/workflows/validate.yml`) ejecuta los mismos comandos en cada push y pull request.

@@ -120,13 +120,15 @@
         <div class="flow-step"><code>paso 1</code><strong>Fijar el encargo</strong><p>Propósito, audiencia y momento de uso: qué debe poder hacer la persona —leer, comparar, decidir, interactuar, copiar—.</p></div>
         <div class="flow-step"><code>paso 2</code><strong>Reunir el material</strong><p>Fuentes del proyecto: código, documentación, historial, salidas de comandos. Cada dato verificado lleva su fuente; lo demás va a «Desconocidos».</p></div>
         <div class="flow-step"><code>paso 3</code><strong>Elegir familia</strong><p>Comparación, explicador, informe, diagrama, prototipo, cuestionario, editor o presentación; luego la sección de esa familia en <code>references/artifact-patterns.md</code>.</p></div>
-        <div class="flow-step"><code>paso 4</code><strong>Generar</strong><p>Un único <code>.explanations/&lt;slug&gt;.html</code> desde la plantilla y el lenguaje visual: sin CDN, todo en línea, por <code>file://</code>.</p></div>
-        <div class="flow-step"><code>paso 5</code><strong>Verificar</strong><p><code>check-artifact.py</code> pasa antes de abrir; un artefacto con recursos externos o sin título no se entrega.</p></div>
-        <div class="flow-step"><code>paso 6</code><strong>Abrir y cerrar</strong><p><code>open-artifact.sh</code> lo abre en el navegador; el cierre informa ruta, familia, qué se verificó y cómo pedir cambios.</p></div>
+        <div class="flow-step"><code>paso 4</code><strong>Generar</strong><p>Copia la plantilla de la familia elegida, rellena el bloque de procedencia —prompt, fecha, familia y fuentes— y guarda un único <code>.explanations/&lt;slug&gt;.html</code>; si el encargo es rutinario, <code>render-quick.py</code> lo renderiza desde un JSON validado.</p></div>
+        <div class="flow-step"><code>paso 5</code><strong>Verificar e indexar</strong><p><code>check-artifact.py</code> comprueba autocontención, título y procedencia; <code>build-index.py</code> regenera el índice de <code>.explanations/</code>. Un artefacto con recursos externos, sin título o con procedencia vacía no se entrega.</p></div>
+        <div class="flow-step"><code>paso 6</code><strong>Abrir, podar y cerrar</strong><p><code>open-artifact.sh</code> lo abre en el navegador; <code>lifecycle.py</code> conserva las últimas versiones de cada artefacto. El cierre informa ruta, familia, qué se verificó y cómo pedir cambios.</p></div>
       </div>
 
       <div class="qa"><h3>Falta material verificado suficiente</h3><p>El artefacto se genera igualmente con lo verificado y una sección «Desconocidos» explícita, con la pregunta o la prueba que desbloquearía cada hueco. Nunca se rellena con lo plausible.</p></div>
-      <div class="qa"><h3>El encargo es una nueva vuelta sobre un artefacto anterior</h3><p>Se genera un artefacto nuevo con versión en el nombre y se conserva el anterior. No se sobrescribe sin instrucción explícita.</p></div>
+      <div class="qa"><h3>¿Qué es el bloque de procedencia?</h3><p>Un comentario HTML al inicio del body con el prompt del encargo, la fecha, la familia y las fuentes. No se renderiza, sobrevive a cualquier editor y <code>check-artifact.py</code> lo exige completo: sin él, el índice no puede fechar el artefacto y el cierre no puede decir de dónde salió.</p></div>
+      <div class="qa"><h3>¿Cuándo se usa el modo rápido?</h3><p>Solo para artefactos rutinarios de texto, listas, tablas, cifras y notas. <code>render-quick.py</code> valida un JSON acotado y lo renderiza de forma determinista; si no valida, se cae a la generación a medida con la plantilla de la familia, que es la vía normal para composiciones propias.</p></div>
+      <div class="qa"><h3>El encargo es una nueva vuelta sobre un artefacto anterior</h3><p>Se genera un artefacto nuevo con versión en el nombre y se conserva el anterior. <code>lifecycle.py</code> conserva por defecto las últimas tres versiones de cada <code>&lt;slug&gt;-v&lt;N&gt;.html</code> y nunca borra la vigente ni nada fuera de <code>.explanations/</code>.</p></div>
       <div class="qa"><h3>El encargo no encaja en ninguna familia</h3><p>Se elige la más cercana y se declara en el cierre. Si es claramente otro dominio —documentación, identidad visual, interfaz real—, se delega y se dice a quién.</p></div>
       <div class="qa"><h3>No hay navegador disponible</h3><p>Se informa la ruta completa y la alternativa de servir el proyecto con <code>serve-web.sh</code> si existe. No se reintenta la apertura.</p></div>
     </section>
@@ -141,9 +143,15 @@
 │   ├── artifact-patterns.md        # estructura de cada familia, para leer por sección
 │   └── visual-language.md          # matriz de representación, tipografía, accesibilidad
 ├── assets/
-│   └── plantilla-artefacto.html    # esqueleto base: tokens, temas, «copiar como prompt»
+│   ├── plantilla-artefacto.html    # esqueleto base, para encargos sin familia
+│   └── plantilla-&lt;familia&gt;.html    # una por familia: exploracion, explicador, informe,
+│                                   # diagrama, prototipo, cuestionario, editor, presentacion
 └── scripts/
-    ├── check-artifact.py           # verifica la autocontención del artefacto
+    ├── artifact_meta.py            # familias y validación del bloque de procedencia
+    ├── check-artifact.py           # autocontención, título y procedencia
+    ├── build-index.py              # regenera .explanations/index.html
+    ├── render-quick.py             # modo rápido desde un JSON validado
+    ├── lifecycle.py                # conserva las últimas versiones y poda las antiguas
     └── open-artifact.sh            # lo abre en el navegador del entorno (WSL o Linux)</code></pre></div>
 
       <div class="table-wrap wrap-cells">
@@ -153,8 +161,11 @@
             <tr><td><code>SKILL.md</code></td><td>Siempre, al disparar la skill.</td></tr>
             <tr><td><code>references/artifact-patterns.md</code></td><td>Paso 3, la sección de la familia elegida; no el fichero entero.</td></tr>
             <tr><td><code>references/visual-language.md</code></td><td>Paso 4, antes de generar el HTML.</td></tr>
-            <tr><td><code>assets/plantilla-artefacto.html</code></td><td>Paso 4, como esqueleto que se copia, no se improvisa.</td></tr>
+            <tr><td><code>assets/plantilla-&lt;familia&gt;.html</code></td><td>Paso 4, como estructura que se copia; el esqueleto base solo si ninguna familia encaja.</td></tr>
+            <tr><td><code>scripts/render-quick.py</code></td><td>Paso 4, solo si el artefacto es rutinario y cabe en el esquema.</td></tr>
             <tr><td><code>scripts/check-artifact.py</code></td><td>Paso 5, antes de abrir el artefacto.</td></tr>
+            <tr><td><code>scripts/build-index.py</code></td><td>Paso 5, tras generar o borrar artefactos.</td></tr>
+            <tr><td><code>scripts/lifecycle.py</code></td><td>Paso 6, cuando una vuelta nueva deja versiones antiguas.</td></tr>
             <tr><td><code>scripts/open-artifact.sh</code></td><td>Paso 6, tras pasar la verificación.</td></tr>
           </tbody>
         </table>
@@ -172,7 +183,7 @@
             <tr><td>Qué no se puede saltar, qué límites tiene y cómo se cierra.</td><td><code>SKILL.md</code></td></tr>
             <tr><td>Cómo se estructura cada familia de artefacto.</td><td><code>references/artifact-patterns.md</code></td></tr>
             <tr><td>Qué técnica usa cada tipo de contenido y qué invariantes visuales.</td><td><code>references/visual-language.md</code></td></tr>
-            <tr><td>Con qué esqueleto se genera y cómo se verifica y se abre.</td><td><code>assets/plantilla-artefacto.html</code>, <code>scripts/</code></td></tr>
+            <tr><td>Con qué plantilla se genera, cómo se indexa, cuándo se usa el modo rápido y cómo se podan versiones.</td><td><code>assets/plantilla-&lt;familia&gt;.html</code>, <code>scripts/</code></td></tr>
           </tbody>
         </table>
       </div>
@@ -222,6 +233,8 @@
 
       <div class="code"><pre><code class="language-bash"># por artefacto, desde la carpeta de la skill
 python3 scripts/check-artifact.py ../../.explanations/&lt;slug&gt;.html
+python3 scripts/build-index.py ../../.explanations
+python3 scripts/lifecycle.py ../../.explanations --dry-run
 
 # puerta del repositorio
 python3 scripts/check-repo.py</code></pre></div>
@@ -230,14 +243,14 @@ python3 scripts/check-repo.py</code></pre></div>
         <table>
           <thead><tr><th>Código</th><th>Significado</th></tr></thead>
           <tbody>
-            <tr><td><code>0</code></td><td>Artefacto autocontenido con título, o repositorio sin hallazgos.</td></tr>
-            <tr><td><code>distinto de 0</code></td><td>Recurso externo, marcador de plantilla o hallazgo estructural; se corrige antes de cerrar.</td></tr>
+            <tr><td><code>0</code></td><td>Artefacto autocontenido con título y procedencia completa, índice regenerado, o repositorio sin hallazgos.</td></tr>
+            <tr><td><code>distinto de 0</code></td><td>Recurso externo, título o procedencia sin personalizar, JSON del modo rápido inválido o hallazgo estructural; se corrige antes de cerrar.</td></tr>
           </tbody>
         </table>
       </div>
 
       <div class="note">
-        <p>El script comprueba autocontención y título, no la calidad del contenido ni la accesibilidad: eso es criterio del agente según <code>references/visual-language.md</code>. Un artefacto que el script no pasa no se entrega ni se abre.</p>
+        <p>El script comprueba autocontención, título y bloque de procedencia, no la calidad del contenido ni la accesibilidad: eso es criterio del agente según <code>references/visual-language.md</code>. Un artefacto que el script no pasa no se entrega ni se abre.</p>
       </div>
     </section>
 

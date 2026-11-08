@@ -1,6 +1,6 @@
 # Lenguaje visual del artefacto
 
-Invariantes comunes a todas las familias. Se aplican sobre el esqueleto de [plantilla-artefacto](../assets/plantilla-artefacto.html), que ya los trae; esta referencia los explica y fija los valores que no debe cambiar el artefacto.
+Invariantes comunes a todas las familias. Se aplican sobre la plantilla de la familia elegida —o el esqueleto base si ninguna encaja—, que ya los trae; esta referencia los explica y fija los valores que no debe cambiar el artefacto.
 
 ## Matriz de representación
 
@@ -55,9 +55,11 @@ Antes de entregar, comprueba:
 
 1. Un único `.html` en `.explanations/`, sin ningún recurso externo (lo verifica `check-artifact.py`).
 2. `<title>` con el asunto concreto del artefacto.
-3. Primera pantalla: pregunta y respuesta principal visibles.
-4. Temas claro y oscuro legibles, o un solo tema justificado.
-5. Diagramas dentro de `<figure>` con etiqueta accesible y leyenda.
-6. Foco visible y teclado operable en controles.
-7. Botón «copiar como prompt» funcional en los artefactos interactivos con retorno.
-8. Sección «Desconocidos» presente cuando haya material no verificado; sin datos inventados en gráficos, tablas o cifras.
+3. Bloque de procedencia completo: prompt, fecha, familia y fuentes (lo verifica `check-artifact.py`).
+4. Primera pantalla: pregunta y respuesta principal visibles.
+5. Temas claro y oscuro legibles, o un solo tema justificado.
+6. Diagramas dentro de `<figure>` con etiqueta accesible y leyenda.
+7. Foco visible y teclado operable en controles.
+8. Botón «copiar como prompt» funcional en los artefactos interactivos con retorno.
+9. Sección «Desconocidos» presente cuando haya material no verificado; sin datos inventados en gráficos, tablas o cifras.
+10. Índice regenerado con `build-index.py` y, si hay vueltas antiguas, `lifecycle.py` ejecutado.

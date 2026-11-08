@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Pruebas de scripts/check-artifact.py: autocontención, título y códigos de salida.
+"""Pruebas de scripts/check-artifact.py: autocontención, título, procedencia y códigos de salida.
 
 Uso: python3 test-check-artifact.py
 Sale 0 si todo pasa; imprime el caso fallido y sale 1 si no.
@@ -9,13 +9,24 @@ import sys
 import tempfile
 from pathlib import Path
 
+import artifact_meta
+
 CHECKER = Path(__file__).with_name("check-artifact.py")
+ASSETS = Path(__file__).resolve().parents[1] / "assets"
+
+GOOD_META = (
+    '<!-- procedencia: {"prompt": "estado semanal", "fecha": "2026-11-08", '
+    '"familia": "informe", "fuentes": ["git log"]} -->'
+)
+EMPTY_META = '<!-- procedencia: {"prompt": "", "fecha": "", "familia": "", "fuentes": []} -->'
 
 BASE = """<!DOCTYPE html>
 <html lang="es"><head><meta charset="utf-8">
 <title>{title}</title>{extra}
 <style>p {{ background: url({url}) }}</style></head>
-<body><p>hola</p><script>var a = 1;</script></body></html>
+<body>
+{meta}
+<p>hola</p><script>var a = 1;</script></body></html>
 """
 
 
@@ -32,13 +43,17 @@ def run(tmp: Path, name: str, content: str | None) -> tuple[int, str]:
 
 def main() -> int:
     cases: list[tuple[str, str | None, int, list[str]]] = [
-        ("autocontenida con título propio", BASE.format(title="Estado semana 45", extra="", url="data:image/png;base64,AAA"), 0, []),
-        ("con script por CDN", BASE.format(title="Estado", extra='<script src="https://cdn.jsdelivr.net/x.js"></script>', url="#"), 1, ["cdn.jsdelivr.net"]),
-        ("con hoja externa", BASE.format(title="Estado", extra='<link rel="stylesheet" href="temas.css">', url="#"), 1, ["temas.css"]),
-        ("con url() remota en CSS", BASE.format(title="Estado", extra="", url="https://fonts.googleapis.com/f.css"), 1, ["fonts.googleapis.com"]),
-        ("con imagen por URL", BASE.format(title="Estado", extra='<img src="https://example.com/f.png" alt="">', url="#"), 1, ["example.com"]),
-        ("sin título", BASE.format(title="", extra="", url="#").replace("<title></title>", ""), 1, ["falta <title>"]),
-        ("título sin personalizar", BASE.format(title="ASUNTO DEL ARTEFACTO", extra="", url="#"), 1, ["marcador"]),
+        ("autocontenido con título y procedencia", BASE.format(title="Estado semana 45", extra="", url="data:image/png;base64,AAA", meta=GOOD_META), 0, []),
+        ("con script por CDN", BASE.format(title="Estado", extra='<script src="https://cdn.jsdelivr.net/x.js"></script>', url="#", meta=GOOD_META), 1, ["cdn.jsdelivr.net"]),
+        ("con hoja externa", BASE.format(title="Estado", extra='<link rel="stylesheet" href="temas.css">', url="#", meta=GOOD_META), 1, ["temas.css"]),
+        ("con url() remota en CSS", BASE.format(title="Estado", extra="", url="https://fonts.googleapis.com/f.css", meta=GOOD_META), 1, ["fonts.googleapis.com"]),
+        ("con imagen por URL", BASE.format(title="Estado", extra='<img src="https://example.com/f.png" alt="">', url="#", meta=GOOD_META), 1, ["example.com"]),
+        ("sin título", BASE.format(title="", extra="", url="#", meta=GOOD_META).replace("<title></title>", ""), 1, ["falta <title>"]),
+        ("título sin personalizar", BASE.format(title="ASUNTO DEL ARTEFACTO", extra="", url="#", meta=GOOD_META), 1, ["marcador"]),
+        ("procedencia ausente", BASE.format(title="Estado", extra="", url="#", meta=""), 1, ["falta el bloque de procedencia"]),
+        ("procedencia con campos vacíos", BASE.format(title="Estado", extra="", url="#", meta=EMPTY_META), 1, ["vacío", "prompt", "fecha", "familia", "fuentes"]),
+        ("procedencia con JSON roto", BASE.format(title="Estado", extra="", url="#", meta="<!-- procedencia: {prompt: x} -->"), 1, ["JSON válido"]),
+        ("procedencia con familia inválida", BASE.format(title="Estado", extra="", url="#", meta='<!-- procedencia: {"prompt": "x", "fecha": "2026-11-08", "familia": "otra", "fuentes": ["y"]} -->'), 1, ["familia"]),
     ]
     failures = 0
     with tempfile.TemporaryDirectory() as raw:
@@ -63,10 +78,28 @@ def main() -> int:
             print(f"FALLO «sin argumentos»: código {proc.returncode}, esperado 2")
             failures += 1
 
+    # Las nueve plantillas (base y una por familia) traen el bloque vacío listo
+    # para rellenar; si falta una, el contrato no se puede cumplir copiándola.
+    templates = [ASSETS / "plantilla-artefacto.html"] + [
+        ASSETS / f"plantilla-{slug}.html" for slug in artifact_meta.FAMILIES
+    ]
+    for template in templates:
+        if not template.is_file():
+            print(f"FALLO «plantilla»: no existe {template}")
+            failures += 1
+            continue
+        text = template.read_text(encoding="utf-8")
+        if '{"prompt": "", "fecha": "", "familia": "", "fuentes": []}' not in text:
+            print(f"FALLO «plantilla»: {template.name} no trae el bloque de procedencia vacío")
+            failures += 1
+        if "ASUNTO DEL ARTEFACTO" not in text:
+            print(f"FALLO «plantilla»: {template.name} no marca el título a sustituir")
+            failures += 1
+
     if failures:
         print(f"{failures} caso(s) fallidos.")
         return 1
-    print(f"OK: {len(cases) + 2} casos pasan.")
+    print(f"OK: {len(cases) + 2} casos y {len(templates)} plantillas pasan.")
     return 0
 
 

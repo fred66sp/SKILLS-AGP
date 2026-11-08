@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- Plantilla de la familia «informe» de explain-html.
+     Cópiala para el artefacto, sustituye los marcadores y rellena la
+     procedencia. Estructura: references/artifact-patterns.md. Sin recursos
+     externos: todo CSS, JS y SVG en línea. -->
+<title>ASUNTO DEL ARTEFACTO</title>
+<style>
+:root {
+  --bg: #fafaf9; --surface: #ffffff; --border: #e2e1de; --text: #1c1b1a;
+  --text-dim: #5d5b58; --accent: #0f766e; --ok: #15803d; --warn: #b45309; --err: #b91c1c;
+  --mono: ui-monospace, "Cascadia Mono", "JetBrains Mono", Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root { --bg: #141413; --surface: #1e1e1d; --border: #333231; --text: #ecebea;
+    --text-dim: #9d9b98; --accent: #2dd4bf; --ok: #4ade80; --warn: #fbbf24; --err: #f87171; }
+}
+* { box-sizing: border-box; }
+html { font-size: 16px; }
+body { margin: 0; background: var(--bg); color: var(--text);
+  font: 400 1rem/1.6 system-ui, "Segoe UI", sans-serif; }
+header { padding: 2.5rem 1.5rem 1.5rem; border-bottom: 1px solid var(--border); }
+h1 { font-size: 1.75rem; line-height: 1.25; margin: 0 0 .5rem; text-wrap: balance; }
+h2 { font-size: 1.25rem; margin: 2.5rem 0 .75rem; text-wrap: balance; }
+p, li { max-width: 65ch; }
+.lead { color: var(--text-dim); font-size: 1.05rem; margin: 0; }
+main { padding: 0 1.5rem 3rem; max-width: 72rem; }
+section { margin-top: 2.5rem; }
+table { border-collapse: collapse; width: 100%; font-size: .95rem; }
+th, td { border: 1px solid var(--border); padding: .5rem .75rem; text-align: left; vertical-align: top; }
+th { background: var(--surface); }
+figure { margin: 1.5rem 0; }
+figcaption { color: var(--text-dim); font-size: .875rem; margin-top: .5rem; }
+button { font: inherit; color: var(--text); background: var(--surface);
+  border: 1px solid var(--border); border-radius: 6px; padding: .5rem 1rem; cursor: pointer; }
+button:focus-visible, input:focus-visible, a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+details { border: 1px solid var(--border); border-radius: 6px; padding: .75rem 1rem; margin: .75rem 0; }
+summary { cursor: pointer; font-weight: 600; }
+.kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr)); gap: .75rem; }
+.kpi { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 1rem; }
+.kpi strong { display: block; font-size: 1.75rem; line-height: 1.2; color: var(--accent); }
+.kpi span { color: var(--text-dim); font-size: .875rem; }
+.timeline { list-style: none; padding: 0; margin: 0; border-left: 2px solid var(--border); }
+.timeline li { position: relative; padding: 0 0 1.25rem 1.5rem; }
+.timeline li::before { content: ""; position: absolute; left: -.5rem; top: .45rem;
+  width: .75rem; height: .75rem; border-radius: 50%; background: var(--text-dim); }
+.timeline .hecho::before { background: var(--ok); }
+.timeline .en-curso::before { background: var(--warn); }
+.timeline .bloqueado::before { background: var(--err); }
+.status { font-size: .8rem; font-weight: 600; text-transform: uppercase; letter-spacing: .03em; }
+.hecho .status { color: var(--ok); }
+.en-curso .status { color: var(--warn); }
+.bloqueado .status { color: var(--err); }
+</style>
+</head>
+<body>
+<!-- Bloque de procedencia — obligatorio; lo exige check-artifact.py.
+     Rellena prompt, fecha (AAAA-MM-DD), familia y fuentes. No se renderiza
+     y sobrevive a cualquier editor. Familias válidas: exploracion,
+     explicador, informe, diagrama, prototipo, cuestionario, editor,
+     presentacion. -->
+<!-- procedencia: {"prompt": "", "fecha": "", "familia": "", "fuentes": []} -->
+<header>
+  <h1>ASUNTO DEL ARTEFACTO</h1>
+  <p class="lead">Qué periodo cubre el informe, para quién y con qué fecha.</p>
+</header>
+<main>
+
+  <section id="resumen">
+    <h2>Resumen</h2>
+    <div class="kpis">
+      <div class="kpi"><strong>N</strong><span>Entregado en el periodo</span></div>
+      <div class="kpi"><strong>M</strong><span>Retrasado o bloqueado</span></div>
+      <div class="kpi"><strong>Fecha</strong><span>Cifra clave verificada</span></div>
+    </div>
+    <p>Qué se entregó, qué se retrasó y por qué, en la primera pantalla.</p>
+  </section>
+
+  <section id="cronologia">
+    <h2>Cronología</h2>
+    <ol class="timeline">
+      <li class="hecho"><span class="status">Hecho</span> · <strong>Hito</strong>
+        <p>Qué ocurrió y su fuente.</p></li>
+      <li class="en-curso"><span class="status">En curso</span> · <strong>Hito</strong>
+        <p>Qué avanza y qué falta.</p></li>
+      <li class="bloqueado"><span class="status">Bloqueado</span> · <strong>Hito</strong>
+        <p>Qué lo bloquea y quién lo desbloquea.</p></li>
+    </ol>
+  </section>
+
+  <section id="datos">
+    <h2>Datos</h2>
+    <figure>
+      <svg viewBox="0 0 480 180" role="img" aria-label="Serie de datos verificados del periodo">
+        <line x1="40" y1="150" x2="460" y2="150" stroke="currentColor" stroke-width="1"/>
+        <rect x="70" y="90" width="50" height="60" fill="var(--accent)" opacity=".7"/>
+        <rect x="160" y="60" width="50" height="90" fill="var(--accent)" opacity=".7"/>
+        <rect x="250" y="110" width="50" height="40" fill="var(--accent)" opacity=".7"/>
+        <rect x="340" y="40" width="50" height="110" fill="var(--accent)" opacity=".7"/>
+      </svg>
+      <figcaption>Solo con datos verificados; sin ellos, tabla y no gráfico.</figcaption>
+    </figure>
+  </section>
+
+  <section id="seguimiento">
+    <h2>Acciones de seguimiento</h2>
+    <ul>
+      <li>Acción concreta, responsable y fecha.</li>
+    </ul>
+  </section>
+
+  <section id="desconocidos">
+    <h2>Desconocidos</h2>
+    <p>Lo que no se pudo verificar y qué lo desbloquearía. Sin relleno.</p>
+  </section>
+
+</main>
+</body>
+</html>

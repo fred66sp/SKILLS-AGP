@@ -6,12 +6,15 @@ Uso: python3 check-artifact.py <ruta.html> [ruta.html ...]
 Un artefacto es autocontenido cuando funciona igual abierto por file:// que
 servido: todo CSS, JS y SVG en línea, toda imagen como data: URI o SVG
 incrustado, sin CDN, sin fuentes remotas y sin ficheros compañeros. El script
-comprueba eso y que el artefacto tenga título; no valida la calidad del
+comprueba eso, que el artefacto tenga título y que su bloque de procedencia
+—prompt, fecha, familia y fuentes— esté completo; no valida la calidad del
 contenido ni la accesibilidad, que son criterio del agente, no del script.
 """
 import re
 import sys
 from pathlib import Path
+
+import artifact_meta
 
 # src= y href= de recursos cargados: cualquier valor que no sea inline o
 # ancla interno rompe la autocontención. Los <a href> de texto sí pueden
@@ -49,6 +52,14 @@ def check_artifact(path: Path) -> list[str]:
         errors.append(f"{path}: falta <title>. Un artefacto sin título no se encuentra ni se nombra en el cierre.")
     elif "ASUNTO DEL ARTEFACTO" in title.group("val"):
         errors.append(f"{path}: <title> conserva el marcador de la plantilla; pon el asunto concreto.")
+
+    meta = artifact_meta.find(text)
+    if meta is None:
+        errors.append(f"{path}: {artifact_meta.MISSING}")
+    else:
+        _, problems = artifact_meta.load(meta)
+        for problem in problems:
+            errors.append(f"{path}:{line_of(text, meta.start())}: {problem}")
 
     for tag in LOADING_TAGS.finditer(text):
         tag_text = tag.group(0)
@@ -90,12 +101,12 @@ def main() -> int:
         all_errors.extend(errors)
 
     if all_errors:
-        print("El artefacto no es autocontenido; corrige antes de abrirlo en el navegador:")
+        print("El artefacto no pasa la verificación; corrige antes de abrirlo en el navegador:")
         for error in all_errors:
             print(f"  - {error}")
         return 1
 
-    print(f"OK: {checked} artefacto(s) autocontenido(s), con título y sin recursos externos.")
+    print(f"OK: {checked} artefacto(s) autocontenido(s), con título y procedencia completa.")
     return 0
 
 

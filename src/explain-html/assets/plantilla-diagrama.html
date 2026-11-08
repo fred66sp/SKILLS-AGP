@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- Plantilla de la familia «diagrama» de explain-html.
+     Cópiala para el artefacto, sustituye los marcadores y rellena la
+     procedencia. Estructura: references/artifact-patterns.md. Sin recursos
+     externos: todo CSS, JS y SVG en línea. -->
+<title>ASUNTO DEL ARTEFACTO</title>
+<style>
+:root {
+  --bg: #fafaf9; --surface: #ffffff; --border: #e2e1de; --text: #1c1b1a;
+  --text-dim: #5d5b58; --accent: #0f766e; --ok: #15803d; --warn: #b45309; --err: #b91c1c;
+  --mono: ui-monospace, "Cascadia Mono", "JetBrains Mono", Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root { --bg: #141413; --surface: #1e1e1d; --border: #333231; --text: #ecebea;
+    --text-dim: #9d9b98; --accent: #2dd4bf; --ok: #4ade80; --warn: #fbbf24; --err: #f87171; }
+}
+* { box-sizing: border-box; }
+html { font-size: 16px; }
+body { margin: 0; background: var(--bg); color: var(--text);
+  font: 400 1rem/1.6 system-ui, "Segoe UI", sans-serif; }
+header { padding: 2.5rem 1.5rem 1.5rem; border-bottom: 1px solid var(--border); }
+h1 { font-size: 1.75rem; line-height: 1.25; margin: 0 0 .5rem; text-wrap: balance; }
+h2 { font-size: 1.25rem; margin: 2.5rem 0 .75rem; text-wrap: balance; }
+p, li { max-width: 65ch; }
+.lead { color: var(--text-dim); font-size: 1.05rem; margin: 0; }
+main { padding: 0 1.5rem 3rem; max-width: 72rem; }
+section { margin-top: 2.5rem; }
+figure { margin: 1.5rem 0; }
+figure svg { width: 100%; height: auto; background: var(--surface);
+  border: 1px solid var(--border); border-radius: 8px; }
+figcaption { color: var(--text-dim); font-size: .875rem; margin-top: .5rem; }
+button { font: inherit; color: var(--text); background: var(--surface);
+  border: 1px solid var(--border); border-radius: 6px; padding: .5rem 1rem; cursor: pointer; }
+button:focus-visible, input:focus-visible, a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.legend { display: grid; grid-template-columns: max-content 1fr; gap: .4rem 1rem; align-items: center; }
+.swatch { width: 1.1rem; height: 1.1rem; border-radius: 3px; border: 1px solid var(--border); }
+.swatch.hot { background: var(--accent); }
+.swatch.cold { background: var(--surface); }
+.swatch.bad { background: var(--err); }
+</style>
+</head>
+<body>
+<!-- Bloque de procedencia — obligatorio; lo exige check-artifact.py.
+     Rellena prompt, fecha (AAAA-MM-DD), familia y fuentes. No se renderiza
+     y sobrevive a cualquier editor. Familias válidas: exploracion,
+     explicador, informe, diagrama, prototipo, cuestionario, editor,
+     presentacion. -->
+<!-- procedencia: {"prompt": "", "fecha": "", "familia": "", "fuentes": []} -->
+<header>
+  <h1>ASUNTO DEL ARTEFACTO</h1>
+  <p class="lead">La pregunta que responde el diagrama y la fecha.</p>
+</header>
+<main>
+
+  <section id="diagrama">
+    <h2>Diagrama</h2>
+    <figure>
+      <svg viewBox="0 0 720 320" role="img" aria-label="Topología con el camino caliente resaltado">
+        <defs>
+          <marker id="arrow" markerWidth="9" markerHeight="9" refX="8" refY="4.5" orient="auto">
+            <path d="M0 0l9 4.5-9 4.5z" fill="currentColor"/>
+          </marker>
+        </defs>
+        <rect x="30" y="40" width="150" height="64" rx="8" fill="none" stroke="currentColor" stroke-width="1.5"/>
+        <text x="105" y="78" text-anchor="middle" font-size="14">Entrada</text>
+
+        <rect x="285" y="40" width="150" height="64" rx="8" fill="none" stroke="var(--accent)" stroke-width="2.5"/>
+        <text x="360" y="78" text-anchor="middle" font-size="14">Componente</text>
+
+        <rect x="540" y="40" width="150" height="64" rx="8" fill="none" stroke="currentColor" stroke-width="1.5"/>
+        <text x="615" y="78" text-anchor="middle" font-size="14">Salida</text>
+
+        <rect x="285" y="200" width="150" height="64" rx="8" fill="none" stroke="var(--err)" stroke-width="1.5"/>
+        <text x="360" y="238" text-anchor="middle" font-size="14">Dependencia</text>
+
+        <path d="M180 72h100" stroke="currentColor" stroke-width="1.5" marker-end="url(#arrow)"/>
+        <text x="230" y="62" text-anchor="middle" font-size="12" fill="var(--text-dim)">petición</text>
+        <path d="M435 72h100" stroke="currentColor" stroke-width="1.5" marker-end="url(#arrow)"/>
+        <text x="485" y="62" text-anchor="middle" font-size="12" fill="var(--text-dim)">respuesta</text>
+        <path d="M360 104v92" stroke="var(--err)" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#arrow)"/>
+        <text x="372" y="152" font-size="12" fill="var(--text-dim)">en cada lectura</text>
+        <path d="M285 232H120V104" fill="none" stroke="var(--err)" stroke-width="1.5"
+          stroke-dasharray="5 4" marker-end="url(#arrow)"/>
+        <text x="145" y="196" font-size="12" fill="var(--text-dim)">camino lento</text>
+      </svg>
+      <figcaption>Qué representa el diagrama y qué camino resalta.</figcaption>
+    </figure>
+  </section>
+
+  <section id="leyenda">
+    <h2>Leyenda</h2>
+    <div class="legend">
+      <span class="swatch hot" aria-hidden="true"></span><span>Camino caliente o pieza central.</span>
+      <span class="swatch cold" aria-hidden="true"></span><span>Pieza de paso, sin estado propio.</span>
+      <span class="swatch bad" aria-hidden="true"></span><span>Dependencia o camino que falla o penaliza.</span>
+    </div>
+    <p>Las flechas llevan su propósito o su frecuencia; un diagrama sin leyenda de estados no se entrega.</p>
+  </section>
+
+  <section id="notas">
+    <h2>Notas</h2>
+    <ul>
+      <li>Punto que necesita explicación y su fuente.</li>
+      <li>Qué queda fuera del diagrama y por qué.</li>
+    </ul>
+  </section>
+
+  <section id="desconocidos">
+    <h2>Desconocidos</h2>
+    <p>Lo que el material fuente no permitió verificar y qué lo desbloquearía.</p>
+  </section>
+
+</main>
+</body>
+</html>

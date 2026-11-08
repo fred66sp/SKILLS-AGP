@@ -3,10 +3,11 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<!-- Plantilla base de explain-html: cópiala como esqueleto del artefacto.
-     Tokens, tema claro/oscuro y tipografía ya resueltos; añade las secciones
-     de la familia elegida (references/artifact-patterns.md). Sin recursos
-     externos: todo CSS, JS y SVG en línea. -->
+<!-- Plantilla base de explain-html: el esqueleto mínimo. Para generar, copia la
+     plantilla de la familia elegida (plantilla-exploracion.html, plantilla-informe.html
+     y así hasta las ocho) y usa esta solo si el encargo no encaja en ninguna.
+     Tokens, tema claro/oscuro y tipografía ya resueltos; sin recursos externos:
+     todo CSS, JS y SVG en línea. -->
 <title>ASUNTO DEL ARTEFACTO</title>
 <style>
 :root {
@@ -75,6 +76,12 @@ summary { cursor: pointer; font-weight: 600; }
 </style>
 </head>
 <body>
+<!-- Bloque de procedencia — obligatorio; lo exige check-artifact.py.
+     Rellena prompt, fecha (AAAA-MM-DD), familia y fuentes. No se renderiza
+     y sobrevive a cualquier editor. Familias válidas: exploracion,
+     explicador, informe, diagrama, prototipo, cuestionario, editor,
+     presentacion. -->
+<!-- procedencia: {"prompt": "", "fecha": "", "familia": "", "fuentes": []} -->
 <header>
   <h1>ASUNTO DEL ARTEFACTO</h1>
   <p class="lead">Una línea con la pregunta que resuelve el artefacto y la fecha.</p>

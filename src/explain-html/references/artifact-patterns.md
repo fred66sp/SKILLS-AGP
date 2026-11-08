@@ -1,8 +1,10 @@
 # Patrones por familia de artefacto
 
-Estructura de cada familia. Lee solo la sección de la familia elegida y copia su estructura; no improvises una variante propia. Todos los fragmentos van dentro del esqueleto de [plantilla-artefacto](../assets/plantilla-artefacto.html).
+Estructura de cada familia. Lee solo la sección de la familia elegida y copia su plantilla completa de `../assets/`; no improvises una variante propia. El esqueleto [plantilla-artefacto](../assets/plantilla-artefacto.html) queda solo para encargos que no encajan en ninguna familia. Todas las plantillas traen `ASUNTO DEL ARTEFACTO` y el bloque de procedencia vacío para sustituirlos.
 
 ## Exploración comparativa
+
+Plantilla: [`plantilla-exploracion.html`](../assets/plantilla-exploracion.html).
 
 Cuándo: la persona no sabe qué dirección tomar y hay que poner las opciones una al lado de otra para poder señalar una.
 
@@ -12,6 +14,8 @@ Cada opción es una tarjeta con: nombre corto, cómo funciona en 2–4 líneas, 
 
 ## Explicador
 
+Plantilla: [`plantilla-explicador.html`](../assets/plantilla-explicador.html).
+
 Cuándo: la persona quiere entender cómo funciona algo —un mecanismo del código, un concepto, un proceso— y lo va a leer una vez o dos.
 
 Estructura: caja de TL;DR al principio (3–5 líneas: qué es, por qué importa, dónde está en el código) → diagrama del flujo completo (SVG en línea) → recorrido por pasos como `<details>` plegables, cada uno con el fragmento de código real anotado → sección «Trampas» al final → sección «Desconocidos».
@@ -20,6 +24,8 @@ El diagrama representa el mecanismo, no su nombre: el camino de una petición po
 
 ## Informe
 
+Plantilla: [`plantilla-informe.html`](../assets/plantilla-informe.html).
+
 Cuándo: estado periódico, evolución de un trabajo, resumen de incidente. Se lee rápido, no se estudia.
 
 Estructura: resumen en la primera pantalla (qué se entregó, qué se retrasó, una cifra clave) → tabla o cronología coloreada por estado → mini-gráfico SVG si hay datos reales → acciones de seguimiento → «Desconocidos».
@@ -27,6 +33,8 @@ Estructura: resumen en la primera pantalla (qué se entregó, qué se retrasó, 
 La cronología es una lista con marcadores de estado (`hecho`, `en curso`, `bloqueado`) con color semántico consistente. Un gráfico solo se dibuja con datos verificados: sin datos reales, tabla, no gráfico.
 
 ## Diagrama
+
+Plantilla: [`plantilla-diagrama.html`](../assets/plantilla-diagrama.html).
 
 Cuándo: flujo, arquitectura, secuencia o proceso que vive mejor como caja y flecha que como prosa.
 
@@ -41,6 +49,8 @@ Etiqueta cada flecha con su propósito o su frecuencia. Un diagrama sin leyenda 
 
 ## Prototipo
 
+Plantilla: [`plantilla-prototipo.html`](../assets/plantilla-prototipo.html).
+
 Cuándo: probar una animación, una interacción o un flujo clicable; el movimiento y la interacción no se describen, se sienten.
 
 Estructura: zona de prueba a pantalla completa → panel de controles (deslizadores, interruptores) → botón «copiar como prompt».
@@ -51,6 +61,8 @@ El botón «copiar como prompt» lee el estado actual de los controles (valores,
 
 ## Cuestionario
 
+Plantilla: [`plantilla-cuestionario.html`](../assets/plantilla-cuestionario.html).
+
 Cuándo: evaluar comprensión de un tema, autoevaluación, preparación de una entrevista o revisión de conocimiento.
 
 Estructura: cabecera con tema y número de preguntas → preguntas de una en una o en lista → corrección en vivo → resultado final con puntuación → botón «copiar resultado» → «Desconocidos» solo si el cuestionario cubre un material verificable.
@@ -59,6 +71,8 @@ Reglas: cada pregunta con sus opciones como `<button>` o `<label>` + `<input typ
 
 ## Editor a medida
 
+Plantilla: [`plantilla-editor.html`](../assets/plantilla-editor.html).
+
 Cuándo: la persona tiene que reordenar, clasificar o editar algo que es un martirio de expresar en texto —prioridades, configuración con restricciones, valores de color o curvas, listas largas—.
 
 Estructura: el dato cargado, visible y editable → validación o avisos en línea cuando el estado sea incoherente → botón «copiar como prompt» (o «copiar diff») que exporta solo lo cambiado.
@@ -66,6 +80,8 @@ Estructura: el dato cargado, visible y editable → validación o avisos en lín
 El editor es desechable y específico de este dato, no un producto: no crea persistencia, no guarda en `localStorage` salvo que el encargo lo pida, no añade funciones para después. La exportación copia el estado final estructurado —JSON o texto plano— con una razón por cambio cuando aplique.
 
 ## Presentación
+
+Plantilla: [`plantilla-presentacion.html`](../assets/plantilla-presentacion.html).
 
 Cuándo: comunicar en una reunión con las flechas del teclado, sin herramienta de escritorio.
 
