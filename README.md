@@ -267,6 +267,8 @@ Contrato completo: [`src/explain-html/SKILL.md`](src/explain-html/SKILL.md).
 
 Documentación: [`docs/explain-html/index.html`](docs/explain-html/index.html).
 
+Catálogo demostrativo: [`docs/explain-html/demo/index.html`](docs/explain-html/demo/index.html), con una demo autocontenida por familia, material real del repositorio y los tokens de `DESIGN.md` copiados en cada página.
+
 Precedencia: la documentación duradera del repositorio es de `document-management-software`; la identidad y el sistema visual de un producto, de `design-system-architect`; la implementación de una interfaz real, de `web-interface-visual-design`. `explain-html` cubre el paso previo: explorar, decidir, probar y comunicar.
 
 ## Skills en uso
@@ -419,6 +421,7 @@ Cada skill declara su versión independiente en `metadata.version`; el procedimi
 - `docs/security-engineering/flujo-de-trabajo.html`: diagrama del flujo, del encargo al riesgo residual.
 - `docs/security-engineering/arquitectura.html`: diagrama del paquete, la superficie revisada y la puerta.
 - `docs/explain-html/index.html`: página de entrada a la skill `explain-html`, con las familias de artefacto, el procedimiento y el paquete.
+- `docs/explain-html/demo/index.html`: catálogo demostrativo con una demo autocontenida por familia y la portada que las agrupa.
 - `docs/explain-html/flujo-de-trabajo.html`: diagrama del flujo, del encargo al artefacto abierto en el navegador.
 - `docs/explain-html/arquitectura.html`: diagrama del paquete, la puerta de la autocontención y la salida desechable.
 - `docs/playwright-cli-usage/index.html`: página de entrada a la skill del navegador, con la puerta de confirmación, la escalera de uso, el paquete y el reconocimiento del entorno.
