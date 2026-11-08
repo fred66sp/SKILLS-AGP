@@ -5,10 +5,12 @@ Uso: python3 build-index.py [directorio] [--quiet]
 
 `directorio` por defecto es `.explanations` del proyecto actual. El script lee
 el `<title>` de cada `.html` de primer nivel, su bloque de procedencia si lo
-tiene (fecha y familia) y, si no, la fecha de modificación del fichero.
-Escribe `index.html` en ese mismo directorio con enlaces relativos, sin
-dependencias y funcional por file://. No toca los artefactos ni nada fuera del
-directorio. Se ejecuta tras generar cada artefacto nuevo.
+tiene (fecha, familia y `enlaces` opcionales) y, si no, la fecha de
+modificación del fichero. Escribe `index.html` en ese mismo directorio con
+enlaces relativos, sin dependencias y funcional por file://. Si un artefacto
+declara `enlaces`, el índice muestra a qué otros artefactos del bucle apunta.
+No toca los artefactos ni nada fuera del directorio. Se ejecuta tras generar
+cada artefacto nuevo.
 """
 import argparse
 import html
@@ -45,6 +47,8 @@ li { background: var(--surface); border: 1px solid var(--border);
 li a { color: var(--accent); font-weight: 600; text-decoration: none; }
 li a:hover, li a:focus-visible { text-decoration: underline; }
 .meta { display: block; color: var(--text-dim); font-size: .875rem; margin-top: .25rem; }
+.links { display: block; color: var(--text-dim); font-size: .875rem; margin-top: .25rem; }
+.links a { color: var(--accent); font-weight: 400; }
 .empty { color: var(--text-dim); }
 """
 
@@ -56,6 +60,7 @@ def artifact_row(path: Path) -> dict:
 
     fecha = fecha_archivo(path)
     familia = ""
+    enlaces: list[str] = []
     meta = artifact_meta.find(text)
     if meta is not None:
         data, _ = artifact_meta.load(meta)
@@ -64,11 +69,26 @@ def artifact_row(path: Path) -> dict:
                 fecha = data["fecha"]
             if data.get("familia") in artifact_meta.FAMILIES:
                 familia = artifact_meta.FAMILIES[data["familia"]]
-    return {"file": path.name, "title": name, "fecha": fecha, "familia": familia}
+            declared = data.get(artifact_meta.LINK_FIELD)
+            if isinstance(declared, list):
+                enlaces = [item for item in declared
+                           if isinstance(item, str) and artifact_meta.LINK_RE.match(item)]
+    return {"file": path.name, "title": name, "fecha": fecha, "familia": familia,
+            "enlaces": enlaces}
 
 
 def fecha_archivo(path: Path) -> str:
     return datetime.fromtimestamp(path.stat().st_mtime).date().isoformat()
+
+
+def links_line(enlaces: list[str]) -> str:
+    """Relación declarada por el artefacto, como enlaces relativos hermanos."""
+    if not enlaces:
+        return ""
+    items = ", ".join(
+        f'<a href="{html.escape(link)}">{html.escape(link)}</a>' for link in enlaces
+    )
+    return f'<span class="links">Enlaza: {items}</span>'
 
 
 def render(rows: list[dict]) -> str:
@@ -77,7 +97,8 @@ def render(rows: list[dict]) -> str:
         items = "\n".join(
             f'  <li><a href="{html.escape(row["file"])}">{row["title"]}</a>'
             f'<span class="meta">{row["fecha"]}'
-            f'{" · " + row["familia"] if row["familia"] else ""}</span></li>'
+            f'{" · " + row["familia"] if row["familia"] else ""}</span>'
+            f'{links_line(row["enlaces"])}</li>'
             for row in rows
         )
         body = f'<ul>\n{items}\n</ul>'

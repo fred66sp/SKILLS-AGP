@@ -46,11 +46,18 @@ def main() -> int:
                      '"familia": "informe", "fuentes": ["git log"]} -->'),
             encoding="utf-8",
         )
+        (tmp / "c-encadenado.html").write_text(
+            artifact("Plan enlazado", '<!-- procedencia: {"prompt": "p", "fecha": "2026-01-01", '
+                     '"familia": "exploracion", "fuentes": ["conversación"], '
+                     '"enlaces": ["a-con-meta.html", "b-sin-meta.html"]} -->'),
+            encoding="utf-8",
+        )
         (tmp / "notas.txt").write_text("no es un artefacto", encoding="utf-8")
 
         result = run(str(tmp))
         index = tmp / "index.html"
         text = index.read_text(encoding="utf-8") if index.is_file() else ""
+        links_block = text.split('<span class="links">', 1)[-1].split("</span>", 1)[0]
         checks = [
             ("código 0", result.returncode == 0),
             ("index creado", index.is_file()),
@@ -60,6 +67,9 @@ def main() -> int:
             ("fecha de metadatos", "2026-01-02" in text),
             ("fecha de fichero", "2026-02-03" in text),
             ("enlace relativo", 'href="a-con-meta.html"' in text),
+            ("relación visible", "Enlaza:" in text),
+            ("enlaces del bucle", 'href="a-con-meta.html"' in links_block
+             and 'href="b-sin-meta.html"' in links_block),
             ("ignora no-html", "notas.txt" not in text),
             ("no se lista a sí mismo", 'href="index.html"' not in text),
             ("orden por fecha reciente", text.find("Exploración sin metadatos") < text.find("Estado verificado")),
@@ -76,7 +86,7 @@ def main() -> int:
 
         again = run(str(tmp))
         text = index.read_text(encoding="utf-8")
-        if again.returncode != 0 or text.count('<li><a href="') != 2:
+        if again.returncode != 0 or text.count('<li><a href="') != 3:
             print(f"FALLO «regenerar no duplica entradas»\n{again.stdout}{again.stderr}")
             failures += 1
 

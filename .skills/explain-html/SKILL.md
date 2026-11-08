@@ -1,6 +1,6 @@
 ---
 name: explain-html
-description: "Enrutador de la skill `explain-html` del repositorio: genera artefactos HTML autocontenidos —informes, explicadores, cuestionarios interactivos, prototipos, diagramas, presentaciones, comparaciones y editores a medida— en .explanations/ del proyecto y los abre en el navegador para revisarlos e interactuar con ellos. Úsalo cuando la persona pida un informe o estado, un cuestionario, un prototipo interactivo, un diagrama o flujo, una presentación, una comparación de alternativas o un editor desechable con exportación «copiar como prompt». No contiene el contrato: la fuente canónica vive en el paquete homónimo del repositorio, que se lee completo antes de trabajar."
+description: "Enrutador de la skill `explain-html` del repositorio: genera artefactos HTML autocontenidos —informes, explicadores, cuestionarios interactivos, prototipos, diagramas, presentaciones, comparaciones y editores a medida— en .explanations/ del proyecto y los abre en el navegador para revisarlos e interactuar con ellos. Puede copiar los tokens del sistema visual del proyecto, enlazar varios artefactos como un bucle y resaltar código sin dependencias. Úsalo cuando la persona pida un informe o estado, un cuestionario, un prototipo interactivo, un diagrama o flujo, una presentación, una comparación de alternativas o un editor desechable con exportación «copiar como prompt». No contiene el contrato: la fuente canónica vive en el paquete homónimo del repositorio, que se lee completo antes de trabajar."
 ---
 
 # Enrutador de la skill explain-html

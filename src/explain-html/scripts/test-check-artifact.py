@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Pruebas de scripts/check-artifact.py: autocontención, título, procedencia y códigos de salida.
+"""Pruebas de scripts/check-artifact.py: autocontención, título, procedencia, estructura, avisos y códigos de salida.
 
 Uso: python3 test-check-artifact.py
 Sale 0 si todo pasa; imprime el caso fallido y sale 1 si no.
@@ -54,6 +54,12 @@ def main() -> int:
         ("procedencia con campos vacíos", BASE.format(title="Estado", extra="", url="#", meta=EMPTY_META), 1, ["vacío", "prompt", "fecha", "familia", "fuentes"]),
         ("procedencia con JSON roto", BASE.format(title="Estado", extra="", url="#", meta="<!-- procedencia: {prompt: x} -->"), 1, ["JSON válido"]),
         ("procedencia con familia inválida", BASE.format(title="Estado", extra="", url="#", meta='<!-- procedencia: {"prompt": "x", "fecha": "2026-11-08", "familia": "otra", "fuentes": ["y"]} -->'), 1, ["familia"]),
+        ("enlaces válidos", BASE.format(title="Estado", extra="", url="#", meta='<!-- procedencia: {"prompt": "x", "fecha": "2026-11-08", "familia": "informe", "fuentes": ["y"], "enlaces": ["plan.html"]} -->'), 0, []),
+        ("enlaces con URL externa", BASE.format(title="Estado", extra="", url="#", meta='<!-- procedencia: {"prompt": "x", "fecha": "2026-11-08", "familia": "informe", "fuentes": ["y"], "enlaces": ["https://example.com/plan.html"]} -->'), 1, ["enlaces", "hermano"]),
+        ("HTML mal formado", BASE.format(title="Estado", extra="", url="#", meta=GOOD_META).replace("<p>hola</p>", "<div><span>hola</div>"), 1, ["mal formado", "span"]),
+        ("etiqueta sin cerrar", BASE.format(title="Estado", extra="", url="#", meta=GOOD_META).replace("</body></html>", "</body></html><div>"), 1, ["no se cierra", "div"]),
+        ("tokens de bajo contraste avisan", BASE.format(title="Estado", extra="<style>:root { --bg: #ffffff; --text: #aaaaaa; }</style>", url="#", meta=GOOD_META), 0, ["contraste", "--text", "--bg"]),
+        ("fichero enorme avisa", BASE.format(title="Estado", extra="", url="#", meta=GOOD_META).replace("<p>hola</p>", "<!--" + "x" * 100_001 + "--><p>hola</p>"), 0, ["100000", "descontrola"]),
     ]
     failures = 0
     with tempfile.TemporaryDirectory() as raw:

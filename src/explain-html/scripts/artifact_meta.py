@@ -27,6 +27,12 @@ FAMILIES = {
 
 REQUIRED_FIELDS = ("prompt", "fecha", "familia", "fuentes")
 
+# Campo opcional `enlaces`: artefactos hermanos de un bucle multi-artefacto. Son
+# nombres de fichero relativos del mismo directorio, nunca URLs ni rutas
+# absolutas: el artefacto debe seguir funcionando por file://.
+LINK_FIELD = "enlaces"
+LINK_RE = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._-]*\.html$")
+
 META_RE = re.compile(r"<!--\s*procedencia\s*:\s*(?P<json>\{.*?\})\s*-->", re.DOTALL)
 DATE_RE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
 
@@ -96,5 +102,21 @@ def load(match) -> tuple[dict | None, list[str]]:
             "el campo «fuentes» está vacío o no es una lista de cadenas no vacías. "
             'Lista de dónde sale el material, por ejemplo ["src/x.py:12", "git log"].'
         )
+
+    enlaces = data.get(LINK_FIELD)
+    if enlaces is not None:
+        if not isinstance(enlaces, list) or not enlaces:
+            problems.append(
+                "el campo «enlaces» está vacío: elimínalo o lista los ficheros .html "
+                "hermanos que forman el bucle, por ejemplo [\"plan.html\"]."
+            )
+        else:
+            for item in enlaces:
+                if not isinstance(item, str) or not LINK_RE.match(item):
+                    problems.append(
+                        f"el enlace {item!r} no es un fichero .html hermano. Usa solo el "
+                        "nombre relativo, sin carpetas, URLs ni rutas absolutas "
+                        "(por ejemplo \"plan.html\"); la autocontención no admite otra cosa."
+                    )
 
     return data, problems

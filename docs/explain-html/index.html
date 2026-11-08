@@ -84,8 +84,11 @@
             <tr><td>«Prototipa este botón», «dame deslizadores para probar la animación».</td><td>Genera un prototipo interactivo que termina en un botón «copiar como prompt» para devolver los valores a la sesión.</td></tr>
             <tr><td>«Compárame tres enfoques», «no sé qué dirección dar».</td><td>Genera una exploración comparativa lado a lado, cada opción con su concesión anotada.</td></tr>
             <tr><td>«Hazme un editor para reordenar estos tickets».</td><td>Genera un editor desechable sobre el dato concreto, con exportación del resultado.</td></tr>
+            <tr><td>«Usa los colores de este proyecto».</td><td>Copia los valores de su sistema visual en el <code>:root</code> del artefacto —intención de la persona → proyecto → plantilla— sin enlazar CSS.</td></tr>
+            <tr><td>«Esto son varios pasos: explora, planea, enséñame los mockups».</td><td>Genera un bucle de artefactos hermanos enlazados con rutas relativas; el índice muestra la relación y cada página pasa la puerta.</td></tr>
+            <tr><td>El artefacto muestra código.</td><td>Lo resalta con <code>highlight.py</code>, determinista y sin librerías, y deja su CSS en línea.</td></tr>
             <tr><td>Parte del material no se pudo verificar.</td><td>Lo declara en la sección «Desconocidos» del artefacto; no rellena con lo plausible.</td></tr>
-            <tr><td>El artefacto está listo.</td><td>Verifica su autocontención con el script, lo abre en el navegador e informa ruta, familia y grados de certeza.</td></tr>
+            <tr><td>El artefacto está listo.</td><td>Verifica su autocontención con el script, hace o delega la revisión perceptiva, lo abre en el navegador e informa ruta, familia y grados de certeza.</td></tr>
           </tbody>
         </table>
       </div>
@@ -120,15 +123,18 @@
         <div class="flow-step"><code>paso 1</code><strong>Fijar el encargo</strong><p>Propósito, audiencia y momento de uso: qué debe poder hacer la persona —leer, comparar, decidir, interactuar, copiar—.</p></div>
         <div class="flow-step"><code>paso 2</code><strong>Reunir el material</strong><p>Fuentes del proyecto: código, documentación, historial, salidas de comandos. Cada dato verificado lleva su fuente; lo demás va a «Desconocidos».</p></div>
         <div class="flow-step"><code>paso 3</code><strong>Elegir familia</strong><p>Comparación, explicador, informe, diagrama, prototipo, cuestionario, editor o presentación; luego la sección de esa familia en <code>references/artifact-patterns.md</code>.</p></div>
-        <div class="flow-step"><code>paso 4</code><strong>Generar</strong><p>Copia la plantilla de la familia elegida, rellena el bloque de procedencia —prompt, fecha, familia y fuentes— y guarda un único <code>.explanations/&lt;slug&gt;.html</code>; si el encargo es rutinario, <code>render-quick.py</code> lo renderiza desde un JSON validado.</p></div>
-        <div class="flow-step"><code>paso 5</code><strong>Verificar e indexar</strong><p><code>check-artifact.py</code> comprueba autocontención, título y procedencia; <code>build-index.py</code> regenera el índice de <code>.explanations/</code>. Un artefacto con recursos externos, sin título o con procedencia vacía no se entrega.</p></div>
-        <div class="flow-step"><code>paso 6</code><strong>Abrir, podar y cerrar</strong><p><code>open-artifact.sh</code> lo abre en el navegador; <code>lifecycle.py</code> conserva las últimas versiones de cada artefacto. El cierre informa ruta, familia, qué se verificó y cómo pedir cambios.</p></div>
+        <div class="flow-step"><code>paso 4</code><strong>Generar</strong><p>Copia la plantilla de la familia elegida, rellena el bloque de procedencia —prompt, fecha, familia y fuentes— y guarda un único <code>.explanations/&lt;slug&gt;.html</code>; si el encargo es rutinario, <code>render-quick.py</code> lo renderiza desde un JSON validado. Si el proyecto declara su sistema visual, <code>tokens-from-project.py</code> copia sus valores en el <code>:root</code>; si muestra código, <code>highlight.py</code> lo resalta; si forma un bucle, cada página hermana se declara en <code>enlaces</code>.</p></div>
+        <div class="flow-step"><code>paso 5</code><strong>Verificar e indexar</strong><p><code>check-artifact.py</code> comprueba autocontención, HTML bien formado, título y procedencia, y avisa del contraste bajo y de ficheros de más de 100 KB; <code>build-index.py</code> regenera el índice de <code>.explanations/</code> con la relación de enlaces. Un artefacto con recursos externos, HTML roto o procedencia vacía no se entrega.</p></div>
+        <div class="flow-step"><code>paso 6</code><strong>Abrir, revisar a ojo y cerrar</strong><p><code>open-artifact.sh</code> lo abre en el navegador y la verificación perceptiva revisa el render —o lo revisa la persona si no hay navegador automatizable—; <code>lifecycle.py</code> conserva las últimas versiones de cada artefacto. El cierre informa ruta, familia, tokens, bucle, revisión y cómo pedir cambios.</p></div>
       </div>
 
       <div class="qa"><h3>Falta material verificado suficiente</h3><p>El artefacto se genera igualmente con lo verificado y una sección «Desconocidos» explícita, con la pregunta o la prueba que desbloquearía cada hueco. Nunca se rellena con lo plausible.</p></div>
       <div class="qa"><h3>¿Qué es el bloque de procedencia?</h3><p>Un comentario HTML al inicio del body con el prompt del encargo, la fecha, la familia y las fuentes. No se renderiza, sobrevive a cualquier editor y <code>check-artifact.py</code> lo exige completo: sin él, el índice no puede fechar el artefacto y el cierre no puede decir de dónde salió.</p></div>
       <div class="qa"><h3>¿Cuándo se usa el modo rápido?</h3><p>Solo para artefactos rutinarios de texto, listas, tablas, cifras y notas. <code>render-quick.py</code> valida un JSON acotado y lo renderiza de forma determinista; si no valida, se cae a la generación a medida con la plantilla de la familia, que es la vía normal para composiciones propias.</p></div>
       <div class="qa"><h3>El encargo es una nueva vuelta sobre un artefacto anterior</h3><p>Se genera un artefacto nuevo con versión en el nombre y se conserva el anterior. <code>lifecycle.py</code> conserva por defecto las últimas tres versiones de cada <code>&lt;slug&gt;-v&lt;N&gt;.html</code> y nunca borra la vigente ni nada fuera de <code>.explanations/</code>.</p></div>
+      <div class="qa"><h3>¿Puedo usar los colores y tokens del proyecto?</h3><p>Sí, copiando sus valores, nunca enlazando su CSS. <code>tokens-from-project.py</code> extrae las custom properties de un <code>DESIGN.md</code> o los tokens de <code>design-system.json</code> y emite un bloque <code>:root</code> para pegar en el artefacto. La precedencia es intención de la persona → sistema del proyecto → defaults de la plantilla; el artefacto sigue funcionando por <code>file://</code>.</p></div>
+      <div class="qa"><h3>¿Puedo repartir el encargo en varios artefactos?</h3><p>Sí: exploración → plan → mockups es un bucle de páginas hermanas en <code>.explanations/</code>, enlazadas con rutas relativas. Cada página pasa <code>check-artifact.py</code> y la que conoce el bucle declara a las demás en <code>enlaces</code>; <code>build-index.py</code> muestra la relación. Los nombres con carpetas, URLs o rutas absolutas se rechazan.</p></div>
+      <div class="qa"><h3>¿Y el código que muestra el artefacto?</h3><p>Se resalta con <code>highlight.py</code>, un resaltador determinista para go, python, json, bash, html, javascript y css que escapa el HTML y emite clases <code>tok-*</code>. Su CSS se pega una vez en el <code>&lt;style&gt;</code> del artefacto: sin librerías ni recursos externos.</p></div>
       <div class="qa"><h3>El encargo no encaja en ninguna familia</h3><p>Se elige la más cercana y se declara en el cierre. Si es claramente otro dominio —documentación, identidad visual, interfaz real—, se delega y se dice a quién.</p></div>
       <div class="qa"><h3>No hay navegador disponible</h3><p>Se informa la ruta completa y la alternativa de servir el proyecto con <code>serve-web.sh</code> si existe. No se reintenta la apertura.</p></div>
     </section>
@@ -147,10 +153,12 @@
 │   └── plantilla-&lt;familia&gt;.html    # una por familia: exploracion, explicador, informe,
 │                                   # diagrama, prototipo, cuestionario, editor, presentacion
 └── scripts/
-    ├── artifact_meta.py            # familias y validación del bloque de procedencia
-    ├── check-artifact.py           # autocontención, título y procedencia
+    ├── artifact_meta.py            # familias, procedencia y enlaces del bucle
+    ├── check-artifact.py           # autocontención, HTML, procedencia y avisos
     ├── build-index.py              # regenera .explanations/index.html
     ├── render-quick.py             # modo rápido desde un JSON validado
+    ├── tokens-from-project.py      # :root con los tokens del proyecto destino
+    ├── highlight.py                # resaltado determinista de código
     ├── lifecycle.py                # conserva las últimas versiones y poda las antiguas
     └── open-artifact.sh            # lo abre en el navegador del entorno (WSL o Linux)</code></pre></div>
 
@@ -163,10 +171,12 @@
             <tr><td><code>references/visual-language.md</code></td><td>Paso 4, antes de generar el HTML.</td></tr>
             <tr><td><code>assets/plantilla-&lt;familia&gt;.html</code></td><td>Paso 4, como estructura que se copia; el esqueleto base solo si ninguna familia encaja.</td></tr>
             <tr><td><code>scripts/render-quick.py</code></td><td>Paso 4, solo si el artefacto es rutinario y cabe en el esquema.</td></tr>
+            <tr><td><code>scripts/tokens-from-project.py</code></td><td>Paso 4, si el proyecto declara su sistema visual y el encargo pide usarlo.</td></tr>
+            <tr><td><code>scripts/highlight.py</code></td><td>Paso 4, cuando el artefacto muestra código.</td></tr>
             <tr><td><code>scripts/check-artifact.py</code></td><td>Paso 5, antes de abrir el artefacto.</td></tr>
-            <tr><td><code>scripts/build-index.py</code></td><td>Paso 5, tras generar o borrar artefactos.</td></tr>
+            <tr><td><code>scripts/build-index.py</code></td><td>Paso 5, tras generar o borrar artefactos; muestra la relación de <code>enlaces</code>.</td></tr>
             <tr><td><code>scripts/lifecycle.py</code></td><td>Paso 6, cuando una vuelta nueva deja versiones antiguas.</td></tr>
-            <tr><td><code>scripts/open-artifact.sh</code></td><td>Paso 6, tras pasar la verificación.</td></tr>
+            <tr><td><code>scripts/open-artifact.sh</code></td><td>Paso 6, tras pasar la verificación y antes de la revisión perceptiva.</td></tr>
           </tbody>
         </table>
       </div>
@@ -183,7 +193,7 @@
             <tr><td>Qué no se puede saltar, qué límites tiene y cómo se cierra.</td><td><code>SKILL.md</code></td></tr>
             <tr><td>Cómo se estructura cada familia de artefacto.</td><td><code>references/artifact-patterns.md</code></td></tr>
             <tr><td>Qué técnica usa cada tipo de contenido y qué invariantes visuales.</td><td><code>references/visual-language.md</code></td></tr>
-            <tr><td>Con qué plantilla se genera, cómo se indexa, cuándo se usa el modo rápido y cómo se podan versiones.</td><td><code>assets/plantilla-&lt;familia&gt;.html</code>, <code>scripts/</code></td></tr>
+            <tr><td>Con qué plantilla se genera, cómo se copian los tokens, cómo se resalta el código, cómo se indexa, cuándo se usa el modo rápido y cómo se podan versiones.</td><td><code>assets/plantilla-&lt;familia&gt;.html</code>, <code>scripts/</code></td></tr>
           </tbody>
         </table>
       </div>
@@ -243,14 +253,14 @@ python3 scripts/check-repo.py</code></pre></div>
         <table>
           <thead><tr><th>Código</th><th>Significado</th></tr></thead>
           <tbody>
-            <tr><td><code>0</code></td><td>Artefacto autocontenido con título y procedencia completa, índice regenerado, o repositorio sin hallazgos.</td></tr>
-            <tr><td><code>distinto de 0</code></td><td>Recurso externo, título o procedencia sin personalizar, JSON del modo rápido inválido o hallazgo estructural; se corrige antes de cerrar.</td></tr>
+            <tr><td><code>0</code></td><td>Artefacto autocontenido, bien formado, con título, procedencia y enlaces válidos —aunque haya avisos de contraste o tamaño—, índice regenerado, o repositorio sin hallazgos.</td></tr>
+            <tr><td><code>distinto de 0</code></td><td>Recurso externo, HTML mal formado, título o procedencia sin personalizar, enlaces no relativos, JSON del modo rápido inválido o hallazgo estructural; se corrige antes de cerrar.</td></tr>
           </tbody>
         </table>
       </div>
 
       <div class="note">
-        <p>El script comprueba autocontención, título y bloque de procedencia, no la calidad del contenido ni la accesibilidad: eso es criterio del agente según <code>references/visual-language.md</code>. Un artefacto que el script no pasa no se entrega ni se abre.</p>
+        <p>El script comprueba autocontención, HTML bien formado, título, procedencia y enlaces, y avisa del contraste de los tokens y de los ficheros de más de 100 KB sin cambiar el código de salida. No comprueba la calidad del contenido ni la accesibilidad completa: eso es criterio del agente según <code>references/visual-language.md</code>, que incluye la revisión perceptiva del artefacto renderizado. Un artefacto que el script no pasa no se entrega ni se abre.</p>
       </div>
     </section>
 

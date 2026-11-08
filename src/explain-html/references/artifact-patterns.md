@@ -88,3 +88,29 @@ Cuándo: comunicar en una reunión con las flechas del teclado, sin herramienta 
 Estructura: secciones `<section>` a `100dvh` con navegación por teclado (flechas, espacio, Home/End) → barra de progreso fina → contador «n / total» → índice accesible.
 
 Reglas: una idea por diapositiva; títulos grandes y cuerpo mínimo; los diagramas en diapositiva propia; sin animación esencial y con `prefers-reduced-motion` respetado. Sin JS, el deck sigue siendo legible como página con scroll: cada sección apilada es contenido completo.
+
+## Bucles de varios artefactos
+
+Un mismo razonamiento puede necesitar varias páginas —exploración → plan → mockups— que se leen en orden. No es un documento con capítulos: son artefactos hermanos de `.explanations/` que se enlazan con rutas relativas y funcionan como memoria del razonamiento.
+
+- Cada página es un `.html` de primer nivel con su propia familia y su propio bloque de procedencia.
+- Los enlaces del cuerpo usan el nombre relativo (`<a href="plan.html">`), nunca `file:///`, rutas absolutas ni URLs.
+- La página que conoce el bucle declara sus hermanos en `enlaces` dentro de la procedencia. `build-index.py` muestra esa relación; `check-artifact.py` rechaza nombres con carpetas, URLs o rutas absolutas.
+- Cada eslabón pasa `check-artifact.py` por separado. Un bucle con una página rota no está terminado.
+- La entrada del bucle se abre primero y se nombra en el cierre; las demás se alcanzan desde ella.
+
+Ejemplo de procedencia en la primera página:
+
+```html
+<!-- procedencia: {"prompt": "Explora y prepara el rediseño del panel", "fecha": "2026-11-08",
+     "familia": "exploracion", "fuentes": ["conversación", "src/panel.py:40"],
+     "enlaces": ["plan-panel.html", "mockups-panel.html"]} -->
+```
+
+## Código resaltado
+
+Cuando la familia muestre código real, el fragmento va dentro de `<pre><code>` con las clases que produce `scripts/highlight.py`: `tok-kw`, `tok-str`, `tok-com`, `tok-num` y `tok-fn`.
+
+- Genera el fragmento con `python3 scripts/highlight.py <lenguaje> <fichero>` (o por stdin) y pega su bloque `--css` una sola vez en el `<style>` del artefacto.
+- No escribas el resaltado a mano ni cargues una librería: la salida es determinista, escapa el HTML y no introduce recursos externos.
+- Cada fragmento lleva su fichero y línea de origen; el color no sustituye la anotación de lo que importa.

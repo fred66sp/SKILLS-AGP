@@ -86,3 +86,9 @@ jobs:
 
       - name: Test the artifact lifecycle
         run: python src/explain-html/scripts/test-lifecycle.py
+
+      - name: Test the project-token extractor
+        run: python src/explain-html/scripts/test-tokens-from-project.py
+
+      - name: Test the code highlighter
+        run: python src/explain-html/scripts/test-highlight.py
