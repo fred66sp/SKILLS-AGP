@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<!-- Plantilla de la familia «entrevista» de explain-html.
+     Cópiala para el artefacto, sustituye los marcadores y rellena la
+     procedencia. Estructura: references/artifact-patterns.md. Sin recursos
+     externos: todo CSS, JS y SVG en línea. -->
+<title>ASUNTO DEL ARTEFACTO</title>
+<style>
+:root {
+  color-scheme: light dark;
+  --bg: #fafaf9; --surface: #ffffff; --border: #e2e1de; --text: #1c1b1a; --text-dim: #5d5b58;
+  --accent: #0f766e; --accent-2: #2563eb; --ok: #15803d; --warn: #b45309; --err: #b91c1c;
+  --code-bg: #0a0f1c; --code-text: #e5e7eb; --code-border: #1f2937;
+  --sans: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "SF Mono", "Fira Code", Menlo, Consolas, monospace;
+  --radius: 16px; --radius-sm: 10px; --radius-inline: 6px;
+  --shadow: 0 1px 2px rgba(15, 23, 42, .05), 0 8px 24px -12px rgba(15, 23, 42, .18);
+  --pad: clamp(16px, 4vw, 40px);
+  --measure: 68ch;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #141413; --surface: #1e1e1d; --border: #333231; --text: #ecebea; --text-dim: #9d9b98;
+    --accent: #2dd4bf; --accent-2: #60a5fa; --ok: #4ade80; --warn: #fbbf24; --err: #f87171;
+    --code-bg: #070b16; --code-text: #e5e7eb; --code-border: #1f2937;
+    --shadow: 0 1px 2px rgba(0, 0, 0, .4), 0 12px 32px -18px rgba(0, 0, 0, .8);
+  }
+}
+* { box-sizing: border-box; }
+html { font-size: 16px; scroll-behavior: smooth; }
+body {
+  margin: 0; background: var(--bg); color: var(--text);
+  font: 400 16px/1.65 var(--sans); -webkit-font-smoothing: antialiased;
+}
+header { padding: clamp(24px, 4vw, 40px) max(var(--pad), calc((100% - 72rem) / 2)) 20px; border-bottom: 1px solid var(--border); }
+main { padding-bottom: 64px; }
+h1 { margin: 0 0 8px; font-size: clamp(1.75rem, 3.4vw, 2.4rem); line-height: 1.12; letter-spacing: -.025em; text-wrap: balance; }
+h2 { margin: 40px 0 12px; font-size: clamp(1.25rem, 2vw, 1.5rem); line-height: 1.25; letter-spacing: -.02em; text-wrap: balance; }
+h3 { font-size: 1.05rem; line-height: 1.35; letter-spacing: -.01em; }
+p, li { max-width: var(--measure); }
+.lead { max-width: 60ch; margin: 0; color: var(--text-dim); font-size: 1.05rem; line-height: 1.6; }
+section { margin-top: 40px; }
+a { color: var(--accent); text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; }
+a:hover { text-decoration-thickness: 2px; }
+button, input, select { font: inherit; color: var(--text); background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-sm); }
+button { padding: .55rem 1rem; font-weight: 600; cursor: pointer; transition: border-color .15s, background .15s; }
+button:hover { border-color: var(--accent); }
+button.ok { color: var(--ok); border-color: var(--ok); }
+input[type="range"] { accent-color: var(--accent); }
+select { padding: .45rem .6rem; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+pre {
+  margin: 16px 0; padding: 16px 18px; background: var(--code-bg); color: var(--code-text);
+  border: 1px solid var(--code-border); border-radius: var(--radius); overflow-x: auto;
+  box-shadow: var(--shadow); white-space: pre-wrap; font: 400 .8125rem/1.7 var(--mono);
+}
+pre code { background: none; border: 0; padding: 0; color: inherit; font-size: inherit; }
+code { font-family: var(--mono); font-size: .875em; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-inline); padding: .08em .38em; }
+figure { margin: 24px 0; }
+figcaption { margin-top: 8px; color: var(--text-dim); font-size: .875rem; }
+table { width: 100%; border-collapse: collapse; font-size: .94rem; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
+th, td { padding: .6rem .8rem; border-bottom: 1px solid var(--border); text-align: left; vertical-align: top; }
+thead th { background: color-mix(in srgb, var(--border) 35%, var(--surface)); color: var(--text-dim); font-size: .75rem; letter-spacing: .06em; text-transform: uppercase; }
+tbody tr:last-child td { border-bottom: 0; }
+details { margin: .75rem 0; padding: .75rem 1rem; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-sm); }
+summary { cursor: pointer; font-weight: 650; }
+summary:focus-visible { outline-offset: -2px; }
+::selection { background: color-mix(in srgb, var(--accent) 26%, transparent); }
+@media (max-width: 640px) {
+  table { font-size: .875rem; }
+  th, td { padding: .5rem .6rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  * { scroll-behavior: auto !important; transition: none !important; animation: none !important; }
+}
+main { width: min(calc(100% - 2 * var(--pad)), 72rem); margin-inline: auto; }
+
+[hidden] { display: none !important; }
+.q { margin: 0 0 16px; padding: 16px 20px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow); }
+.q:focus-within { border-color: var(--accent); }
+.q legend { padding: 0 .35rem; font-size: 1.05rem; font-weight: 650; line-height: 1.4; }
+.why { max-width: none; margin: 4px 0 12px; color: var(--text-dim); font-size: .9rem; }
+label { display: block; padding: .3rem 0; cursor: pointer; }
+label input[type="radio"] { accent-color: var(--accent); margin-right: 6px; }
+.detail { margin-top: 10px; color: var(--text-dim); font-size: .9rem; }
+.detail label { display: block; }
+textarea { display: block; width: 100%; margin-top: 4px; padding: .5rem .6rem; font: inherit; color: var(--text); background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-sm); resize: vertical; }
+.blast { display: inline-block; margin-right: 8px; padding: .1rem .45rem; border: 1px solid currentColor; border-radius: 999px; font-size: .68rem; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; vertical-align: 2px; }
+.blast.alto { color: var(--err); }
+.blast.medio { color: var(--warn); }
+.blast.bajo { color: var(--accent); }
+.progress { color: var(--text-dim); font-size: .875rem; }
+.actions { display: flex; flex-wrap: wrap; gap: 8px; margin: 16px 0 0; }
+#prompt-preview { max-height: 20rem; overflow: auto; }
+.copy-prompt { margin-top: 16px; }
+</style>
+</head>
+<body>
+<!-- Bloque de procedencia — obligatorio; lo exige check-artifact.py.
+     Rellena prompt, fecha (AAAA-MM-DD), familia y fuentes. No se renderiza
+     y sobrevive a cualquier editor. Familias válidas: exploracion,
+     explicador, informe, diagrama, prototipo, cuestionario, editor,
+     presentacion, blindspots, entrevista. -->
+<!-- procedencia: {"prompt": "", "fecha": "", "familia": "", "fuentes": []} -->
+<header>
+  <h1>ASUNTO DEL ARTEFACTO</h1>
+  <p class="lead">El encargo ambiguo que se va a entrevistar y la fecha. Una pregunta a la vez, de mayor a menor radio de explosión; cada respuesta abre las preguntas que de verdad dependen de ella.</p>
+</header>
+<main>
+
+  <section id="entrevista" data-encargo="Describe en una línea el encargo ambiguo que hay que convertir en un prompt de implementación.">
+    <h2>Entrevista</h2>
+    <p>No hay respuestas correctas y nada se corrige: cada opción abre un camino distinto de preguntas. Responde con lo que ya sabes; lo que no esté decidido se dirá en el prompt final.</p>
+
+    <div id="paso">
+      <p class="progress" id="progress" aria-live="polite">Pregunta 1 de 4</p>
+      <form id="form">
+
+        <fieldset class="q" data-id="q1" data-blast="Alto" data-question="¿Qué se rompe si esta pieza sale mal?">
+          <legend><span class="blast alto">Radio alto</span>¿Qué se rompe si esta pieza sale mal?</legend>
+          <p class="why">Fija el nivel de rigor de todo lo que viene después: no se entrevista igual un experimento que un cambio sobre datos de personas.</p>
+          <label><input type="radio" name="q1" value="datos"> Se pierden o se exponen datos</label>
+          <label><input type="radio" name="q1" value="tiempo"> Solo se pierde tiempo o se retrasa</label>
+          <label><input type="radio" name="q1" value="nada"> Nada irreversible: es exploratorio</label>
+          <div class="detail">
+            <label for="q1-note">Matiz opcional</label>
+            <textarea id="q1-note" name="q1-note" rows="2" placeholder="El caso concreto que te preocupa."></textarea>
+          </div>
+        </fieldset>
+
+        <!-- Las preguntas condicionadas llevan data-requires (id del padre) y
+             data-when (la opción que las abre); el JS solo muestra las activas. -->
+        <fieldset class="q" data-id="q1b" data-blast="Alto" data-requires="q1" data-when="datos"
+          data-question="¿Dónde está la frontera de confianza y quién puede cruzarla?">
+          <legend><span class="blast alto">Radio alto</span>¿Dónde está la frontera de confianza y quién puede cruzarla?</legend>
+          <p class="why">Solo se abre cuando hay datos en juego. Decide validación, permisos y qué se puede registrar sin exponer nada.</p>
+          <label><input type="radio" name="q1b" value="interno"> Personal interno con sesión</label>
+          <label><input type="radio" name="q1b" value="enlace"> Cualquiera que tenga el enlace</label>
+          <label><input type="radio" name="q1b" value="externo"> Un sistema externo por integración</label>
+          <div class="detail">
+            <label for="q1b-note">Matiz opcional</label>
+            <textarea id="q1b-note" name="q1b-note" rows="2" placeholder="Quién valida la identidad y con qué credencial."></textarea>
+          </div>
+        </fieldset>
+
+        <fieldset class="q" data-id="q2" data-blast="Alto" data-question="¿Qué decisión ya está tomada y no se puede reabrir?">
+          <legend><span class="blast alto">Radio alto</span>¿Qué decisión ya está tomada y no se puede reabrir?</legend>
+          <p class="why">Evita que la implementación proponga justo lo que ya se descartó; si no hay nada cerrado, se dice y se decide en el prompt.</p>
+          <label><input type="radio" name="q2" value="modelo"> El modelo de datos</label>
+          <label><input type="radio" name="q2" value="interfaz"> La interfaz y el flujo de uso</label>
+          <label><input type="radio" name="q2" value="nada"> Ninguna: todo está abierto</label>
+        </fieldset>
+
+        <fieldset class="q" data-id="q2b" data-blast="Medio" data-requires="q2" data-when="modelo"
+          data-question="¿Qué parte del modelo es obligatoria desde el primer día?">
+          <legend><span class="blast medio">Radio medio</span>¿Qué parte del modelo es obligatoria desde el primer día?</legend>
+          <p class="why">Solo se abre con el modelo cerrado. Separa lo que ya usan las pantallas de lo que se puede añadir sin migrar datos.</p>
+          <label><input type="radio" name="q2b" value="minimo"> Solo lo que ya usan las pantallas</label>
+          <label><input type="radio" name="q2b" value="completo"> Todo lo previsto en el diseño</label>
+          <label><input type="radio" name="q2b" value="despues"> Se puede migrar después sin coste</label>
+          <div class="detail">
+            <label for="q2b-note">Matiz opcional</label>
+            <textarea id="q2b-note" name="q2b-note" rows="2" placeholder="Campos y relaciones que no admiten espera."></textarea>
+          </div>
+        </fieldset>
+
+        <fieldset class="q" data-id="q3" data-blast="Medio" data-question="¿Cómo sabremos al terminar que salió bien?">
+          <legend><span class="blast medio">Radio medio</span>¿Cómo sabremos al terminar que salió bien?</legend>
+          <p class="why">Convierte el cierre en una comprobación concreta en vez de una opinión; sin esto, cada revisión reabre el encargo.</p>
+          <label><input type="radio" name="q3" value="test"> Un test automático que hoy falla</label>
+          <label><input type="radio" name="q3" value="revision"> Una revisión manual guiada</label>
+          <label><input type="radio" name="q3" value="uso"> Un dato de uso tras la primera semana</label>
+        </fieldset>
+
+        <fieldset class="q" data-id="q4" data-blast="Bajo" data-question="¿Qué forma prefiere la persona para el resultado?">
+          <legend><span class="blast bajo">Radio bajo</span>¿Qué forma prefiere la persona para el resultado?</legend>
+          <p class="why">Solo cambia la forma de entregar, no lo que hay que construir. Se pregunta al final para no desviar la entrevista.</p>
+          <label><input type="radio" name="q4" value="reutilizar"> Reutilizar lo que ya existe</label>
+          <label><input type="radio" name="q4" value="corto"> La versión más corta que funcione</label>
+          <label><input type="radio" name="q4" value="igual"> Da igual: decide tú</label>
+        </fieldset>
+
+      </form>
+      <p class="actions"><button type="button" id="next">Siguiente</button></p>
+    </div>
+  </section>
+
+  <section id="cierre" hidden>
+    <h2>Decisiones tomadas</h2>
+    <p>Lo que quedó decidido en la entrevista, en el mismo orden en que se preguntó. Lo no respondido se marca como pendiente.</p>
+    <table>
+      <thead>
+        <tr><th scope="col">Pregunta</th><th scope="col">Decisión</th><th scope="col">Radio</th></tr>
+      </thead>
+      <tbody id="decisions"></tbody>
+    </table>
+
+    <h2>Prompt de implementación</h2>
+    <pre id="prompt-preview" aria-live="polite"></pre>
+    <p class="copy-prompt"><button type="button" id="copy-prompt">Copiar como prompt</button></p>
+  </section>
+
+  <section id="desconocidos">
+    <h2>Desconocidos</h2>
+    <p>Lo que la persona no supo responder y qué evidencia lo desbloquearía. Las preguntas sin respuesta no se rellenan con supuestos.</p>
+  </section>
+
+</main>
+<script>
+(function () {
+  var sets = Array.prototype.slice.call(document.querySelectorAll("fieldset.q"));
+  var form = document.getElementById("form");
+  var step = document.getElementById("paso");
+  var closure = document.getElementById("cierre");
+  var progress = document.getElementById("progress");
+  var next = document.getElementById("next");
+  var tbody = document.getElementById("decisions");
+  var preview = document.getElementById("prompt-preview");
+  var encargo = document.getElementById("entrevista").getAttribute("data-encargo");
+  var byId = {};
+  var current = sets[0];
+
+  sets.forEach(function (set) {
+    byId[set.getAttribute("data-id")] = set;
+  });
+
+  function optionLabel(input) {
+    var label = input.closest("label");
+    return label ? label.textContent.trim() : input.value;
+  }
+
+  function answerOf(set) {
+    var checked = set.querySelector("input[type=radio]:checked");
+    var detail = set.querySelector("textarea");
+    var text = checked ? optionLabel(checked) : "";
+    var note = detail ? detail.value.trim() : "";
+    if (!text && !note) {
+      return null;
+    }
+    return { text: text || "Sin opción fijada", note: note };
+  }
+
+  function activeIds() {
+    var active = {};
+    sets.forEach(function (set) {
+      var id = set.getAttribute("data-id");
+      var requires = set.getAttribute("data-requires");
+      if (requires) {
+        var parent = byId[requires];
+        var checked = parent ? parent.querySelector("input[type=radio]:checked") : null;
+        if (!active[requires] || !checked || checked.value !== set.getAttribute("data-when")) {
+          return;
+        }
+      }
+      active[id] = true;
+    });
+    return active;
+  }
+
+  function visible() {
+    var active = activeIds();
+    return sets.filter(function (set) {
+      return active[set.getAttribute("data-id")];
+    });
+  }
+
+  function nextUnanswered(list) {
+    var start = list.indexOf(current);
+    var index;
+    for (index = start + 1; index < list.length; index += 1) {
+      if (!answerOf(list[index])) {
+        return list[index];
+      }
+    }
+    for (index = 0; index < list.length; index += 1) {
+      if (list[index] !== current && !answerOf(list[index])) {
+        return list[index];
+      }
+    }
+    return null;
+  }
+
+  function show(set) {
+    current = set;
+    sets.forEach(function (item) {
+      item.hidden = item !== set;
+    });
+    updateProgress();
+    var field = set.querySelector("input, textarea");
+    if (field) {
+      field.focus();
+    }
+    set.scrollIntoView({ block: "nearest" });
+  }
+
+  function updateProgress() {
+    var list = visible();
+    progress.textContent = "Pregunta " + (list.indexOf(current) + 1) + " de " + list.length;
+    next.textContent = nextUnanswered(list) ? "Siguiente" : "Ver decisiones";
+  }
+
+  function finish() {
+    var list = visible();
+    var lines = [];
+    tbody.textContent = "";
+    list.forEach(function (set) {
+      var answer = answerOf(set);
+      var text = answer
+        ? answer.text + (answer.note ? " — " + answer.note : "")
+        : "Sin responder";
+      var row = document.createElement("tr");
+      [set.getAttribute("data-question"), text, set.getAttribute("data-blast")].forEach(function (value) {
+        var cell = document.createElement("td");
+        cell.textContent = value;
+        row.appendChild(cell);
+      });
+      tbody.appendChild(row);
+      lines.push("— " + set.getAttribute("data-question") + ": " + text);
+    });
+    preview.textContent = "Implementa este encargo: " + encargo
+      + "\n\nDecisiones ya tomadas:\n" + lines.join("\n")
+      + "\n\nNo reabras estas decisiones salvo que contradigan el material. "
+      + "Si falta algo que no aparezca aquí, pregúntame antes de asumirlo.";
+    step.hidden = true;
+    closure.hidden = false;
+    closure.scrollIntoView({ block: "start" });
+  }
+
+  form.addEventListener("change", updateProgress);
+  form.addEventListener("input", updateProgress);
+
+  next.addEventListener("click", function () {
+    var target = nextUnanswered(visible());
+    if (target) {
+      show(target);
+    } else {
+      finish();
+    }
+  });
+
+  document.getElementById("copy-prompt").addEventListener("click", async function () {
+    try {
+      await navigator.clipboard.writeText(preview.textContent);
+      this.textContent = "Copiado";
+      this.classList.add("ok");
+      setTimeout(function (b) { b.textContent = "Copiar como prompt"; b.classList.remove("ok"); }, 1000, this);
+    } catch (e) {
+      this.textContent = "No se pudo copiar: copia el texto a mano";
+    }
+  });
+
+  sets.forEach(function (set) {
+    set.hidden = set !== current;
+  });
+  updateProgress();
+})();
+</script>
+</body>
+</html>
