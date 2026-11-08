@@ -351,6 +351,11 @@
 }.flow-step code {color: var(--accent); font-weight: 700;
 }.flow-step strong {display: block; margin-top: 10px; font-size: 15px;
 }.flow-step p {margin: 5px 0 0; color: var(--muted); font-size: 13.5px;
+}.diagram {margin: 22px 0 4px;
+}.diagram svg {display: block; width: 100%; height: auto;
+}.diagram figcaption {margin: 8px 0 0; color: var(--muted); font-size: 12.5px;
+}.diagram-cta {margin: 20px 0 0;
+}.diagram-cta .btn {max-width: 100%; white-space: normal; text-align: left; line-height: 1.35;
 }a.card-link {display: block; text-decoration: none; color: inherit; transition: border-color .15s, transform .12s;
 }a.card-link:hover {text-decoration: none; border-color: var(--accent); transform: translateY(-1px);
 }a.card-link:focus-visible {outline: 2px solid var(--accent); outline-offset: 3px;

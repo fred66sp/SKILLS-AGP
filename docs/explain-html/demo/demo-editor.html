@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<meta name="description" content="Editor interactivo de acento y radios del sistema SKILLS-AGP, con contraste AA en claro y oscuro y exportación del bloque :root como prompt.">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%234f46e5'/%3E%3Crect x='7' y='9' width='18' height='14' rx='2' fill='none' stroke='%23ffffff' stroke-width='2'/%3E%3Cpath d='M7 13h18' stroke='%23ffffff' stroke-width='2'/%3E%3Cpath d='M12 19l3 3 5-5' fill='none' stroke='%23ffffff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+<title>Editor de tokens a medida · explain-html</title>
+<script>
+(function () {
+  try {
+    var t = localStorage.getItem("explain-html-demo:theme");
+    if (!t && window.matchMedia) t = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+    document.documentElement.setAttribute("data-theme", t || "light");
+  } catch (e) {}
+  document.documentElement.classList.add("js");
+})();
+</script>
+<style>
+
+:root{
+  color-scheme:light;
+  --bg:#f8fafc; --surface:#ffffff; --sunken:#f1f5f9;
+  --text:#0f172a; --muted:#5f6b80;
+  --line:#e2e8f0; --line-strong:#cbd5e1;
+  --accent:#4f46e5; --accent-2:#2563eb; --accent-3:#0891b2;
+  --accent-soft:color-mix(in srgb,var(--accent) 10%,transparent);
+  --terminal:#0a0f1c; --terminal-panel:#111827; --terminal-line:#1f2937; --terminal-content:#e5e7eb;
+  --ok:#047857; --ok-mark:#10b981; --warn:#b45309; --warn-mark:#f59e0b; --err:#b91c1c; --err-mark:#ef4444;
+  --shadow:0 1px 2px rgba(15,23,42,.05),0 8px 24px -12px rgba(15,23,42,.18);
+  --shadow-lg:0 20px 60px -30px rgba(15,23,42,.35);
+  --radius:16px; --radius-sm:10px; --radius-inline:6px;
+  --font:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,"SF Mono","Fira Code",Menlo,Consolas,monospace;
+  --fs-display:clamp(34px,6vw,62px);
+  --fs-h1:clamp(30px,4.4vw,42px);
+  --fs-h2:clamp(21px,2.6vw,27px);
+  --gutter:clamp(16px,4vw,40px);
+  --shell:1180px;
+  --sp-1:8px; --sp-2:12px; --sp-3:16px; --sp-4:24px; --sp-5:32px; --sp-6:48px; --sp-7:64px;
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --bg:#0a0f1c; --surface:#111827; --sunken:#1f2937;
+  --text:#e5e7eb; --muted:#94a3b8;
+  --line:#334155; --line-strong:#475569;
+  --accent:#818cf8; --accent-2:#93c5fd; --accent-3:#67e8f9;
+  --terminal:#070b16; --terminal-panel:#111827; --terminal-line:#1f2937; --terminal-content:#e5e7eb;
+  --ok:#34d399; --ok-mark:#34d399; --warn:#fbbf24; --warn-mark:#fbbf24; --err:#f87171; --err-mark:#f87171;
+  --shadow:0 1px 2px rgba(0,0,0,.4),0 12px 32px -18px rgba(0,0,0,.8);
+  --shadow-lg:0 24px 70px -34px rgba(0,0,0,.9);
+}
+*,*::before,*::after{box-sizing:border-box}
+html{font-size:16px;scroll-behavior:smooth;scroll-padding-top:88px}
+body{margin:0;background:var(--bg);color:var(--text);font:400 16px/1.65 var(--font);-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+a{color:var(--accent);text-decoration:none}
+a:hover{text-decoration:underline;text-underline-offset:3px}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:2px}
+::selection{background:color-mix(in srgb,var(--accent) 28%,transparent)}
+.shell{width:min(calc(100% - 2*var(--gutter)),var(--shell));margin-inline:auto}
+.visually-hidden{position:absolute;width:1px;height:1px;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0;padding:0}
+.skip{position:absolute;left:16px;top:-64px;z-index:100;padding:10px 16px;border:1px solid var(--accent);border-radius:var(--radius-sm);background:var(--surface);color:var(--text);font-weight:650;font-size:14px}
+.skip:focus{top:12px}
+h1{margin:0;font-size:var(--fs-display);font-weight:800;line-height:1.04;letter-spacing:-.035em;text-wrap:balance}
+body.inner h1{font-size:var(--fs-h1);line-height:1.1;letter-spacing:-.03em}
+h1 .grad{color:var(--accent)}
+h2{font-size:var(--fs-h2);font-weight:700;line-height:1.25;letter-spacing:-.02em;margin:0;text-wrap:balance}
+h3{font-size:17px;line-height:1.35;letter-spacing:-.01em;margin:0 0 6px}
+p,li{max-width:74ch}
+.lead{margin:18px 0 0;max-width:660px;color:var(--muted);font-size:clamp(16px,2vw,18.5px);line-height:1.6}
+.sub{margin:6px 0 var(--sp-4);color:var(--muted);max-width:74ch}
+.eyebrow{display:inline-flex;align-items:center;gap:8px;margin:0 0 18px;color:var(--muted);font-size:11.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase}
+.eyebrow .dot{width:7px;height:7px;border-radius:50%;background:var(--ok-mark);box-shadow:0 0 0 3px color-mix(in srgb,var(--ok-mark) 22%,transparent)}
+.top{position:sticky;top:0;z-index:50;background:color-mix(in srgb,var(--bg) 84%,transparent);-webkit-backdrop-filter:saturate(180%) blur(14px);backdrop-filter:saturate(180%) blur(14px);border-bottom:1px solid var(--line)}
+.top-in{display:flex;align-items:center;gap:14px;padding:10px 0}
+.brand{display:flex;align-items:center;gap:10px;color:var(--text);min-width:0}
+.brand:hover{text-decoration:none}
+.mark{display:block;width:32px;height:32px;border-radius:9px;overflow:hidden;box-shadow:var(--shadow);flex:none}
+.mark svg{display:block;width:100%;height:100%}
+.brand-text{min-width:0}
+.brand-text strong{display:block;font-size:14.5px;line-height:1.2;letter-spacing:-.02em;white-space:nowrap}
+.brand-text small{display:block;font-size:10.5px;line-height:1.3;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.top-nav{margin-left:auto;display:flex;align-items:center;gap:4px;flex:none}
+.top-nav a,.theme{display:inline-flex;align-items:center;justify-content:center;height:34px;padding:0 11px;border:1px solid transparent;border-radius:var(--radius-sm);color:var(--muted);font:600 13px/1 var(--font);background:transparent}
+.top-nav a:hover{color:var(--text);background:var(--surface);border-color:var(--line);text-decoration:none}
+.theme{width:34px;padding:0;border-color:var(--line);background:var(--surface);color:var(--text);cursor:pointer}
+.theme:hover{border-color:var(--line-strong)}
+.theme svg{width:16px;height:16px}
+.i-sun{display:none}
+:root[data-theme="dark"] .i-moon{display:none}
+:root[data-theme="dark"] .i-sun{display:block}
+.hero{position:relative;overflow:hidden;padding:clamp(44px,7vw,86px) 0 clamp(32px,5vw,52px);border-bottom:1px solid var(--line)}
+.hero::before{content:"";position:absolute;inset:-45% -10% auto -10%;height:520px;background:radial-gradient(58% 60% at 18% 32%,color-mix(in srgb,var(--accent) 22%,transparent),transparent 70%),radial-gradient(46% 50% at 74% 4%,color-mix(in srgb,var(--accent-2) 18%,transparent),transparent 70%),radial-gradient(40% 44% at 94% 28%,color-mix(in srgb,var(--accent-3) 14%,transparent),transparent 70%);filter:blur(8px);pointer-events:none}
+.hero>.shell{position:relative}
+.hero.grid::after{content:"";position:absolute;inset:0;background-image:linear-gradient(var(--line-strong) 1px,transparent 1px),linear-gradient(90deg,var(--line-strong) 1px,transparent 1px);background-size:56px 56px;opacity:.28;-webkit-mask-image:radial-gradient(70% 80% at 50% 10%,#000 10%,transparent 72%);mask-image:radial-gradient(70% 80% at 50% 10%,#000 10%,transparent 72%);pointer-events:none}
+.hero-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:26px}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:11px 18px;border:1px solid transparent;border-radius:var(--radius-sm);font:650 14.5px/1.2 var(--font);cursor:pointer;white-space:nowrap;transition:transform .12s,box-shadow .2s,border-color .15s,background .15s}
+.btn-primary{background:linear-gradient(135deg,var(--accent),var(--accent-2));color:#fff;box-shadow:var(--shadow)}
+.btn-primary:hover{text-decoration:none;transform:translateY(-1px);box-shadow:var(--shadow-lg)}
+:root[data-theme="dark"] .btn-primary{color:#0a0f1c}
+.btn-ghost{background:var(--surface);border-color:var(--line-strong);color:var(--text)}
+.btn-ghost:hover{text-decoration:none;border-color:var(--accent);color:var(--text)}
+.btn svg{width:16px;height:16px;flex:none}
+.meta-row{display:flex;flex-wrap:wrap;gap:8px;margin-top:22px}
+.tag{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border:1px solid var(--line-strong);border-radius:999px;background:var(--surface);color:var(--muted);font-size:12px;font-weight:600;white-space:nowrap}
+.tag-accent{background:color-mix(in srgb,var(--accent) 8%,transparent);border-color:color-mix(in srgb,var(--accent) 32%,transparent);color:var(--accent)}
+.tag-ok{background:color-mix(in srgb,var(--ok-mark) 10%,transparent);border-color:color-mix(in srgb,var(--ok-mark) 32%,transparent);color:var(--ok)}
+.section{margin-top:var(--sp-7)}
+.section-head{display:flex;align-items:center;gap:12px;margin-bottom:6px}
+.num{display:grid;place-items:center;width:30px;height:30px;border-radius:9px;background:var(--accent-soft);color:var(--accent);font:800 13px/1 var(--font);font-variant-numeric:tabular-nums;flex:none}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:20px;box-shadow:var(--shadow);min-width:0}
+.note{display:flex;gap:12px;margin:20px 0;padding:14px 16px;border-left:1px solid var(--accent);border-radius:0 var(--radius-sm) var(--radius-sm) 0;background:var(--accent-soft);font-size:14px}
+.note p{margin:0;max-width:80ch}
+.note strong{color:var(--text)}
+.note-ok{border-left-color:var(--ok-mark);background:color-mix(in srgb,var(--ok-mark) 9%,transparent)}
+.note-warn{border-left-color:var(--warn-mark);background:color-mix(in srgb,var(--warn-mark) 10%,transparent)}
+.table-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:var(--radius);background:var(--surface);box-shadow:var(--shadow);margin:20px 0}
+table{width:100%;border-collapse:collapse;font-size:14px}
+thead th{text-align:left;padding:11px 16px;background:var(--sunken);color:var(--muted);font-size:11.5px;letter-spacing:.06em;text-transform:uppercase;border-bottom:1px solid var(--line);white-space:nowrap}
+tbody td{padding:11px 16px;border-bottom:1px solid var(--line);vertical-align:top}
+tbody tr:last-child td{border-bottom:0}
+tbody tr:hover{background:color-mix(in srgb,var(--accent) 3%,transparent)}
+td code,th code{font-size:12.8px}
+.table-wrap.wrap td:first-child{white-space:normal}
+pre,code{font-family:var(--mono)}
+.code{position:relative;margin:18px 0}
+.code pre{margin:0;padding:16px 52px 16px 18px;background:var(--terminal);color:var(--terminal-content);border:1px solid var(--terminal-line);border-radius:var(--radius);overflow-x:auto;font:400 12.9px/1.72 var(--mono);box-shadow:var(--shadow)}
+.code pre code{background:none;border:0;padding:0;color:inherit;font-size:inherit}
+.code .copy{position:absolute;top:9px;right:9px;display:inline-flex;align-items:center;height:30px;padding:0 9px;border:1px solid var(--terminal-line);border-radius:8px;background:color-mix(in srgb,var(--terminal) 60%,#ffffff 8%);color:#c8d2e8;font:600 11.5px/1 var(--font);cursor:pointer;opacity:0;transition:opacity .15s,border-color .15s,color .15s}
+.code:hover .copy,.code .copy:focus-visible{opacity:1}
+@media (hover:none){.code .copy{opacity:1}}
+.code .copy:hover{border-color:#3b4c72}
+.code .copy.ok{color:var(--ok-mark);border-color:var(--ok-mark)}
+p code,li code,td code{background:var(--sunken);border:1px solid var(--line);border-radius:var(--radius-inline);padding:.08em .4em;font-size:.88em}
+.foot{border-top:1px solid var(--line);margin-top:var(--sp-7);padding:24px 0 40px;color:var(--muted);font-size:13px}
+.foot-in{display:flex;flex-wrap:wrap;gap:8px 22px;align-items:center;justify-content:space-between}
+.foot code{background:var(--sunken);border:1px solid var(--line);border-radius:6px;padding:1px 6px}
+.foot a{color:var(--accent)}
+ul.tight{margin:12px 0;padding-left:20px}
+ul.tight li{margin:6px 0}
+.reveal{min-width:0}
+@media (prefers-reduced-motion:no-preference){
+  .js .reveal{opacity:0;transform:translateY(12px)}
+  .js .reveal.in{opacity:1;transform:none;transition:opacity .55s cubic-bezier(.16,1,.3,1),transform .55s cubic-bezier(.16,1,.3,1);transition-delay:calc(var(--d,0)*70ms)}
+  .js .hero>.shell{animation:rise .6s ease-out both}
+}
+@keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
+@media (max-width:560px){
+  .top-nav a[href="index.html"]{display:none}
+}
+@media (max-width:640px){
+  .brand-text small{display:none}
+  .top-nav a{padding:0 8px;font-size:12.5px}
+  body.inner h1{font-size:clamp(27px,7vw,34px)}
+}
+@media (max-width:420px){.top-nav a.hide-sm{display:none}}
+
+
+.editor{display:grid;gap:16px;margin-top:20px}
+@media (min-width:820px){.editor{grid-template-columns:repeat(3,minmax(0,1fr))}}
+.field{display:grid;gap:6px;padding:16px;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow)}
+.field label{font:700 11.5px/1.4 var(--font);letter-spacing:.07em;text-transform:uppercase;color:var(--muted)}
+.field select{width:100%;padding:9px 10px;border:1px solid var(--line-strong);border-radius:var(--radius-sm);background:var(--bg);color:var(--text);font:600 14px/1.2 var(--font);cursor:pointer}
+.field small{color:var(--muted);font-size:12px;line-height:1.45}
+.previews{display:grid;gap:16px;margin-top:16px}
+@media (min-width:820px){.previews{grid-template-columns:1fr 1fr}}
+.preview{--pv-bg:#f8fafc;--pv-surface:#ffffff;--pv-text:#0f172a;--pv-muted:#5f6b80;--pv-line:#e2e8f0;--pv-accent:#4f46e5;--pv-panel:16px;--pv-control:10px;background:var(--pv-bg);color:var(--pv-text);border:1px solid var(--line);border-radius:var(--radius);padding:16px;min-width:0}
+.preview[data-preview="dark"]{--pv-bg:#0a0f1c;--pv-surface:#111827;--pv-text:#e5e7eb;--pv-muted:#94a3b8;--pv-line:#334155}
+.pv-head{display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin-bottom:10px}
+.pv-head span{font:700 11.5px/1.4 var(--font);letter-spacing:.07em;text-transform:uppercase;color:var(--pv-muted)}
+.pv-head code{background:none;border:0;padding:0;color:var(--pv-muted);font-size:11.5px}
+.pv-card{background:var(--pv-surface);border:1px solid var(--pv-line);border-radius:var(--pv-panel);padding:16px}
+.pv-eyebrow{margin:0 0 4px;color:var(--pv-accent);font:700 10.5px/1.4 var(--font);letter-spacing:.07em;text-transform:uppercase}
+.pv-card h3{margin:0 0 4px;color:var(--pv-text);font-size:16px}
+.pv-card p{margin:0 0 12px;color:var(--pv-muted);font-size:13px;line-height:1.55}
+.pv-row{display:flex;flex-wrap:wrap;align-items:center;gap:8px}
+.pv-btn{display:inline-flex;align-items:center;padding:8px 13px;border-radius:var(--pv-control);background:var(--pv-accent);color:#fff;font:650 12.5px/1 var(--font)}
+.preview[data-preview="dark"] .pv-btn{color:#0a0f1c}
+.pv-pill{display:inline-flex;align-items:center;padding:5px 10px;border-radius:999px;border:1px solid var(--pv-line);color:var(--pv-muted);font:600 11.5px/1 var(--font)}
+.warnbox{display:none;margin:14px 0 0;padding:10px 12px;border-left:2px solid var(--warn-mark);border-radius:0 var(--radius-sm) var(--radius-sm) 0;background:color-mix(in srgb,var(--warn-mark) 10%,transparent);color:var(--warn);font-size:13px}
+.warnbox.show{display:block}
+.ratios td:first-child{white-space:normal}
+.ratio{font:700 13px/1 var(--mono);font-variant-numeric:tabular-nums}
+.badge{display:inline-block;padding:1px 7px;border-radius:999px;font:700 10.5px/1.7 var(--font);letter-spacing:.04em;text-transform:uppercase}
+.badge.ok{background:color-mix(in srgb,var(--ok-mark) 13%,transparent);color:var(--ok)}
+.badge.bad{background:color-mix(in srgb,var(--err-mark) 13%,transparent);color:var(--err)}
+.export{display:grid;gap:12px;margin-top:20px}
+.export-actions{display:flex;flex-wrap:wrap;gap:8px}
+.export-actions .btn.ok{color:var(--ok);border-color:var(--ok)}
+
+</style>
+</head>
+<body class="inner">
+<!-- procedencia: {"prompt": "Genera la demo de editor del catálogo de explain-html: editor de tokens del sistema visual", "fecha": "2026-11-08", "familia": "editor", "fuentes": ["DESIGN.md:4-69", "docs/assets/site.css:8-40", "src/explain-html/SKILL.md:71-83"], "enlaces": ["index.html"]} -->
+<a class="skip" href="#contenido">Saltar al contenido</a>
+<header class="top">
+  <div class="shell top-in">
+    <a class="brand" href="index.html" aria-label="explain-html, catálogo demostrativo">
+      <span class="mark" aria-hidden="true"><svg viewBox="0 0 32 32" role="presentation"><rect width="32" height="32" rx="8" fill="#4f46e5"/><rect x="7" y="9" width="18" height="14" rx="2" fill="none" stroke="#ffffff" stroke-width="2"/><path d="M7 13h18" stroke="#ffffff" stroke-width="2"/><path d="M12 19l3 3 5-5" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+      <span class="brand-text"><strong>explain-html</strong><small>catálogo / editor</small></span>
+    </a>
+    <nav class="top-nav" aria-label="Navegación">
+      <a href="index.html">Catálogo</a>
+      <a href="../index.html">Documentación</a>
+      <a class="hide-sm" href="../../index.html">Skills</a>
+      <button class="theme" type="button" data-theme-toggle aria-label="Cambiar a tema oscuro" title="Cambiar tema">
+        <svg class="i-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg><svg class="i-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+      </button>
+    </nav>
+  </div>
+</header>
+
+<section class="hero" id="top">
+  <div class="shell">
+    <p class="eyebrow"><span class="dot"></span>familia 07 · editor a medida · 8 nov 2026</p>
+    <h1>Editor de <span class="grad">tokens</span> a medida</h1>
+    <p class="lead">Ajusta el acento y los radios del sistema, mira cómo responden los dos temas con su contraste y copia el bloque <code>:root</code> listo para pegar en una plantilla o en un artefacto.</p>
+    <div class="meta-row">
+      <span class="tag tag-accent">contraste AA en vivo</span>
+      <span class="tag">claro / oscuro</span>
+      <span class="tag">exportar :root</span>
+    </div>
+  </div>
+</section>
+
+<main class="shell inner" id="contenido">
+  <section class="section" id="editor">
+    <div class="section-head"><span class="num">1</span><h2>Ajustes</h2></div>
+    <p class="sub">Solo valores que el sistema admite: tres acentos AA de la paleta y los radios de la escala. Si sales de la escala, el editor lo dice antes de exportar.</p>
+    <div class="editor">
+      <div class="field">
+        <label for="accent">Acento</label>
+        <select id="accent">
+          <option value="indigo" selected>Índigo · #4f46e5</option>
+          <option value="blue">Azul · #2563eb</option>
+          <option value="violet">Violeta · #7c3aed</option>
+        </select>
+        <small>El acento de <code>explain-html</code>; en oscuro se aclara al par declarado.</small>
+      </div>
+      <div class="field">
+        <label for="panel-radius">Radio de panel</label>
+        <select id="panel-radius">
+          <option value="10">10 px</option>
+          <option value="16" selected>16 px · sistema</option>
+          <option value="24">24 px · prueba</option>
+        </select>
+        <small>Tarjetas, tablas y bloques de código. <code>DESIGN.md</code> fija 16 px.</small>
+      </div>
+      <div class="field">
+        <label for="control-radius">Radio de control</label>
+        <select id="control-radius">
+          <option value="6">6 px</option>
+          <option value="10" selected>10 px · sistema</option>
+          <option value="16">16 px</option>
+        </select>
+        <small>Botones, pastillas y recuadros. El control no debe superar al panel.</small>
+      </div>
+    </div>
+    <p class="warnbox" id="warnbox" role="status"></p>
+
+    <div class="previews" aria-label="Vista previa en los dos temas">
+      <div class="preview" data-preview="light">
+        <div class="pv-head"><span>Claro</span><code id="hex-light">#4f46e5</code></div>
+        <div class="pv-card">
+          <p class="pv-eyebrow">familia 07 · editor</p>
+          <h3>Una tarjeta del sistema</h3>
+          <p>Texto secundario sobre superficie. El acento solo tiñe lo que pide atención.</p>
+          <div class="pv-row"><span class="pv-btn">Botón</span><span class="pv-pill">pastilla</span></div>
+        </div>
+      </div>
+      <div class="preview" data-preview="dark">
+        <div class="pv-head"><span>Oscuro</span><code id="hex-dark">#818cf8</code></div>
+        <div class="pv-card">
+          <p class="pv-eyebrow">familia 07 · editor</p>
+          <h3>Una tarjeta del sistema</h3>
+          <p>Texto secundario sobre superficie. El acento se aclara para sobrevivir al fondo.</p>
+          <div class="pv-row"><span class="pv-btn">Botón</span><span class="pv-pill">pastilla</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="contraste">
+    <div class="section-head"><span class="num">2</span><h2>Contraste de los pares</h2></div>
+    <p class="sub">Medido con la fórmula WCAG sobre los valores exportados. Un par por debajo de 4.5:1 no se usa como texto: se corrige con la variante oscurecida.</p>
+    <div class="table-wrap">
+      <table class="ratios">
+        <thead><tr><th>Par</th><th>Claro</th><th>Oscuro</th><th>Mínimo</th></tr></thead>
+        <tbody>
+          <tr><td>Texto sobre papel</td><td><span class="ratio" data-ratio="text-light">—</span> <span class="badge ok" data-badge="text-light">AA</span></td><td><span class="ratio" data-ratio="text-dark">—</span> <span class="badge ok" data-badge="text-dark">AA</span></td><td><code>4.5:1</code></td></tr>
+          <tr><td>Texto atenuado sobre papel</td><td><span class="ratio" data-ratio="muted-light">—</span> <span class="badge ok" data-badge="muted-light">AA</span></td><td><span class="ratio" data-ratio="muted-dark">—</span> <span class="badge ok" data-badge="muted-dark">AA</span></td><td><code>4.5:1</code></td></tr>
+          <tr><td>Acento como texto</td><td><span class="ratio" data-ratio="accent-light">—</span> <span class="badge ok" data-badge="accent-light">AA</span></td><td><span class="ratio" data-ratio="accent-dark">—</span> <span class="badge ok" data-badge="accent-dark">AA</span></td><td><code>4.5:1</code></td></tr>
+          <tr><td>Texto sobre acento</td><td><span class="ratio" data-ratio="on-light">—</span> <span class="badge ok" data-badge="on-light">AA</span></td><td><span class="ratio" data-ratio="on-dark">—</span> <span class="badge ok" data-badge="on-dark">AA</span></td><td><code>4.5:1</code></td></tr>
+          <tr><td>Texto de código sobre terminal</td><td><span class="ratio">15.45:1</span> <span class="badge ok">AA</span></td><td><span class="ratio">15.45:1</span> <span class="badge ok">AA</span></td><td><code>4.5:1</code></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="note"><p><strong>Por qué el cian no está en la lista de acentos.</strong> <code>#0891b2</code> da 3.68:1 sobre papel blanco: sirve para halos y para el acento de una familia, no para texto normal. El editor solo ofrece los tres que llegan a AA como texto.</p></div>
+  </section>
+
+  <section class="section" id="exportar">
+    <div class="section-head"><span class="num">3</span><h2>Exportar</h2></div>
+    <p class="sub">El bloque copia solo los valores que cambian; el resto del sistema se conserva. La exportación es texto listo para pegar, no un fichero.</p>
+    <div class="export">
+      <div class="code"><button class="copy" type="button">Copiar bloque</button><pre><code id="export-code"></code></pre></div>
+      <div class="export-actions">
+        <button class="btn btn-primary" type="button" id="copy-prompt">Copiar como prompt</button>
+        <button class="btn btn-ghost" type="button" id="reset">Restablecer</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="desconocidos">
+    <div class="section-head"><span class="num">4</span><h2>Desconocidos</h2></div>
+    <ul class="tight">
+      <li>El editor no guarda estado entre sesiones ni sustituye a <code>DESIGN.md</code>: exporta una propuesta para revisar.</li>
+      <li>Los ratios se calculan sobre los valores de los tokens; no miden el render final, el antialiasing ni el contraste de un SVG.</li>
+      <li>La variante oscura de cada acento es la declarada por el sistema; el editor no la inventa.</li>
+    </ul>
+  </section>
+</main>
+<script>
+(function () {
+  var ACCENTS = {
+    indigo: { light: "#4f46e5", dark: "#818cf8", name: "índigo" },
+    blue: { light: "#2563eb", dark: "#93c5fd", name: "azul" },
+    violet: { light: "#7c3aed", dark: "#a78bfa", name: "violeta" }
+  };
+  var LIGHT = { bg: "#f8fafc", surface: "#ffffff", text: "#0f172a", muted: "#5f6b80", on: "#ffffff" };
+  var DARK = { bg: "#0a0f1c", surface: "#111827", text: "#e5e7eb", muted: "#94a3b8", on: "#0a0f1c" };
+  var accent = document.getElementById("accent");
+  var panel = document.getElementById("panel-radius");
+  var control = document.getElementById("control-radius");
+  var warnbox = document.getElementById("warnbox");
+  var code = document.getElementById("export-code");
+  var copy = document.getElementById("copy-prompt");
+  var reset = document.getElementById("reset");
+  var lightPreview = document.querySelector('[data-preview="light"]');
+  var darkPreview = document.querySelector('[data-preview="dark"]');
+
+  function lum(hex) {
+    var d = hex.replace("#", "");
+    var c = [0, 2, 4].map(function (i) { return parseInt(d.substr(i, 2), 16) / 255; })
+      .map(function (v) { return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4); });
+    return 0.2126 * c[0] + 0.7152 * c[1] + 0.0722 * c[2];
+  }
+  function ratio(a, b) {
+    var x = lum(a), y = lum(b);
+    return (Math.max(x, y) + 0.05) / (Math.min(x, y) + 0.05);
+  }
+  function setRatio(key, value, minimum) {
+    var out = document.querySelector('[data-ratio="' + key + '"]');
+    var badge = document.querySelector('[data-badge="' + key + '"]');
+    out.textContent = value.toFixed(2) + ":1";
+    var ok = value >= minimum;
+    badge.textContent = ok ? "AA" : "bajo";
+    badge.className = "badge " + (ok ? "ok" : "bad");
+  }
+  function render() {
+    var a = ACCENTS[accent.value];
+    var p = panel.value, c = control.value;
+    lightPreview.style.setProperty("--pv-accent", a.light);
+    darkPreview.style.setProperty("--pv-accent", a.dark);
+    lightPreview.style.setProperty("--pv-panel", p + "px");
+    lightPreview.style.setProperty("--pv-control", c + "px");
+    darkPreview.style.setProperty("--pv-panel", p + "px");
+    darkPreview.style.setProperty("--pv-control", c + "px");
+    document.getElementById("hex-light").textContent = a.light;
+    document.getElementById("hex-dark").textContent = a.dark;
+
+    setRatio("text-light", ratio(LIGHT.text, LIGHT.bg), 4.5);
+    setRatio("text-dark", ratio(DARK.text, DARK.bg), 4.5);
+    setRatio("muted-light", ratio(LIGHT.muted, LIGHT.bg), 4.5);
+    setRatio("muted-dark", ratio(DARK.muted, DARK.bg), 4.5);
+    setRatio("accent-light", ratio(a.light, LIGHT.bg), 4.5);
+    setRatio("accent-dark", ratio(a.dark, DARK.bg), 4.5);
+    setRatio("on-light", ratio(LIGHT.on, a.light), 4.5);
+    setRatio("on-dark", ratio(DARK.on, a.dark), 4.5);
+
+    var notices = [];
+    if (Number(c) > Number(p)) notices.push("El radio de control (" + c + " px) supera al de panel (" + p + " px): invierte la jerarquía de formas.");
+    if (p === "24") notices.push("24 px no está en la escala de DESIGN.md (10/16): es una prueba, no una recomendación.");
+    warnbox.textContent = notices.join(" ");
+    warnbox.className = notices.length ? "warnbox show" : "warnbox";
+
+    code.textContent = ':root {\n'
+      + '  --accent: ' + a.light + ';\n'
+      + '  --accent-2: #2563eb;\n'
+      + '  --radius: ' + p + 'px;\n'
+      + '  --radius-sm: ' + c + 'px;\n'
+      + '}\n'
+      + ':root[data-theme="dark"] {\n'
+      + '  --accent: ' + a.dark + ';\n'
+      + '  --accent-2: #93c5fd;\n'
+      + '}';
+  }
+  [accent, panel, control].forEach(function (el) { el.addEventListener("change", render); });
+  reset.addEventListener("click", function () {
+    accent.value = "indigo"; panel.value = "16"; control.value = "10"; render();
+  });
+  copy.addEventListener("click", async function () {
+    var text = "Aplica estos tokens al acabado de las plantillas de explain-html:\n\n" + code.textContent;
+    try {
+      await navigator.clipboard.writeText(text);
+      copy.textContent = "Copiado";
+      copy.classList.add("ok");
+      setTimeout(function () { copy.textContent = "Copiar como prompt"; copy.classList.remove("ok"); }, 1200);
+    } catch (e) {
+      copy.textContent = "No se pudo copiar: copia el bloque a mano";
+    }
+  });
+  render();
+})();
+</script>
+<footer class="foot">
+  <div class="shell foot-in">
+    <span><code>docs/explain-html/demo/demo-editor.html</code> · activo documental de SKILLS-AGP</span>
+    <span><a href="index.html">Catálogo de demos</a> · <a href="../index.html">Documentación</a> · <a href="../../index.html">Skills</a></span>
+    <span>Sin CDN · sin fuentes remotas · funciona por <code>file://</code></span>
+  </div>
+</footer><script>
+(function () {
+  var root = document.documentElement;
+  var toggles = [].slice.call(document.querySelectorAll("[data-theme-toggle]"));
+  function label() {
+    var dark = root.getAttribute("data-theme") === "dark";
+    toggles.forEach(function (toggle) {
+      toggle.setAttribute("aria-label", dark ? "Cambiar a tema claro" : "Cambiar a tema oscuro");
+    });
+  }
+  if (toggles.length) {
+    label();
+    toggles.forEach(function (toggle) {
+      toggle.addEventListener("click", function () {
+        var next = root.getAttribute("data-theme") === "dark" ? "light" : "dark";
+        root.setAttribute("data-theme", next);
+        try { localStorage.setItem("explain-html-demo:theme", next); } catch (e) {}
+        label();
+      });
+    });
+  }
+  [].slice.call(document.querySelectorAll(".code .copy")).forEach(function (btn) {
+    btn.addEventListener("click", async function () {
+      var pre = btn.parentElement.querySelector("pre");
+      if (!pre) return;
+      try {
+        await navigator.clipboard.writeText(pre.innerText);
+        btn.textContent = "Copiado";
+        btn.classList.add("ok");
+        setTimeout(function () { btn.textContent = "Copiar"; btn.classList.remove("ok"); }, 1200);
+      } catch (e) {
+        btn.textContent = "No se pudo copiar";
+      }
+    });
+  });
+  var items = [].slice.call(document.querySelectorAll(".reveal"));
+  if (!("IntersectionObserver" in window)) {
+    items.forEach(function (el) { el.classList.add("in"); });
+  } else {
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) { entry.target.classList.add("in"); io.unobserve(entry.target); }
+      });
+    }, { threshold: 0.08 });
+    document.querySelectorAll(".reveal").forEach(function (el, i) {
+      el.style.setProperty("--d", i % 4);
+      io.observe(el);
+    });
+  }
+})();
+</script>
+</body>
+</html>

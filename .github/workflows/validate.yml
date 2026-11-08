@@ -78,6 +78,9 @@ jobs:
       - name: Test the artifact containment gate
         run: python src/explain-html/scripts/test-check-artifact.py
 
+      - name: Check the demo catalog artifacts
+        run: python src/explain-html/scripts/check-artifact.py docs/explain-html/demo/index.html docs/explain-html/demo/demo-exploracion.html docs/explain-html/demo/demo-explicador.html docs/explain-html/demo/demo-informe.html docs/explain-html/demo/demo-diagrama.html docs/explain-html/demo/demo-prototipo.html docs/explain-html/demo/demo-cuestionario.html docs/explain-html/demo/demo-editor.html docs/explain-html/demo/demo-presentacion.html
+
       - name: Test the artifact index builder
         run: python src/explain-html/scripts/test-build-index.py
 

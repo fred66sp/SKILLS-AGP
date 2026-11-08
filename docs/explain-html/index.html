@@ -68,6 +68,7 @@
     <a href="#preguntas">6. Preguntas cortas</a>
     <a href="#diagramas">7. Los diagramas</a>
     <a href="#verificacion">8. Verificación</a>
+    <a href="#catalogo">9. Catálogo demostrativo</a>
     <div class="toc-extra"><a href="../index.html">Volver al catálogo</a></div>
   </nav>
 
@@ -264,12 +265,130 @@ python3 scripts/check-repo.py</code></pre></div>
       </div>
     </section>
 
+    <section id="catalogo" class="section">
+      <div class="section-head"><span class="section-num">9</span><h2 class="title">El catálogo demostrativo</h2><span class="chip-repo">9 artefactos</span></div>
+      <p class="sub">La portada y una demo real por familia, generadas con las plantillas y los tokens del repositorio. El diagrama muestra cómo se agrupan; el botón abre el catálogo completo. Es la forma más rápida de ver la skill funcionando antes de encargarle un artefacto.</p>
+
+      <figure class="diagram">
+        <svg viewBox="0 0 920 790" role="img" aria-label="Diagrama del catálogo demostrativo: el nodo central reúne la portada y las ocho familias, de la exploración comparativa a la presentación.">
+          <defs>
+            <linearGradient id="gCat" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" style="stop-color:var(--accent)"/>
+              <stop offset=".55" style="stop-color:var(--accent-2)"/>
+              <stop offset="1" style="stop-color:var(--accent)"/>
+            </linearGradient>
+            <filter id="shCat" x="-40%" y="-40%" width="180%" height="180%">
+              <feDropShadow dx="0" dy="4" stdDeviation="8" flood-opacity=".14"/>
+            </filter>
+          </defs>
+
+          <g fill="none" stroke="var(--border-strong)" stroke-width="1.6">
+            <polyline points="460,270 460,692"/>
+            <polyline points="436,368 484,368"/>
+            <polyline points="436,476 484,476"/>
+            <polyline points="436,584 484,584"/>
+            <polyline points="436,692 484,692"/>
+          </g>
+          <g fill="var(--border-strong)">
+            <circle cx="460" cy="270" r="3.5"/>
+            <circle cx="436" cy="368" r="3.5"/><circle cx="484" cy="368" r="3.5"/>
+            <circle cx="436" cy="476" r="3.5"/><circle cx="484" cy="476" r="3.5"/>
+            <circle cx="436" cy="584" r="3.5"/><circle cx="484" cy="584" r="3.5"/>
+            <circle cx="436" cy="692" r="3.5"/><circle cx="484" cy="692" r="3.5"/>
+          </g>
+
+          <circle cx="460" cy="150" r="120" fill="none" stroke="var(--border)" stroke-width="2"/>
+          <circle cx="460" cy="150" r="110" fill="none" stroke="url(#gCat)" stroke-width="16" pathLength="100" stroke-dasharray="11.5 1" transform="rotate(-90 460 150)"/>
+          <circle cx="460" cy="150" r="96" fill="var(--bg-elev)" filter="url(#shCat)"/>
+          <text x="460" y="138" text-anchor="middle" font-size="23" font-weight="700" fill="var(--text)">CATÁLOGO</text>
+          <text x="460" y="158" text-anchor="middle" font-size="12.5" fill="var(--muted)">explain-html</text>
+          <rect x="370" y="170" width="180" height="24" rx="12" fill="url(#gCat)"/>
+          <text x="460" y="186" text-anchor="middle" font-size="10" font-weight="700" fill="var(--bg)" letter-spacing=".3">9 ARTEFACTOS · 8 FAMILIAS</text>
+          <text x="460" y="216" text-anchor="middle" font-size="10.5" fill="var(--muted)">demo/index.html</text>
+
+          <g>
+            <rect x="16" y="320" width="420" height="96" rx="48" fill="var(--bg-elev)" stroke="var(--border)" filter="url(#shCat)"/>
+            <circle cx="64" cy="368" r="31" fill="none" stroke="url(#gCat)" stroke-width="3.5" pathLength="100" stroke-dasharray="62 38" transform="rotate(-120 64 368)"/>
+            <circle cx="64" cy="368" r="24" fill="var(--bg-elev)" stroke="var(--border)"/>
+            <text x="64" y="375" text-anchor="middle" font-size="19" font-weight="700" fill="url(#gCat)">1</text>
+            <text x="108" y="360" font-size="16.5" font-weight="700" fill="var(--text)">Exploración comparativa</text>
+            <text x="108" y="384" font-size="11.5" fill="var(--muted)">tres direcciones y sus concesiones</text>
+          </g>
+          <g>
+            <rect x="16" y="428" width="420" height="96" rx="48" fill="var(--bg-elev)" stroke="var(--border)" filter="url(#shCat)"/>
+            <circle cx="64" cy="476" r="31" fill="none" stroke="url(#gCat)" stroke-width="3.5" pathLength="100" stroke-dasharray="62 38" transform="rotate(-160 64 476)"/>
+            <circle cx="64" cy="476" r="24" fill="var(--bg-elev)" stroke="var(--border)"/>
+            <text x="64" y="483" text-anchor="middle" font-size="19" font-weight="700" fill="url(#gCat)">2</text>
+            <text x="108" y="468" font-size="16.5" font-weight="700" fill="var(--text)">Explicador</text>
+            <text x="108" y="492" font-size="11.5" fill="var(--muted)">TL;DR, flujo, recorrido y trampas</text>
+          </g>
+          <g>
+            <rect x="16" y="536" width="420" height="96" rx="48" fill="var(--bg-elev)" stroke="var(--border)" filter="url(#shCat)"/>
+            <circle cx="64" cy="584" r="31" fill="none" stroke="url(#gCat)" stroke-width="3.5" pathLength="100" stroke-dasharray="62 38" transform="rotate(90 64 584)"/>
+            <circle cx="64" cy="584" r="24" fill="var(--bg-elev)" stroke="var(--border)"/>
+            <text x="64" y="591" text-anchor="middle" font-size="19" font-weight="700" fill="url(#gCat)">3</text>
+            <text x="108" y="576" font-size="16.5" font-weight="700" fill="var(--text)">Informe</text>
+            <text x="108" y="600" font-size="11.5" fill="var(--muted)">10 mejoras, dos tandas y datos</text>
+          </g>
+          <g>
+            <rect x="16" y="644" width="420" height="96" rx="48" fill="var(--bg-elev)" stroke="var(--border)" filter="url(#shCat)"/>
+            <circle cx="64" cy="692" r="31" fill="none" stroke="url(#gCat)" stroke-width="3.5" pathLength="100" stroke-dasharray="62 38" transform="rotate(140 64 692)"/>
+            <circle cx="64" cy="692" r="24" fill="var(--bg-elev)" stroke="var(--border)"/>
+            <text x="64" y="699" text-anchor="middle" font-size="19" font-weight="700" fill="url(#gCat)">4</text>
+            <text x="108" y="684" font-size="16.5" font-weight="700" fill="var(--text)">Diagrama</text>
+            <text x="108" y="708" font-size="11.5" fill="var(--muted)">cinco pasos, una puerta, una vuelta</text>
+          </g>
+
+          <g>
+            <rect x="484" y="320" width="420" height="96" rx="48" fill="var(--bg-elev)" stroke="var(--border)" filter="url(#shCat)"/>
+            <circle cx="532" cy="368" r="31" fill="none" stroke="url(#gCat)" stroke-width="3.5" pathLength="100" stroke-dasharray="62 38" transform="rotate(-80 532 368)"/>
+            <circle cx="532" cy="368" r="24" fill="var(--bg-elev)" stroke="var(--border)"/>
+            <text x="532" y="375" text-anchor="middle" font-size="19" font-weight="700" fill="url(#gCat)">5</text>
+            <text x="576" y="360" font-size="16.5" font-weight="700" fill="var(--text)">Prototipo</text>
+            <text x="576" y="384" font-size="11.5" fill="var(--muted)">densidad, radio y acento en vivo</text>
+          </g>
+          <g>
+            <rect x="484" y="428" width="420" height="96" rx="48" fill="var(--bg-elev)" stroke="var(--border)" filter="url(#shCat)"/>
+            <circle cx="532" cy="476" r="31" fill="none" stroke="url(#gCat)" stroke-width="3.5" pathLength="100" stroke-dasharray="62 38" transform="rotate(-40 532 476)"/>
+            <circle cx="532" cy="476" r="24" fill="var(--bg-elev)" stroke="var(--border)"/>
+            <text x="532" y="483" text-anchor="middle" font-size="19" font-weight="700" fill="url(#gCat)">6</text>
+            <text x="576" y="468" font-size="16.5" font-weight="700" fill="var(--text)">Cuestionario</text>
+            <text x="576" y="492" font-size="11.5" fill="var(--muted)">7 preguntas y corrección en vivo</text>
+          </g>
+          <g>
+            <rect x="484" y="536" width="420" height="96" rx="48" fill="var(--bg-elev)" stroke="var(--border)" filter="url(#shCat)"/>
+            <circle cx="532" cy="584" r="31" fill="none" stroke="url(#gCat)" stroke-width="3.5" pathLength="100" stroke-dasharray="62 38" transform="rotate(20 532 584)"/>
+            <circle cx="532" cy="584" r="24" fill="var(--bg-elev)" stroke="var(--border)"/>
+            <text x="532" y="591" text-anchor="middle" font-size="19" font-weight="700" fill="url(#gCat)">7</text>
+            <text x="576" y="576" font-size="16.5" font-weight="700" fill="var(--text)">Editor a medida</text>
+            <text x="576" y="600" font-size="11.5" fill="var(--muted)">acento, radios y contraste AA</text>
+          </g>
+          <g>
+            <rect x="484" y="644" width="420" height="96" rx="48" fill="var(--bg-elev)" stroke="var(--border)" filter="url(#shCat)"/>
+            <circle cx="532" cy="692" r="31" fill="none" stroke="url(#gCat)" stroke-width="3.5" pathLength="100" stroke-dasharray="62 38" transform="rotate(-140 532 692)"/>
+            <circle cx="532" cy="692" r="24" fill="var(--bg-elev)" stroke="var(--border)"/>
+            <text x="532" y="699" text-anchor="middle" font-size="19" font-weight="700" fill="url(#gCat)">8</text>
+            <text x="576" y="684" font-size="16.5" font-weight="700" fill="var(--text)">Presentación</text>
+            <text x="576" y="708" font-size="11.5" fill="var(--muted)">7 diapositivas con teclado</text>
+          </g>
+        </svg>
+        <figcaption>La portada y las ocho demos: exploración comparativa, explicador, informe, diagrama, prototipo, cuestionario, editor a medida y presentación. Cada familia tiene su artefacto autocontenido; el botón abre el catálogo completo.</figcaption>
+      </figure>
+
+      <p class="diagram-cta"><a class="btn btn-primary" href="demo/index.html">Catálogo demostrativo · 8 familias · 9 artefactos
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 5l7 7-7 7"/></svg></a></p>
+
+      <div class="note">
+        <p><strong>Vive junto a esta documentación y sirve de banco de pruebas.</strong> El catálogo está versionado en <code>docs/explain-html/demo/</code>; al revisarlo se detectan los ajustes de espaciado, jerarquía y densidad que después se aplican a las plantillas. Los artefactos de revisión siguen viviendo en <code>.explanations/</code> y se regeneran.</p>
+      </div>
+    </section>
+
   </main>
 </div>
 
 <footer class="footer">
   <span><code>docs/explain-html/</code> · skill <code>explain-html</code> · documento en español</span>
-  <span><a href="../index.html">Catálogo</a> · <a href="#top">Volver arriba</a> · <a href="../../src/explain-html/SKILL.md">SKILL.md</a> · <a href="flujo-de-trabajo.html">Flujo</a> · <a href="arquitectura.html">Arquitectura</a></span>
+  <span><a href="../index.html">Catálogo</a> · <a href="#top">Volver arriba</a> · <a href="../../src/explain-html/SKILL.md">SKILL.md</a> · <a href="flujo-de-trabajo.html">Flujo</a> · <a href="arquitectura.html">Arquitectura</a> · <a href="demo/index.html">Demos</a></span>
   <span>Página estática: no envía datos ni carga recursos externos · <code>docs/explain-html/index.html</code></span>
 </footer>
 
