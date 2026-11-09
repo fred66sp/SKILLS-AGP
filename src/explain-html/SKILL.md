@@ -2,7 +2,7 @@
 name: explain-html
 description: "Genera artefactos HTML autocontenidos —informes, explicadores, cuestionarios, prototipos, diagramas, presentaciones, comparaciones y editores a medida— en .explanations/ del proyecto y los abre en el navegador para revisarlos. Se usa cuando se pide un informe o estado, un cuestionario, un prototipo interactivo, un diagrama o flujo, una presentación, un explicador o un editor desechable con exportación «copiar como prompt»; también ante encargos vagos o revisiones a ciegas: pase de puntos ciegos, entrevista de requisito ambiguo, bitácora de desviaciones, cuestionario de merge o pitch de compra. Cada artefacto es un .html sin dependencias externas que funciona por file:// y separa hechos verificados de desconocidos. No se usa para documentación duradera del repositorio (eso es document-management-software), para la identidad y el sistema visual de un producto (design-system-architect), para implementar una interfaz real (web-interface-visual-design) ni para mantener un catálogo de informes publicado."
 metadata:
-  version: "0.4.0"
+  version: "0.5.0"
 ---
 
 # explain-html: artefactos HTML explicativos
