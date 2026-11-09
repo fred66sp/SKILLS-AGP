@@ -13,7 +13,7 @@ import json
 import re
 from datetime import date
 
-# Slugs y etiquetas de las ocho familias de artifact-patterns.md.
+# Slugs y etiquetas de las diez familias de artifact-patterns.md.
 FAMILIES = {
     "exploracion": "Exploración comparativa",
     "explicador": "Explicador",
@@ -23,6 +23,8 @@ FAMILIES = {
     "cuestionario": "Cuestionario",
     "editor": "Editor a medida",
     "presentacion": "Presentación",
+    "blindspots": "Pase de puntos ciegos",
+    "entrevista": "Entrevista",
 }
 
 REQUIRED_FIELDS = ("prompt", "fecha", "familia", "fuentes")

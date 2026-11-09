@@ -1,8 +1,8 @@
 ---
 name: explain-html
-description: "Genera artefactos HTML autocontenidos —informes, explicadores, cuestionarios interactivos, prototipos, diagramas, presentaciones, comparaciones de alternativas y editores a medida— en la carpeta .explanations/ del proyecto y los abre en el navegador para revisarlos e interactuar con ellos. Se usa cuando la persona pide un informe o un estado, un cuestionario, un prototipo interactivo, un diagrama o flujo, una presentación, una comparación de enfoques lado a lado, un explicador de código o de concepto, o un editor desechable que termina en un botón «copiar como prompt». Cada artefacto es un único .html sin dependencias externas que funciona por file:// y separa hechos verificados de desconocidos. No se usa para documentación duradera del repositorio (eso es document-management-software), para la identidad o el sistema visual de una interfaz de producto (design-system-architect), para implementar una interfaz real (web-interface-visual-design) ni para mantener un catálogo de informes publicado."
+description: "Genera artefactos HTML autocontenidos —informes, explicadores, cuestionarios, prototipos, diagramas, presentaciones, comparaciones y editores a medida— en .explanations/ del proyecto y los abre en el navegador para revisarlos. Se usa cuando se pide un informe o estado, un cuestionario, un prototipo interactivo, un diagrama o flujo, una presentación, un explicador o un editor desechable con exportación «copiar como prompt»; también ante encargos vagos o revisiones a ciegas: pase de puntos ciegos, entrevista de requisito ambiguo, bitácora de desviaciones, cuestionario de merge o pitch de compra. Cada artefacto es un .html sin dependencias externas que funciona por file:// y separa hechos verificados de desconocidos. No se usa para documentación duradera del repositorio (eso es document-management-software), para la identidad y el sistema visual de un producto (design-system-architect), para implementar una interfaz real (web-interface-visual-design) ni para mantener un catálogo de informes publicado."
 metadata:
-  version: "0.3.0"
+  version: "0.4.0"
 ---
 
 # explain-html: artefactos HTML explicativos
@@ -33,8 +33,29 @@ Convierte un encargo —un informe, un cuestionario, un prototipo interactivo, u
 | Preguntar, evaluar o autocorregir | Cuestionario (`cuestionario`) | `plantilla-cuestionario.html` | Preguntas con corrección en vivo y resultado exportable |
 | Reordenar, clasificar, editar valores o afinar texto | Editor a medida (`editor`) | `plantilla-editor.html` | Formulario sobre el dato concreto + exportación |
 | Presentar en una reunión | Presentación (`presentacion`) | `plantilla-presentacion.html` | Secciones a pantalla completa navegables con teclado |
+| No sé qué no sé sobre un territorio del proyecto | Pase de puntos ciegos (`blindspots`) | `plantilla-blindspots.html` | Cartas de desconocido desconocido con evidencia y prompt desbloqueador, ensambladas en un prompt de implementación mejorado |
+| Un encargo ambiguo que hay que acotar antes de generar nada | Entrevista (`entrevista`) | `plantilla-entrevista.html` | Preguntas una a una ordenadas por radio de explosión, tabla de decisiones y prompt final copiable |
 
 Para la familia elegida lee la sección correspondiente de [artifact-patterns](references/artifact-patterns.md) antes de generar y copia su plantilla de `assets/`. Usa [plantilla-artefacto](assets/plantilla-artefacto.html), el esqueleto base, solo si el encargo no encaja en ninguna familia.
+
+## Descubrir los desconocidos
+
+La tabla anterior serializa lo que ya se sabe: qué forma tiene el encargo y qué plantilla le toca. Hay encargos en los que el problema no es elegir familia, sino que nadie sabe todavía qué preguntar. Estos artefactos no representan conocimiento: lo descubren.
+
+El eje es temporal, no temático. **Antes de implementar** se usan el pase de puntos ciegos —cartas de desconocido desconocido sobre un territorio—, la entrevista —preguntas por radio de explosión—, la dirección con steal/skip, el mock antes de cablear, el plan que se espera retocar y el mapa de la referencia a portar. **Durante** se lleva una bitácora de desviaciones del plan. **Después** aparecen el pitch que pre-responde objeciones y el cuestionario antes de un merge: el trabajo ya está hecho y toca defenderlo o comprobarlo.
+
+Ofrécelos proactivamente, sin esperar a que la persona los pida, cuando el encargo llegue vago, cuando el territorio sea desconocido para el agente, cuando el plan en curso se esté desviando o la víspera de un merge. Un encargo que se acota con tres preguntas no necesita tres artefactos: elige el más pequeño que desbloquee la siguiente decisión.
+
+| Momento | Artefacto | Familia | Se documenta en |
+|---|---|---|---|
+| Antes de implementar | Pase de puntos ciegos: cartas con evidencia y prompt que desbloquea | `blindspots` | [Pase de puntos ciegos](references/artifact-patterns.md#pase-de-puntos-ciegos) |
+| Antes de implementar | Entrevista: preguntas por radio de explosión, decisiones y prompt final | `entrevista` | [Entrevista](references/artifact-patterns.md#entrevista) |
+| Antes de implementar | Brainstorm con respuestas ensamblables; dirección con steal/skip | `exploracion` | [Familia prestada](references/artifact-patterns.md#artefactos-de-desconocidos-con-familia-prestada) |
+| Antes de implementar | Mapa de la referencia a portar | `explicador` | [Familia prestada](references/artifact-patterns.md#artefactos-de-desconocidos-con-familia-prestada) |
+| Durante | Bitácora de desviaciones del plan | `informe` | [Familia prestada](references/artifact-patterns.md#artefactos-de-desconocidos-con-familia-prestada) |
+| Después | Pitch que pre-responde objeciones; cuestionario antes de un merge | `informe`, `cuestionario` | [Familia prestada](references/artifact-patterns.md#artefactos-de-desconocidos-con-familia-prestada) |
+
+Mismos invariantes que el resto: procedencia completa, `check-artifact.py` en verde y autocontención total. La diferencia está en el cierre: en estos artefactos lo normal es que el objetivo sea la exportación «copiar como prompt» —el prompt de implementación, las decisiones acordadas, las preguntas sin responder— para devolver el descubrimiento a la conversación.
 
 ## Metadatos de procedencia
 
@@ -50,7 +71,7 @@ Todo artefacto empieza el body con este comentario (la plantilla ya lo trae vac�
 |---|---|
 | `prompt` | El encargo que originó el artefacto, en una línea |
 | `fecha` | Día de generación en `AAAA-MM-DD` |
-| `familia` | Uno de los ocho slugs de la tabla anterior |
+| `familia` | Uno de los diez slugs de la tabla anterior |
 | `fuentes` | Lista no vacía de fuentes: `fichero:línea`, comando, conversación fechada |
 | `enlaces` | Opcional. Lista de ficheros `.html` hermanos del bucle, por ejemplo `["plan.html", "mockups.html"]` |
 
@@ -165,5 +186,6 @@ Informa: ruta del artefacto, familia elegida y por qué, qué se verificó de ca
 - `check-artifact.py` solo avisa (contraste bajo o más de 100 KB): no bloquea la entrega, pero ajusta el par de tokens o reparte el contenido en un artefacto enlazado; si la persona acepta el aviso, dilo en el cierre.
 - `tokens-from-project.py` no encuentra tokens: usa los defaults de la plantilla y declara en el cierre que el sistema del proyecto no aportó valores legibles; no inventes un sistema ni enlaces CSS.
 - Bucle con un eslabón roto: cada página se verifica y se enlaza por su nombre relativo; si una aún no existe, no la declares en `enlaces` ni la enlaces como si estuviera terminada.
+- Entrevista interrumpida: exporta lo respondido hasta el momento como prompt parcial y declara qué queda por preguntar; no descartes las respuestas ni generes el artefacto como si la entrevista hubiera terminado.
 - Revisión perceptiva no disponible: abre el artefacto y pide la revisión a la persona; no sustituyas la comprobación visual por una suposición.
 - `lifecycle.py` con `--keep 0`: se rechaza porque borraría la versión vigente; usa 1 o más. Si un artefacto no sigue el patrón `<slug>-v<N>.html`, no se poda: renómbralo solo si el encargo lo pide.

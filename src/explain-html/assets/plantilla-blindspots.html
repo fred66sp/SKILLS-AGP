@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<!-- Plantilla de la familia «pase de puntos ciegos» de explain-html.
+     Cópiala para el artefacto, sustituye los marcadores y rellena la
+     procedencia. Estructura: references/artifact-patterns.md. Sin recursos
+     externos: todo CSS, JS y SVG en línea. -->
+<title>ASUNTO DEL ARTEFACTO</title>
+<style>
+:root {
+  color-scheme: light dark;
+  --bg: #fafaf9; --surface: #ffffff; --border: #e2e1de; --border-strong: #c9c7c2; --text: #1c1b1a; --text-dim: #5d5b58;
+  --accent: #0f766e; --accent-2: #2563eb; --ok: #15803d; --warn: #b45309; --err: #b91c1c;
+  --code-bg: #0a0f1c; --code-text: #e5e7eb; --code-border: #1f2937;
+  --sans: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "SF Mono", "Fira Code", Menlo, Consolas, monospace;
+  --radius: 16px; --radius-sm: 10px; --radius-inline: 6px;
+  --shadow: 0 1px 2px rgba(15, 23, 42, .05), 0 8px 24px -12px rgba(15, 23, 42, .18);
+  --pad: clamp(16px, 4vw, 40px);
+  --measure: 68ch;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #141413; --surface: #1e1e1d; --border: #333231; --border-strong: #494745; --text: #ecebea; --text-dim: #9d9b98;
+    --accent: #2dd4bf; --accent-2: #60a5fa; --ok: #4ade80; --warn: #fbbf24; --err: #f87171;
+    --code-bg: #070b16; --code-text: #e5e7eb; --code-border: #1f2937;
+    --shadow: 0 1px 2px rgba(0, 0, 0, .4), 0 12px 32px -18px rgba(0, 0, 0, .8);
+  }
+}
+* { box-sizing: border-box; }
+html { font-size: 16px; scroll-behavior: smooth; }
+body {
+  margin: 0; background: var(--bg); color: var(--text);
+  font: 400 16px/1.65 var(--sans); -webkit-font-smoothing: antialiased;
+}
+header { position: relative; overflow: hidden; isolation: isolate; padding: clamp(24px, 4vw, 40px) max(var(--pad), calc((100% - 72rem) / 2)) 20px; border-bottom: 1px solid var(--border); }
+header::before { content: ""; position: absolute; z-index: -1; inset: -45% -10% auto -10%; height: 520px; background: radial-gradient(58% 60% at 18% 32%, color-mix(in srgb, var(--accent) 22%, transparent), transparent 70%), radial-gradient(46% 50% at 74% 4%, color-mix(in srgb, var(--accent-2) 18%, transparent), transparent 70%), radial-gradient(40% 44% at 94% 28%, color-mix(in srgb, var(--accent-2) 14%, transparent), transparent 70%); filter: blur(8px); pointer-events: none; }
+header::after { content: ""; position: absolute; z-index: -1; inset: 0; background-image: linear-gradient(var(--border-strong) 1px, transparent 1px), linear-gradient(90deg, var(--border-strong) 1px, transparent 1px); background-size: 56px 56px; opacity: .28; -webkit-mask-image: radial-gradient(70% 80% at 50% 10%, #000 10%, transparent 72%); mask-image: radial-gradient(70% 80% at 50% 10%, #000 10%, transparent 72%); pointer-events: none; }
+main { padding-bottom: 64px; }
+h1 { margin: 0 0 8px; font-size: clamp(1.75rem, 3.4vw, 2.4rem); line-height: 1.12; letter-spacing: -.025em; text-wrap: balance; }
+h2 { margin: 40px 0 12px; font-size: clamp(1.25rem, 2vw, 1.5rem); line-height: 1.25; letter-spacing: -.02em; text-wrap: balance; }
+h3 { font-size: 1.05rem; line-height: 1.35; letter-spacing: -.01em; }
+p, li { max-width: var(--measure); }
+.lead { max-width: 60ch; margin: 0; color: var(--text-dim); font-size: 1.05rem; line-height: 1.6; }
+section { margin-top: 40px; }
+a { color: var(--accent); text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; }
+a:hover { text-decoration-thickness: 2px; }
+button, input, select { font: inherit; color: var(--text); background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-sm); }
+button { padding: .55rem 1rem; font-weight: 600; cursor: pointer; transition: border-color .15s, background .15s; }
+button:hover { border-color: var(--accent); }
+button.ok { color: var(--ok); border-color: var(--ok); }
+input[type="range"] { accent-color: var(--accent); }
+select { padding: .45rem .6rem; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+pre {
+  margin: 16px 0; padding: 16px 18px; background: var(--code-bg); color: var(--code-text);
+  border: 1px solid var(--code-border); border-radius: var(--radius); overflow-x: auto;
+  box-shadow: var(--shadow); white-space: pre-wrap; font: 400 .8125rem/1.7 var(--mono);
+}
+pre code { background: none; border: 0; padding: 0; color: inherit; font-size: inherit; }
+code { font-family: var(--mono); font-size: .875em; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-inline); padding: .08em .38em; }
+figure { margin: 24px 0; }
+figcaption { margin-top: 8px; color: var(--text-dim); font-size: .875rem; }
+table { width: 100%; border-collapse: collapse; font-size: .94rem; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
+th, td { padding: .6rem .8rem; border-bottom: 1px solid var(--border); text-align: left; vertical-align: top; }
+thead th { background: color-mix(in srgb, var(--border) 35%, var(--surface)); color: var(--text-dim); font-size: .75rem; letter-spacing: .06em; text-transform: uppercase; }
+tbody tr:last-child td { border-bottom: 0; }
+details { margin: .75rem 0; padding: .75rem 1rem; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-sm); }
+summary { cursor: pointer; font-weight: 650; }
+summary:focus-visible { outline-offset: -2px; }
+::selection { background: color-mix(in srgb, var(--accent) 26%, transparent); }
+@media (max-width: 640px) {
+  table { font-size: .875rem; }
+  th, td { padding: .5rem .6rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  * { scroll-behavior: auto !important; transition: none !important; animation: none !important; }
+}
+main { width: min(calc(100% - 2 * var(--pad)), 72rem); margin-inline: auto; }
+
+.blindspots { display: grid; grid-template-columns: repeat(auto-fit, minmax(19rem, 1fr)); gap: 16px; }
+.blindspot { display: flex; flex-direction: column; min-width: 0; padding: 20px; background: var(--surface); border: 1px solid var(--border); border-top: 3px solid var(--warn); border-radius: 0 0 var(--radius) var(--radius); box-shadow: var(--shadow); }
+.blindspot h3 { margin: 0 0 10px; }
+.blindspot p { margin: 0 0 12px; font-size: .94rem; }
+.blindspot .label { display: block; margin-bottom: 2px; color: var(--text-dim); font-size: .72rem; letter-spacing: .06em; text-transform: uppercase; }
+.blindspot .why { color: var(--text-dim); }
+.blindspot .evidence { padding-left: 12px; border-left: 2px solid var(--accent-2); font-family: var(--mono); font-size: .8rem; color: var(--text-dim); overflow-wrap: anywhere; }
+.blindspot .unlock { margin-top: auto; padding: 10px 12px; background: color-mix(in srgb, var(--accent) 7%, transparent); border: 1px dashed var(--border); border-radius: var(--radius-sm); font-size: .9rem; }
+.blindspot .actions { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-top: 12px; }
+.blindspot .actions button { padding: .35rem .7rem; font-size: .84rem; }
+.include { display: inline-flex; gap: 6px; align-items: center; margin-right: auto; color: var(--text-dim); font-size: .84rem; cursor: pointer; }
+.include input { accent-color: var(--accent); }
+#selection { color: var(--text-dim); font-size: .875rem; }
+#prompt-preview { max-height: 18rem; overflow: auto; }
+.copy-prompt { margin-top: 16px; }
+</style>
+</head>
+<body>
+<!-- Bloque de procedencia — obligatorio; lo exige check-artifact.py.
+     Rellena prompt, fecha (AAAA-MM-DD), familia y fuentes. No se renderiza
+     y sobrevive a cualquier editor. Familias válidas: exploracion,
+     explicador, informe, diagrama, prototipo, cuestionario, editor,
+     presentacion, blindspots, entrevista. -->
+<!-- procedencia: {"prompt": "", "fecha": "", "familia": "", "fuentes": []} -->
+<header>
+  <h1>ASUNTO DEL ARTEFACTO</h1>
+  <p class="lead">El territorio del proyecto que se audita, cuántos puntos ciegos salieron y la fecha. Marca las cartas que quieras resolver y el prompt final las reunirá.</p>
+</header>
+<main>
+
+  <section id="pase">
+    <h2>Puntos ciegos</h2>
+    <p>Cada carta es un desconocido desconocido: algo que nadie del proyecto sabía que no sabía sobre este territorio. La evidencia es la que hay en el material fuente; si no hay, se dice, no se rellena.</p>
+    <div class="blindspots">
+
+      <article class="blindspot">
+        <h3>Propiedad y concurrencia del dato</h3>
+        <p class="why"><span class="label">Por qué importa</span>Si no hay dueño único del registro, cada caché o escritura optimista duplica el problema en silencio y no se nota hasta que los datos ya no cuadran.</p>
+        <p class="evidence"><span class="label">Evidencia</span><code>src/pedidos/repositorio.py:44</code> escribe sin bloqueo y ningún otro sitio lee ese campo.</p>
+        <p class="unlock"><span class="label">Prompt que lo desbloquea</span><span class="q-text">¿Qué componente es la única fuente de verdad de este registro y qué pasa cuando dos escrituras compiten por la misma fila?</span></p>
+        <div class="actions">
+          <label class="include"><input type="checkbox" checked> Incluir</label>
+          <button type="button" class="copy-one">Copiar pregunta</button>
+        </div>
+      </article>
+
+      <article class="blindspot">
+        <h3>El camino de error que nadie recorre</h3>
+        <p class="why"><span class="label">Por qué importa</span>El caso feliz está probado; la rama de error decide si la persona pierde el trabajo que acababa de hacer o solo ve un aviso.</p>
+        <p class="evidence"><span class="label">Evidencia</span><code>src/pedidos/api.py:88</code> devuelve 500 sin mensaje; no hay test que cubra esa rama.</p>
+        <p class="unlock"><span class="label">Prompt que lo desbloquea</span><span class="q-text">¿Qué debe ver la persona cuando falla el guardado a mitad: reintento automático, borrador recuperable o error explícito con los datos conservados?</span></p>
+        <div class="actions">
+          <label class="include"><input type="checkbox" checked> Incluir</label>
+          <button type="button" class="copy-one">Copiar pregunta</button>
+        </div>
+      </article>
+
+      <article class="blindspot">
+        <h3>El coste real del camino caliente</h3>
+        <p class="why"><span class="label">Por qué importa</span>Una llamada por elemento parece inocente en desarrollo y se convierte en la causa del incidente cuando el listado crece; el orden de magnitud decide la solución.</p>
+        <p class="evidence"><span class="label">Evidencia</span><code>src/pedidos/listado.py:31</code> consulta dentro de un bucle; el material no trae volumen de producción.</p>
+        <p class="unlock"><span class="label">Prompt que lo desbloquea</span><span class="q-text">¿Cuál es el volumen máximo realista de filas y qué latencia tolera la persona antes de que el listado se considere roto?</span></p>
+        <div class="actions">
+          <label class="include"><input type="checkbox" checked> Incluir</label>
+          <button type="button" class="copy-one">Copiar pregunta</button>
+        </div>
+      </article>
+
+      <article class="blindspot">
+        <h3>Quién decide el cierre</h3>
+        <p class="why"><span class="label">Por qué importa</span>Sin criterio de aceptación ni persona que firme, el encargo se alarga indefinidamente y cada revisión reabre decisiones ya cerradas.</p>
+        <p class="evidence"><span class="label">Evidencia</span>El material fuente describe la idea, pero no nombra revisor ni fecha de corte.</p>
+        <p class="unlock"><span class="label">Prompt que lo desbloquea</span><span class="q-text">¿Quién valida este cambio y con qué comprobación concreta se da por terminado sin discutir gustos?</span></p>
+        <div class="actions">
+          <label class="include"><input type="checkbox" checked> Incluir</label>
+          <button type="button" class="copy-one">Copiar pregunta</button>
+        </div>
+      </article>
+
+    </div>
+  </section>
+
+  <section id="prompt">
+    <h2>Prompt de implementación</h2>
+    <p id="selection" aria-live="polite">4 de 4 cartas dentro del prompt.</p>
+    <pre id="prompt-preview" aria-live="polite"></pre>
+    <p class="copy-prompt"><button type="button" id="copy-prompt">Copiar como prompt</button></p>
+  </section>
+
+  <section id="desconocidos">
+    <h2>Desconocidos</h2>
+    <p>Lo que el material fuente no permitió verificar en este mismo pase y qué lo desbloquearía. Sin relleno ni evidencia inventada.</p>
+  </section>
+
+</main>
+<script>
+(function () {
+  var cards = Array.prototype.slice.call(document.querySelectorAll(".blindspot"));
+  var preview = document.getElementById("prompt-preview");
+  var selection = document.getElementById("selection");
+  var copy = document.getElementById("copy-prompt");
+
+  function questionOf(card) {
+    return card.querySelector(".q-text").textContent.trim();
+  }
+
+  function selected() {
+    return cards.filter(function (card) {
+      return card.querySelector(".include input").checked;
+    });
+  }
+
+  function build() {
+    var chosen = selected();
+    var questions = chosen.map(function (card, index) {
+      return (index + 1) + ". " + questionOf(card);
+    });
+    if (!questions.length) {
+      return "No hay preguntas marcadas: marca al menos una carta para construir el prompt de implementación.";
+    }
+    return "Implementa el cambio descrito en el encargo. Antes de escribir código, responde "
+      + "explícitamente cada una de estas preguntas y deja constancia de la decisión:\n\n"
+      + questions.join("\n")
+      + "\n\nSi el material no responde alguna pregunta, dilo y pregúntame antes de asumirla; "
+      + "no rellenes huecos con supuestos.";
+  }
+
+  function update() {
+    var chosen = selected().length;
+    selection.textContent = chosen + " de " + cards.length + " cartas dentro del prompt.";
+    preview.textContent = build();
+  }
+
+  cards.forEach(function (card) {
+    card.querySelector(".include input").addEventListener("change", update);
+    card.querySelector(".copy-one").addEventListener("click", async function () {
+      try {
+        await navigator.clipboard.writeText(questionOf(card));
+        this.textContent = "Copiada";
+        this.classList.add("ok");
+        setTimeout(function (b) { b.textContent = "Copiar pregunta"; b.classList.remove("ok"); }, 1000, this);
+      } catch (e) {
+        this.textContent = "No se pudo copiar: cópiala a mano";
+      }
+    });
+  });
+
+  copy.addEventListener("click", async function () {
+    try {
+      await navigator.clipboard.writeText(build());
+      this.textContent = "Copiado";
+      this.classList.add("ok");
+      setTimeout(function (b) { b.textContent = "Copiar como prompt"; b.classList.remove("ok"); }, 1000, this);
+    } catch (e) {
+      this.textContent = "No se pudo copiar: copia el texto a mano";
+    }
+  });
+
+  update();
+})();
+</script>
+</body>
+</html>

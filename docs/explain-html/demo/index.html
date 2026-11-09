@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="color-scheme" content="light dark">
-<meta name="description" content="Una demo por familia de la skill explain-html, con material real de SKILLS-AGP, tokens del sistema y procedencia completa. Nueve artefactos autocontenidos.">
+<meta name="description" content="Una demo por familia de la skill explain-html, con material real de SKILLS-AGP, tokens del sistema y procedencia completa. Once artefactos autocontenidos.">
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%234f46e5'/%3E%3Crect x='7' y='9' width='18' height='14' rx='2' fill='none' stroke='%23ffffff' stroke-width='2'/%3E%3Cpath d='M7 13h18' stroke='%23ffffff' stroke-width='2'/%3E%3Cpath d='M12 19l3 3 5-5' fill='none' stroke='%23ffffff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
 <title>Catálogo demostrativo · explain-html</title>
 <script>
@@ -190,7 +190,7 @@ body{--shell:1180px}
 </style>
 </head>
 <body>
-<!-- procedencia: {"prompt": "Un catálogo demostrativo que acompaña a la documentación de explain-html, con una demo por familia y el estilo de SKILLS-AGP", "fecha": "2026-11-08", "familia": "explicador", "fuentes": ["DESIGN.md:116-136", "src/explain-html/SKILL.md:24-37", "docs/explain-html/index.html", "tablero: sk-22, sk-23, sk-24, sk-25, sk-26"], "enlaces": ["demo-exploracion.html", "demo-explicador.html", "demo-informe.html", "demo-diagrama.html", "demo-prototipo.html", "demo-cuestionario.html", "demo-editor.html", "demo-presentacion.html"]} -->
+<!-- procedencia: {"prompt": "Un catálogo demostrativo que acompaña a la documentación de explain-html, con una demo por familia y el estilo de SKILLS-AGP", "fecha": "2026-11-08", "familia": "explicador", "fuentes": ["DESIGN.md:116-136", "src/explain-html/SKILL.md:24-37", "docs/explain-html/index.html", "tablero: sk-22, sk-23, sk-24, sk-25, sk-26"], "enlaces": ["demo-exploracion.html", "demo-explicador.html", "demo-informe.html", "demo-diagrama.html", "demo-prototipo.html", "demo-cuestionario.html", "demo-editor.html", "demo-presentacion.html", "demo-blindspots.html", "demo-entrevista.html"]} -->
 <a class="skip" href="#contenido">Saltar al contenido</a>
 <header class="top">
   <div class="shell top-in">
@@ -211,8 +211,8 @@ body{--shell:1180px}
 
 <section class="hero grid" id="top">
   <div class="shell">
-    <p class="eyebrow"><span class="dot"></span>catálogo demostrativo · 8 familias · 9 artefactos</p>
-    <h1>Ocho formas de <span class="grad">leer un encargo</span></h1>
+    <p class="eyebrow"><span class="dot"></span>catálogo demostrativo · 10 familias · 11 artefactos</p>
+    <h1>Diez formas de <span class="grad">leer un encargo</span></h1>
     <p class="lead">Una demo por familia de <code>explain-html</code>, todas con material real de SKILLS-AGP y todas autocontenidas. No explican la skill desde fuera: son artefactos generados como los produce la skill, con sus tokens, su procedencia y su puerta de verificación.</p>
     <div class="hero-actions">
       <a class="btn btn-primary" href="demo-exploracion.html">Ver la primera demo
@@ -236,7 +236,7 @@ body{--shell:1180px}
     <div class="fact"><span class="k">El sistema manda</span><p>Papel, tinta, acento <code>#4f46e5</code> y terminal oscuro, copiados de <code>DESIGN.md</code>. Cero tipografías descargadas.</p></div>
   </div>
   <div class="note location">
-    <p><strong>Dónde vive y por qué.</strong> El catálogo está en <code>docs/explain-html/demo/</code>: es un activo documental versionado en Git que acompaña a la página de la skill, no un artefacto desechable de <code>.explanations/</code>. Las nueve páginas se generan desde las plantillas de la skill y pasan la misma puerta.</p>
+    <p><strong>Dónde vive y por qué.</strong> El catálogo está en <code>docs/explain-html/demo/</code>: es un activo documental versionado en Git que acompaña a la página de la skill, no un artefacto desechable de <code>.explanations/</code>. Las once páginas se generan desde las plantillas de la skill y pasan la misma puerta.</p>
   </div>
 </div>
 
@@ -378,9 +378,43 @@ body{--shell:1180px}
       </span>
     </a>
   </section>
+  <section class="family" id="blindspots">
+    <div class="family-side">
+      <span class="fnum">09</span>
+      <h2>Pase de puntos ciegos</h2>
+      <p>Cuando nadie sabe todavía qué preguntar sobre un territorio.</p>
+      <code>plantilla-blindspots.html</code>
+    </div>
+    <a class="demo-card reveal" href="demo-blindspots.html">
+      <span class="thumb" aria-hidden="true"><svg viewBox="0 0 260 130" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.4"><rect x="10" y="16" width="104" height="98" rx="6"/><path d="M10 16h104" stroke="var(--warn-mark)" stroke-width="3"/><path d="M22 34h56M22 46h74M22 58h64"/><rect x="22" y="72" width="78" height="12" rx="3" fill="var(--warn-mark)" opacity=".2" stroke="none"/><rect x="22" y="90" width="56" height="10" rx="3" fill="var(--sunken)" stroke="none"/><rect x="126" y="28" width="90" height="86" rx="6" stroke="var(--accent)" stroke-width="2"/><circle cx="171" cy="60" r="17" stroke="var(--accent)" stroke-width="2"/><path d="M183 72l12 12" stroke="var(--accent)" stroke-width="2" stroke-linecap="round"/><path d="M165 60h12M171 54v12" stroke="var(--accent)" stroke-width="2"/><path d="M136 98h58M136 106h34"/></g></svg></span>
+      <span class="demo-copy">
+        <h3>Lo que no sabemos de los artefactos</h3>
+        <p>Seis desconocidos sobre la adopción de HTML en SKILLS-AGP, cada uno con evidencia fichero:línea y la pregunta que lo desbloquearía.</p>
+        <span class="demo-meta"><span class="tag">6 cartas · prompt ensamblado</span></span>
+        <span class="go">Abrir la demo →</span>
+      </span>
+    </a>
+  </section>
+  <section class="family" id="entrevista">
+    <div class="family-side">
+      <span class="fnum">10</span>
+      <h2>Entrevista</h2>
+      <p>Cuando el encargo es ambiguo y hay que acotarlo antes de generar nada.</p>
+      <code>plantilla-entrevista.html</code>
+    </div>
+    <a class="demo-card reveal" href="demo-entrevista.html">
+      <span class="thumb" aria-hidden="true"><svg viewBox="0 0 260 130" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.4"><rect x="10" y="14" width="142" height="102" rx="6"/><path d="M22 30h64"/><rect x="22" y="42" width="118" height="18" rx="4" stroke="var(--accent)" stroke-width="2"/><circle cx="32" cy="51" r="3.5" fill="var(--accent)" stroke="none"/><path d="M42 51h56" stroke="var(--accent)"/><rect x="22" y="66" width="118" height="18" rx="4"/><circle cx="32" cy="75" r="3.5"/><path d="M42 75h68"/><rect x="22" y="90" width="118" height="18" rx="4"/><circle cx="32" cy="99" r="3.5"/><path d="M42 99h48"/><path d="M158 65h14" stroke="var(--accent)" stroke-width="2"/><path d="M168 59l7 6-7 6" stroke="var(--accent)" stroke-width="2" stroke-linejoin="round"/><rect x="182" y="24" width="68" height="82" rx="6"/><path d="M192 38h48M192 46h40M192 58h48M192 66h34M192 74h44M192 82h28"/><path d="M192 96h22" stroke="var(--accent)" stroke-width="2"/></g></svg></span>
+      <span class="demo-copy">
+        <h3>Acotar el contrato de viaje</h3>
+        <p>Cinco decisiones abiertas de sk-5, ordenadas por radio de explosión, con preguntas condicionadas y prompt final copiable.</p>
+        <span class="demo-meta"><span class="tag">5 decisiones · 2 condicionadas</span></span>
+        <span class="go">Abrir la demo →</span>
+      </span>
+    </a>
+  </section>
   <section class="closing">
     <div class="section-head"><span class="num">→</span><h2>Cómo leer el catálogo</h2></div>
-    <p class="sub">Cada demo se lee sola. Si buscas una decisión, empieza por la exploración; si buscas cómo se hace, por el explicador; si quieres tocar, por el prototipo o el editor. La página de la skill sigue siendo la fuente de las reglas: este catálogo las muestra, no las sustituye.</p>
+    <p class="sub">Cada demo se lee sola. Si buscas una decisión, empieza por la exploración; si buscas cómo se hace, por el explicador; si quieres tocar, por el prototipo o el editor; si no sabes qué preguntar, por los puntos ciegos o la entrevista. La página de la skill sigue siendo la fuente de las reglas: este catálogo las muestra, no las sustituye.</p>
     <div class="hero-actions">
       <a class="btn btn-ghost" href="../index.html">Volver a la documentación</a>
       <a class="btn btn-ghost" href="../../index.html">Catálogo de skills</a>

@@ -84,7 +84,7 @@ def main() -> int:
             print(f"FALLO «sin argumentos»: código {proc.returncode}, esperado 2")
             failures += 1
 
-    # Las nueve plantillas (base y una por familia) traen el bloque vacío listo
+    # Las once plantillas (base y una por familia) traen el bloque vacío listo
     # para rellenar; si falta una, el contrato no se puede cumplir copiándola.
     templates = [ASSETS / "plantilla-artefacto.html"] + [
         ASSETS / f"plantilla-{slug}.html" for slug in artifact_meta.FAMILIES

@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<meta name="description" content="Entrevista de demostración para acotar el contrato de viaje de una metaskill en SKILLS-AGP: preguntas por radio de explosión, decisiones y prompt final.">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%234f46e5'/%3E%3Crect x='7' y='9' width='18' height='14' rx='2' fill='none' stroke='%23ffffff' stroke-width='2'/%3E%3Cpath d='M7 13h18' stroke='%23ffffff' stroke-width='2'/%3E%3Cpath d='M12 19l3 3 5-5' fill='none' stroke='%23ffffff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+<title>Acotar el contrato de viaje · explain-html</title>
+<script>
+(function () {
+  try {
+    var t = localStorage.getItem("explain-html-demo:theme");
+    if (!t && window.matchMedia) t = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+    document.documentElement.setAttribute("data-theme", t || "light");
+  } catch (e) {}
+  document.documentElement.classList.add("js");
+})();
+</script>
+<style>
+
+:root{
+  color-scheme:light;
+  --bg:#f8fafc; --surface:#ffffff; --sunken:#f1f5f9;
+  --text:#0f172a; --muted:#5f6b80;
+  --line:#e2e8f0; --line-strong:#cbd5e1;
+  --accent:#4f46e5; --accent-2:#2563eb; --accent-3:#0891b2;
+  --accent-soft:color-mix(in srgb,var(--accent) 10%,transparent);
+  --terminal:#0a0f1c; --terminal-panel:#111827; --terminal-line:#1f2937; --terminal-content:#e5e7eb;
+  --ok:#047857; --ok-mark:#10b981; --warn:#b45309; --warn-mark:#f59e0b; --err:#b91c1c; --err-mark:#ef4444;
+  --shadow:0 1px 2px rgba(15,23,42,.05),0 8px 24px -12px rgba(15,23,42,.18);
+  --shadow-lg:0 20px 60px -30px rgba(15,23,42,.35);
+  --radius:16px; --radius-sm:10px; --radius-inline:6px;
+  --font:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,"SF Mono","Fira Code",Menlo,Consolas,monospace;
+  --fs-display:clamp(34px,6vw,62px);
+  --fs-h1:clamp(30px,4.4vw,42px);
+  --fs-h2:clamp(21px,2.6vw,27px);
+  --gutter:clamp(16px,4vw,40px);
+  --shell:1180px;
+  --sp-1:8px; --sp-2:12px; --sp-3:16px; --sp-4:24px; --sp-5:32px; --sp-6:48px; --sp-7:64px;
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --bg:#0a0f1c; --surface:#111827; --sunken:#1f2937;
+  --text:#e5e7eb; --muted:#94a3b8;
+  --line:#334155; --line-strong:#475569;
+  --accent:#818cf8; --accent-2:#93c5fd; --accent-3:#67e8f9;
+  --terminal:#070b16; --terminal-panel:#111827; --terminal-line:#1f2937; --terminal-content:#e5e7eb;
+  --ok:#34d399; --ok-mark:#34d399; --warn:#fbbf24; --warn-mark:#fbbf24; --err:#f87171; --err-mark:#f87171;
+  --shadow:0 1px 2px rgba(0,0,0,.4),0 12px 32px -18px rgba(0,0,0,.8);
+  --shadow-lg:0 24px 70px -34px rgba(0,0,0,.9);
+}
+*,*::before,*::after{box-sizing:border-box}
+html{font-size:16px;scroll-behavior:smooth;scroll-padding-top:88px}
+body{margin:0;background:var(--bg);color:var(--text);font:400 16px/1.65 var(--font);-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+a{color:var(--accent);text-decoration:none}
+a:hover{text-decoration:underline;text-underline-offset:3px}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:2px}
+::selection{background:color-mix(in srgb,var(--accent) 28%,transparent)}
+.shell{width:min(calc(100% - 2*var(--gutter)),var(--shell));margin-inline:auto}
+.visually-hidden{position:absolute;width:1px;height:1px;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0;padding:0}
+.skip{position:absolute;left:16px;top:-64px;z-index:100;padding:10px 16px;border:1px solid var(--accent);border-radius:var(--radius-sm);background:var(--surface);color:var(--text);font-weight:650;font-size:14px}
+.skip:focus{top:12px}
+h1{margin:0;font-size:var(--fs-display);font-weight:800;line-height:1.04;letter-spacing:-.035em;text-wrap:balance}
+body.inner h1{font-size:var(--fs-h1);line-height:1.1;letter-spacing:-.03em}
+h1 .grad{color:var(--accent)}
+h2{font-size:var(--fs-h2);font-weight:700;line-height:1.25;letter-spacing:-.02em;margin:0;text-wrap:balance}
+h3{font-size:17px;line-height:1.35;letter-spacing:-.01em;margin:0 0 6px}
+p,li{max-width:74ch}
+.lead{margin:18px 0 0;max-width:680px;color:var(--muted);font-size:clamp(16px,2vw,18.5px);line-height:1.6}
+.sub{margin:6px 0 var(--sp-4);color:var(--muted);max-width:74ch}
+.eyebrow{display:inline-flex;align-items:center;gap:8px;margin:0 0 18px;color:var(--muted);font-size:11.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase}
+.eyebrow .dot{width:7px;height:7px;border-radius:50%;background:var(--ok-mark);box-shadow:0 0 0 3px color-mix(in srgb,var(--ok-mark) 22%,transparent)}
+.top{position:sticky;top:0;z-index:50;background:color-mix(in srgb,var(--bg) 84%,transparent);-webkit-backdrop-filter:saturate(180%) blur(14px);backdrop-filter:saturate(180%) blur(14px);border-bottom:1px solid var(--line)}
+.top-in{display:flex;align-items:center;gap:14px;padding:10px 0}
+.brand{display:flex;align-items:center;gap:10px;color:var(--text);min-width:0}
+.brand:hover{text-decoration:none}
+.mark{display:block;width:32px;height:32px;border-radius:9px;overflow:hidden;box-shadow:var(--shadow);flex:none}
+.mark svg{display:block;width:100%;height:100%}
+.brand-text{min-width:0}
+.brand-text strong{display:block;font-size:14.5px;line-height:1.2;letter-spacing:-.02em;white-space:nowrap}
+.brand-text small{display:block;font-size:10.5px;line-height:1.3;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.top-nav{margin-left:auto;display:flex;align-items:center;gap:4px;flex:none}
+.top-nav a,.theme{display:inline-flex;align-items:center;justify-content:center;height:34px;padding:0 11px;border:1px solid transparent;border-radius:var(--radius-sm);color:var(--muted);font:600 13px/1 var(--font);background:transparent}
+.top-nav a:hover{color:var(--text);background:var(--surface);border-color:var(--line);text-decoration:none}
+.theme{width:34px;padding:0;border-color:var(--line);background:var(--surface);color:var(--text);cursor:pointer}
+.theme:hover{border-color:var(--line-strong)}
+.theme svg{width:16px;height:16px}
+.i-sun{display:none}
+:root[data-theme="dark"] .i-moon{display:none}
+:root[data-theme="dark"] .i-sun{display:block}
+.hero{position:relative;overflow:hidden;padding:clamp(44px,7vw,86px) 0 clamp(32px,5vw,52px);border-bottom:1px solid var(--line)}
+.hero::before{content:"";position:absolute;inset:-45% -10% auto -10%;height:520px;background:radial-gradient(58% 60% at 18% 32%,color-mix(in srgb,var(--accent) 22%,transparent),transparent 70%),radial-gradient(46% 50% at 74% 4%,color-mix(in srgb,var(--accent-2) 18%,transparent),transparent 70%),radial-gradient(40% 44% at 94% 28%,color-mix(in srgb,var(--accent-3) 14%,transparent),transparent 70%);filter:blur(8px);pointer-events:none}
+.hero>.shell{position:relative}
+.hero.grid::after{content:"";position:absolute;inset:0;background-image:linear-gradient(var(--line-strong) 1px,transparent 1px),linear-gradient(90deg,var(--line-strong) 1px,transparent 1px);background-size:56px 56px;opacity:.28;-webkit-mask-image:radial-gradient(70% 80% at 50% 10%,#000 10%,transparent 72%);mask-image:radial-gradient(70% 80% at 50% 10%,#000 10%,transparent 72%);pointer-events:none}
+.hero-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:26px}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:11px 18px;border:1px solid transparent;border-radius:var(--radius-sm);font:650 14.5px/1.2 var(--font);cursor:pointer;white-space:nowrap;transition:transform .12s,box-shadow .2s,border-color .15s,background .15s}
+.btn-primary{background:linear-gradient(135deg,var(--accent),var(--accent-2));color:#fff;box-shadow:var(--shadow)}
+.btn-primary:hover{text-decoration:none;transform:translateY(-1px);box-shadow:var(--shadow-lg)}
+:root[data-theme="dark"] .btn-primary{color:#0a0f1c}
+.btn-ghost{background:var(--surface);border-color:var(--line-strong);color:var(--text)}
+.btn-ghost:hover{text-decoration:none;border-color:var(--accent);color:var(--text)}
+.btn svg{width:16px;height:16px;flex:none}
+.meta-row{display:flex;flex-wrap:wrap;gap:8px;margin-top:22px}
+.tag{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border:1px solid var(--line-strong);border-radius:999px;background:var(--surface);color:var(--muted);font-size:12px;font-weight:600;white-space:nowrap}
+.tag-accent{background:color-mix(in srgb,var(--accent) 8%,transparent);border-color:color-mix(in srgb,var(--accent) 32%,transparent);color:var(--accent)}
+.tag-ok{background:color-mix(in srgb,var(--ok-mark) 10%,transparent);border-color:color-mix(in srgb,var(--ok-mark) 32%,transparent);color:var(--ok)}
+.tag-warn{background:color-mix(in srgb,var(--warn-mark) 10%,transparent);border-color:color-mix(in srgb,var(--warn-mark) 34%,transparent);color:var(--warn)}
+.section{margin-top:var(--sp-7)}
+.section-head{display:flex;align-items:center;gap:12px;margin-bottom:6px}
+.num{display:grid;place-items:center;width:30px;height:30px;border-radius:9px;background:var(--accent-soft);color:var(--accent);font:800 13px/1 var(--font);font-variant-numeric:tabular-nums;flex:none}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:20px;box-shadow:var(--shadow);min-width:0}
+.note{display:flex;gap:12px;margin:20px 0;padding:14px 16px;border-left:1px solid var(--accent);border-radius:0 var(--radius-sm) var(--radius-sm) 0;background:var(--accent-soft);font-size:14px}
+.note p{margin:0;max-width:80ch}
+.note strong{color:var(--text)}
+.note-ok{border-left-color:var(--ok-mark);background:color-mix(in srgb,var(--ok-mark) 9%,transparent)}
+.note-warn{border-left-color:var(--warn-mark);background:color-mix(in srgb,var(--warn-mark) 10%,transparent)}
+.table-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:var(--radius);background:var(--surface);box-shadow:var(--shadow);margin:20px 0}
+table{width:100%;border-collapse:collapse;font-size:14px}
+thead th{text-align:left;padding:11px 16px;background:var(--sunken);color:var(--muted);font-size:11.5px;letter-spacing:.06em;text-transform:uppercase;border-bottom:1px solid var(--line);white-space:nowrap}
+tbody td{padding:11px 16px;border-bottom:1px solid var(--line);vertical-align:top}
+tbody tr:last-child td{border-bottom:0}
+tbody tr:hover{background:color-mix(in srgb,var(--accent) 3%,transparent)}
+td code,th code{font-size:12.8px}
+pre,code{font-family:var(--mono)}
+.code{position:relative;margin:18px 0}
+.code pre{margin:0;padding:16px 52px 16px 18px;background:var(--terminal);color:var(--terminal-content);border:1px solid var(--terminal-line);border-radius:var(--radius);overflow-x:auto;font:400 12.9px/1.72 var(--mono);box-shadow:var(--shadow)}
+.code pre code{background:none;border:0;padding:0;color:inherit;font-size:inherit}
+.code .copy{position:absolute;top:9px;right:9px;display:inline-flex;align-items:center;height:30px;padding:0 9px;border:1px solid var(--terminal-line);border-radius:8px;background:color-mix(in srgb,var(--terminal) 60%,#ffffff 8%);color:#c8d2e8;font:600 11.5px/1 var(--font);cursor:pointer;opacity:0;transition:opacity .15s,border-color .15s,color .15s}
+.code:hover .copy,.code .copy:focus-visible{opacity:1}
+@media (hover:none){.code .copy{opacity:1}}
+.code .copy:hover{border-color:#3b4c72}
+.code .copy.ok{color:var(--ok-mark);border-color:var(--ok-mark)}
+p code,li code,td code{background:var(--sunken);border:1px solid var(--line);border-radius:var(--radius-inline);padding:.08em .4em;font-size:.88em}
+.foot{border-top:1px solid var(--line);margin-top:var(--sp-7);padding:24px 0 40px;color:var(--muted);font-size:13px}
+.foot-in{display:flex;flex-wrap:wrap;gap:8px 22px;align-items:center;justify-content:space-between}
+.foot code{background:var(--sunken);border:1px solid var(--line);border-radius:6px;padding:1px 6px}
+.foot a{color:var(--accent)}
+ul.tight{margin:12px 0;padding-left:20px}
+ul.tight li{margin:6px 0}
+.reveal{min-width:0}
+@media (prefers-reduced-motion:no-preference){
+  .js .reveal{opacity:0;transform:translateY(12px)}
+  .js .reveal.in{opacity:1;transform:none;transition:opacity .55s cubic-bezier(.16,1,.3,1),transform .55s cubic-bezier(.16,1,.3,1);transition-delay:calc(var(--d,0)*70ms)}
+  .js .hero>.shell{animation:rise .6s ease-out both}
+}
+@keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
+@media (max-width:560px){
+  .top-nav a[href="index.html"]{display:none}
+}
+@media (max-width:640px){
+  .brand-text small{display:none}
+  .top-nav a{padding:0 8px;font-size:12.5px}
+  body.inner h1{font-size:clamp(27px,7vw,34px)}
+}
+@media (max-width:420px){.top-nav a.hide-sm{display:none}}
+
+
+[hidden]{display:none!important}
+.fixed-open{display:grid;gap:16px;grid-template-columns:1fr;margin-top:22px}
+@media (min-width:820px){.fixed-open{grid-template-columns:1fr 1fr}}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:20px;box-shadow:var(--shadow)}
+.panel h3{margin:0 0 10px;font-size:15px;letter-spacing:.02em;text-transform:uppercase;font-size:11.5px;color:var(--muted)}
+.panel ul{margin:0;padding-left:18px}
+.panel li{margin:6px 0;font-size:14px}
+.panel.fixed{border-top:3px solid var(--ok-mark)}
+.panel.open{border-top:3px solid var(--warn-mark)}
+
+.legend-row{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0 20px}
+.blast{display:inline-block;margin-right:6px;padding:1px 7px;border:1px solid currentColor;border-radius:999px;font-size:10.5px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;vertical-align:2px;white-space:nowrap}
+.blast.alto{color:var(--err)}
+.blast.medio{color:var(--warn)}
+.blast.bajo{color:var(--accent)}
+
+.q{margin:0 0 18px;padding:20px;background:var(--surface);border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:var(--radius);box-shadow:var(--shadow)}
+.q:focus-within{border-color:var(--accent);border-left-color:var(--accent)}
+.q legend{padding:0 .35rem;font-size:18px;font-weight:700;line-height:1.35;letter-spacing:-.01em;text-wrap:balance}
+.q .why{margin:6px 0 14px;color:var(--muted);font-size:14px;max-width:72ch}
+.q label{display:block;margin:4px 0;padding:9px 12px;border:1px solid var(--line);border-radius:var(--radius-sm);background:var(--bg);cursor:pointer;font-size:14.5px;transition:border-color .12s,background .12s}
+.q label:hover{border-color:var(--line-strong)}
+.q label:has(input:checked){border-color:var(--accent);background:var(--accent-soft)}
+.q label input{margin:0 8px 0 0;accent-color:var(--accent)}
+.detail{margin-top:12px}
+.detail label{display:block;padding:0;border:0;background:none;font-size:12.5px;font-weight:600;color:var(--muted);cursor:default}
+.detail label:hover{border:0}
+textarea{display:block;width:100%;max-width:70ch;margin-top:5px;padding:10px 12px;font:inherit;font-size:14px;color:var(--text);background:var(--surface);border:1px solid var(--line-strong);border-radius:var(--radius-sm);resize:vertical}
+textarea:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+.progress{margin:0 0 16px;color:var(--muted);font-size:13.5px;font-variant-numeric:tabular-nums}
+.q-actions{display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin-top:20px}
+.q-actions .hint{margin:0;color:var(--muted);font-size:13px}
+
+#decisions{width:100%}
+#decisions td:first-child{max-width:34ch}
+#decisions td:last-child{white-space:nowrap}
+@media (max-width:640px){
+  .table-wrap thead{display:none}
+  #decisions,#decisions tbody{display:block}
+  #decisions tr{display:block;padding:12px 16px;border-bottom:1px solid var(--line)}
+  #decisions tr:last-child{border-bottom:0}
+  #decisions td{display:block;max-width:none;padding:0 0 4px;border:0}
+  #decisions td:first-child{font-weight:650;font-size:13.5px}
+  #decisions td:nth-child(2){color:var(--muted)}
+  #decisions td:last-child{margin-top:4px;font-size:11px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--accent)}
+  #decisions td:last-child::before{content:"Radio ";color:var(--muted);font-weight:600}
+}
+.prompt-panel{margin-top:24px;padding:22px;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow)}
+#prompt-preview{margin:14px 0 0;padding:16px 18px;background:var(--terminal);color:var(--terminal-content);border:1px solid var(--terminal-line);border-radius:var(--radius-sm);white-space:pre-wrap;overflow-wrap:anywhere;font:400 12.8px/1.72 var(--mono)}
+.copy-prompt{margin:16px 0 0;display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+@media (max-width:640px){.q{padding:16px}.q legend{font-size:16.5px}.prompt-panel{padding:16px}}
+
+</style>
+</head>
+<body class="inner">
+<!-- procedencia: {"prompt": "Genera la demo de entrevista del catálogo de explain-html: acotar el contrato de viaje de una metaskill antes de escribir el ADR", "fecha": "2026-11-09", "familia": "entrevista", "fuentes": [".tasks-ai/AGENTS.md:51-61", "README.md:358", "scripts/check-repo.py:384", ".gitignore:122", "tablero: sk-5 (consulta del 9 nov 2026)"], "enlaces": ["index.html"]} -->
+<a class="skip" href="#contenido">Saltar al contenido</a>
+<header class="top">
+  <div class="shell top-in">
+    <a class="brand" href="index.html" aria-label="explain-html, catálogo demostrativo">
+      <span class="mark" aria-hidden="true"><svg viewBox="0 0 32 32" role="presentation"><rect width="32" height="32" rx="8" fill="#4f46e5"/><rect x="7" y="9" width="18" height="14" rx="2" fill="none" stroke="#ffffff" stroke-width="2"/><path d="M7 13h18" stroke="#ffffff" stroke-width="2"/><path d="M12 19l3 3 5-5" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+      <span class="brand-text"><strong>explain-html</strong><small>catálogo / entrevista</small></span>
+    </a>
+    <nav class="top-nav" aria-label="Navegación">
+      <a href="index.html">Catálogo</a>
+      <a href="../index.html">Documentación</a>
+      <a class="hide-sm" href="../../index.html">Skills</a>
+      <button class="theme" type="button" data-theme-toggle aria-label="Cambiar a tema oscuro" title="Cambiar tema">
+        <svg class="i-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg><svg class="i-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+      </button>
+    </nav>
+  </div>
+</header>
+
+<section class="hero grid" id="top">
+  <div class="shell">
+    <p class="eyebrow"><span class="dot"></span>familia 10 · entrevista · 9 nov 2026</p>
+    <h1>Acotar el <span class="grad">contrato de viaje</span> de una metaskill</h1>
+    <p class="lead">La tarea sk-5 pide decidir si SKILLS-AGP necesita una capa de orquestación. La salida ya está fijada —un ADR con alternativas descartadas—, pero cinco decisiones siguen abiertas. La entrevista las ordena por radio de explosión y devuelve un prompt con lo decidido.</p>
+    <div class="meta-row">
+      <span class="tag tag-accent">encargo ambiguo · sk-5</span>
+      <span class="tag">5 decisiones · 2 condicionadas</span>
+      <span class="tag tag-warn">supuestos de demostración</span>
+    </div>
+  </div>
+</section>
+
+<main class="shell" id="contenido">
+  <section class="section" id="encargo">
+    <div class="section-head"><span class="num">1</span><h2>El encargo</h2></div>
+    <p class="sub">No se entrevista para escribir la metaskill: se entrevista para decidir si debe existir y con qué contrato. Escribir el viaje antes de cerrar estas respuestas produciría un documento plausible y prematuro.</p>
+    <div class="fixed-open">
+      <div class="panel fixed">
+        <h3>Lo que ya está fijado</h3>
+        <ul>
+          <li>La salida es un ADR, no una metaskill implementada.</li>
+          <li>El ADR cita, por cada decisión, la alternativa descartada.</li>
+          <li>La regla de cierre viene de PBI-07: ninguna fase se cierra con «la salida parece buena».</li>
+          <li>El tablero sigue siendo el único registro del trabajo.</li>
+        </ul>
+      </div>
+      <div class="panel open">
+        <h3>Lo que sigue abierto</h3>
+        <ul>
+          <li>Dónde vive la capa y quién posee el contrato.</li>
+          <li>Qué ocurre cuando falta una skill dependiente.</li>
+          <li>Si la puerta valida el viaje o lo deja fuera.</li>
+          <li>Qué vocabulario de estados usa el tracker.</li>
+          <li>Qué evidencia acompaña al ADR.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="note note-warn"><p><strong>Supuestos de demostración.</strong> Las opciones marcadas al abrir no son decisiones del proyecto. Representan lo que un entrevistado prudente elegiría con el material de hoy; el ADR de sk-5 tendrá que aceptarlas o sustituirlas con su propia justificación.</p></div>
+  </section>
+
+  <section class="section" id="entrevista" data-encargo="Decidir y documentar el contrato de viaje de una metaskill en SKILLS-AGP: alojamiento, precedencia, dependencias ausentes, validación y estados, en un ADR que cite la alternativa descartada de cada decisión.">
+    <div class="section-head"><span class="num">2</span><h2>Entrevista</h2></div>
+    <p class="sub">Una pregunta a la vez, de mayor a menor radio de explosión. Cada respuesta abre las preguntas que dependen de ella; las que no aplican no se muestran.</p>
+    <div class="legend-row" aria-hidden="true">
+      <span class="blast alto">Radio alto</span>
+      <span class="blast medio">Radio medio</span>
+      <span class="blast bajo">Radio bajo</span>
+    </div>
+
+    <div id="paso">
+      <p class="progress" id="progress" aria-live="polite">Pregunta 1 de 7</p>
+      <form id="form">
+
+        <fieldset class="q" data-id="q1" data-blast="Alto" data-question="¿Dónde vive la capa de orquestación?">
+          <legend><span class="blast alto">Radio alto</span>¿Dónde vive la capa de orquestación?</legend>
+          <p class="why">Fija qué valida <code>check-repo.py</code>, dónde se versiona el contrato y qué rutas cita el ADR. Cambiarlo después mueve el paquete entero.</p>
+          <label><input type="radio" name="q1" value="src" checked> Un paquete en <code>src/</code> con su enrutador en <code>.skills/</code></label>
+          <label><input type="radio" name="q1" value="router"> Solo un enrutador en <code>.skills/</code>, sin paquete en <code>src/</code></label>
+          <label><input type="radio" name="q1" value="no-capa"> No se crea capa: la tarea se descarta</label>
+          <div class="detail">
+            <label for="q1-note">Matiz opcional</label>
+            <textarea id="q1-note" name="q1-note" rows="2" placeholder="Qué obliga a que sea un paquete y no un enrutador."></textarea>
+          </div>
+        </fieldset>
+
+        <fieldset class="q" data-id="q1b" data-blast="Alto" data-requires="q1" data-when="src"
+          data-question="¿Quién posee el artefacto cuando la metaskill y la skill invocada lo tocan?">
+          <legend><span class="blast alto">Radio alto</span>¿Quién posee el artefacto cuando la metaskill y la skill invocada lo tocan?</legend>
+          <p class="why">La duplicación de propiedad es el fallo silencioso de toda capa de orquestación: dos contratos escriben el mismo fichero y ninguno manda.</p>
+          <label><input type="radio" name="q1b" value="posee-skill" checked> La skill invocada posee; la metaskill ordena, exige puertas y anota evidencia</label>
+          <label><input type="radio" name="q1b" value="reescribe"> La metaskill reescribe el artefacto con su propio criterio</label>
+          <label><input type="radio" name="q1b" value="tabla"> Se decide por artefacto en una tabla del contrato</label>
+          <div class="detail">
+            <label for="q1b-note">Matiz opcional</label>
+            <textarea id="q1b-note" name="q1b-note" rows="2" placeholder="El artefacto concreto que ya te ha dado problemas."></textarea>
+          </div>
+        </fieldset>
+
+        <fieldset class="q" data-id="q2" data-blast="Alto" data-question="¿Qué pasa si una skill dependiente no está instalada?">
+          <legend><span class="blast alto">Radio alto</span>¿Qué pasa si una skill dependiente no está instalada?</legend>
+          <p class="why">Un fallback no declarado produce una salida plausible sin las garantías de la skill que falta. La metaskill debe decir siempre en qué modo opera.</p>
+          <label><input type="radio" name="q2" value="minimo" checked> Modo mínimo declarado, con su límite escrito en el estado del viaje</label>
+          <label><input type="radio" name="q2" value="instalar"> Instalar la dependencia antes de empezar</label>
+          <label><input type="radio" name="q2" value="abortar"> Abortar el viaje y devolver el control</label>
+          <div class="detail">
+            <label for="q2-note">Matiz opcional</label>
+            <textarea id="q2-note" name="q2-note" rows="2" placeholder="Qué garantía se pierde en el modo mínimo y quién lo autoriza."></textarea>
+          </div>
+        </fieldset>
+
+        <fieldset class="q" data-id="q3" data-blast="Medio" data-question="¿La puerta valida también el viaje?">
+          <legend><span class="blast medio">Radio medio</span>¿La puerta valida también el viaje?</legend>
+          <p class="why">Si la puerta no lee el viaje, una fase obsoleta o un artefacto que ya no existe pasan en verde. Si lo lee, el contrato gana una superficie de validación más.</p>
+          <label><input type="radio" name="q3" value="si" checked> Sí: <code>check-repo.py</code> valida el tracker y los artefactos citados</label>
+          <label><input type="radio" name="q3" value="tracker"> Solo el tracker; los artefactos siguen su propia puerta</label>
+          <label><input type="radio" name="q3" value="no"> No: el viaje queda fuera de <code>check-repo.py</code></label>
+        </fieldset>
+
+        <fieldset class="q" data-id="q3b" data-blast="Medio" data-requires="q3" data-when="si"
+          data-question="¿Qué comprueba exactamente la puerta del viaje?">
+          <legend><span class="blast medio">Radio medio</span>¿Qué comprueba exactamente la puerta del viaje?</legend>
+          <p class="why">«Validar el viaje» sin decir qué se lee deja la comprobación a la interpretación de quien la implemente.</p>
+          <label><input type="radio" name="q3b" value="todo" checked> Que el tracker y cada artefacto citado existen y son coherentes</label>
+          <label><input type="radio" name="q3b" value="estados"> Solo que el tracker tiene estados válidos</label>
+          <label><input type="radio" name="q3b" value="existencia"> Solo que los artefactos citados existen</label>
+          <div class="detail">
+            <label for="q3b-note">Matiz opcional</label>
+            <textarea id="q3b-note" name="q3b-note" rows="2" placeholder="La comprobación que no puede faltar."></textarea>
+          </div>
+        </fieldset>
+
+        <fieldset class="q" data-id="q4" data-blast="Medio" data-question="¿Qué vocabulario de estados usa el tracker?">
+          <legend><span class="blast medio">Radio medio</span>¿Qué vocabulario de estados usa el tracker?</legend>
+          <p class="why">Un tercer idioma obliga a traducir estado en cada lectura. El tablero ya es el único registro del trabajo y ya distingue abierto, en curso y cerrado con motivo.</p>
+          <label><input type="radio" name="q4" value="tablero" checked> Reutilizar los estados del tablero: abierto, en curso y cierre con motivo</label>
+          <label><input type="radio" name="q4" value="archify"> Reutilizar el journal de Archify con checkpoint y resume</label>
+          <label><input type="radio" name="q4" value="nuevo"> Proponer un vocabulario nuevo con pending, awaiting-evidence, deferred y skipped</label>
+          <div class="detail">
+            <label for="q4-note">Matiz opcional</label>
+            <textarea id="q4-note" name="q4-note" rows="2" placeholder="El estado que hoy no cabe en el vocabulario elegido."></textarea>
+          </div>
+        </fieldset>
+
+        <fieldset class="q" data-id="q5" data-blast="Bajo" data-question="¿Qué evidencia acompaña al ADR?">
+          <legend><span class="blast bajo">Radio bajo</span>¿Qué evidencia acompaña al ADR?</legend>
+          <p class="why">Solo cambia el soporte de la decisión, no lo que se decide. Se pregunta al final para no desviar la entrevista hacia el formato.</p>
+          <label><input type="radio" name="q5" value="journal" checked> El ADR y un journal de fases versionado junto al contrato</label>
+          <label><input type="radio" name="q5" value="adr"> Solo el ADR con las alternativas descartadas</label>
+          <label><input type="radio" name="q5" value="informe"> Un informe HTML aparte que enlace al ADR</label>
+        </fieldset>
+
+      </form>
+      <p class="q-actions"><button class="btn btn-primary" type="button" id="next">Siguiente</button><span class="hint" id="hint">Las respuestas marcadas son supuestos de demostración.</span></p>
+    </div>
+  </section>
+
+  <section class="section" id="cierre" hidden>
+    <div class="section-head"><span class="num">3</span><h2>Decisiones tomadas</h2></div>
+    <p class="sub">Lo que quedó registrado en la entrevista, en el mismo orden en que se preguntó. Lo no respondido se marca como pendiente; las preguntas que no aplican no aparecen.</p>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th scope="col">Pregunta</th><th scope="col">Decisión</th><th scope="col">Radio</th></tr>
+        </thead>
+        <tbody id="decisions"></tbody>
+      </table>
+    </div>
+
+    <div class="prompt-panel">
+      <div class="section-head"><span class="num">4</span><h2>Prompt de implementación</h2></div>
+      <p class="sub" style="margin-bottom:0">El prompt reúne las decisiones y el encargo. Las alternativas descartadas quedan en la tabla para que el ADR pueda citarlas.</p>
+      <pre id="prompt-preview" aria-live="polite"></pre>
+      <p class="copy-prompt"><button class="btn btn-primary" type="button" id="copy-prompt">Copiar como prompt</button><span class="tag">se pega en la conversación</span></p>
+    </div>
+  </section>
+
+  <section class="section" id="desconocidos">
+    <div class="section-head"><span class="num">→</span><h2>Desconocidos</h2></div>
+    <p class="sub">Lo que la entrevista no resuelve y no debería fingir que resuelve.</p>
+    <ul class="tight">
+      <li>Si el alojamiento es solo un enrutador, no está escrito qué documento posee el contrato; la entrevista no lo inventa.</li>
+      <li>No hay medición del coste de validar el viaje dentro de <code>check-repo.py</code>; la opción se elige por coherencia, no por esfuerzo comprobado.</li>
+      <li>El journal de Archify no es reproducible desde un clon porque <code>/archify/</code> está ignorado en Git; por eso se ofrece como alternativa, no como recomendación.</li>
+      <li>Descartar la capa exigiría un criterio de evidencia que la tarea sk-5 todavía no fija; la entrevista solo registra que se tomaría esa salida.</li>
+      <li>Ninguna respuesta sustituye al ADR ni a su puerta: son supuestos de demostración hasta que el ADR los acepte.</li>
+    </ul>
+  </section>
+</main>
+
+<footer class="foot">
+  <div class="shell foot-in">
+    <span><code>docs/explain-html/demo/demo-entrevista.html</code> · activo documental de SKILLS-AGP</span>
+    <span><a href="index.html">Catálogo de demos</a> · <a href="../index.html">Documentación</a> · <a href="../../index.html">Skills</a></span>
+    <span>Sin CDN · sin fuentes remotas · funciona por <code>file://</code></span>
+  </div>
+</footer><script>
+(function () {
+  var root = document.documentElement;
+  var toggles = [].slice.call(document.querySelectorAll("[data-theme-toggle]"));
+  function label() {
+    var dark = root.getAttribute("data-theme") === "dark";
+    toggles.forEach(function (toggle) {
+      toggle.setAttribute("aria-label", dark ? "Cambiar a tema claro" : "Cambiar a tema oscuro");
+    });
+  }
+  if (toggles.length) {
+    label();
+    toggles.forEach(function (toggle) {
+      toggle.addEventListener("click", function () {
+        var next = root.getAttribute("data-theme") === "dark" ? "light" : "dark";
+        root.setAttribute("data-theme", next);
+        try { localStorage.setItem("explain-html-demo:theme", next); } catch (e) {}
+        label();
+      });
+    });
+  }
+
+  var sets = [].slice.call(document.querySelectorAll("fieldset.q"));
+  var form = document.getElementById("form");
+  var step = document.getElementById("paso");
+  var closure = document.getElementById("cierre");
+  var progress = document.getElementById("progress");
+  var hint = document.getElementById("hint");
+  var next = document.getElementById("next");
+  var tbody = document.getElementById("decisions");
+  var preview = document.getElementById("prompt-preview");
+  var encargo = document.getElementById("entrevista").getAttribute("data-encargo");
+  var byId = {};
+  var current = sets[0];
+
+  sets.forEach(function (set) {
+    byId[set.getAttribute("data-id")] = set;
+  });
+
+  function optionLabel(input) {
+    var labelEl = input.closest("label");
+    return labelEl ? labelEl.textContent.trim() : input.value;
+  }
+
+  function answerOf(set) {
+    var checked = set.querySelector("input[type=radio]:checked");
+    var detail = set.querySelector("textarea");
+    var text = checked ? optionLabel(checked) : "";
+    var note = detail ? detail.value.trim() : "";
+    if (!text && !note) {
+      return null;
+    }
+    return { text: text || "Sin opción fijada", note: note };
+  }
+
+  function activeIds() {
+    var active = {};
+    sets.forEach(function (set) {
+      var id = set.getAttribute("data-id");
+      var requires = set.getAttribute("data-requires");
+      if (requires) {
+        var parent = byId[requires];
+        var checked = parent ? parent.querySelector("input[type=radio]:checked") : null;
+        if (!active[requires] || !checked || checked.value !== set.getAttribute("data-when")) {
+          return;
+        }
+      }
+      active[id] = true;
+    });
+    return active;
+  }
+
+  function visible() {
+    var active = activeIds();
+    return sets.filter(function (set) {
+      return active[set.getAttribute("data-id")];
+    });
+  }
+
+  function nextSet(list) {
+    var index = list.indexOf(current);
+    return index >= 0 && index < list.length - 1 ? list[index + 1] : null;
+  }
+
+  function show(set) {
+    current = set;
+    sets.forEach(function (item) {
+      item.hidden = item !== set;
+    });
+    updateProgress();
+    var field = set.querySelector("input, textarea");
+    if (field) {
+      field.focus({ preventScroll: true });
+    }
+    set.scrollIntoView({ block: "nearest" });
+  }
+
+  function updateProgress() {
+    var list = visible();
+    if (list.indexOf(current) === -1) {
+      current = list[0];
+    }
+    progress.textContent = "Pregunta " + (list.indexOf(current) + 1) + " de " + list.length;
+    next.textContent = nextSet(list) ? "Siguiente" : "Ver decisiones";
+  }
+
+  function finish() {
+    var list = visible();
+    var lines = [];
+    tbody.textContent = "";
+    list.forEach(function (set) {
+      var answer = answerOf(set);
+      var text = answer
+        ? answer.text + (answer.note ? " — " + answer.note : "")
+        : "Sin responder";
+      var row = document.createElement("tr");
+      [set.getAttribute("data-question"), text, set.getAttribute("data-blast")].forEach(function (value) {
+        var cell = document.createElement("td");
+        cell.textContent = value;
+        row.appendChild(cell);
+      });
+      tbody.appendChild(row);
+      lines.push("— " + set.getAttribute("data-question") + ": " + text);
+    });
+    preview.textContent = "Resuelve este encargo: " + encargo
+      + "\n\nDecisiones registradas (supuestos de demostración hasta que el ADR las acepte):\n"
+      + lines.join("\n")
+      + "\n\nNo reabras estas decisiones salvo que contradigan el material. "
+      + "Cada una debe entrar en el ADR con la alternativa descartada y su motivo. "
+      + "Si falta algo que no aparezca aquí, pregúntame antes de asumirlo.";
+    step.hidden = true;
+    closure.hidden = false;
+    hint.textContent = "";
+    closure.scrollIntoView({ block: "start" });
+  }
+
+  form.addEventListener("change", updateProgress);
+  form.addEventListener("input", updateProgress);
+
+  next.addEventListener("click", function () {
+    var target = nextSet(visible());
+    if (target) {
+      show(target);
+    } else {
+      finish();
+    }
+  });
+
+  document.getElementById("copy-prompt").addEventListener("click", async function () {
+    try {
+      await navigator.clipboard.writeText(preview.textContent);
+      this.textContent = "Copiado";
+      this.classList.add("ok");
+      setTimeout(function (b) { b.textContent = "Copiar como prompt"; b.classList.remove("ok"); }, 1000, this);
+    } catch (e) {
+      this.textContent = "Copia el texto a mano";
+    }
+  });
+
+  sets.forEach(function (set) {
+    set.hidden = set !== current;
+  });
+  updateProgress();
+})();
+</script>
+</body>
+</html>

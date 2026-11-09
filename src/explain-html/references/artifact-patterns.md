@@ -89,6 +89,39 @@ Estructura: secciones `<section>` a `100dvh` con navegación por teclado (flecha
 
 Reglas: una idea por diapositiva; títulos grandes y cuerpo mínimo; los diagramas en diapositiva propia; sin animación esencial y con `prefers-reduced-motion` respetado. Sin JS, el deck sigue siendo legible como página con scroll: cada sección apilada es contenido completo.
 
+## Pase de puntos ciegos
+
+Plantilla: [`plantilla-blindspots.html`](../assets/plantilla-blindspots.html).
+
+Cuándo: la persona no sabe qué no sabe sobre un territorio —un módulo, un flujo, una migración— y hay que sacar a la superficie los desconocidos desconocidos antes de implementar.
+
+Estructura: encabezado con el territorio, la fecha y el recuento de puntos ciegos → cuadrícula de cartas, cada una con por qué importa, la evidencia tomada del material fuente y el prompt que la desbloquea → sección «Prompt de implementación» con el texto ensamblado → «Desconocidos» con lo que el pase no pudo verificar.
+
+Cada carta se puede incluir o excluir del prompt con una casilla y copiar por separado; el prompt final numera las preguntas elegidas y ordena responderlas antes de escribir código, pidiendo que no se rellenen huecos con supuestos. Sin evidencia en el material, la carta lo dice: no se inventa una fuente.
+
+Invariantes: procedencia completa con familia `blindspots`, `check-artifact.py` en verde, autocontención total y exportación «copiar como prompt» como cierre.
+
+## Entrevista
+
+Plantilla: [`plantilla-entrevista.html`](../assets/plantilla-entrevista.html).
+
+Cuándo: el encargo es ambiguo y hay que acotarlo antes de generar cualquier artefacto de implementación.
+
+Estructura: encabezado con el encargo en una línea → preguntas de una en una, ordenadas por radio de explosión (alto, medio, bajo), con opciones y un matiz libre → tabla de decisiones tomadas → prompt final copiable → «Desconocidos».
+
+Las preguntas condicionadas se abren según la respuesta anterior (`data-requires` y `data-when`), así que la entrevista se ramifica: lo que no depende de nada no se pregunta. El prompt final fija las decisiones, pide no reabrirlas salvo contradicción con el material y deja como pendiente lo no respondido.
+
+Invariantes: familia `entrevista`, procedencia completa, `check-artifact.py` en verde, autocontención total y exportación «copiar como prompt» como cierre.
+
+## Artefactos de desconocidos con familia prestada
+
+Cuatro patrones de descubrimiento no necesitan familia propia: heredan la plantilla y el `familia` de una existente. Cambia la representación; los invariantes son los mismos.
+
+- **Brainstorm con respuestas ensamblables** (`exploracion`, antes de implementar): opciones lado a lado donde cada tarjeta termina en una respuesta copiable; el cierre reúne las elegidas en un prompt o en una lista de direcciones a probar.
+- **Bitácora de desviaciones del plan** (`informe`, durante): cronología de lo que se separó del plan con su motivo, su impacto y la decisión tomada; la exportación devuelve las desviaciones que hay que reincorporar al siguiente plan.
+- **Pitch doc que pre-responde objeciones** (`informe`, después): el caso a favor de una propuesta con las objeciones esperadas y su respuesta junto a cada punto; la exportación copia el argumentario listo para una reunión.
+- **Mapa de la referencia a portar** (`explicador`, antes de un portado): recorrido del sistema de referencia —mecanismo, piezas, trampas— antes de reimplementarlo; la exportación enumera qué se conserva, qué se adapta y qué se descarta.
+
 ## Bucles de varios artefactos
 
 Un mismo razonamiento puede necesitar varias páginas —exploración → plan → mockups— que se leen en orden. No es un documento con capítulos: son artefactos hermanos de `.explanations/` que se enlazan con rutas relativas y funcionan como memoria del razonamiento.
