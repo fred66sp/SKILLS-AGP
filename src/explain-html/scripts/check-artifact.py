@@ -46,12 +46,12 @@ OPTIONAL_CLOSE = {
     "option", "optgroup", "rt", "rp", "colgroup",
 }
 
-ROOT_BLOCK = re.compile(r":root\s*\{(?P<body>[^}]*)\}", re.IGNORECASE)
+ROOT_BLOCK = re.compile(r":root(?:\s*\[[^\]]*\])?\s*\{(?P<body>[^}]*)\}", re.IGNORECASE)
 COLOR_PROP = re.compile(
     r"--(?P<name>[A-Za-z0-9_-]+)\s*:\s*(?P<value>#[0-9a-fA-F]{3}(?:[0-9a-fA-F]{3})?)\b\s*;?"
 )
-FOREGROUND_ROLES = {"text", "text-dim", "fg", "ink", "accent", "ok", "warn", "err"}
-BACKGROUND_ROLES = {"bg", "surface", "background"}
+FOREGROUND_ROLES = {"text", "text-dim", "muted", "fg", "ink", "accent", "ok", "warn", "err"}
+BACKGROUND_ROLES = {"bg", "surface", "sunken", "background"}
 MIN_CONTRAST = 4.5
 MAX_BYTES = 100_000
 

@@ -59,6 +59,7 @@ def main() -> int:
         ("HTML mal formado", BASE.format(title="Estado", extra="", url="#", meta=GOOD_META).replace("<p>hola</p>", "<div><span>hola</div>"), 1, ["mal formado", "span"]),
         ("etiqueta sin cerrar", BASE.format(title="Estado", extra="", url="#", meta=GOOD_META).replace("</body></html>", "</body></html><div>"), 1, ["no se cierra", "div"]),
         ("tokens de bajo contraste avisan", BASE.format(title="Estado", extra="<style>:root { --bg: #ffffff; --text: #aaaaaa; }</style>", url="#", meta=GOOD_META), 0, ["contraste", "--text", "--bg"]),
+        ("tokens oscuros de bajo contraste avisan", BASE.format(title="Estado", extra='<style>:root[data-theme="dark"] { --sunken: #111827; --muted: #333333; }</style>', url="#", meta=GOOD_META), 0, ["contraste", "--muted", "--sunken"]),
         ("fichero enorme avisa", BASE.format(title="Estado", extra="", url="#", meta=GOOD_META).replace("<p>hola</p>", "<!--" + "x" * 100_001 + "--><p>hola</p>"), 0, ["100000", "descontrola"]),
     ]
     failures = 0

@@ -53,14 +53,66 @@ TEMPLATE = Path(__file__).resolve().parents[1] / "assets" / "plantilla-artefacto
 STYLE_RE = re.compile(r"<style>(?P<css>.*?)</style>", re.DOTALL)
 
 EXTRA_STYLE = """
-.grid-kpi { display: grid; grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr)); gap: .75rem; margin: 1.5rem 0; }
-.kpi { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 1rem; }
-.kpi strong { display: block; font-size: 1.75rem; line-height: 1.2; color: var(--accent); }
-.kpi span { color: var(--text-dim); font-size: .875rem; }
-.note { background: var(--surface); border-left: 3px solid var(--accent); padding: .75rem 1rem; margin: 1.5rem 0; }
+.grid-kpi { display: grid; grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr)); gap: 12px; margin: 20px 0; }
+.kpi { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 18px; box-shadow: var(--shadow); min-width: 0; }
+.kpi strong { display: block; font-size: clamp(28px, 3.4vw, 36px); line-height: 1.1; font-weight: 800; letter-spacing: -.03em; color: var(--accent); font-variant-numeric: tabular-nums; }
+.kpi span { display: block; margin-top: 6px; color: var(--muted); font-size: 12.5px; line-height: 1.4; }
+.note { display: flex; gap: 12px; margin: 20px 0; padding: 14px 16px; border-left: 1px solid var(--accent); border-radius: 0 var(--radius-sm) var(--radius-sm) 0; background: var(--accent-soft); font-size: 14px; }
 .note p { margin: 0; }
-.table-wrap { overflow-x: auto; }
+.table-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface); box-shadow: var(--shadow); margin: 20px 0; }
 """
+
+PREPAINT = """<script>
+(function () {
+  try {
+    var t = localStorage.getItem("explain-html:theme");
+    if (!t && window.matchMedia) t = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+    document.documentElement.setAttribute("data-theme", t || "light");
+  } catch (e) {}
+  document.documentElement.classList.add("js");
+})();
+</script>"""
+
+THEME_JS = """<script>
+(function () {
+  var root = document.documentElement;
+  var toggles = [].slice.call(document.querySelectorAll("[data-theme-toggle]"));
+  function label() {
+    var dark = root.getAttribute("data-theme") === "dark";
+    toggles.forEach(function (toggle) {
+      toggle.setAttribute("aria-label", dark ? "Cambiar a tema claro" : "Cambiar a tema oscuro");
+    });
+  }
+  if (toggles.length) {
+    label();
+    toggles.forEach(function (toggle) {
+      toggle.addEventListener("click", function () {
+        var next = root.getAttribute("data-theme") === "dark" ? "light" : "dark";
+        root.setAttribute("data-theme", next);
+        try { localStorage.setItem("explain-html:theme", next); } catch (e) {}
+        label();
+      });
+    });
+  }
+})();
+</script>"""
+
+
+def chrome(familia: str) -> str:
+    return f"""<a class="skip" href="#contenido">Saltar al contenido</a>
+<header class="top">
+  <div class="shell top-in">
+    <a class="brand" href="#contenido" aria-label="Artefacto explain-html">
+      <span class="mark" aria-hidden="true"><svg viewBox="0 0 32 32" role="presentation"><rect width="32" height="32" rx="8" fill="#4f46e5"/><rect x="7" y="9" width="18" height="14" rx="2" fill="none" stroke="#ffffff" stroke-width="2"/><path d="M7 13h18" stroke="#ffffff" stroke-width="2"/><path d="M12 19l3 3 5-5" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+      <span class="brand-text"><strong>explain-html</strong><small>{esc(familia)} · artefacto</small></span>
+    </a>
+    <nav class="top-nav" aria-label="Navegación">
+      <button class="theme" type="button" data-theme-toggle aria-label="Cambiar a tema oscuro" title="Cambiar tema">
+        <svg class="i-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg><svg class="i-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+      </button>
+    </nav>
+  </div>
+</header>"""
 
 TOP_KEYS = {"titulo", "lead", "familia", "procedencia", "secciones", "desconocidos"}
 META_KEYS = {"prompt", "fecha", "fuentes"}
@@ -258,22 +310,31 @@ def render(data: dict, css: str) -> str:
             "  </section>"
         )
     metadata = json.dumps(meta, ensure_ascii=False)
+    eyebrow = f'{esc(data["familia"])} · {esc(data["procedencia"]["fecha"])}'
     return f"""<!DOCTYPE html>
-<html lang="es">
+<html lang="es" data-theme="light">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%234f46e5'/%3E%3Crect x='7' y='9' width='18' height='14' rx='2' fill='none' stroke='%23ffffff' stroke-width='2'/%3E%3Cpath d='M7 13h18' stroke='%23ffffff' stroke-width='2'/%3E%3Cpath d='M12 19l3 3 5-5' fill='none' stroke='%23ffffff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+{PREPAINT}
 <title>{esc(data["titulo"])}</title>
 <style>{css}{EXTRA_STYLE}</style>
 </head>
 <body>
 <!-- procedencia: {metadata} -->
-<header>
-  <h1>{esc(data["titulo"])}</h1>{lead}
-</header>
-<main>
+{chrome(data["familia"])}
+<section class="hero grid-bg" id="portada">
+  <div class="shell">
+    <p class="eyebrow"><span class="dot"></span>{eyebrow}</p>
+    <h1>{esc(data["titulo"])}</h1>{lead}
+  </div>
+</section>
+<main class="shell inner" id="contenido">
 {chr(10).join(sections)}
 </main>
+{THEME_JS}
 </body>
 </html>
 """
