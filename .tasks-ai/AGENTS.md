@@ -53,11 +53,11 @@ se hace cuando toca, no al final:
 
 | Momento | Operación |
 |---|---|
-| Abrir el trabajo | `tasks-ai create --title "..."`; la tarea nace `open` |
+| Abrir el trabajo | `tasks-ai create --title "..."`; la tarea nace `open`. Un encargo sustancial nace con objetivo, alcance y criterios de aceptación en su descripción; un cambio pequeño, con un título claro |
 | Abrir el trabajo de una épica | `tasks-ai update <ref> --status in_progress` en la épica cuando empieza su primera hija; su cierre espera a que cierren todas |
 | Empezar el trabajo | `tasks-ai update <ref> --status in_progress` |
 | Surgir un avance, una decisión o un bloqueo | `tasks-ai comment <ref> --body "..."` en ese momento |
-| Dejar el trabajo a medias | `tasks-ai update <ref> --status open` |
+| Dejar el trabajo a medias | `tasks-ai update <ref> --status open`, y un comentario que señale el siguiente paso |
 | Terminar | informe a la persona y `tasks-ai close <ref> --reason done`, con su revisión o su pedido expreso |
 | Dejar de necesitarla sin hacerla | `tasks-ai close <ref> --reason duplicate`, `absorbed`, `stale` o `superseded` |
 
