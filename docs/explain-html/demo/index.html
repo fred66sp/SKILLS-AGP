@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="color-scheme" content="light dark">
-<meta name="description" content="Una demo por familia de la skill explain-html, con material real de SKILLS-AGP, tokens del sistema y procedencia completa. Once artefactos autocontenidos.">
+<meta name="description" content="Una demo por familia de la skill explain-html, con material real de SKILLS-AGP, tokens del sistema y procedencia completa. Doce artefactos autocontenidos.">
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%234f46e5'/%3E%3Crect x='7' y='9' width='18' height='14' rx='2' fill='none' stroke='%23ffffff' stroke-width='2'/%3E%3Cpath d='M7 13h18' stroke='%23ffffff' stroke-width='2'/%3E%3Cpath d='M12 19l3 3 5-5' fill='none' stroke='%23ffffff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
 <title>Catálogo demostrativo · explain-html</title>
 <script>
@@ -190,7 +190,7 @@ body{--shell:1180px}
 </style>
 </head>
 <body>
-<!-- procedencia: {"prompt": "Un catálogo demostrativo que acompaña a la documentación de explain-html, con una demo por familia y el estilo de SKILLS-AGP", "fecha": "2026-11-08", "familia": "explicador", "fuentes": ["DESIGN.md:116-136", "src/explain-html/SKILL.md:24-37", "docs/explain-html/index.html", "tablero: sk-22, sk-23, sk-24, sk-25, sk-26"], "enlaces": ["demo-exploracion.html", "demo-explicador.html", "demo-informe.html", "demo-diagrama.html", "demo-prototipo.html", "demo-cuestionario.html", "demo-editor.html", "demo-presentacion.html", "demo-blindspots.html", "demo-entrevista.html"]} -->
+<!-- procedencia: {"prompt": "Un catálogo demostrativo que acompaña a la documentación de explain-html, con una demo por familia y el estilo de SKILLS-AGP", "fecha": "2026-11-08", "familia": "explicador", "fuentes": ["DESIGN.md:116-136", "src/explain-html/SKILL.md:24-37", "docs/explain-html/index.html", "tablero: sk-22, sk-23, sk-24, sk-25, sk-26"], "enlaces": ["demo-exploracion.html", "demo-explicador.html", "demo-informe.html", "demo-diagrama.html", "demo-prototipo.html", "demo-cuestionario.html", "demo-editor.html", "demo-presentacion.html", "demo-blindspots.html", "demo-entrevista.html", "demo-sdd.html"]} -->
 <a class="skip" href="#contenido">Saltar al contenido</a>
 <header class="top">
   <div class="shell top-in">
@@ -211,8 +211,8 @@ body{--shell:1180px}
 
 <section class="hero grid" id="top">
   <div class="shell">
-    <p class="eyebrow"><span class="dot"></span>catálogo demostrativo · 10 familias · 11 artefactos</p>
-    <h1>Diez formas de <span class="grad">leer un encargo</span></h1>
+    <p class="eyebrow"><span class="dot"></span>catálogo demostrativo · 11 familias · 12 artefactos</p>
+    <h1>Once formas de <span class="grad">leer un encargo</span></h1>
     <p class="lead">Una demo por familia de <code>explain-html</code>, todas con material real de SKILLS-AGP y todas autocontenidas. No explican la skill desde fuera: son artefactos generados como los produce la skill, con sus tokens, su procedencia y su puerta de verificación.</p>
     <div class="hero-actions">
       <a class="btn btn-primary" href="demo-exploracion.html">Ver la primera demo
@@ -236,7 +236,7 @@ body{--shell:1180px}
     <div class="fact"><span class="k">El sistema manda</span><p>Papel, tinta, acento <code>#4f46e5</code> y terminal oscuro, copiados de <code>DESIGN.md</code>. Cero tipografías descargadas.</p></div>
   </div>
   <div class="note location">
-    <p><strong>Dónde vive y por qué.</strong> El catálogo está en <code>docs/explain-html/demo/</code>: es un activo documental versionado en Git que acompaña a la página de la skill, no un artefacto desechable de <code>.explanations/</code>. Las once páginas se generan desde las plantillas de la skill y pasan la misma puerta.</p>
+    <p><strong>Dónde vive y por qué.</strong> El catálogo está en <code>docs/explain-html/demo/</code>: es un activo documental versionado en Git que acompaña a la página de la skill, no un artefacto desechable de <code>.explanations/</code>. Las doce páginas se generan desde las plantillas de la skill y pasan la misma puerta.</p>
   </div>
 </div>
 
@@ -408,6 +408,23 @@ body{--shell:1180px}
         <h3>Acotar el contrato de viaje</h3>
         <p>Cinco decisiones abiertas de sk-5, ordenadas por radio de explosión, con preguntas condicionadas y prompt final copiable.</p>
         <span class="demo-meta"><span class="tag">5 decisiones · 2 condicionadas</span></span>
+        <span class="go">Abrir la demo →</span>
+      </span>
+    </a>
+  </section>
+  <section class="family" id="sdd">
+    <div class="family-side">
+      <span class="fnum">11</span>
+      <h2>Especificación SDD</h2>
+      <p>Cuando el cambio llega como árbol de especificación y hay que revisarlo entero.</p>
+      <code>plantilla-sdd.html</code>
+    </div>
+    <a class="demo-card reveal" href="demo-sdd.html">
+      <span class="thumb" aria-hidden="true"><svg viewBox="0 0 260 130" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.4"><rect x="10" y="12" width="30" height="22" rx="4"/><rect x="46" y="12" width="30" height="22" rx="4" stroke="var(--accent)" stroke-width="2"/><rect x="82" y="12" width="30" height="22" rx="4" stroke="var(--accent)" stroke-width="2"/><rect x="118" y="12" width="30" height="22" rx="4" stroke="var(--accent)" stroke-width="2"/><rect x="154" y="12" width="30" height="22" rx="4"/><rect x="190" y="12" width="30" height="22" rx="4"/><rect x="226" y="12" width="24" height="22" rx="4"/><rect x="10" y="52" width="150" height="66" rx="6"/><path d="M22 66h44"/><rect x="22" y="76" width="126" height="12" rx="3" stroke="var(--accent)"/><rect x="22" y="94" width="126" height="12" rx="3"/><path d="M30 82h10M30 100h10"/><path d="M52 82h78M52 100h60"/><circle cx="196" cy="84" r="26" stroke="var(--warn-mark)" stroke-width="3"/><path d="M196 72v16" stroke="var(--warn-mark)" stroke-width="3" stroke-linecap="round"/><circle cx="196" cy="98" r="2.5" fill="var(--warn-mark)" stroke="none"/></g></svg></span>
+      <span class="demo-copy">
+        <h3>Un cambio OpenSpec, con sus hallazgos</h3>
+        <p>Siete fases del pipeline, fichas GIVEN/WHEN/THEN, progreso de tareas y los hallazgos que el parser encuentra en el árbol.</p>
+        <span class="demo-meta"><span class="tag">5 documentos · 4 hallazgos</span></span>
         <span class="go">Abrir la demo →</span>
       </span>
     </a>
