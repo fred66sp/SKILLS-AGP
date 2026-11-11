@@ -2,7 +2,7 @@
 name: explain-html
 description: "Genera artefactos HTML autocontenidos —informes, explicadores, cuestionarios, prototipos, diagramas, presentaciones, comparaciones y editores a medida— en .explanations/ del proyecto y los abre en el navegador para revisarlos. Se usa cuando se pide un informe o estado, un cuestionario, un prototipo interactivo, un diagrama o flujo, una presentación, un explicador o un editor desechable con exportación «copiar como prompt»; también ante encargos vagos o revisiones a ciegas: pase de puntos ciegos, entrevista de requisito ambiguo, bitácora de desviaciones, cuestionario de merge o pitch de compra. Cada artefacto es un .html sin dependencias externas que funciona por file:// y separa hechos verificados de desconocidos. No se usa para documentación duradera del repositorio (eso es document-management-software), para la identidad y el sistema visual de un producto (design-system-architect), para implementar una interfaz real (web-interface-visual-design) ni para mantener un catálogo de informes publicado."
 metadata:
-  version: "0.5.0"
+  version: "0.6.0"
 ---
 
 # explain-html: artefactos HTML explicativos
@@ -20,6 +20,7 @@ Convierte un encargo —un informe, un cuestionario, un prototipo interactivo, u
 - Puede usar el sistema visual del proyecto destino sin romper la autocontención: copia sus valores como custom properties en el `:root` del artefacto. Nunca enlaza su CSS ni una fuente externa; la precedencia es intención de la persona → sistema del proyecto → defaults de la plantilla.
 - Puede formar un bucle de varios artefactos —exploración → plan → mockups— como memoria del razonamiento, con enlaces relativos entre ficheros hermanos de `.explanations/`. Cada página del bucle pasa la verificación por separado; el índice los lista con la relación que declaren en `enlaces`.
 - Delega lo que no es suyo: documentación duradera del repositorio a `document-management-software`; identidad y sistema visual de un producto a `design-system-architect`; implementar una interfaz real a `web-interface-visual-design`. Si el artefacto es un paso previo —explorar, decidir, probar, comunicar— es de esta skill.
+- La especificación no es suya: el ciclo de vida de un árbol SDD —crearlo, mantenerlo, aprobarlo— lo gobiernan las skills de la herramienta que lo generó (openspec, Kiro, Spec Kit y sus propias instrucciones). Aquí solo se lee, y la documentación duradera del proyecto sigue siendo de `document-management-software`. La vista `sdd` es de revisión, desechable y regenerable: no sustituye a la spec.
 
 ## Familias de artefacto
 
@@ -33,6 +34,7 @@ Convierte un encargo —un informe, un cuestionario, un prototipo interactivo, u
 | Preguntar, evaluar o autocorregir | Cuestionario (`cuestionario`) | `plantilla-cuestionario.html` | Preguntas con corrección en vivo y resultado exportable |
 | Reordenar, clasificar, editar valores o afinar texto | Editor a medida (`editor`) | `plantilla-editor.html` | Formulario sobre el dato concreto + exportación |
 | Presentar en una reunión | Presentación (`presentacion`) | `plantilla-presentacion.html` | Secciones a pantalla completa navegables con teclado |
+| Revisar una especificación antes o durante su implementación (árbol de proposal/specs/deltas/design/tasks, venga de OpenSpec, Kiro, Spec Kit o de Markdown propio) | Especificación SDD (`sdd`) | `plantilla-sdd.html` | Vista de revisión: fases del pipeline, fichas de requisito con GIVEN/WHEN/THEN, progreso de tareas, hallazgos, desconocidos y trazabilidad cuando el documento la declara |
 | No sé qué no sé sobre un territorio del proyecto | Pase de puntos ciegos (`blindspots`) | `plantilla-blindspots.html` | Cartas de desconocido desconocido con evidencia y prompt desbloqueador, ensambladas en un prompt de implementación mejorado |
 | Un encargo ambiguo que hay que acotar antes de generar nada | Entrevista (`entrevista`) | `plantilla-entrevista.html` | Preguntas una a una ordenadas por radio de explosión, tabla de decisiones y prompt final copiable |
 
@@ -71,7 +73,7 @@ Todo artefacto empieza el body con este comentario (la plantilla ya lo trae vac�
 |---|---|
 | `prompt` | El encargo que originó el artefacto, en una línea |
 | `fecha` | Día de generación en `AAAA-MM-DD` |
-| `familia` | Uno de los diez slugs de la tabla anterior |
+| `familia` | Uno de los once slugs de la tabla anterior |
 | `fuentes` | Lista no vacía de fuentes: `fichero:línea`, comando, conversación fechada |
 | `enlaces` | Opcional. Lista de ficheros `.html` hermanos del bucle, por ejemplo `["plan.html", "mockups.html"]` |
 
@@ -145,13 +147,20 @@ La salida es un fragmento con `<span class="tok-kw|tok-str|tok-com|tok-num|tok-f
 ### 3. Generar
 
 1. Elige la familia y copia su plantilla de `assets/plantilla-<familia>.html`. La plantilla ya trae la estructura completa de esa familia y los invariantes de [visual-language](references/visual-language.md); sustitúyela, no la rodees con otra inventada.
-2. Decide la vía: si el artefacto es rutinario y encaja en el esquema, usa `render-quick.py`; si no, escribe el HTML desde la plantilla. Un JSON inválido no bloquea: se cae a la generación a medida.
+2. Decide la vía: si el artefacto es rutinario y encaja en el esquema, usa `render-quick.py`; si el encargo es revisar una especificación SDD, `render-sdd.py` la escribe sin HTML a mano; si no, escribe el HTML desde la plantilla. Un JSON inválido no bloquea: se cae a la generación a medida.
 3. Genera un único `.explanations/<slug>.html`, con slug en kebab-case descriptivo, por ejemplo `.explanations/estado-semana-45.html`. Si el encargo es un bucle multi-artefacto, cada página es un fichero hermano y declara a las demás en `enlaces`.
 4. Rellena el bloque de procedencia con el prompt real, la fecha de hoy, el slug de la familia y las fuentes verificadas.
 5. Si el proyecto declara su sistema visual y el encargo lo pide, ejecuta `tokens-from-project.py` y copia los valores en el `:root` según la precedencia de la sección anterior; no enlaces su CSS.
 6. Si el artefacto muestra código, pásalo por `highlight.py` y pega su CSS una sola vez en el `<style>`.
 7. Cuando el objetivo es devolver datos a la sesión —editor, cuestionario, prototipo afinado—, el artefacto termina en un botón «copiar como prompt» que copia al portapapeles el resultado como texto listo para pegar de vuelta en la conversación.
 8. Antes de continuar, revisa que no has introducido CDN, fuentes remotas, imágenes por URL ni hojas enlazadas al copiar los tokens.
+
+**Especificación SDD.** Para un árbol de documentos SDD no se escribe HTML a mano: `python3 scripts/sdd_scan.py <árbol>` imprime el modelo estructural —perfiles, requisitos, tareas y hallazgos— y `python3 scripts/render-sdd.py <árbol> --out ../../.explanations/<slug>.html --prompt "…" --date AAAA-MM-DD [--title "…"]` escribe el artefacto. Prompt y fecha van por flag, así que la misma entrada produce los mismos bytes. Antes de abrir, contrasta el modelo con el árbol que pidió la persona —que no se ha escaneado la carpeta de al lado— y pasa `check-artifact.py` como cualquier artefacto. Reglas de la familia:
+
+- Los perfiles `openspec`, `kiro`, `spec-kit` y `generic` son convención de lectura, no frontera. Un fichero sin perfil reconocido no se descarta: se transcribe tal cual en modo degradado, con aviso visible, sin inventarle fichas ni progreso.
+- Un árbol grande se corta por fase del pipeline —y el detalle de hallazgos y desconocidos a la hermana `<slug>-hallazgos.html` en modo seccionado—, nunca por tamaño. El umbral de 100 KB es el de la puerta y no se toca.
+- El renderer no llama a ninguna CLI ni lee código fuente: los hallazgos son solo los comprobables en Markdown —requisito vago, spec prescriptora, escenario único sin caso de error, ausencia de no-objetivos— más los estructurales del escáner.
+- Escribe solo dentro de `.explanations/`; un `--out` fuera de ahí o `index.html` es error.
 
 ### 4. Verificar, revisar a ojo, indexar y abrir
 
