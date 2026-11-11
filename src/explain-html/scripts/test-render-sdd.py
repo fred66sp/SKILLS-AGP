@@ -61,6 +61,30 @@ OPENSPEC_TASKS = """# Tasks
 [NEEDS CLARIFICATION] Which provider finishes the rollout?
 """
 
+OPENSPEC_DESIGN = """# Design: add throttling
+
+## Enfoque
+
+El límite vive en el cliente y se calcula por ventana.
+
+## Decisiones
+
+- Ventana deslizante, no cubos.
+"""
+
+HOSTILE_PROPOSAL = """# Hostile
+
+</script><script>alert(1)</script>
+
+## Why
+
+Un payload no puede cerrar su bloque ni ejecutar código.
+"""
+
+PAYLOAD_RE = re.compile(r'<script type="text/markdown" data-path="([^"]*)">')
+LINK_RE = re.compile(r'class="md-link" data-path="([^"]*)"')
+MARKED_MARK = "marked v12.0.2 - a markdown parser"
+
 GENERIC_NOTES = """# Notas
 
 ## Contexto
@@ -147,6 +171,22 @@ def main() -> int:
                 print(detail)
             failures += 1
 
+    def check_md(name: str, text: str) -> None:
+        """Invariantes del modal: payloads empatados con botones y marked una vez."""
+        payloads = PAYLOAD_RE.findall(text)
+        links = LINK_RE.findall(text)
+        check(
+            f"{name}: marked una sola vez si hay payloads",
+            text.count(MARKED_MARK) == (1 if payloads else 0),
+            f"{text.count(MARKED_MARK)} aparición(es), {len(payloads)} payload(s)",
+        )
+        check(
+            f"{name}: cada .md-link tiene payload",
+            sorted(set(links)) == sorted(set(payloads)),
+            f"{sorted(set(links))} != {sorted(set(payloads))}",
+        )
+        check(f"{name}: modal accesible en el chrome", 'role="dialog" aria-modal="true"' in text)
+
     with tempfile.TemporaryDirectory() as raw:
         tmp = Path(raw)
 
@@ -158,6 +198,7 @@ def main() -> int:
                 "openspec/specs/auth/spec.md": OPENSPEC_SPEC,
                 "openspec/changes/add-throttle/specs/auth/spec.md": OPENSPEC_DELTA,
                 "openspec/changes/add-throttle/tasks.md": OPENSPEC_TASKS,
+                "openspec/changes/add-throttle/design.md": OPENSPEC_DESIGN,
                 "notas.md": GENERIC_NOTES,
             },
         )
@@ -213,16 +254,20 @@ def main() -> int:
         )
 
         checks = [
-            ("chips: perfil openspec", "openspec · 4" in text),
+            ("chips: perfil openspec", "openspec · 5" in text),
             ("chips: perfil generic", "generic · 1" in text),
             (
                 "chips: sin perfil reconocido",
-                "1 de 5 ficheros sin perfil reconocido" in text,
+                "1 de 6 ficheros sin perfil reconocido" in text,
             ),
             ("progreso: números", "<strong>1 de 3</strong>" in text and "1 marcadas [P]" in text),
             ("escenario: triplete GIVEN/WHEN/THEN", '<span class="lbl">GIVEN</span>' in text and '<span class="lbl">WHEN</span>' in text and '<span class="lbl">THEN</span>' in text),
             ("delta: color por operación", 'class="delta delta-modified">MODIFIED' in text),
             ("fases: las siete más Sin fase", all(f'id="fase-{phase}"' in text for phase in ["explore", "propose", "specify", "design", "tasks", "apply", "verify", "misc"])),
+            ("extracto: Why en la tarjeta Propose", 'class="md-excerpt md-body"' in text and "Too many attempts." in text),
+            ("extracto: Enfoque en la tarjeta Design", "El límite vive en el cliente" in text),
+            ("extracto: ver más hacia el payload", text.count('class="md-link md-more"') == 2
+                and all(f'data-path="{p}"' in text for p in ["openspec/proposal.md", "openspec/changes/add-throttle/design.md"])),
             ("fase vacía visible", "Sin ficheros en esta fase" in text),
             ("hallazgos: kind y fichero:línea", "scenario-three-hashes" in text and "openspec/specs/auth/spec.md:" in text),
             ("hallazgos: delta sin destino", "modified-without-target" in text),
@@ -236,6 +281,18 @@ def main() -> int:
         ]
         for name, ok in checks:
             check(name, ok, "" if ok else text[:0])
+
+        check_md("openspec", text)
+        payloads = PAYLOAD_RE.findall(text)
+        check(
+            "openspec: payloads ordenados y del modelo",
+            payloads == sorted(expected_fuentes) and set(payloads) <= set(expected_fuentes),
+            f"{payloads} != {sorted(expected_fuentes)}",
+        )
+        check(
+            "openspec: la ruta es un botón con estilo de código",
+            'class="md-link" data-path="notas.md"' in text,
+        )
 
         # --- Árbol kiro con refs: matriz y criterios de aceptación -----------
         kiro = write_tree(
@@ -269,6 +326,21 @@ def main() -> int:
         check("genérico: sin matriz", 'id="trazabilidad"' not in generic_text)
         check("genérico: aviso y cuerpo", "Sin perfil reconocido:" in generic_text and "Texto plano sin requisitos ni tareas." in generic_text)
         check("genérico: navegación fija completa", 'id="fase-apply"' in generic_text and "Sin ficheros en esta fase" in generic_text)
+
+        # --- Payload hostil: no cierra el bloque ni deja un script vivo ------
+        hostile = write_tree(tmp / "hostile-tree", {"openspec/proposal.md": HOSTILE_PROPOSAL})
+        hostile_out = tmp / "hostile" / ".explanations" / "hostil.html"
+        result = render(hostile, hostile_out)
+        hostile_text = hostile_out.read_text(encoding="utf-8") if hostile_out.is_file() else ""
+        check("hostil: código 0", result.returncode == 0, result.stdout + result.stderr)
+        clean, result = gate(hostile_out)
+        check("hostil: puerta sin errores ni avisos", clean, result.stdout + result.stderr)
+        check(
+            "hostil: el cierre se escapa y no queda script vivo",
+            "<\\/script><script>alert(1)<\\/script>" in hostile_text
+            and "</script><script>alert(1)</script>" not in hostile_text,
+        )
+        check_md("hostil", hostile_text)
 
         # --- Refusals --------------------------------------------------------
         loose = tmp / "suelto.html"
@@ -315,6 +387,7 @@ def main() -> int:
         for path in big_pages:
             page_meta, page_problems = meta_of(path)
             check(f"seccionamiento: procedencia válida en {path.name}", page_problems == [], str(page_problems))
+            check_md(f"seccionamiento {path.name}", path.read_text(encoding="utf-8"))
             enlaces = page_meta.get("enlaces") if isinstance(page_meta, dict) else None
             check(f"seccionamiento: enlaces declarados en {path.name}", isinstance(enlaces, list) and bool(enlaces), json.dumps(page_meta, ensure_ascii=False))
             links[path.name] = set(enlaces or [])
@@ -382,6 +455,7 @@ def main() -> int:
         for path in noisy_pages:
             page_text = path.read_text(encoding="utf-8")
             noisy_texts[path.name] = page_text
+            check_md(f"ruido {path.name}", page_text)
             clean, gate_result = gate(path)
             check(f"ruido: puerta limpia en {path.name}", clean, gate_result.stdout + gate_result.stderr)
         names = set(noisy_texts)
@@ -409,6 +483,48 @@ def main() -> int:
         check("artifact_meta contiene la familia sdd", "sdd" in artifact_meta.FAMILIES)
         sdd_meta, sdd_problems = meta_of(out)
         check("artifact_meta.load acepta el bloque sdd", sdd_problems == [] and sdd_meta.get("familia") == "sdd")
+
+        # --- La plantilla lleva el chrome completo y cero payloads -----------
+        template = (
+            Path(__file__).resolve().parents[1] / "assets" / "plantilla-sdd.html"
+        ).read_text(encoding="utf-8")
+        check(
+            "plantilla: modal, botón y estilos en el chrome",
+            'id="md-modal"' in template
+            and 'role="dialog" aria-modal="true"' in template
+            and 'class="md-link"' in template
+            and "data-md-close" in template
+            and ".md-modal{" in template,
+        )
+        check(
+            "plantilla: sin payloads no incrusta marked",
+            MARKED_MARK not in template and '<script type="text/markdown"' not in template,
+        )
+
+        def modal_markup(source: str) -> str:
+            match = re.search(
+                r'<div class="md-modal" id="md-modal" hidden>.*?\n</div>\n<script>',
+                source,
+                re.S,
+            )
+            return match.group(0) if match else ""
+
+        def modal_script(source: str) -> str:
+            match = re.search(
+                r'<script>\n\(function \(\) \{\n  var modal = document\.getElementById\("md-modal"\);.*?</script>',
+                source,
+                re.S,
+            )
+            return match.group(0) if match else ""
+
+        check(
+            "plantilla y renderer: el mismo markup de modal",
+            bool(modal_markup(text)) and modal_markup(text) == modal_markup(template),
+        )
+        check(
+            "plantilla y renderer: el mismo JS de modal",
+            bool(modal_script(text)) and modal_script(text) == modal_script(template),
+        )
 
     if failures:
         print(f"{failures} caso(s) fallidos.")

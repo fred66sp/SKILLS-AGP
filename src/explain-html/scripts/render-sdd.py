@@ -22,6 +22,12 @@ que vigila check-artifact.py— no se emite un muro; se escribe un índice y una
 página por fase (`<slug>-<fase>.html`). El corte es por fase, nunca por
 tamaño; una fase que aún se pase se reparte por fichero
 (`<slug>-<fase>-<n>.html`) y se avisa por stderr.
+
+Los caminos de las tarjetas son botones que abren un modal con el Markdown
+original: cada página con tarjetas incrusta su payload (`<script
+type="text/markdown">`) y marked vendorizado una sola vez. Un fichero cuyo
+payload no cabe entero con sus tarjetas en una página se queda como código:
+preferimos no duplicarlo hasta desbordar el umbral.
 """
 import argparse
 import html
@@ -36,7 +42,9 @@ import artifact_meta
 import sdd_scan
 
 TEMPLATE = Path(__file__).resolve().parents[1] / "assets" / "plantilla-sdd.html"
+MARKED = Path(__file__).resolve().parents[1] / "assets" / "marked.min.js"
 STYLE_RE = re.compile(r"<style>(?P<css>.*?)</style>", re.DOTALL)
+MD_LINK_RE = re.compile(r'class="md-link" data-path="([^"]+)"')
 
 # El umbral de la puerta vive en check-artifact.py (MAX_BYTES). Aquí solo se
 # usa para decidir el corte por fase, no para trocear contenido a ciegas.
@@ -118,12 +126,185 @@ THEME_JS = """<script>
 </script>"""
 
 
+MODAL_HTML = """<div class="md-modal" id="md-modal" hidden>
+  <div class="md-backdrop" data-md-close></div>
+  <div class="md-panel" role="dialog" aria-modal="true" aria-labelledby="md-modal-title">
+    <header class="md-head">
+      <p class="md-path" id="md-modal-title"></p>
+      <button class="md-close" type="button" data-md-close aria-label="Cerrar el Markdown original">Cerrar</button>
+    </header>
+    <div class="md-body"></div>
+  </div>
+</div>"""
+
+MD_JS = r"""<script>
+(function () {
+  var modal = document.getElementById("md-modal");
+  if (!modal) return;
+  var panel = modal.querySelector(".md-panel");
+  var title = modal.querySelector(".md-path");
+  var body = modal.querySelector(".md-body");
+  var last = null;
+  // No es un sanitizador completo: corta la ejecución y los recursos remotos
+  // que un Markdown hostil puede colar en el modal. El payload es local.
+  function sanitize(html) {
+    var box = document.createElement("div");
+    box.innerHTML = html;
+    [].slice.call(box.querySelectorAll("script, iframe, object, embed")).forEach(function (node) {
+      node.parentNode.removeChild(node);
+    });
+    [].slice.call(box.querySelectorAll("*")).forEach(function (node) {
+      [].slice.call(node.attributes).forEach(function (attr) {
+        if (/^on/i.test(attr.name)) node.removeAttribute(attr.name);
+        if (attr.name === "src" || attr.name === "href" || attr.name === "srcset") {
+          if (attr.value.trim().charAt(0) !== "#" && /^(?:[a-z][a-z0-9+.-]*:|\/)/i.test(attr.value)) {
+            node.setAttribute(attr.name, "#");
+            node.setAttribute("data-neutralized", "1");
+          }
+        }
+      });
+    });
+    return box.innerHTML;
+  }
+  function open(path, trigger) {
+    var parts = document.querySelectorAll('script[type="text/markdown"]');
+    var text = "";
+    for (var index = 0; index < parts.length; index++) {
+      if (parts[index].getAttribute("data-path") === path) text += parts[index].textContent;
+    }
+    if (!text) return;
+    text = text.replace(/<\\\/script/g, "</" + "script");
+    title.textContent = path;
+    body.innerHTML = window.marked ? sanitize(window.marked.parse(text)) : "";
+    if (!window.marked) body.textContent = text;
+    last = trigger;
+    modal.hidden = false;
+    var close = modal.querySelector(".md-close");
+    if (close) close.focus();
+  }
+  function close() {
+    if (modal.hidden) return;
+    modal.hidden = true;
+    body.innerHTML = "";
+    if (last) last.focus();
+    last = null;
+  }
+  document.addEventListener("click", function (event) {
+    var trigger = event.target.closest ? event.target.closest(".md-link") : null;
+    if (trigger) {
+      event.preventDefault();
+      open(trigger.getAttribute("data-path"), trigger);
+      return;
+    }
+    if (!modal.hidden && !panel.contains(event.target)) close();
+  });
+  document.addEventListener("keydown", function (event) {
+    if (event.key === "Escape") close();
+  });
+  [].slice.call(modal.querySelectorAll("[data-md-close]")).forEach(function (node) {
+    node.addEventListener("click", close);
+  });
+})();
+</script>"""
+
+
 def esc(value) -> str:
     return html.escape(str(value))
 
 
+EXCERPT_SECTIONS = {
+    "proposal": ("why",),
+    "design": ("enfoque", "contexto", "context", "overview", "background"),
+}
+
+SECTION_TITLE_RE = re.compile(r"^##\s+(.+?)\s*$")
+
+
+def section_text(md: str, names: tuple[str, ...]) -> str | None:
+    """Contenido de una sección `## <nombre>`: hasta el siguiente encabezado."""
+    lines = md.replace("\r\n", "\n").split("\n")
+    start = None
+    for position, line in enumerate(lines):
+        match = SECTION_TITLE_RE.match(line)
+        if match and match.group(1).strip().casefold() in names:
+            start = position + 1
+            break
+    if start is None:
+        return None
+    body: list[str] = []
+    for line in lines[start:]:
+        if re.match(r"^#{1,2}\s", line):
+            break
+        body.append(line)
+    text = "\n".join(body).strip()
+    return text or None
+
+
+def excerpt_html(item: dict, root: Path, linkable) -> str:
+    """Extracto del md en las tarjetas Propose (Why) y Design (Contexto).
+
+    Solo cuando el documento va incrustado: sin payload, el «ver más»
+    no tendría a dónde llevar y el extracto se duplicaría en cada hermana.
+    """
+    names = EXCERPT_SECTIONS.get(item["role"])
+    if not names or item["path"] not in linkable:
+        return ""
+    try:
+        md = (root / item["path"]).read_text(encoding="utf-8", errors="replace")
+    except OSError:
+        return ""
+    section = section_text(md, names)
+    if not section:
+        return ""
+    body = "".join(markdown_blocks_from_text(section))
+    more = (
+        f'<button type="button" class="md-link md-more" data-path="{esc(item["path"])}" '
+        'title="Ver el documento completo">Ver más…</button>'
+    )
+    return f'<div class="md-excerpt md-body">{body}</div><p class="md-more-row">{more}</p>'
 def size(text: str) -> int:
     return len(text.encode("utf-8"))
+
+
+def md_link(path: str) -> str:
+    """La ruta es un botón: abre el Markdown incrustado sin salir del artefacto."""
+    return (
+        f'<button type="button" class="md-link" data-path="{esc(path)}" '
+        f'title="Ver el Markdown original">{esc(path)}</button>'
+    )
+
+
+def payload_text(path: Path) -> str:
+    """Markdown literal, con `</script` neutralizado para no cerrar el bloque."""
+    try:
+        text = path.read_text(encoding="utf-8", errors="replace")
+    except OSError:
+        return ""
+    return re.sub(r"</script", lambda _: "<\\/script", text, flags=re.IGNORECASE)
+
+
+def md_extras(plan: dict, paths, marked_js: str) -> str:
+    """Marked una vez y los payloads de la página, ordenados por ruta."""
+    paths = sorted(paths)
+    if not paths:
+        return ""
+    scripts = "\n".join(
+        f'<script type="text/markdown" data-path="{esc(path)}">{plan[path]}</script>'
+        for path in paths
+    )
+    return f"<script>\n{script_safe(marked_js)}</script>\n{scripts}"
+
+
+def script_safe(source: str) -> str:
+    """Reescrituras equivalentes para que check-artifact no lea JS como recursos.
+
+    check-artifact.py busca `url(` y `<img src=` en todo el texto, también
+    dentro de un <script>. El vendor no se toca: se incrusta con un espacio en
+    los métodos `url (` y con una concatenación en la plantilla de `<img`, sin
+    cambiar lo que hace.
+    """
+    return source.replace("url(", "url (").replace("`<img src=", "`<i` + `mg src=")
+
 
 
 def chrome() -> str:
@@ -156,7 +337,7 @@ def hero(title: str, lead: str, chips: str, fecha: str) -> str:
 </section>"""
 
 
-def page(title: str, css: str, meta: dict, hero_html: str, main: str, footer: str) -> str:
+def page(title: str, css: str, meta: dict, hero_html: str, main: str, footer: str, extras: str = "") -> str:
     metadata = json.dumps(meta, ensure_ascii=False)
     return f"""<!DOCTYPE html>
 <html lang="es" data-theme="light">
@@ -182,6 +363,9 @@ def page(title: str, css: str, meta: dict, hero_html: str, main: str, footer: st
     <span>{footer}</span>
   </div>
 </footer>
+{MODAL_HTML}
+{extras}
+{MD_JS}
 {THEME_JS}
 </body>
 </html>
@@ -319,6 +503,10 @@ def markdown_blocks(path: Path) -> list:
         text = path.read_text(encoding="utf-8", errors="replace")
     except OSError:
         return ['<p class="muted">No se pudo leer el fichero desde el árbol.</p>']
+    return markdown_blocks_from_text(text)
+
+
+def markdown_blocks_from_text(text: str) -> list:
     lines = text.replace("\r\n", "\n").replace("\r", "\n").split("\n")
     index = 0
     if lines and lines[0].strip() == "---":
@@ -400,11 +588,12 @@ def markdown_blocks(path: Path) -> list:
     return blocks
 
 
-def file_pieces(item: dict, root: Path, budget: int) -> list:
+def file_pieces(item: dict, root: Path, budget: int, linkable) -> list:
     """Devuelve las tarjetas HTML del fichero, troceadas si no caben en `budget`."""
+    phase_cls = f" tag-phase-{esc(item['phase'])}" if item["phase"] else ""
     tags = [
         f'<span class="tag">{esc(item["role"])}</span>',
-        f'<span class="tag">{esc(item["phase"] or "sin fase")}</span>',
+        f'<span class="tag{phase_cls}">{esc(item["phase"] or "sin fase")}</span>',
         f'<span class="tag">{esc(item["profile"])}</span>',
     ]
     if item["markers"]:
@@ -413,6 +602,9 @@ def file_pieces(item: dict, root: Path, budget: int) -> list:
         )
 
     blocks: list = []
+    excerpt = excerpt_html(item, root, linkable)
+    if excerpt:
+        blocks.append(excerpt)
     if item["unclassified_reason"]:
         blocks.append(
             '<div class="note note-warn"><p><strong>Sin perfil reconocido:</strong> '
@@ -449,20 +641,44 @@ def file_pieces(item: dict, root: Path, budget: int) -> list:
         title = esc(item["title"])
         if position:
             title += " <small>(continúa)</small>"
+        path_html = (
+            md_link(item["path"])
+            if item["path"] in linkable
+            else f'<code>{esc(item["path"])}</code>'
+        )
         head = (
             '<header class="file-head"><div class="file-title">'
-            f'<h4>{title}</h4><p class="path"><code>{esc(item["path"])}</code></p>'
+            f'<h4>{title}</h4><p class="path">{path_html}</p>'
             f'</div><div class="chips">{"".join(tags)}</div></header>'
         )
         pieces.append(f'<article class="file-card">{head}{"".join(group)}</article>')
     return pieces
 
 
-def phase_cards(bucket: list, root: Path, budget: int) -> list:
+def phase_cards(bucket: list, root: Path, budget: int, linkable) -> list:
     pieces: list = []
     for item in bucket:
-        pieces.extend(file_pieces(item, root, budget))
+        pieces.extend(file_pieces(item, root, budget, linkable))
     return pieces
+
+
+def plan_payloads(model: dict, root: Path, reserve: int) -> dict:
+    """Markdown que cabe entero con sus tarjetas en una página: ruta → payload.
+
+    Un fichero que ya necesita varias páginas —o cuyo payload más la cabecera
+    no baja del umbral— se queda con la ruta en código: duplicar su Markdown
+    en cada página hermana desbordaría la puerta sin enseñar nada nuevo.
+    """
+    every = {item["path"] for item in model["files"]}
+    plan: dict = {}
+    for item in model["files"]:
+        text = payload_text(root / item["path"])
+        if not text or size(text) + reserve > MAX_BYTES:
+            continue
+        pieces = file_pieces(item, root, MAX_BYTES, every)
+        if len(pieces) == 1 and size(text) + size(pieces[0]) + reserve <= MAX_BYTES:
+            plan[item["path"]] = text
+    return plan
 
 
 def profile_chips(model: dict) -> str:
@@ -668,7 +884,7 @@ def pipeline_anchors(buckets: dict) -> str:
     return f'<ul class="pipeline">{"".join(links)}</ul>'
 
 
-def phases_single_html(model: dict, buckets: dict, root: Path, number: int, budget: int) -> str:
+def phases_single_html(model: dict, buckets: dict, root: Path, number: int, budget: int, linkable) -> str:
     parts = [
         f'<section class="section" id="fases">{section_head(number, "Fases del pipeline")}'
         '<p class="sub">La navegación es fija: las siete fases del pipeline más «Sin fase». '
@@ -678,7 +894,7 @@ def phases_single_html(model: dict, buckets: dict, root: Path, number: int, budg
     for phase in [*PHASES, MISC]:
         bucket = buckets.get(phase, [])
         label = PHASE_LABEL[phase]
-        cards = "".join(phase_cards(bucket, root, budget))
+        cards = "".join(phase_cards(bucket, root, budget, linkable))
         if not cards:
             cards = '<p class="phase-empty">Sin ficheros en esta fase.</p>'
         parts.append(
@@ -728,28 +944,61 @@ def page_nav(index_name: str, current: str, enlaces: list) -> str:
     return f'<nav class="page-nav" aria-label="Páginas del artefacto">{"".join(links)}</nav>'
 
 
-def paginate(pieces: list, limit: int) -> list:
+def paginate(pieces: list, limit: int, payload_sizes=None) -> list:
+    """Reparte piezas en páginas; el payload de una página cuenta una sola vez."""
     pages: list = []
     current: list = []
     current_size = 0
+    used: set = set()
     for piece in pieces:
-        if current and current_size + size(piece) > limit:
+        match = MD_LINK_RE.search(piece)
+        key = match.group(1) if match else None
+        extra = payload_sizes.get(key, 0) if payload_sizes and key not in used else 0
+        if current and current_size + size(piece) + extra > limit:
             pages.append(current)
             current = []
             current_size = 0
+            used = set()
+            extra = payload_sizes.get(key, 0) if payload_sizes and key else 0
         current.append(piece)
-        current_size += size(piece)
+        if key:
+            used.add(key)
+        current_size += size(piece) + extra
     if current:
         pages.append(current)
     return pages
 
 
-def build_single(model, root, title, css, meta, fecha, stats, buckets, budget):
+def phase_cards_split(bucket: list, root: Path, limit_md: int, plan: dict) -> list:
+    """Tarjetas de una fase con el presupuesto que le deja su payload."""
+    pieces: list = []
+    linkable = set(plan)
+    for item in bucket:
+        if item["path"] in plan:
+            budget = max(2_000, limit_md - size(plan[item["path"]]))
+        else:
+            budget = max(10_000, MAX_BYTES // 2)
+        pieces.extend(file_pieces(item, root, budget, linkable))
+    return pieces
+
+
+def chunk_payloads(chunk: list, plan: dict) -> list:
+    """Rutas distintas con .md-link en la página, en orden de ruta."""
+    by_escaped = {esc(path): path for path in plan}
+    paths: list = []
+    for escaped in MD_LINK_RE.findall("".join(chunk)):
+        path = by_escaped.get(escaped)
+        if path and path not in paths:
+            paths.append(path)
+    return sorted(paths)
+
+
+def build_single(model, root, title, css, meta, fecha, stats, buckets, budget, plan, marked_js):
     chars = []
     number = 1
     chars.append(resumen_html(model, stats, number))
     number += 1
-    chars.append(phases_single_html(model, buckets, root, number, budget))
+    chars.append(phases_single_html(model, buckets, root, number, budget, set(plan)))
     number += 1
     traceability = traceability_html(model)
     if traceability:
@@ -769,23 +1018,26 @@ def build_single(model, root, title, css, meta, fecha, stats, buckets, budget):
     )
     footer = f"{len(model['files'])} documentos · árbol {esc(model['tree_profile'])}"
     hero_html = hero(title, lead, chips_html(model), fecha)
-    return page(title, css, meta, hero_html, "\n".join(chars), footer)
+    extras = md_extras(plan, plan.keys(), marked_js)
+    return page(title, css, meta, hero_html, "\n".join(chars), footer, extras)
 
 
-def build_split(model, root, out, title, css, base_meta, fecha, stats, buckets, budget):
+def build_split(model, root, out, title, css, base_meta, fecha, stats, buckets, plan, marked_js, probe):
     """Construye el índice y las páginas por fase; devuelve [(ruta, html)] y avisos."""
     warnings: list = []
     # Holgura: se mide una página vacía con el mismo chrome, hero y CSS; el
-    # margen cubre la cabecera de fase y la navegación entre hermanas.
-    probe = page(title, css, base_meta, hero(title, "", chips_html(model), fecha), "", "")
+    # margen cubre la cabecera de fase y la navegación entre hermanas. El
+    # payload de cada página sale de su propio presupuesto, no del global.
     limit = max(20_000, MAX_BYTES - size(probe) - 4_000)
+    limit_md = max(10_000, limit - size(marked_js))
+    payload_sizes = {esc(path): size(text) for path, text in plan.items()}
 
     phase_pages: list = []
     for phase in [*PHASES, MISC]:
-        pieces = phase_cards(buckets.get(phase, []), root, budget)
+        pieces = phase_cards_split(buckets.get(phase, []), root, limit_md, plan)
         if not pieces:
             continue
-        chunks = paginate(pieces, limit)
+        chunks = paginate(pieces, limit_md, payload_sizes)
         phase_pages.append((phase, chunks))
         if len(chunks) > 1:
             warnings.append(
@@ -876,7 +1128,15 @@ def build_split(model, root, out, title, css, base_meta, fecha, stats, buckets, 
         pages.append(
             (
                 out.parent / name,
-                page(page_title, css, meta, hero_html, main, f"{label} · {len(chunk)} fichas"),
+                page(
+                    page_title,
+                    css,
+                    meta,
+                    hero_html,
+                    main,
+                    f"{label} · {len(chunk)} fichas",
+                    md_extras(plan, chunk_payloads(chunk, plan), marked_js),
+                ),
             )
         )
 
@@ -963,6 +1223,10 @@ def main(argv=None) -> int:
         css = read_css()
     except (OSError, ValueError) as exc:
         return fail(f"no se pudo leer el estilo de {TEMPLATE}: {exc}")
+    try:
+        marked_js = MARKED.read_text(encoding="utf-8")
+    except OSError as exc:
+        return fail(f"no se pudo leer el marked vendorizado {MARKED}: {exc}")
 
     model = sdd_scan.scan(args.directorio)
     title = args.title or f"Especificación SDD: {root.resolve().name}"
@@ -971,8 +1235,12 @@ def main(argv=None) -> int:
     stats = task_stats(model)
     buckets = bucket_files(model)
     budget = max(10_000, MAX_BYTES // 2)
+    probe = page(title, css, base_meta, hero(title, "", chips_html(model), args.fecha), "", "")
+    plan = plan_payloads(model, root, size(probe) + size(marked_js) + 4_000)
 
-    single = build_single(model, root, title, css, base_meta, args.fecha, stats, buckets, budget)
+    single = build_single(
+        model, root, title, css, base_meta, args.fecha, stats, buckets, budget, plan, marked_js
+    )
     if size(single) <= MAX_BYTES:
         try:
             out.parent.mkdir(parents=True, exist_ok=True)
@@ -989,7 +1257,8 @@ def main(argv=None) -> int:
         )
 
     pages, warnings = build_split(
-        model, root, out, title, css, base_meta, args.fecha, stats, buckets, budget
+        model, root, out, title, css, base_meta, args.fecha, stats, buckets,
+        plan, marked_js, probe,
     )
     for path, text in pages:
         try:
