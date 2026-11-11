@@ -910,6 +910,9 @@ def build_split(model, root, out, title, css, base_meta, fecha, stats, buckets, 
 
 def read_css() -> str:
     text = TEMPLATE.read_text(encoding="utf-8")
+    # Comentario fuera: un literal `<style>` en la prosa del comentario de la
+    # plantilla sería capturado como inicio del bloque (error real verificado).
+    text = re.sub(r"<!--.*?-->", "", text, flags=re.DOTALL)
     match = STYLE_RE.search(text)
     if match is None:
         raise ValueError("la plantilla no tiene un bloque <style>")

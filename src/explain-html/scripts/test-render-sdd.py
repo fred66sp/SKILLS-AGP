@@ -7,6 +7,7 @@ Sale 0 si todo pasa; imprime el caso fallido y sale 1 si no.
 Los fixtures se escriben en un directorio temporal, nunca en el repositorio.
 """
 import json
+import re
 import subprocess
 import sys
 import tempfile
@@ -197,6 +198,18 @@ def main() -> int:
         check(
             "procedencia: prompt y fecha de los flags",
             isinstance(meta, dict) and meta.get("prompt") == PROMPT and meta.get("fecha") == FECHA,
+        )
+        # Regresión verificada en navegador: el comentario de la plantilla con
+        # el literal `<style>` se extraía como CSS y el parser HTML descartaba
+        # el bloque :root completo (todo el tema claro caía a estilos UA).
+        css_blocks = re.findall(r"<style>(.*?)</style>", text, re.DOTALL)
+        check(
+            "cabecera: un único <style> que abre en :root, sin basura de plantilla",
+            len(css_blocks) == 1
+            and css_blocks[0].lstrip().startswith(":root{")
+            and "-->" not in css_blocks[0]
+            and "ASUNTO DEL ARTEFACTO" not in text.split("<!-- procedencia")[0],
+            f"{len(css_blocks)} bloque(s) de estilo",
         )
 
         checks = [
