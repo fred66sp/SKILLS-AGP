@@ -348,8 +348,22 @@ python src/document-redactor/scripts/test-redactor.py
 python src/software-testing/scripts/test-case-check.py
 python src/design-system-architect/scripts/test-design-system.py
 python src/explain-html/scripts/test-check-artifact.py
+python src/explain-html/scripts/check-artifact.py docs/explain-html/demo/index.html \
+  docs/explain-html/demo/demo-exploracion.html \
+  docs/explain-html/demo/demo-explicador.html \
+  docs/explain-html/demo/demo-informe.html \
+  docs/explain-html/demo/demo-diagrama.html \
+  docs/explain-html/demo/demo-prototipo.html \
+  docs/explain-html/demo/demo-cuestionario.html \
+  docs/explain-html/demo/demo-editor.html \
+  docs/explain-html/demo/demo-presentacion.html \
+  docs/explain-html/demo/demo-blindspots.html \
+  docs/explain-html/demo/demo-entrevista.html \
+  docs/explain-html/demo/demo-sdd.html
 python src/explain-html/scripts/test-build-index.py
 python src/explain-html/scripts/test-render-quick.py
+python src/explain-html/scripts/test-sdd_scan.py
+python src/explain-html/scripts/test-render-sdd.py
 python src/explain-html/scripts/test-lifecycle.py
 python src/explain-html/scripts/test-tokens-from-project.py
 python src/explain-html/scripts/test-highlight.py
