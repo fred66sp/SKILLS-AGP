@@ -128,12 +128,12 @@ thead th{text-align:left;padding:11px 16px;background:var(--sunken);color:var(--
 tbody td{padding:11px 16px;border-bottom:1px solid var(--line);vertical-align:top}
 tbody tr:last-child td{border-bottom:0}
 tbody tr:hover{background:color-mix(in srgb,var(--accent) 3%,transparent)}
-td code,th code{font-size:12.8px}
+td code,th code{font-size:13px}
 pre,code{font-family:var(--mono)}
 pre{margin:18px 0;padding:16px 18px;background:var(--terminal);color:var(--terminal-content);border:1px solid var(--terminal-line);border-radius:var(--radius);overflow-x:auto;font:400 12.9px/1.72 var(--mono);box-shadow:var(--shadow);white-space:pre-wrap}
 pre code{background:none;border:0;padding:0;color:inherit;font-size:inherit}
-code{font-family:var(--mono);font-size:.875em;background:var(--sunken);border:1px solid var(--line);border-radius:var(--radius-inline);padding:.08em .38em}
-p code,li code,td code{background:var(--sunken);border:1px solid var(--line);border-radius:var(--radius-inline);padding:.08em .4em;font-size:.88em}
+code{font-family:var(--mono);font-size:13px;background:color-mix(in srgb,var(--text) 6%,var(--surface));border:1px solid var(--line-strong);border-radius:var(--radius-inline);padding:.08em .38em;overflow-wrap:anywhere}
+p code,li code,td code{background:color-mix(in srgb,var(--text) 6%,var(--surface));border:1px solid var(--line-strong);border-radius:var(--radius-inline);padding:.08em .4em}
 details{margin:.75rem 0;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius-sm);padding:0;box-shadow:var(--shadow)}
 summary{display:flex;gap:10px;align-items:baseline;padding:14px 16px;cursor:pointer;font-weight:650;font-size:15px;border-radius:var(--radius-sm)}
 summary::marker{color:var(--accent)}
@@ -142,7 +142,7 @@ ul.tight{margin:12px 0;padding-left:20px}
 ul.tight li{margin:6px 0}
 .foot{border-top:1px solid var(--line);margin-top:var(--sp-7);padding:24px 0 40px;color:var(--muted);font-size:13px}
 .foot-in{display:flex;flex-wrap:wrap;gap:8px 22px;align-items:center;justify-content:space-between}
-.foot code{background:var(--sunken);border:1px solid var(--line);border-radius:6px;padding:1px 6px}
+.foot code{background:var(--sunken);border:1px solid var(--line);border-radius:6px;padding:1px 6px;font-size:12px}
 .foot a{color:var(--accent)}
 .muted{color:var(--muted);font-size:15px}
 @media (max-width:640px){
@@ -245,11 +245,29 @@ ul.tight li{margin:6px 0}
 .page-nav a{padding:6px 11px;border:1px solid var(--line);border-radius:999px;background:var(--surface);color:var(--text);font:600 12.5px/1.2 var(--font)}
 .page-nav a:hover{border-color:var(--accent);text-decoration:none}
 .finding-group summary .count{padding:0 7px;border-radius:999px;background:var(--sunken);color:var(--muted);font:700 11px/1.8 var(--mono)}
-/* Hallazgos numerados de forma global: el contador vive en la sección. */
+/* Hallazgos numerados de forma global: el contador vive en la sección.
+   Rejilla de dos columnas: contador y ruta en la primera fila; la alerta y
+   la caja de código cruzan el ancho completo del contenido (1/-1). */
 #hallazgos{counter-reset:hallazgo}
-.finding-group li{list-style:none;position:relative;padding-left:30px}
-.finding-group li::before{counter-increment:hallazgo;content:counter(hallazgo) ".";position:absolute;left:0;top:0;color:var(--accent);font:700 13px/1.65 var(--mono);font-variant-numeric:tabular-nums}
-.finding-group summary code{font-size:12px}
+.f-list{list-style:none;margin:12px 0;padding:0 20px}
+.f-item{display:grid;grid-template-columns:26px minmax(0,1fr);column-gap:10px;margin:14px 0;max-width:none}
+.f-item > *{min-width:0;max-width:none}
+.f-item::before{counter-increment:hallazgo;content:counter(hallazgo) ".";grid-column:1;grid-row:1;color:var(--accent);font:700 13px/1.65 var(--mono);font-variant-numeric:tabular-nums}
+.f-head{grid-column:2;grid-row:1}
+.finding-group summary code{font-size:13px}
+/* La línea, separada de la ruta y en su propio chip tinto. */
+code.loc{color:var(--accent);font-variant-numeric:tabular-nums}
+/* La línea señalada, como en un editor: caja con la ruta fuera y,
+   dentro, el número en el gutter y el texto tal cual está en el fichero. */
+/* La línea señalada, como en un editor: caja a todo lo ancho de la fila,
+   el número en el gutter y el texto tal cual está en el fichero. */
+.f-code{grid-column:1/-1;margin:8px 0 2px;padding:9px 16px;background:color-mix(in srgb,var(--text) 6%,var(--surface));border:1px solid var(--line-strong);border-radius:var(--radius-sm);box-shadow:none;white-space:pre;overflow-x:auto;font:400 13px/1.6 var(--mono)}
+.f-code .ln{display:inline-block;min-width:3ch;margin-right:12px;padding-right:10px;border-right:1px solid var(--line-strong);color:var(--accent);font-weight:700;font-variant-numeric:tabular-nums;text-align:right}
+/* El motivo, en alerta compacta: barra izquierda y tinte por severidad. */
+.f-note{grid-column:1/-1;margin:8px 0 0;padding:9px 16px;border-left:3px solid var(--f-note,var(--warn-mark));border-radius:0 var(--radius-sm) var(--radius-sm) 0;background:color-mix(in srgb,var(--f-note,var(--warn-mark)) 10%,transparent);font-size:15px}
+.f-note-info{--f-note:var(--accent)}
+.f-note-warning{--f-note:var(--warn-mark)}
+.f-note-danger{--f-note:var(--err-mark)}
 .tree-level{color:var(--muted);font-size:12.5px}
 /* La ruta de la tarjeta abre el Markdown incrustado en un modal. */
 .md-link{font-family:var(--mono);font-size:.875em;background:var(--sunken);border:1px solid var(--line);border-radius:var(--radius-inline);padding:.08em .38em;color:var(--accent);cursor:pointer}

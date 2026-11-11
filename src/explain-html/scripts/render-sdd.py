@@ -90,6 +90,15 @@ FINDING_LABELS = {
     "missing-non-goals": "Falta la sección de no-objetivos en el árbol",
 }
 
+# Severidad de la alerta: danger rompe una referencia del pipeline,
+# info es estado o completitud; el resto son avisos de calidad.
+FINDING_SEVERITY = {
+    "modified-without-target": "danger",
+    "capability-without-delta-file": "danger",
+    "checkbox-pending": "info",
+    "missing-non-goals": "info",
+}
+
 PREPAINT = """<script>
 (function () {
   try {
@@ -713,13 +722,34 @@ def traceability_html(model: dict) -> str:
 
 
 def finding_place(item: dict) -> str:
-    path = item["path"]
-    line = item["line"]
-    if line:
-        return f'<code>{esc(path)}:{line}</code>'
+    path, line = item["path"], item["line"]
     if path:
-        return f'<code>{esc(path)}</code> <span class="tree-level">· a nivel de árbol</span>'
+        place = f'<code>{esc(path)}</code>'
+        if not line:
+            place += ' <span class="tree-level">· a nivel de árbol</span>'
+        return place
     return '<span class="tree-level">a nivel de árbol</span>'
+
+
+def finding_source(item: dict, root: Path) -> str:
+    """La línea señalada, en una caja de editor: número en el gutter y texto.
+
+    Sin línea, sin fichero legible o con número fuera de rango, no hay caja:
+    el hallazgo conserva su ruta y su motivo.
+    """
+    path, line = item["path"], item["line"]
+    if not path or not line:
+        return ""
+    try:
+        lines = (root / path).read_text(encoding="utf-8", errors="replace").splitlines()
+    except OSError:
+        return ""
+    if not 1 <= line <= len(lines):
+        return ""
+    return (
+        f'<pre class="f-code"><code><span class="ln">{line}</span>'
+        f'{esc(lines[line - 1].strip())}</code></pre>'
+    )
 
 
 def finding_groups(model: dict) -> dict:
@@ -729,7 +759,7 @@ def finding_groups(model: dict) -> dict:
     return groups
 
 
-def finding_blocks(model: dict, chunk_size: int = 80) -> list:
+def finding_blocks(model: dict, root: Path, chunk_size: int = 80) -> list:
     """Un <details> por kind; un kind enorme se reparte en tandas con su recuento."""
     blocks = []
     groups = finding_groups(model)
@@ -740,18 +770,21 @@ def finding_blocks(model: dict, chunk_size: int = 80) -> list:
             chunk = entries[start:start + chunk_size]
             continues = " <small>(continúa)</small>" if start else ""
             items = "".join(
-                f"<li>{finding_place(entry)} · {esc(entry['detail'])}</li>"
+                f'<li class="f-item"><div class="f-head">{finding_place(entry)}</div>'
+                f'<div class="f-note f-note-{FINDING_SEVERITY.get(entry["kind"], "warning")}">'
+                f'{esc(entry["detail"])}</div>'
+                f"{finding_source(entry, root)}</li>"
                 for entry in chunk
             )
             blocks.append(
                 f'<details class="finding-group" open><summary>{esc(label)}{continues} '
                 f'<code>{esc(kind)}</code> <span class="count">{len(entries)}</span></summary>'
-                f'<ul class="tight">{items}</ul></details>'
+                f'<ul class="f-list">{items}</ul></details>'
             )
     return blocks
 
 
-def findings_html(model: dict, number: int) -> str:
+def findings_html(model: dict, number: int, root: Path) -> str:
     groups = finding_groups(model)
     head = section_head(number, "Hallazgos")
     if not groups:
@@ -766,7 +799,7 @@ def findings_html(model: dict, number: int) -> str:
     return (
         f'<section class="section" id="hallazgos">{head}'
         f'<div class="chips">{counts}</div>'
-        f'{"".join(finding_blocks(model))}</section>'
+        f'{"".join(finding_blocks(model, root))}</section>'
     )
 
 
@@ -1009,7 +1042,7 @@ def build_single(model, root, title, css, meta, fecha, stats, buckets, budget, p
             f"{traceability}</section>"
         )
         number += 1
-    chars.append(findings_html(model, number))
+    chars.append(findings_html(model, number, root))
     number += 1
     chars.append(unknowns_html(model, number))
     lead = (
@@ -1057,7 +1090,7 @@ def build_split(model, root, out, title, css, base_meta, fecha, stats, buckets, 
 
     # El detalle de hallazgos y desconocidos va a su propia hermana: el índice
     # se queda con el recuento por kind para no crecer con el árbol.
-    detail_blocks = finding_blocks(model) + unknown_blocks(model)
+    detail_blocks = finding_blocks(model, root) + unknown_blocks(model)
     detail_chunks = paginate(detail_blocks, limit) if detail_blocks else []
     detail_names: list = []
     for position in range(1, len(detail_chunks) + 1):

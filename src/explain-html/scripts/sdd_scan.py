@@ -447,13 +447,19 @@ def extract_structure(
             continue
 
         if current_req is not None:
-            current_req["_body"].append(stripped)
+            current_req["_body"].append((line_no, stripped))
 
     for req in requirements:
-        req["text"] = " ".join(req.pop("_body")).strip()
+        body = req.pop("_body")
+        req["text"] = " ".join(text for _, text in body).strip()
         for scenario in req["scenarios"]:
             scenario["_all"] = " ".join([scenario["name"], *scenario["_text"]])
         blob = " ".join([req["text"], *(item["text"] for item in req["acceptance_criteria"])])
+        # Cada hallazgo ancla a la línea de su evidencia: el cuerpo y los
+        # criterios conservan su línea; el encabezado es el último recurso.
+        evidence = [(line, text) for line, text in body if text] + [
+            (item["line"], item["text"]) for item in req["acceptance_criteria"]
+        ]
         if not req["scenarios"] and not req["acceptance_criteria"]:
             findings.append(
                 finding(
@@ -465,21 +471,26 @@ def extract_structure(
             )
         vague = VAGUE_RE.search(blob)
         if vague and not METRIC_RE.search(blob):
+            vague_line = next((n for n, text in evidence if VAGUE_RE.search(text)), req["line"])
             findings.append(
                 finding(
                     "vague-requirement",
                     rel,
-                    req["line"],
+                    vague_line,
                     f"«{vague.group(0)}» sin métrica observable en el requisito «{req['name']}».",
                 )
             )
         prescriptive = CODE_SPAN_RE.search(blob) or CALL_RE.search(blob)
         if prescriptive:
+            presc_line = next(
+                (n for n, text in evidence if CODE_SPAN_RE.search(text) or CALL_RE.search(text)),
+                req["line"],
+            )
             findings.append(
                 finding(
                     "prescriptive-requirement",
                     rel,
-                    req["line"],
+                    presc_line,
                     f"«{prescriptive.group(0)[:60]}» concreta el CÓMO; eso pertenece al design.",
                 )
             )

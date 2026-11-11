@@ -269,7 +269,8 @@ def main() -> int:
             ("extracto: ver más hacia el payload", text.count('class="md-link md-more"') == 2
                 and all(f'data-path="{p}"' in text for p in ["openspec/proposal.md", "openspec/changes/add-throttle/design.md"])),
             ("fase vacía visible", "Sin ficheros en esta fase" in text),
-            ("hallazgos: kind y fichero:línea", "scenario-three-hashes" in text and "openspec/specs/auth/spec.md:" in text),
+            ("hallazgos: severidad en la alerta", 'class="f-note f-note-danger"' in text and 'class="f-note f-note-warning"' in text and 'class="f-note f-note-info"' in text),
+            ("hallazgos: kind, ruta y línea en caja de editor", "scenario-three-hashes" in text and '<code>openspec/specs/auth/spec.md</code>' in text and '<span class="ln">8</span>### Scenario: Expired session' in text),
             ("hallazgos: delta sin destino", "modified-without-target" in text),
             ("hallazgos: no-objetivos a nivel de árbol", "a nivel de árbol" in text),
             ("desconocidos: motivo del sin-perfil", "sin perfil reconocido: encabezados sin anclas" in text),
