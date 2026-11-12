@@ -45,6 +45,7 @@ def make_repo(root, router_ref="../../src/demo/SKILL.md", router_name="demo", sr
         f'<link rel="stylesheet" href="../assets/site.css"></head><body>demo</body></html>\n',
     )
     write(root / "docs" / "index.html", f'<a href="{src_name}/index.html">{src_name}</a>\n')
+    write(root / "docs" / "assets" / "site.css", "")
 
 
 class CheckRepoTest(unittest.TestCase):
@@ -142,6 +143,38 @@ class CheckRepoTest(unittest.TestCase):
         )
         errors = self.errors()
         self.assertTrue(any("estilo inline" in item for item in errors))
+
+    def test_broken_html_href_is_rejected(self):
+        make_repo(self.root)
+        write(
+            self.root / "docs" / "demo" / "index.html",
+            f'<!doctype html><html data-skill="demo"><head>'
+            f'<link rel="stylesheet" href="../assets/site.css"></head>'
+            f'<body><a href="missing.html">roto</a></body></html>\n',
+        )
+        self.assertTrue(any("[enlaces-html]" in item for item in self.errors()))
+
+    def test_missing_internal_anchor_is_rejected(self):
+        make_repo(self.root)
+        write(
+            self.root / "docs" / "demo" / "index.html",
+            f'<!doctype html><html data-skill="demo"><head>'
+            f'<link rel="stylesheet" href="../assets/site.css"></head>'
+            f'<body><a href="#no-existe">ancla</a></body></html>\n',
+        )
+        self.assertTrue(any("[enlaces-html]" in item for item in self.errors()))
+
+    def test_anchor_and_data_uri_pass(self):
+        make_repo(self.root)
+        write(
+            self.root / "docs" / "demo" / "index.html",
+            f'<!doctype html><html data-skill="demo"><head>'
+            f'<link rel="stylesheet" href="../assets/site.css"></head>'
+            f'<body id="existente"><a href="#existente">ancla</a>'
+            f'<img src="data:image/png;base64,AA">'
+            f'<a href="https://example.com/x">fuera</a></body></html>\n',
+        )
+        self.assertFalse(any("[enlaces-html]" in item for item in self.errors()))
 
     def test_bad_receipt_is_rejected(self):
         make_repo(self.root)

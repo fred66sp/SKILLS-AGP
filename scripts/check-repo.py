@@ -10,6 +10,8 @@ Comprueba:
 - que cada skill de `src/` tenga su enrutador en `.skills/` y que cada
   enrutador resuelva su contrato desde su propio directorio;
 - que los enlaces Markdown relativos del repositorio resuelvan;
+- que los enlaces y recursos de las páginas HTML de `docs/` y del `index.html`
+  de la raíz resuelvan, y que sus anclas internas existan;
 - que los recibos de `docs/` coincidan con el `sha256` y los bytes reales de
   su especificación y su HTML, y que la especificación esté en LF;
 - que cada skill canónica declare una versión SemVer en `metadata.version` y
@@ -41,6 +43,7 @@ import skill_versions
 NAME_RE = re.compile(r"^[a-z0-9]+(-[a-z0-9]+)*$")
 SCHEME_RE = re.compile(r"^[A-Za-z][A-Za-z0-9+.\-]*:")
 LINK_RE = re.compile(r"!?\[[^\]]*\]\(\s*([^)\s]+)(?:\s+\"[^\"]*\")?\s*\)")
+HTML_LINK_RE = re.compile(r'(?<![\w-])(?:href|src)="([^"]*)"')
 FENCE_RE = re.compile(r"^\s*(```+|~~~+)")
 INLINE_CODE_RE = re.compile(r"`[^`\n]*`")
 ROUTER_MARKER = "Enrutador de la skill"
@@ -193,6 +196,31 @@ def check_links(root, errors):
                     errors.append(
                         f"[enlaces] {path}:{number}: no resuelve '{target}'"
                     )
+
+
+def check_html_links(root, errors):
+    pages = sorted(root.glob("docs/**/*.html"))
+    if (root / "index.html").is_file():
+        pages.append(root / "index.html")
+    for path in pages:
+        if any(part in EXCLUDED_DIRS for part in path.relative_to(root).parts):
+            continue
+        text = read(path)
+        for target in HTML_LINK_RE.findall(text):
+            if target.startswith(("//", "data:", "mailto:")) or SCHEME_RE.match(target):
+                continue
+            route, _, fragment = target.partition("#")
+            if not route:
+                if fragment and f'id="{fragment}"' not in text:
+                    errors.append(f"[enlaces-html] {path}: no resuelve '{target}'")
+                continue
+            cleaned = unquote(route.split("?", 1)[0])
+            if cleaned.startswith("/"):
+                resolved = root / cleaned.lstrip("/")
+            else:
+                resolved = path.parent / cleaned
+            if not resolved.exists():
+                errors.append(f"[enlaces-html] {path}: no resuelve '{target}'")
 
 
 def check_router(router_md, name, canonical_md, errors):
@@ -381,6 +409,7 @@ def validate(root):
     errors, notes = [], []
     check_skills(root, errors, notes)
     check_links(root, errors)
+    check_html_links(root, errors)
     check_receipts(root, errors)
     check_scripts(root, errors, notes)
     return errors, notes

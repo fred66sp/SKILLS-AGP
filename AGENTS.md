@@ -32,7 +32,7 @@ Este fichero solo enruta: no define reglas, comandos, recuentos ni estados. Si c
 | Crear o etiquetar una tarea | [`.tasks-ai/CONTRATO_ETIQUETAS.md`](.tasks-ai/CONTRATO_ETIQUETAS.md) sección 2 | La tarea nace con su tipo y su estructural (`task` o `epic`); el catálogo vivo, en `tasks-ai tags` |
 | Escribir o actualizar documentación | [`src/document-management-software/SKILL.md`](src/document-management-software/SKILL.md) | El inventario que fije el contrato |
 | Redactar o corregir prosa | [`src/document-redactor/SKILL.md`](src/document-redactor/SKILL.md) | La puerta que fije el contrato |
-| Regenerar un diagrama | [`README.md`](README.md), sección «Documentación» | El recibo del artefacto |
+| Regenerar un diagrama | [`README.md`](README.md), sección «Documentación», y [`docs/archify-local-patch.md`](docs/archify-local-patch.md) | El recibo del artefacto |
 | Trabajar en interfaz o sistema visual | [`src/design-system-architect/SKILL.md`](src/design-system-architect/SKILL.md) o [`src/web-interface-visual-design/SKILL.md`](src/web-interface-visual-design/SKILL.md) | Lo que fije el contrato |
 
 ## Mantenimiento de este fichero

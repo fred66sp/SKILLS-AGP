@@ -428,7 +428,7 @@ Cada skill declara su versión independiente en `metadata.version`; el procedimi
 - `docs/playwright-cli-usage/flujo-de-trabajo.html`: diagrama del flujo, de la pregunta al cierre con la puerta de confirmación.
 - `docs/playwright-cli-usage/arquitectura.html`: diagrama del contrato, sus referencias y la sesión confirmada.
 
-Los diagramas son artefactos de [archify](https://github.com/tt-a1i/archify) 3.2.0. Cada uno tiene su especificación (`*.json`) y su recibo de entrega (`*.delivery.json`) con el `sha256` del HTML y del spec. Para regenerarlos hace falta archify 3.2.0 y el checkout local en `archify/`, ignorado por Git, con los ajustes de ancho descritos en `archify/LOCAL-PATCH.md`; el comando es el mismo en todas las carpetas de `docs/<skill>/`:
+Los diagramas son artefactos de [archify](https://github.com/tt-a1i/archify) 3.2.0. Cada uno tiene su especificación (`*.json`) y su recibo de entrega (`*.delivery.json`) con el `sha256` del HTML y del spec. Para regenerarlos hace falta archify 3.2.0 y el checkout local en `archify/`, ignorado por Git, con el parche local aplicado —los ajustes y su diff versionados en [`docs/archify-local-patch.md`](docs/archify-local-patch.md)—; el comando es el mismo en todas las carpetas de `docs/<skill>/`:
 
 ```bash
 node archify/archify/bin/archify.mjs deliver workflow \
