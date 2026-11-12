@@ -14,6 +14,7 @@ Este fichero solo enruta: no define reglas, comandos, recuentos ni estados. Si c
 | Qué skill aplica a un encargo | [`README.md`](README.md), sección «Skills disponibles», y la descripción de cada `.skills/<skill>/SKILL.md` |
 | Enrutador de una skill propia | `.skills/<skill>/SKILL.md` |
 | Trabajo pendiente y prioridad | [`.tasks-ai/AGENTS.md`](.tasks-ai/AGENTS.md), sección «Cuándo se usa qué» |
+| Decisiones durables (ADR) | La base del tablero, con `tasks-ai adr`; su exportación versionada es [`docs/decisions/`](docs/decisions/) (generada: no se edita a mano; `adr export --check` detecta deriva) |
 | Etiquetas del tablero: clases, asignación y catálogo | [`.tasks-ai/CONTRATO_ETIQUETAS.md`](.tasks-ai/CONTRATO_ETIQUETAS.md) → «1. Las clases y su convivencia», «2. Asignación correcta a una tarea», «3. Gestión del catálogo» |
 | Servidor del tablero | [`serve.sh`](serve.sh) |
 | Servidor de la documentación HTML | [`serve-web.sh`](serve-web.sh) |
