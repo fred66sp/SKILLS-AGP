@@ -1,0 +1,4 @@
+# El registro del runner no se toca a mano: la fase la decide la herramienta.
+# Guarda activa con el plugin opencode-ignore-file instalado globalmente;
+# sin él, esta regla no bloquea nada y vale la convención.
+.run/orchestrator-runner.json
