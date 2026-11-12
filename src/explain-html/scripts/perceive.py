@@ -7,9 +7,12 @@ Uso:
 
 Abre el artefacto por file:// con playwright-cli, recorre cada ancho, mide el
 desborde horizontal, captura el artefacto en tema claro y oscuro y recoge los
-errores de consola. Las capturas van a un directorio temporal propio, o al que
-indique --out; nunca se escribe en el proyecto ni en .explanations/. El script
-mide y entrega evidencia: la calidad visual la juzga la persona.
+errores de consola. Por defecto las capturas van a un directorio temporal
+propio; --out permite elegir otro, y entonces el script escribe donde le digas.
+La CLI corre con una sesión sin perfil persistente y un cwd temporal para no
+dejar estado en el proyecto. Si una medición no se entiende, el informe lo dice
+y no afirma que el artefacto esté limpio: mide y entrega evidencia, la calidad
+visual la juzga la persona.
 
 Códigos de salida:
     0  sin desborde horizontal ni errores de consola
@@ -169,15 +172,17 @@ def main(argv: list[str] | None = None) -> int:
         print(f"ERROR: --widths no es válido: {exc}", file=sys.stderr)
         return 2
 
-    out = Path(args.out).expanduser().resolve() if args.out else \
-        Path(tempfile.mkdtemp(prefix="explain-html-perceive-"))
+    out = Path(args.out).expanduser().resolve() if args.out else None
     session = args.session or f"perceive-{os.getpid()}"
     slug = slugify(artifact.stem)
+    url = artifact.resolve().as_uri()
     binary = shutil.which(BINARY)
-    plan = build_plan(binary or BINARY, session, artifact.resolve().as_uri(), widths, out, slug)
 
     if args.dry_run:
-        print_plan(plan)
+        planned = out or Path(tempfile.gettempdir()) / "explain-html-perceive-<aleatorio>"
+        if out is None:
+            print("# --out: directorio temporal aleatorio; se crea al ejecutar")
+        print_plan(build_plan(binary or BINARY, session, url, widths, planned, slug))
         return 0
 
     if binary is None:
@@ -185,10 +190,14 @@ def main(argv: list[str] | None = None) -> int:
         print(MANUAL, file=sys.stderr)
         return 3
 
+    if out is None:
+        out = Path(tempfile.mkdtemp(prefix="explain-html-perceive-"))
     out.mkdir(parents=True, exist_ok=True)
+    plan = build_plan(binary, session, url, widths, out, slug)
     # cwd propio para la CLI: sus artefactos de sesión no caen en el proyecto.
     workdir = Path(tempfile.mkdtemp(prefix="explain-html-perceive-cli-"))
     warnings: list[str] = []
+    incomplete: list[str] = []
     overflows: list[int] = []
     console_errors = 0
     shots: list[Path] = []
@@ -221,6 +230,7 @@ def main(argv: list[str] | None = None) -> int:
                 warnings.append(
                     f"{purpose} devolvió {proc.returncode}" + (f": {detail[0]}" if detail else "")
                 )
+                incomplete.append(f"{purpose}" + (f" a {width} px" if width else ""))
                 continue
             if purpose == "medir desborde":
                 value = parse_bool(proc.stdout or "")
@@ -229,15 +239,18 @@ def main(argv: list[str] | None = None) -> int:
                         f"no se entendió la respuesta de desborde a {width} px; "
                         "no se marca el artefacto como fallido"
                     )
+                    incomplete.append(f"desborde a {width} px")
                 elif value:
                     overflows.append(width)
             elif purpose.startswith("capturar"):
                 match = re.search(r"--filename=(.+)$", " ".join(cmd))
                 if match:
                     shot = Path(match.group(1))
-                    shots.append(shot)
-                    if not shot.is_file():
+                    if shot.is_file():
+                        shots.append(shot)
+                    else:
                         warnings.append(f"no se creó la captura {shot}")
+                        incomplete.append(f"{purpose} a {width} px")
             elif purpose == "recoger errores de consola":
                 count = parse_console_errors(text)
                 if count is None:
@@ -245,6 +258,7 @@ def main(argv: list[str] | None = None) -> int:
                         "no se entendió la salida de consola; revísala a mano "
                         "(el artefacto no se marca como fallido)"
                     )
+                    incomplete.append("errores de consola")
                 else:
                     console_errors = count
     finally:
@@ -256,9 +270,12 @@ def main(argv: list[str] | None = None) -> int:
         print(f"Aviso: {warning}", file=sys.stderr)
 
     print(f"Verificación perceptiva: {artifact}")
-    print(f"Capturas en {out}:")
-    for shot in shots or [out / f"{slug}-{w}-{theme}.png" for w in widths for theme in ("claro", "oscuro")]:
-        print(f"  - {shot}")
+    if shots:
+        print(f"Capturas en {out}:")
+        for shot in shots:
+            print(f"  - {shot}")
+    else:
+        print(f"Sin capturas en {out}: revisa los avisos antes de dar la revisión por hecha.")
 
     findings: list[str] = []
     for width in overflows:
@@ -270,6 +287,11 @@ def main(argv: list[str] | None = None) -> int:
         for finding in findings:
             print(f"  - {finding}")
         return 1
+
+    if incomplete:
+        print("Medición incompleta: " + ", ".join(incomplete) + ".")
+        print("Revisa las capturas a mano; no des la revisión perceptiva por hecha.")
+        return 0
 
     print("Sin desborde horizontal ni errores de consola.")
     print("Revisa las capturas: el script mide, la calidad visual la juzgas tú.")

@@ -5,9 +5,10 @@ Uso: python3 publish.py <ruta.html> [ruta.html ...] [--no-open] [--quiet]
 
 Encadena los tres pasos del contrato: check-artifact.py (autocontención,
 título y procedencia), build-index.py (index.html de cada carpeta distinta) y
-open-artifact.sh (navegador). Si la verificación falla no escribe índice ni
-abre nada. Si falla el índice, no abre. Que no haya navegador no invalida el
-artefacto: avisa con la ruta absoluta y termina bien.
+open-artifact.sh (navegador; abre el primero de los artefactos). Si la
+verificación falla no escribe índice ni abre nada. Si falla el índice, no abre.
+Que no haya navegador no invalida el artefacto: avisa con la ruta absoluta y
+termina bien.
 
 Códigos de salida: 0 correcto; 1 verificación o índice fallidos; 2 uso
 incorrecto (sin argumentos, ruta inexistente o que no sea .html).
@@ -28,7 +29,7 @@ def parse_args(argv=None) -> argparse.Namespace:
         description="Verifica, indexa y abre artefactos de explain-html en un paso"
     )
     parser.add_argument("artefactos", nargs="*", metavar="ruta.html",
-                        help="artefactos .html ya generados")
+                        help="artefactos .html ya generados; se abre el primero")
     parser.add_argument("--no-open", action="store_true", help="no abre el navegador")
     parser.add_argument("--quiet", action="store_true", help="no imprime el resumen propio")
     return parser.parse_args(argv)

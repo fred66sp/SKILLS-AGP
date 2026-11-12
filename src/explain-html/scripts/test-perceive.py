@@ -47,6 +47,9 @@ elif command == "eval":
     else:
         print("true")
 elif command == "screenshot":
+    if os.environ.get("FAKE_NO_SHOT") == "1":
+        print("- screenshot skipped")
+        sys.exit(0)
     filename = ""
     for arg in args:
         if arg.startswith("--filename="):
@@ -57,6 +60,9 @@ elif command == "screenshot":
         target.write_bytes(b"PNG")
         print("- Screenshot saved to " + filename)
 elif command == "console":
+    if os.environ.get("FAKE_CONSOLE_FAIL") == "1":
+        print("console failed", file=sys.stderr)
+        sys.exit(1)
     if os.environ.get("FAKE_CONSOLE_ERRORS") == "1":
         print("Total messages: 2 (Errors: 1, Warnings: 1)")
     else:
@@ -96,10 +102,17 @@ def run(env: dict[str, str], *args: str, cwd: Path | None = None) -> subprocess.
     )
 
 
+SKIP = {
+    ".git", ".tasks-ai", ".explanations", ".run", ".playwright-cli",
+    ".codegraph", ".engram", ".impeccable", ".pi", "__pycache__",
+    "archify", "node_modules",
+}
+
+
 def snapshot(root: Path) -> dict[str, object]:
     entries: dict[str, object] = {}
     for path in root.rglob("*"):
-        if ".git" in path.parts:
+        if any(part in SKIP for part in path.relative_to(root).parts):
             continue
         relative = str(path.relative_to(root))
         entries[relative] = "dir" if path.is_dir() else path.stat().st_size
@@ -151,6 +164,7 @@ def main() -> int:
         check("dry-run: código 0", proc.returncode == 0, f"código {proc.returncode}\n{out}")
         check("dry-run: imprime los anchos", all(str(width) in out for width in WIDTHS), out)
         check("dry-run: no ejecuta el binario", not log_b.exists(), "el falso registró llamadas")
+        check("dry-run: avisa del temporal", "aleatorio" in out, out)
 
         # (d) Todo limpio: 0 y capturas claras y oscuras en --out.
         out_dir = tmp / "capturas"
@@ -185,6 +199,8 @@ def main() -> int:
         out = proc.stdout + proc.stderr
         check("ininteligible: código 0", proc.returncode == 0, f"código {proc.returncode}\n{out}")
         check("ininteligible: avisa", "no se entendió" in out and "Aviso" in out, out)
+        check("ininteligible: no afirma limpieza", "Sin desborde horizontal" not in out, out)
+        check("ininteligible: medición incompleta", "Medición incompleta" in out, out)
 
         # Errores de consola también son hallazgo.
         log_f = tmp / "log-f.jsonl"
@@ -193,6 +209,22 @@ def main() -> int:
         out = proc.stdout + proc.stderr
         check("consola: código 1", proc.returncode == 1, f"código {proc.returncode}\n{out}")
         check("consola: nombra el error", "consola" in out and "1 error" in out, out)
+
+        # La consola no responde: no se puede afirmar limpieza, pero no es hallazgo.
+        env = make_env(fake_dir, tmp / "state-g", tmp / "log-g.jsonl", FAKE_CONSOLE_FAIL="1")
+        proc = run(env, str(artifact), "--out", str(tmp / "capturas-g"))
+        out = proc.stdout + proc.stderr
+        check("consola falla: código 0", proc.returncode == 0, f"código {proc.returncode}\n{out}")
+        check("consola falla: no afirma limpieza", "Sin desborde horizontal" not in out, out)
+        check("consola falla: medición incompleta", "Medición incompleta" in out and "consola" in out, out)
+
+        # Sin capturas: el informe avisa y no inventa rutas.
+        env = make_env(fake_dir, tmp / "state-h", tmp / "log-h.jsonl", FAKE_NO_SHOT="1")
+        proc = run(env, str(artifact), "--out", str(tmp / "capturas-h"))
+        out = proc.stdout + proc.stderr
+        check("sin captura: avisa", "no se creó la captura" in out, out)
+        check("sin captura: no lista rutas inexistentes",
+              "Sin capturas" in out and "Capturas en" not in out, out)
 
         # Uso incorrecto: 2.
         env = make_env(fake_dir, tmp / "state-g", tmp / "log-g.jsonl")

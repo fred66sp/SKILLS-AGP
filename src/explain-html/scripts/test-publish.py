@@ -7,6 +7,9 @@ Sale 0 si todo pasa; imprime el caso fallido y sale 1 si no.
 Los casos usan solo directorios temporales: publicar sobre `.explanations/` del
 repositorio regeneraría índices reales.
 """
+import contextlib
+import importlib.util
+import io
 import os
 import subprocess
 import sys
@@ -46,6 +49,14 @@ def run(*args: str, path_value: str | None = None) -> subprocess.CompletedProces
 def no_open_attempt(result: subprocess.CompletedProcess) -> bool:
     output = result.stdout + result.stderr
     return not any(mark in output for mark in ("Abierto en el navegador", "Abre a mano esta ruta"))
+
+
+def load_publish():
+    """Importa publish.py para sustituir su abridor sin depender del entorno."""
+    spec = importlib.util.spec_from_file_location("publish_under_test", SCRIPT)
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
 
 
 def main() -> int:
@@ -102,16 +113,35 @@ def main() -> int:
         check("--quiet sale 0", quiet.returncode == 0, quiet)
         check("--quiet sin resumen", "verificados e indexados" not in quiet.stdout, quiet)
 
-        # 4. Sin --no-open y sin navegador: avisa, indexa y sale 0 igualmente.
-        no_browser = root / "navegador"
+        # 4. Sin --no-open y sin bash en PATH: avisa, indexa y sale 0 igualmente.
+        no_browser = root / "sin-bash"
         no_browser.mkdir()
-        (no_browser / "aviso.html").write_text(artifact("Sin navegador", META), encoding="utf-8")
+        (no_browser / "aviso.html").write_text(artifact("Sin bash", META), encoding="utf-8")
         warned = run(str(no_browser / "aviso.html"), path_value="")
-        check("sin navegador sale 0", warned.returncode == 0, warned)
-        check("sin navegador avisa", "no hay navegador" in (warned.stdout + warned.stderr), warned)
-        check("sin navegador indexa", (no_browser / "index.html").is_file(), warned)
+        check("sin bash sale 0", warned.returncode == 0, warned)
+        check("sin bash avisa", "no hay navegador" in (warned.stdout + warned.stderr), warned)
+        check("sin bash indexa", (no_browser / "index.html").is_file(), warned)
 
-        # 5. Uso incorrecto.
+        # 5. El abridor existe pero no encuentra navegador: aviso, índice y salida 0.
+        opener = root / "sin-navegador.sh"
+        opener.write_text(
+            "#!/usr/bin/env bash\necho 'No hay navegador disponible en este entorno.' >&2\nexit 1\n",
+            encoding="utf-8",
+        )
+        module = load_publish()
+        module.OPEN = opener
+        no_opener = root / "abridor"
+        no_opener.mkdir()
+        (no_opener / "aviso.html").write_text(artifact("Sin abridor", META), encoding="utf-8")
+        captured_out, captured_err = io.StringIO(), io.StringIO()
+        with contextlib.redirect_stdout(captured_out), contextlib.redirect_stderr(captured_err):
+            code = module.main([str(no_opener / "aviso.html")])
+        text = captured_out.getvalue() + captured_err.getvalue()
+        check("sin abridor: código 0", code == 0, None)
+        check("sin abridor: avisa", "no hay navegador" in text.lower(), None)
+        check("sin abridor: indexa", (no_opener / "index.html").is_file(), None)
+
+        # 6. Uso incorrecto.
         missing = run(str(root / "no-existe.html"), "--no-open")
         check("ruta inexistente sale 2", missing.returncode == 2, missing)
         no_args = run()

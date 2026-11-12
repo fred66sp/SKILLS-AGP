@@ -54,6 +54,8 @@ def main() -> int:
         ("marcador partido por span", BASE.format(title="Estado", extra="", url="#", meta=GOOD_META).replace("<p>hola</p>", '<h1>ASUNTO DEL <span class="grad">ARTEFACTO</span></h1>'), 1, ["marcador"]),
         ("texto visible sin marcador", BASE.format(title="Estado", extra="", url="#", meta=GOOD_META).replace("<p>hola</p>", "<h1>Estado semana 45</h1>"), 0, []),
         ("marcador citado en un bloque de código", BASE.format(title="Estado", extra="", url="#", meta=GOOD_META).replace("<p>hola</p>", '<pre><code>"ASUNTO DEL ARTEFACTO" in title</code></pre>'), 0, []),
+        ("marcador dentro de un comentario HTML", BASE.format(title="Estado", extra="", url="#", meta=GOOD_META).replace("<p>hola</p>", "<!-- TODO > reemplazar ASUNTO DEL ARTEFACTO --><p>hola</p>"), 0, []),
+        ("marcador en un code suelto", BASE.format(title="Estado", extra="", url="#", meta=GOOD_META).replace("<p>hola</p>", "<p>escribe <code>ASUNTO DEL ARTEFACTO</code> aquí</p>"), 1, ["marcador"]),
         ("procedencia ausente", BASE.format(title="Estado", extra="", url="#", meta=""), 1, ["falta el bloque de procedencia"]),
         ("procedencia con campos vacíos", BASE.format(title="Estado", extra="", url="#", meta=EMPTY_META), 1, ["vacío", "prompt", "fecha", "familia", "fuentes"]),
         ("procedencia con JSON roto", BASE.format(title="Estado", extra="", url="#", meta="<!-- procedencia: {prompt: x} -->"), 1, ["JSON válido"]),

@@ -33,11 +33,13 @@ CSS_URL = re.compile(r'''url\(\s*["']?(?P<val>[^"')]+)["']?\s*\)''', re.IGNORECA
 CSS_IMPORT = re.compile(r'''@import\s+(?:url\(\s*)?["']?(?P<val>[^"'();\s]+)''', re.IGNORECASE)
 TITLE = re.compile(r"<title>\s*(?P<val>[^<]+?)\s*</title>", re.IGNORECASE)
 TAG = re.compile(r"<[^>]*>")
+COMMENT = re.compile(r"<!--.*?-->", re.DOTALL)
 MARKER = "ASUNTO DEL ARTEFACTO"
 # Un ejemplo de código puede citar el marcador sin ser el asunto del artefacto:
-# el texto de <pre>/<code> y lo que no se pinta como prosa no se revisa.
+# los bloques <pre> (con su <code> dentro), <script> y <style> no se revisan.
+# Un <code> suelto sí: se pinta en la prosa y un marcador ahí está a la vista.
 NON_PROSE = re.compile(
-    r"<(pre|code|script|style)\b[^>]*>.*?</\1>", re.IGNORECASE | re.DOTALL
+    r"<(pre|script|style)\b[^>]*>.*?</\1>", re.IGNORECASE | re.DOTALL
 )
 
 INLINE_OK = re.compile(r"^(data:|#|$)", re.IGNORECASE)
@@ -182,10 +184,13 @@ def blank(match: re.Match) -> str:
 # escanear el bloque si alguna plantilla lo parte.
 def marker_errors(path: Path, text: str) -> list[str]:
     """El marcador de la plantilla no puede quedar en el texto visible."""
-    visible = NON_PROSE.sub(blank, TITLE.sub(blank, text))
+    visible = COMMENT.sub(blank, text)
+    visible = NON_PROSE.sub(blank, visible)
+    visible = TITLE.sub(blank, visible)
+    visible = TAG.sub(blank, visible)
     errors: list[str] = []
     for number, line in enumerate(visible.split("\n"), start=1):
-        if MARKER in " ".join(TAG.sub(" ", line).split()):
+        if MARKER in " ".join(line.split()):
             errors.append(
                 f"{path}:{number}: el texto visible conserva el marcador «{MARKER}»; "
                 "sustitúyelo por el asunto concreto del artefacto."

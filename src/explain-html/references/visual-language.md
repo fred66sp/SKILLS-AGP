@@ -76,8 +76,8 @@ Las demos de `docs/explain-html/demo/` siguen estas convenciones; la plantilla l
 
 La verificación estática no ve si el artefacto se lee. Antes de declararlo entregado:
 
-- Con un navegador automatizable —la skill `playwright-cli-usage` del repositorio indica cómo prepararlo; no es una dependencia de esta skill—, ejecuta `scripts/perceive.py <artefacto>` y revisa las capturas: mide el desborde horizontal a 390, 768 y 1440 px y recoge los errores de consola, pero no juzga la calidad.
-- Si sale 3, no hay navegador: ábrelo con `open-artifact.sh` y pide a la persona que lo revise.
+- Con un navegador automatizable y confirmación explícita de la persona —la skill `playwright-cli-usage` la exige antes del primer `open`—, ejecuta `scripts/perceive.py <artefacto>` y revisa las capturas: mide el desborde horizontal a 390, 768 y 1440 px y recoge los errores de consola, pero no juzga la calidad.
+- Sin confirmación o si sale 3, no hay navegador: ábrelo con `open-artifact.sh` y pide a la persona que lo revise. Si el informe dice «Medición incompleta», la revisión no está hecha.
 - En ambos casos, mira el primer viewport, 390, 768 y 1440 px, el foco visible, el contraste en los dos temas, el desborde horizontal y los estados vacíos. Corrige lo que veas antes de abrir la conversación de cierre.
 - No declares una revisión visual que no has hecho: si no la hiciste, di quién la hará.
 
