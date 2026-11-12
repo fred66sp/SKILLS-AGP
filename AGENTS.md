@@ -27,6 +27,7 @@ Este fichero solo enruta: no define reglas, comandos, recuentos ni estados. Si c
 | Encargo | Lee antes | Cierre |
 |---|---|---|
 | Crear o editar una skill | [`docs/best-practices-create-skills/README.md`](docs/best-practices-create-skills/README.md), [`.skills/skill-creator/SKILL.md`](.skills/skill-creator/SKILL.md), [`README.md`](README.md) secciones «Regla de empaquetado» y «Enrutadores de skills propias», y [`CONTRIBUTING.md`](CONTRIBUTING.md) secciones «Enrutadores de skills» y «Versiones de las skills» | La verificación de [`README.md`](README.md), sección «Validación» |
+| Evaluar si una skill funciona | [`CONTRIBUTING.md`](CONTRIBUTING.md), sección «Evaluar una skill con experimentos» | Un informe clasificado en las cuatro clases como comentario de la ficha evaluada |
 | Operación Git | [`src/git-flow-management/SKILL.md`](src/git-flow-management/SKILL.md) y [`CONTRIBUTING.md`](CONTRIBUTING.md) | El script que fije el contrato |
 | Crear o etiquetar una tarea | [`.tasks-ai/CONTRATO_ETIQUETAS.md`](.tasks-ai/CONTRATO_ETIQUETAS.md) sección 2 | La tarea nace con su tipo y su estructural (`task` o `epic`); el catálogo vivo, en `tasks-ai tags` |
 | Escribir o actualizar documentación | [`src/document-management-software/SKILL.md`](src/document-management-software/SKILL.md) | El inventario que fije el contrato |

@@ -70,6 +70,36 @@ Cualquier otra cosa entra por una rama corta. Ante la duda, rama.
 
 El tablero tasks-ai de `.tasks-ai/` es el registro del trabajo pendiente y en curso; sustituye a `BACKLOG.md`, retirado. Se trabaja en una tarea por cambio y la tarea se crea antes de tocar ficheros. Al empezar, pasa a `in_progress`; los avances, las decisiones y los bloqueos van en comentarios en el momento en que surgen. El commit va antes que el cierre: el tablero no guarda estado de Git, así que no registra ramas, hashes ni si el cambio está publicado. Las órdenes están en [`.tasks-ai/AGENTS.md`](.tasks-ai/AGENTS.md) y las reglas de etiquetas en [`.tasks-ai/CONTRATO_ETIQUETAS.md`](.tasks-ai/CONTRATO_ETIQUETAS.md).
 
+## Evaluar una skill con experimentos
+
+Las puertas del repositorio (`check-repo.py`, versionado, enrutadores, recibos) comprueban que una skill está bien formada; no comprueban que funciona. Si una skill funciona lo decide un experimento con criterios previos: **ninguna fase, versión o afirmación de «funciona» se cierra sin un protocolo ejecutado con sus criterios fijados de antemano, y una salida convincente sin criterio previo no es prueba.** Esta regla la consumen las demás unidades de trabajo; ni sk-5 ni sk-6 la redefinen.
+
+El protocolo, presentado antes de ejecutar nada:
+
+1. Pregunta e hipótesis.
+2. Entorno: modelo, agente y herramientas, congelados por brazo.
+3. Entradas exactas: el lote se fija antes de correr y no se retoca después.
+4. Criterios observables de éxito y de fallo.
+5. Comandos previstos.
+6. Riesgos y condiciones de parada.
+
+El resultado se clasifica en una de cuatro clases, y cada una abre un camino distinto:
+
+| Clase | Significa | Abre |
+|---|---|---|
+| Confirmado | la hipótesis se sostuvo con los criterios. | cerrar el cambio evaluado; |
+| Defecto de skill | el contrato condujo al fallo. | un ítem contra la skill; |
+| Defecto de entorno o ejecutor | la skill está sana; falló el modelo, el agente o las herramientas. | un ítem contra el entorno —nunca contra la skill—; |
+| Criterio insuficiente | el experimento no distingue éxito de fallo. | una revisión del protocolo, no de la skill. |
+
+La taxonomía se amplía solo cuando un experimento real obligue a una quinta clase; una lista más larga sin un caso que la justifique es otro documento plausible.
+
+Ejecuciones y evidencia: el experimento se corre en `.explanations/` —ignorada, desechable, con el versionado `-vN` de explain-html; una repetición crea una ejecución nueva y ninguna evidencia anterior se sobrescribe—. El informe se publica como comentario de la ficha de la tarea evaluada: pregunta, entorno, entradas, clase del veredicto y limitaciones.
+
+Fidelidad: se distingue **seguir fielmente la skill** —ejecutar cada paso como está escrito— de **hacer algo inspirado en ella**. Solo la primera evalúa la skill; el resultado de la segunda no es evidencia sobre el contrato, y una fase no se cierra con ella.
+
+Origen: el método está portado de `archify-tuning` (Archify, `.agents/skills/archify-tuning/`, con `references/experiment-design.md`), directorio ignorado y fuera del versionado de este repositorio. La atribución es nominal: nada de Archify se importó; la unidad vive aquí.
+
 ## Enrutadores de skills
 
 Cada skill de `src/<skill>/` se descubre por su enrutador en `.skills/<skill>/SKILL.md`: metadatos de disparo y una instrucción para leer el contrato completo. Al cambiar una skill, revisa su enrutador en el mismo cambio:
