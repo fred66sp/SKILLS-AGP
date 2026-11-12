@@ -100,6 +100,9 @@ jobs:
       - name: Test the quick artifact renderer
         run: python src/explain-html/scripts/test-render-quick.py
 
+      - name: Test the artifact publisher
+        run: python src/explain-html/scripts/test-publish.py
+
       - name: Test the generic SDD document scanner
         run: python src/explain-html/scripts/test-sdd_scan.py
 
@@ -114,3 +117,6 @@ jobs:
 
       - name: Test the code highlighter
         run: python src/explain-html/scripts/test-highlight.py
+
+      - name: Test the perceptual verification
+        run: python src/explain-html/scripts/test-perceive.py

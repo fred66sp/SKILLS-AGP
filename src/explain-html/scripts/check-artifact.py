@@ -32,6 +32,13 @@ SRC_HREF = re.compile(r'''\b(?:src|href)\s*=\s*["'](?P<val>[^"']*)["']''', re.IG
 CSS_URL = re.compile(r'''url\(\s*["']?(?P<val>[^"')]+)["']?\s*\)''', re.IGNORECASE)
 CSS_IMPORT = re.compile(r'''@import\s+(?:url\(\s*)?["']?(?P<val>[^"'();\s]+)''', re.IGNORECASE)
 TITLE = re.compile(r"<title>\s*(?P<val>[^<]+?)\s*</title>", re.IGNORECASE)
+TAG = re.compile(r"<[^>]*>")
+MARKER = "ASUNTO DEL ARTEFACTO"
+# Un ejemplo de código puede citar el marcador sin ser el asunto del artefacto:
+# el texto de <pre>/<code> y lo que no se pinta como prosa no se revisa.
+NON_PROSE = re.compile(
+    r"<(pre|code|script|style)\b[^>]*>.*?</\1>", re.IGNORECASE | re.DOTALL
+)
 
 INLINE_OK = re.compile(r"^(data:|#|$)", re.IGNORECASE)
 
@@ -166,6 +173,26 @@ def contrast_warnings(path: Path, text: str) -> list[str]:
     return warnings
 
 
+def blank(match: re.Match) -> str:
+    """Sustituye un tramo por espacios conservando los saltos de línea."""
+    return "".join(ch if ch == "\n" else " " for ch in match.group(0))
+
+
+# shortcut: un marcador partido entre dos líneas del h1 no se detecta; pasar a
+# escanear el bloque si alguna plantilla lo parte.
+def marker_errors(path: Path, text: str) -> list[str]:
+    """El marcador de la plantilla no puede quedar en el texto visible."""
+    visible = NON_PROSE.sub(blank, TITLE.sub(blank, text))
+    errors: list[str] = []
+    for number, line in enumerate(visible.split("\n"), start=1):
+        if MARKER in " ".join(TAG.sub(" ", line).split()):
+            errors.append(
+                f"{path}:{number}: el texto visible conserva el marcador «{MARKER}»; "
+                "sustitúyelo por el asunto concreto del artefacto."
+            )
+    return errors
+
+
 def structure_errors(path: Path, text: str) -> list[str]:
     checker = StructureChecker()
     try:
@@ -199,8 +226,10 @@ def check_artifact(path: Path) -> tuple[list[str], list[str]]:
     title = TITLE.search(text)
     if not title:
         errors.append(f"{path}: falta <title>. Un artefacto sin título no se encuentra ni se nombra en el cierre.")
-    elif "ASUNTO DEL ARTEFACTO" in title.group("val"):
+    elif MARKER in title.group("val"):
         errors.append(f"{path}: <title> conserva el marcador de la plantilla; pon el asunto concreto.")
+
+    errors.extend(marker_errors(path, text))
 
     meta = artifact_meta.find(text)
     if meta is None:
