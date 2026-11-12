@@ -44,6 +44,9 @@ NAME_RE = re.compile(r"^[a-z0-9]+(-[a-z0-9]+)*$")
 SCHEME_RE = re.compile(r"^[A-Za-z][A-Za-z0-9+.\-]*:")
 LINK_RE = re.compile(r"!?\[[^\]]*\]\(\s*([^)\s]+)(?:\s+\"[^\"]*\")?\s*\)")
 HTML_LINK_RE = re.compile(r'(?<![\w-])(?:href|src)="([^"]*)"')
+# Los enlaces dentro de <script> y <style> no son enlaces: el JS vendorizado
+# (marked, en demo-sdd.html) contiene href/src en plantillas de cadena.
+HTML_PROGRAM = re.compile(r"<(script|style)\b[^>]*>.*?</\1>", re.IGNORECASE | re.DOTALL)
 FENCE_RE = re.compile(r"^\s*(```+|~~~+)")
 INLINE_CODE_RE = re.compile(r"`[^`\n]*`")
 ROUTER_MARKER = "Enrutador de la skill"
@@ -205,7 +208,7 @@ def check_html_links(root, errors):
     for path in pages:
         if any(part in EXCLUDED_DIRS for part in path.relative_to(root).parts):
             continue
-        text = read(path)
+        text = HTML_PROGRAM.sub("", read(path))
         for target in HTML_LINK_RE.findall(text):
             if target.startswith(("//", "data:", "mailto:")) or SCHEME_RE.match(target):
                 continue
