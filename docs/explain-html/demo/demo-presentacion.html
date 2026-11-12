@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="color-scheme" content="light dark">
-<meta name="description" content="Presentación navegable con teclado de la skill explain-html: qué es, las diez familias, procedencia, verificación y límites.">
+<meta name="description" content="Presentación navegable con teclado de la skill explain-html: qué es, las once familias, procedencia, verificación y límites.">
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%234f46e5'/%3E%3Crect x='7' y='9' width='18' height='14' rx='2' fill='none' stroke='%23ffffff' stroke-width='2'/%3E%3Cpath d='M7 13h18' stroke='%23ffffff' stroke-width='2'/%3E%3Cpath d='M12 19l3 3 5-5' fill='none' stroke='%23ffffff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
 <title>explain-html en siete diapositivas · catálogo</title>
 <script>
@@ -222,7 +222,7 @@ kbd{display:inline-block;min-width:24px;padding:2px 6px;border:1px solid var(--l
 </style>
 </head>
 <body class="deck">
-<!-- procedencia: {"prompt": "Genera la demo de presentación del catálogo de explain-html: la skill en diapositivas navegables", "fecha": "2026-11-08", "familia": "presentacion", "fuentes": ["src/explain-html/SKILL.md:8-37", "src/explain-html/references/artifact-patterns.md:82-90", "DESIGN.md:116-136"], "enlaces": ["index.html"]} -->
+<!-- procedencia: {"prompt": "Genera la demo de presentación del catálogo de explain-html: la skill en diapositivas navegables", "fecha": "2026-11-11", "familia": "presentacion", "fuentes": ["src/explain-html/SKILL.md:8-41", "src/explain-html/references/artifact-patterns.md:82-90", "DESIGN.md:116-136"], "enlaces": ["index.html"]} -->
 <a class="skip" href="#contenido">Saltar al contenido</a>
 <header class="top">
   <div class="shell top-in">
@@ -243,7 +243,7 @@ kbd{display:inline-block;min-width:24px;padding:2px 6px;border:1px solid var(--l
 
 <div class="progress" role="presentation"><span id="bar"></span></div>
 <div class="deckbar">
-  <a class="deck-brand" href="index.html"><span class="mark" aria-hidden="true"><svg viewBox="0 0 32 32" role="presentation"><rect width="32" height="32" rx="8" fill="#4f46e5"/><rect x="7" y="9" width="18" height="14" rx="2" fill="none" stroke="#ffffff" stroke-width="2"/><path d="M7 13h18" stroke="#ffffff" stroke-width="2"/><path d="M12 19l3 3 5-5" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span><strong>explain-html</strong><small>presentación · 0.4.0</small></span></a>
+  <a class="deck-brand" href="index.html"><span class="mark" aria-hidden="true"><svg viewBox="0 0 32 32" role="presentation"><rect width="32" height="32" rx="8" fill="#4f46e5"/><rect x="7" y="9" width="18" height="14" rx="2" fill="none" stroke="#ffffff" stroke-width="2"/><path d="M7 13h18" stroke="#ffffff" stroke-width="2"/><path d="M12 19l3 3 5-5" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span><strong>explain-html</strong><small>presentación · 0.6.0</small></span></a>
   <nav class="dots" aria-label="Diapositivas">
     <button type="button" aria-current="true" aria-label="Diapositiva 1">1</button>
     <button type="button" aria-label="Diapositiva 2">2</button>
@@ -263,11 +263,11 @@ kbd{display:inline-block;min-width:24px;padding:2px 6px;border:1px solid var(--l
 <main id="contenido">
   <section class="slide" id="s1">
     <div class="deck-wrap">
-      <p class="eyebrow"><span class="dot"></span>explain-html · 0.4.0 · 9 nov 2026</p>
+      <p class="eyebrow"><span class="dot"></span>explain-html · 0.6.0 · 11 nov 2026</p>
       <h1>Un encargo. Un <span class="grad">.html</span>. Se abre y se lee.</h1>
-      <p class="lead">La skill convierte informes, explicadores, diagramas, prototipos, cuestionarios, editores y presentaciones en artefactos autocontenidos que se abren en el navegador y devuelven el resultado a la conversación.</p>
+      <p class="lead">La skill convierte informes, explicadores, diagramas, prototipos, cuestionarios, editores y presentaciones en artefactos autocontenidos que se abren en el navegador y devuelven el resultado a la conversación, y añade tres vías de descubrimiento: pases de puntos ciegos, entrevistas de requisito y vistas de revisión de especificaciones.</p>
       <div class="meta-row">
-        <span class="tag tag-accent">10 familias</span>
+        <span class="tag tag-accent">11 familias</span>
         <span class="tag">sin CDN</span>
         <span class="tag">file://</span>
         <span class="tag">procedencia dentro</span>
@@ -291,7 +291,7 @@ kbd{display:inline-block;min-width:24px;padding:2px 6px;border:1px solid var(--l
   <section class="slide" id="s3">
     <div class="deck-wrap">
       <p class="eyebrow"><span class="dot"></span>02 · familias</p>
-      <h2>Ocho familias, una plantilla cada una</h2>
+      <h2>Once familias, una plantilla cada una</h2>
       <p class="lead" style="font-size:16px;margin-top:10px">La familia se elige por lo que la persona necesita hacer, no por el formato que parece más vistoso.</p>
       <div class="fam-grid">
         <div class="fam"><code>01</code><strong>Exploración</strong><small>opciones lado a lado</small></div>
@@ -302,8 +302,11 @@ kbd{display:inline-block;min-width:24px;padding:2px 6px;border:1px solid var(--l
         <div class="fam"><code>06</code><strong>Cuestionario</strong><small>corrección en vivo</small></div>
         <div class="fam"><code>07</code><strong>Editor</strong><small>el dato, editable</small></div>
         <div class="fam"><code>08</code><strong>Presentación</strong><small>teclado, sin exportar</small></div>
+        <div class="fam"><code>09</code><strong>Pase de puntos ciegos</strong><small>desconocidos con evidencia</small></div>
+        <div class="fam"><code>10</code><strong>Entrevista</strong><small>una pregunta cada vez</small></div>
+        <div class="fam"><code>11</code><strong>Especificación SDD</strong><small>vista de revisión del árbol</small></div>
       </div>
-      <p class="deck-note">Una novena pieza, el esqueleto base, queda solo para encargos que no encajan en ninguna familia.</p>
+      <p class="deck-note">Una pieza base, el esqueleto, queda solo para encargos que no encajan en ninguna familia.</p>
     </div>
   </section>
 
@@ -317,7 +320,7 @@ kbd{display:inline-block;min-width:24px;padding:2px 6px;border:1px solid var(--l
           <div class="fields">
             <div class="fieldline"><code>prompt</code><span>El encargo que lo originó, en una línea.</span></div>
             <div class="fieldline"><code>fecha</code><span>El día de generación, en AAAA-MM-DD.</span></div>
-            <div class="fieldline"><code>familia</code><span>Uno de los ocho slugs.</span></div>
+            <div class="fieldline"><code>familia</code><span>Uno de los once slugs.</span></div>
             <div class="fieldline"><code>fuentes</code><span>Fichero:línea, comando o conversación fechada.</span></div>
             <div class="fieldline"><code>enlaces</code><span>Opcional: hermanos .html del bucle, sin carpetas ni URLs.</span></div>
           </div>
@@ -380,7 +383,7 @@ python3 scripts/check-repo.py</code></pre></div>
         <a class="btn btn-ghost" href="../index.html">Documentación de la skill</a>
         <a class="btn btn-ghost" href="../../../src/explain-html/SKILL.md">Contrato</a>
       </div>
-      <p class="deck-note">Nueve artefactos autocontenidos · cero dependencias · tokens de SKILLS-AGP.</p>
+      <p class="deck-note">Doce artefactos autocontenidos · cero dependencias · tokens de SKILLS-AGP.</p>
     </div>
   </section>
 </main>

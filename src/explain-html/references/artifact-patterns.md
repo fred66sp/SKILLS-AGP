@@ -89,6 +89,22 @@ Estructura: secciones `<section>` a `100dvh` con navegación por teclado (flecha
 
 Reglas: una idea por diapositiva; títulos grandes y cuerpo mínimo; los diagramas en diapositiva propia; sin animación esencial y con `prefers-reduced-motion` respetado. Sin JS, el deck sigue siendo legible como página con scroll: cada sección apilada es contenido completo.
 
+## Especificación SDD
+
+Plantilla: [`plantilla-sdd.html`](../assets/plantilla-sdd.html).
+
+Cuándo: hay que revisar un árbol de documentos de desarrollo guiado por especificación —antes de implementarlo o para ver su estado— y da igual la herramienta que lo generó: OpenSpec, Kiro, Spec Kit o Markdown propio con la misma forma de proposal, specs, deltas, design y tasks.
+
+Estructura: resumen con perfil del árbol, barra de progreso de tareas y chips de perfil → las siete fases del pipeline (Explore, Propose, Specify, Design, Tasks, Apply, Verify) más «Sin fase», cada una con la ficha de sus documentos → fichas de requisito con escenarios GIVEN/WHEN/THEN y criterios de aceptación → matriz de trazabilidad si las tareas declaran sus requisitos → hallazgos por kind → «Desconocidos».
+
+No se escribe a mano: `scripts/sdd_scan.py <árbol>` produce el modelo estructural y `scripts/render-sdd.py <árbol> --out .explanations/<slug>.html --prompt "…" --date AAAA-MM-DD [--title "…"]` escribe el artefacto. Prompt y fecha son flags obligatorios, así que dos ejecuciones sobre el mismo árbol dan los mismos bytes; el renderer no llama a ninguna CLI.
+
+- **Perfiles como convención, no frontera.** `openspec`, `kiro`, `spec-kit` y `generic` se detectan por ruta y por contenido. Un `.md` sin anclas de requisito, escenario ni tarea no se descarta: aparece en «Sin fase», transcrito tal cual —párrafos, listas y tablas— con su aviso de «sin perfil reconocido» y su motivo en «Desconocidos». No se le inventan fichas, tareas ni fase.
+- **Corte por fase.** Si la página completa pasaría de 100 KB —el mismo umbral que vigila `check-artifact.py`— se escribe un índice y una página por fase (`<slug>-<fase>.html`), con el recuento de hallazgos y desconocidos en el índice y su detalle en `<slug>-hallazgos.html`. Una fase que aún se pase se reparte por fichero (`<slug>-<fase>-<n>.html`) y se avisa por stderr; el corte nunca es por tamaño a ciegas.
+- **Caminos clicables con el Markdown incrustado.** La ruta de cada ficha es un botón que abre un modal con el Markdown original: el renderer incrusta un payload `<script type="text/markdown" data-path="…">` por fichero y marked 12.0.2 vendorizado (`assets/marked.min.js`, MIT, en línea) una sola vez en las páginas con tarjetas. El modal no hace `fetch`; tras parsear sanea el resultado —quita `script`, atributos `on*` y neutraliza `src`/`href` que no empiecen por ancla o sean relativos—. Un fichero cuyo payload no cabe entero con sus tarjetas en una página conserva la ruta como código y no viaja.
+- **Hallazgos solo de Markdown.** El escáner no lee código fuente: señala requisito vago, spec prescriptora —código o llamada dentro del requisito—, escenario único sin caso de error y ausencia de no-objetivos en todo el árbol, además de los estructurales (escenario con tres almohadillas, requisito sin escenario, línea EARS sin SHALL, tarea pendiente, capacidad sin `spec.md`, delta sin requisito de destino).
+- **Solo escribe en `.explanations/`** y nunca en `index.html`, que es de `build-index.py`. Cada página hermana se declara en `enlaces` y pasa `check-artifact.py` por separado.
+
 ## Pase de puntos ciegos
 
 Plantilla: [`plantilla-blindspots.html`](../assets/plantilla-blindspots.html).
