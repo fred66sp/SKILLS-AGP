@@ -78,6 +78,10 @@ def main() -> int:
             ("nota", 'class="note"' in html),
             ("desconocidos", 'id="desconocidos"' in html),
             ("procedencia", '"familia": "informe"' in html),
+            (
+                "cabecera al índice",
+                'class="brand" href="index.html"' in html and ">Índice</a>" in html,
+            ),
             ("determinista", second.returncode == 0 and html == (tmp / "copia.html").read_text(encoding="utf-8")),
         ]
         for name, ok in checks:

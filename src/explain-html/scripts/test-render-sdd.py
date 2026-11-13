@@ -186,6 +186,10 @@ def main() -> int:
             f"{sorted(set(links))} != {sorted(set(payloads))}",
         )
         check(f"{name}: modal accesible en el chrome", 'role="dialog" aria-modal="true"' in text)
+        check(
+            f"{name}: cabecera con vuelta al índice",
+            'class="brand" href="index.html"' in text and ">Índice</a>" in text,
+        )
 
     with tempfile.TemporaryDirectory() as raw:
         tmp = Path(raw)

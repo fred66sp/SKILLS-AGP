@@ -108,6 +108,9 @@ def main() -> int:
         if "ASUNTO DEL ARTEFACTO" not in text:
             print(f"FALLO «plantilla»: {template.name} no marca el título a sustituir")
             failures += 1
+        if 'class="brand" href="index.html"' not in text or ">Índice</a>" not in text:
+            print(f"FALLO «plantilla»: {template.name} no enlaza al índice desde la cabecera")
+            failures += 1
 
     if failures:
         print(f"{failures} caso(s) fallidos.")

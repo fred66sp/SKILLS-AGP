@@ -1,6 +1,6 @@
 # Patrones por familia de artefacto
 
-Estructura de cada familia. Lee solo la sección de la familia elegida y copia su plantilla completa de `../assets/`; no improvises una variante propia. El esqueleto [plantilla-artefacto](../assets/plantilla-artefacto.html) queda solo para encargos que no encajan en ninguna familia. Todas las plantillas traen `ASUNTO DEL ARTEFACTO` y el bloque de procedencia vacío para sustituirlos.
+Estructura de cada familia. Lee solo la sección de la familia elegida y copia su plantilla completa de `../assets/`; no improvises una variante propia. El esqueleto [plantilla-artefacto](../assets/plantilla-artefacto.html) queda solo para encargos que no encajan en ninguna familia. Todas las plantillas traen `ASUNTO DEL ARTEFACTO` y el bloque de procedencia vacío para sustituirlos. Todas comparten cabecera con la marca y el botón «Índice» hacia `index.html` para volver a la lista de artefactos.
 
 ## Exploración comparativa
 
