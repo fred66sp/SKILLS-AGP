@@ -159,6 +159,42 @@ html:not(.js) .toolbar,html:not(.js) .pager,html:not(.js) .resumen{display:none}
   .artefacto{grid-template-columns:28px minmax(0,1fr);grid-template-areas:"ico t" "bucle bucle" "cab cab"}
   .artefacto .cab{justify-self:start;padding-top:2px}
 }
+/* Modo borrado: la papelera y los círculos los inyecta el JS; sin él no existe nada. */
+#herramientas.con-acciones{position:relative;padding-bottom:56px}
+.acciones-borrado{position:absolute;right:12px;bottom:12px;display:flex;flex-wrap:wrap;align-items:center;justify-content:flex-end;gap:8px;max-width:calc(100% - 24px)}
+.papelera{width:34px;padding:0;justify-content:center;flex:none}
+.papelera svg{width:16px;height:16px}
+.papelera[aria-pressed="true"]{border-color:var(--accent);background:var(--accent-soft);color:var(--accent)}
+.btn-peligro{border-color:var(--err);color:var(--err)}
+.btn-peligro:hover{border-color:var(--err);background:color-mix(in srgb,var(--err) 12%,transparent);color:var(--err)}
+.modo-borrado .artefacto{padding-right:44px}
+.modo-borrado .artefacto .t{cursor:default}
+.modo-borrado .artefacto.seleccionado{border-color:var(--familia,var(--accent));box-shadow:inset 0 0 0 1px var(--familia,var(--accent))}
+.selector-borrado{position:absolute;top:8px;right:8px;z-index:2;display:grid;place-items:center;width:22px;height:22px;padding:0;border:2px solid var(--line-strong);border-radius:50%;background:var(--surface);color:#fff;cursor:pointer;transition:background .15s,border-color .15s}
+.selector-borrado:hover{border-color:var(--accent)}
+.selector-borrado svg{width:12px;height:12px;opacity:0;transition:opacity .15s}
+.selector-borrado[aria-pressed="true"]{background:var(--familia,var(--accent));border-color:var(--familia,var(--accent))}
+.selector-borrado[aria-pressed="true"] svg{opacity:1}
+.modal-borrado{position:fixed;inset:0;z-index:200;display:grid;place-items:center;padding:16px;background:rgba(15,23,42,.55);-webkit-backdrop-filter:blur(2px);backdrop-filter:blur(2px)}
+.caja-borrado{display:flex;flex-direction:column;width:min(640px,100%);max-height:calc(100vh - 32px);max-height:calc(100dvh - 32px);background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow-lg);color:var(--text)}
+.caja-cab{display:flex;align-items:flex-start;gap:12px;padding:16px 18px 10px;border-bottom:1px solid var(--line)}
+.caja-cab h2{margin:0;flex:1;font-size:17px;line-height:1.3;letter-spacing:-.01em}
+.caja-cab .cerrar{width:30px;height:30px;padding:0;justify-content:center;flex:none}
+.caja-cab .cerrar svg{width:14px;height:14px}
+.caja-cuerpo{padding:14px 18px;overflow:auto;font-size:13.5px}
+.caja-cuerpo p{margin:0 0 10px;color:var(--muted);max-width:none}
+.lista-borrado{list-style:none;margin:0 0 12px;padding:0;display:grid;gap:4px;max-height:130px;overflow:auto}
+.lista-borrado li{margin:0;max-width:none}
+.lista-borrado code{font-family:var(--mono);font-size:12px;overflow-wrap:anywhere}
+.prompt-borrado{margin:0;padding:12px;border:1px solid var(--line);border-radius:var(--radius-sm);background:var(--sunken);color:var(--text);font:400 12px/1.55 var(--mono);white-space:pre-wrap;overflow-wrap:anywhere}
+.caja-pie{display:flex;justify-content:flex-end;gap:8px;padding:0 18px 16px}
+.caja-pie .btn.ok{border-color:var(--ok);color:var(--ok)}
+@media (max-width:640px){
+  #herramientas.con-acciones{padding-bottom:52px}
+  .acciones-borrado{left:12px}
+  .caja-borrado{max-height:calc(100vh - 24px)}
+  .caja-cab,.caja-cuerpo,.caja-pie{padding-left:14px;padding-right:14px}
+}
 </style>
 </head>
 <body>
@@ -326,9 +362,11 @@ html:not(.js) .toolbar,html:not(.js) .pager,html:not(.js) .resumen{display:none}
     if (next) next.disabled = pagina >= paginas;
     if (estado) estado.textContent = "Página " + pagina + " de " + paginas;
     if (resumen) {
-      resumen.textContent = encontrados.length === items.length
+      var cuenta = encontrados.length === items.length
         ? items.length + " artefacto(s)"
         : encontrados.length + " de " + items.length + " artefacto(s)";
+      if (modoBorrado && seleccion.length) cuenta += " · " + seleccion.length + " seleccionado(s)";
+      resumen.textContent = cuenta;
     }
   }
 
@@ -384,6 +422,228 @@ html:not(.js) .toolbar,html:not(.js) .pager,html:not(.js) .resumen{display:none}
   var guardada = "lista";
   try { guardada = localStorage.getItem("explain-html:index:vista") || "lista"; } catch (e) {}
   if (guardada === "tarjetas") pintaVista("tarjetas");
+
+  // Modo borrado. No borra nada: entrega al agente un prompt copiable para que
+  // retire los ficheros y regenere el índice. Los controles se inyectan aquí
+  // para que sin JavaScript no cambie nada.
+  var seleccion = [];
+  var modoBorrado = false;
+  var modal = null;
+  var focoPrevio = null;
+  var desbordePrevio = "";
+  var papelera = null;
+  var borrar = null;
+
+  function crea(tag, clase) {
+    var el = document.createElement(tag);
+    if (clase) el.className = clase;
+    return el;
+  }
+
+  function copiaPrompt(texto, fin) {
+    function conExec() {
+      var area = crea("textarea");
+      area.value = texto;
+      area.setAttribute("readonly", "");
+      area.style.position = "fixed";
+      area.style.top = "-1000px";
+      document.body.appendChild(area);
+      area.select();
+      var ok = false;
+      try { ok = document.execCommand("copy"); } catch (e) {}
+      document.body.removeChild(area);
+      fin(ok);
+    }
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(texto).then(function () { fin(true); }, conExec);
+    } else {
+      conExec();
+    }
+  }
+
+  function textoPrompt() {
+    var ficheros = seleccion.map(function (li) {
+      var enlace = li.querySelector("a.t");
+      return enlace ? enlace.getAttribute("href") : "";
+    }).filter(function (f) { return f; });
+    var lineas = ficheros.map(function (f) { return "- .explanations/" + f; });
+    // @@PROYECTO@@ lo sustituye build-index.py: la plantilla es común a todos los proyectos.
+    return "Borra estos artefactos del catálogo .explanations del proyecto @@PROYECTO@@:\n\n" +
+      lineas.join("\n") + "\n\n" +
+      "1. Elimina esos ficheros de la carpeta .explanations/. No toques ningún otro fichero.\n" +
+      "2. Regenera el índice de .explanations con build-index.py de la skill explain-html.\n" +
+      "3. Comprueba que el índice ya no los lista y que el resto de artefactos sigue enlazado. No edites index.html a mano.";
+  }
+
+  function pintaBorrar() {
+    if (!borrar) return;
+    borrar.hidden = seleccion.length === 0;
+    borrar.textContent = "Borrar (" + seleccion.length + ")";
+    borrar.setAttribute("aria-label", "Borrar " + seleccion.length + " artefacto(s) seleccionados");
+  }
+
+  function marcaSeleccion(li, activo) {
+    var boton = li.querySelector(".selector-borrado");
+    var i = seleccion.indexOf(li);
+    li.classList.toggle("seleccionado", activo);
+    if (boton) boton.setAttribute("aria-pressed", String(activo));
+    if (activo && i === -1) seleccion.push(li);
+    if (!activo && i !== -1) seleccion.splice(i, 1);
+  }
+
+  function ponCirculos() {
+    items.forEach(function (li) {
+      if (li.querySelector(".selector-borrado")) return;
+      var boton = crea("button", "selector-borrado");
+      boton.type = "button";
+      boton.setAttribute("aria-pressed", "false");
+      boton.setAttribute("aria-label", "Seleccionar/quitar: " + (li.getAttribute("data-titulo") || "artefacto"));
+      boton.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 4 4 10-10"/></svg>';
+      boton.addEventListener("click", function (ev) {
+        ev.preventDefault();
+        marcaSeleccion(li, boton.getAttribute("aria-pressed") !== "true");
+        pintaBorrar();
+        pinta();
+      });
+      li.appendChild(boton);
+    });
+  }
+
+  function quitaCirculos() {
+    items.forEach(function (li) {
+      var boton = li.querySelector(".selector-borrado");
+      if (boton) boton.parentNode.removeChild(boton);
+      li.classList.remove("seleccionado");
+    });
+  }
+
+  function activaModo(activo) {
+    modoBorrado = activo;
+    lista.classList.toggle("modo-borrado", activo);
+    papelera.setAttribute("aria-pressed", String(activo));
+    papelera.setAttribute("aria-label", activo ? "Salir del modo borrado" : "Entrar en modo borrado");
+    if (activo) {
+      ponCirculos();
+    } else {
+      seleccion = [];
+      quitaCirculos();
+    }
+    pintaBorrar();
+    pinta();
+  }
+
+  function cierraModal() {
+    if (!modal) return;
+    document.removeEventListener("keydown", teclaModal);
+    modal.parentNode.removeChild(modal);
+    modal = null;
+    document.body.style.overflow = desbordePrevio;
+    if (focoPrevio && focoPrevio.focus) focoPrevio.focus();
+  }
+
+  function teclaModal(ev) {
+    if (ev.key === "Escape" || ev.keyCode === 27) {
+      ev.preventDefault();
+      cierraModal();
+    }
+  }
+
+  function abreModal() {
+    if (!seleccion.length || modal) return;
+    focoPrevio = document.activeElement;
+    desbordePrevio = document.body.style.overflow;
+
+    var overlay = crea("div", "modal-borrado");
+    var caja = crea("div", "caja-borrado");
+    caja.setAttribute("role", "dialog");
+    caja.setAttribute("aria-modal", "true");
+    caja.setAttribute("aria-label", "Borrar artefactos del catálogo");
+
+    var cab = crea("div", "caja-cab");
+    var titulo = crea("h2");
+    titulo.textContent = "Borrar artefactos del catálogo";
+    var cerrar = crea("button", "btn cerrar");
+    cerrar.type = "button";
+    cerrar.setAttribute("aria-label", "Cerrar");
+    cerrar.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>';
+    cerrar.addEventListener("click", cierraModal);
+    cab.appendChild(titulo);
+    cab.appendChild(cerrar);
+
+    var cuerpo = crea("div", "caja-cuerpo");
+    var intro = crea("p");
+    intro.textContent = seleccion.length + " artefacto(s) seleccionado(s). El índice no borra nada: copia el prompt y pégalo en una sesión de agente.";
+    var listaSel = crea("ul", "lista-borrado");
+    seleccion.forEach(function (li) {
+      var enlace = li.querySelector("a.t");
+      var fila = crea("li");
+      var codigo = crea("code");
+      codigo.textContent = enlace ? enlace.getAttribute("href") : "";
+      fila.appendChild(codigo);
+      listaSel.appendChild(fila);
+    });
+    var pre = crea("pre", "prompt-borrado");
+    pre.textContent = textoPrompt();
+    cuerpo.appendChild(intro);
+    cuerpo.appendChild(listaSel);
+    cuerpo.appendChild(pre);
+
+    var pie = crea("div", "caja-pie");
+    var copiar = crea("button", "btn");
+    copiar.type = "button";
+    copiar.textContent = "Copiar prompt";
+    copiar.addEventListener("click", function () {
+      copiaPrompt(pre.textContent, function (ok) {
+        copiar.focus();
+        copiar.textContent = ok ? "Copiado" : "No se pudo copiar";
+        copiar.classList.toggle("ok", ok);
+        setTimeout(function () {
+          copiar.textContent = "Copiar prompt";
+          copiar.classList.remove("ok");
+        }, 1400);
+      });
+    });
+    pie.appendChild(copiar);
+
+    caja.appendChild(cab);
+    caja.appendChild(cuerpo);
+    caja.appendChild(pie);
+    overlay.appendChild(caja);
+    overlay.addEventListener("click", function (ev) {
+      if (ev.target === overlay) cierraModal();
+    });
+    document.body.appendChild(overlay);
+    modal = overlay;
+    document.body.style.overflow = "hidden";
+    document.addEventListener("keydown", teclaModal);
+    copiar.focus();
+  }
+
+  if (herramientas) {
+    var acciones = crea("div", "acciones-borrado");
+    borrar = crea("button", "btn btn-peligro");
+    borrar.type = "button";
+    borrar.hidden = true;
+    borrar.addEventListener("click", abreModal);
+    papelera = crea("button", "btn papelera");
+    papelera.type = "button";
+    papelera.setAttribute("aria-pressed", "false");
+    papelera.setAttribute("aria-label", "Entrar en modo borrado");
+    papelera.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18M8 6V4h8v2M6 6l1 14h10l1-14M10 11v5M14 11v5"/></svg>';
+    papelera.addEventListener("click", function () { activaModo(!modoBorrado); });
+    acciones.appendChild(borrar);
+    acciones.appendChild(papelera);
+    herramientas.classList.add("con-acciones");
+    herramientas.appendChild(acciones);
+  }
+
+  // En modo borrado el clic no navega: seleccionar un artefacto no debe abrirlo.
+  lista.addEventListener("click", function (ev) {
+    if (!modoBorrado) return;
+    var enlace = ev.target.closest ? ev.target.closest("a") : null;
+    if (enlace && lista.contains(enlace)) ev.preventDefault();
+  });
+
   pinta();
 })();
 </script>
