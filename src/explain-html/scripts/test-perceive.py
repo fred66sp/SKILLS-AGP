@@ -2,7 +2,9 @@
 """Pruebas de scripts/perceive.py con un playwright-cli falso, sin navegador real.
 
 Uso: python3 test-perceive.py
-Sale 0 si todo pasa; imprime el caso fallido y sale 1 si no.
+Sale 0 si todo pasa; imprime el caso fallido y sale 1 si no. En Windows se
+salta con un SKIP: el binario falso es un script POSIX y el sistema no lo
+ejecuta, así que la prueba no dice nada del producto.
 """
 import os
 import subprocess
@@ -120,6 +122,14 @@ def snapshot(root: Path) -> dict[str, object]:
 
 
 def main() -> int:
+    if os.name == "nt":
+        print(
+            "SKIP: el playwright-cli falso de esta suite es un script POSIX con shebang y "
+            "Windows no lo ejecuta; aquí no se puede probar perceive.py. "
+            "La verificación perceptiva se prueba en Linux y macOS."
+        )
+        return 0
+
     failures = 0
     checks = 0
 

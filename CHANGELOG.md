@@ -132,6 +132,8 @@ Las categorías —Añadido, Corregido, Modificado— vienen de [Keep a Changelo
 
 ### Corregido
 
+- Skill `explain-html`: `scripts/test-perceive.py` se salta en Windows con un SKIP explícito. El `playwright-cli` falso de la suite es un guion POSIX con `shebang` y `chmod`, que Windows no ejecuta: `perceive.py` salía 3 y el job de Windows fallaba 19 de 33 comprobaciones por una limitación del fixture, no del producto. La prueba sigue corriendo completa en Linux y macOS, y el motivo del salto queda impreso en el log. No cambia el contrato ni el comportamiento, así que no hay incremento de versión. (sk-53.)
+
 - Skill `explain-html`: `check-artifact.py` deja de aceptar el marcador «ASUNTO DEL ARTEFACTO» en el texto visible del artefacto —`h1` incluido, aunque esté partido por un `<span>`— y no solo en `<title>`; excluye `<pre>`, `<code>`, `<script>` y `<style>` para que un ejemplo de código que cita el marcador no dé un falso positivo. El paso 3.1 del contrato ordena copiar la plantilla con `cp` y sustituir solo los huecos con ediciones dirigidas, en vez de reescribirla desde cero. `test-check-artifact.py` cubre el marcador partido, el que queda en la prosa y el que cita un bloque de código. (sk-48, sk-49.)
 
 - `typescript-testing-and-verification`: `scripts/test-verify-ts.py` comparaba la ruta de `tsc` sin resolver. En los runners de Windows `TEMP` llega en forma corta (`RUNNER~1`) y el script resuelve la raíz, así que la llamada esperada no coincidía con la real y el job de Windows fallaba; en local no se veía porque la ruta temporal no tenía alias corto. La expectativa usa ahora `tsc.resolve()`, la misma forma que produce el script, y la prueba se reproduce y pasa con `TEMP` en forma corta.
