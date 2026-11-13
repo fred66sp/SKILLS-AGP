@@ -2,7 +2,7 @@
 name: explain-html
 description: "Genera artefactos HTML autocontenidos —informes, explicadores, cuestionarios, prototipos, diagramas, presentaciones, comparaciones y editores a medida— en .explanations/ del proyecto y los abre en el navegador para revisarlos. Se usa cuando se pide un informe o estado, un cuestionario, un prototipo interactivo, un diagrama o flujo, una presentación, un explicador o un editor desechable con exportación «copiar como prompt»; también ante encargos vagos o revisiones a ciegas: pase de puntos ciegos, entrevista de requisito ambiguo, bitácora de desviaciones, cuestionario de merge o pitch de compra. Cada artefacto es un .html sin dependencias externas que funciona por file:// y separa hechos verificados de desconocidos. No se usa para documentación duradera del repositorio (eso es document-management-software), para la identidad y el sistema visual de un producto (design-system-architect), para implementar una interfaz real (web-interface-visual-design) ni para mantener un catálogo de informes publicado."
 metadata:
-  version: "0.7.0"
+  version: "0.8.0"
 ---
 
 # explain-html: artefactos HTML explicativos
@@ -16,7 +16,7 @@ Convierte un encargo —un informe, un cuestionario, un prototipo interactivo, u
 - Autocontención total: sin CDN, sin `<script src>` ni `<link>` a red, sin fuentes remotas, sin imágenes por URL. Todo CSS, JS y SVG va en línea y toda imagen es `data:` o SVG incrustado. El artefacto debe funcionar igual abierto por `file://` que servido por HTTP.
 - Procedencia obligatoria: cada artefacto lleva dentro, al inicio del body, un comentario `<!-- procedencia: {...} -->` con prompt, fecha, familia y fuentes. `check-artifact.py` no lo deja pasar vacío. Sin él, el índice no puede fechar ni clasificar el artefacto y el cierre no puede decir de dónde salió.
 - No inventa datos: cada cifra, estado, fecha y relación del artefacto sale del material fuente o queda en la sección «Desconocidos». No rellena huecos con lo plausible; un gráfico sin datos reales no se dibuja.
-- No mantiene un catálogo publicado: `.explanations/index.html` es un índice local regenerable, no una aplicación ni documentación duradera.
+- No mantiene un catálogo publicado: `.explanations/index.html` es un índice local regenerable —búsqueda, filtro por familia, por bucles y por periodo (hoy, semana, mes, año), vista de lista o tarjetas y páginas de 20—, siempre derivado de la carpeta, no una aplicación ni documentación duradera.
 - Puede usar el sistema visual del proyecto destino sin romper la autocontención: copia sus valores como custom properties en el `:root` del artefacto. Nunca enlaza su CSS ni una fuente externa; la precedencia es intención de la persona → sistema del proyecto → defaults de la plantilla.
 - Puede formar un bucle de varios artefactos —exploración → plan → mockups— como memoria del razonamiento, con enlaces relativos entre ficheros hermanos de `.explanations/`. Cada página del bucle pasa la verificación por separado; el índice los lista con la relación que declaren en `enlaces`.
 - Delega lo que no es suyo: documentación duradera del repositorio a `document-management-software`; identidad y sistema visual de un producto a `design-system-architect`; implementar una interfaz real a `web-interface-visual-design`. Si el artefacto es un paso previo —explorar, decidir, probar, comunicar— es de esta skill.
@@ -118,7 +118,7 @@ Un encargo puede necesitar varios artefactos que se leen en orden —una explora
      "fuentes": ["conversación"], "enlaces": ["plan.html", "mockups.html"]} -->
 ```
 
-`build-index.py` muestra esa relación en el índice junto al artefacto. Los enlaces del cuerpo son contenido, pero siguen siendo rutas relativas: ni `file:///` absolutos ni URLs que conviertan el bucle en una dependencia de red.
+`build-index.py` muestra esa relación en el índice junto al artefacto, y su filtro «Solo bucles» aísla los que forman uno. Los enlaces del cuerpo son contenido, pero siguen siendo rutas relativas: ni `file:///` absolutos ni URLs que conviertan el bucle en una dependencia de red.
 
 ## Código en el artefacto
 
@@ -165,7 +165,7 @@ La salida es un fragmento con `<span class="tok-kw|tok-str|tok-com|tok-num|tok-f
 ### 4. Verificar, revisar a ojo, indexar y abrir
 
 1. Publica con `python3 scripts/publish.py ../../.explanations/<slug>.html`. Verifica con `check-artifact.py`, regenera `index.html` de la carpeta y lo abre; son los tres pasos, en ese orden y sin saltarse ninguno. Corrige lo que la verificación señale como error: recursos externos, HTML mal formado, marcador de plantilla sin sustituir, título sin personalizar, procedencia incompleta o `enlaces` inválidos. Los avisos —contraste de tokens por debajo de WCAG AA y ficheros de más de 100 KB— no bloquean, pero se leen y se corrigen o se justifican.
-2. Si la verificación falla, `publish.py` no indexa ni abre: corrige y repite. `--no-open` publica sin abrir (bucles y comprobaciones); `--quiet` calla el resumen propio. El índice lista los artefactos con su título, fecha, familia y, si la declaran, sus enlaces: es parte de generar, no un extra.
+2. Si la verificación falla, `publish.py` no indexa ni abre: corrige y repite. `--no-open` publica sin abrir (bucles y comprobaciones); `--quiet` calla el resumen propio. El índice lista los artefactos con su título, fecha, familia y, si la declaran, sus enlaces, y añade búsqueda por título, filtro por familia, por bucles y por periodo —hoy, esta semana, este mes, este año, medido contra el día en que se abre—, vista de lista o tarjetas y páginas de 20; sin JavaScript queda la lista completa y enlazada. Las fechas se leen como DD-MM-YYYY y conservan el dato ISO en `datetime` para ordenar. Su HTML sale de `assets/plantilla-indice.html`, que `build-index.py` rellena: el índice no se edita a mano ni se reescribe para cambiar su diseño. Es parte de generar, no un extra.
 3. En un bucle, publica cada página por separado y abre la que sirve de entrada. Si no hay navegador disponible, `publish.py` avisa con la ruta completa y sigue; sugiere servir el proyecto con `serve-web.sh` si existe.
 4. **Verificación perceptiva**, obligatoria antes de declarar el artefacto entregado. Con confirmación explícita para el primer navegador de la sesión —la skill `playwright-cli-usage` la exige antes de cada `open`—, ejecuta `python3 scripts/perceive.py ../../.explanations/<slug>.html`: abre el artefacto por `file://`, mide el desborde horizontal a 390, 768 y 1440 px, captura en claro y oscuro y recoge los errores de consola. Sin confirmación o sin navegador (sale 3), usa `--dry-run` para dejar la secuencia y abre el artefacto con `open-artifact.sh` para que lo revise la persona. Mira las capturas —primer viewport, los tres anchos, foco, contraste y tema oscuro—; el script mide, la calidad la juzgas tú. Si el informe dice «Medición incompleta», no des la revisión por hecha. No declares una revisión visual que no has hecho.
 5. Tras el feedback de la persona, genera la siguiente vuelta como artefacto nuevo y conserva el anterior.

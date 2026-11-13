@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Pruebas de scripts/build-index.py: lista, fechas, familia, enlaces y autocontención.
+"""Pruebas de scripts/build-index.py: lista, fechas, familia, enlaces y controles.
 
 Uso: python3 test-build-index.py
 Sale 0 si todo pasa; imprime el caso fallido y sale 1 si no.
@@ -11,8 +11,9 @@ import tempfile
 import time
 from pathlib import Path
 
-SCRIPT = Path(__file__).with_name("build-index.py")
-CHECKER = Path(__file__).with_name("check-artifact.py")
+SCRIPTS = Path(__file__).resolve().parent
+SCRIPT = SCRIPTS / "build-index.py"
+CHECKER = SCRIPTS / "check-artifact.py"
 
 
 def artifact(title: str, meta: str) -> str:
@@ -57,15 +58,18 @@ def main() -> int:
         result = run(str(tmp))
         index = tmp / "index.html"
         text = index.read_text(encoding="utf-8") if index.is_file() else ""
-        links_block = text.split('<span class="links">', 1)[-1].split("</span>", 1)[0]
+        links_block = text.split('<span class="bucle">', 1)[-1].split("</span>", 1)[0]
         checks = [
             ("código 0", result.returncode == 0),
             ("index creado", index.is_file()),
             ("título con metadatos", "Estado verificado" in text),
             ("título sin metadatos", "Exploración sin metadatos" in text),
             ("familia legible", "Informe" in text),
-            ("fecha de metadatos", "2026-01-02" in text),
-            ("fecha de fichero", "2026-02-03" in text),
+            ("fecha de metadatos", "02-01-2026" in text),
+            ("fecha de fichero", "03-02-2026" in text),
+            ("fecha ordenable", 'data-fecha="2026-01-02"' in text
+             and '<time datetime="2026-01-02">02-01-2026</time>' in text),
+            ("título con el proyecto", "El catálogo de explain-html" in text),
             ("enlace relativo", 'href="a-con-meta.html"' in text),
             ("relación visible", "Enlaza:" in text),
             ("enlaces del bucle", 'href="a-con-meta.html"' in links_block
@@ -73,6 +77,18 @@ def main() -> int:
             ("ignora no-html", "notas.txt" not in text),
             ("no se lista a sí mismo", 'href="index.html"' not in text),
             ("orden por fecha reciente", text.find("Exploración sin metadatos") < text.find("Estado verificado")),
+            ("datos para el filtro", 'data-familia="informe"' in text
+             and 'data-titulo="Estado verificado"' in text),
+            ("un solo miembro del bucle", text.count('data-bucle="') == 1),
+            ("chips de familia", 'data-filtro-familia="informe"' in text
+             and 'data-filtro-familia="exploracion"' in text),
+            ("recuento en el chip", '>Todas <span class="n">3</span>' in text),
+            ("filtro por fecha", 'data-filtro-fecha="hoy"' in text
+             and 'data-filtro-fecha="semana"' in text
+             and 'data-filtro-fecha="mes"' in text
+             and 'data-filtro-fecha="anio"' in text),
+            ("paginación disponible", 'id="paginador"' in text),
+            ("sin marcadores sueltos", "@@" not in text),
         ]
         for name, ok in checks:
             if not ok:
@@ -86,8 +102,22 @@ def main() -> int:
 
         again = run(str(tmp))
         text = index.read_text(encoding="utf-8")
-        if again.returncode != 0 or text.count('<li><a href="') != 3:
+        if again.returncode != 0 or text.count('class="artefacto"') != 3:
             print(f"FALLO «regenerar no duplica entradas»\n{again.stdout}{again.stderr}")
+            failures += 1
+
+        vacia = Path(raw) / "vacia"
+        vacia.mkdir()
+        empty = run(str(vacia))
+        empty_index = vacia / "index.html"
+        empty_text = empty_index.read_text(encoding="utf-8") if empty_index.is_file() else ""
+        empty_check = subprocess.run(
+            [sys.executable, str(CHECKER), str(empty_index)], capture_output=True, text=True
+        )
+        if (empty.returncode != 0 or "Todavía no hay artefactos" not in empty_text
+                or empty_check.returncode != 0):
+            print(f"FALLO «carpeta sin artefactos»\n{empty.stdout}{empty.stderr}"
+                  f"{empty_check.stdout}{empty_check.stderr}")
             failures += 1
 
         missing = run(str(tmp / "no-existe"))
@@ -98,7 +128,7 @@ def main() -> int:
     if failures:
         print(f"{failures} caso(s) fallidos.")
         return 1
-    print("OK: build-index lista, fecha, enlaza y regenera sin duplicar.")
+    print("OK: build-index lista, fecha, enlaza, filtra y regenera sin duplicar.")
     return 0
 
 
