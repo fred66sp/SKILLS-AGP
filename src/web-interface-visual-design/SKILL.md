@@ -2,7 +2,7 @@
 name: web-interface-visual-design
 description: "Diseña, implementa y revisa la calidad visual y comunicativa de interfaces web, componentes, SVG, iconografía, infografías y diagramas. Se activa al diseñar o mejorar páginas, paneles, dashboards o aplicaciones; revisar composición, tipografía, color y jerarquía; crear o revisar SVG e iconos; explicar procesos visualmente; o corregir presentación responsive. Respeta la marca y el sistema de diseño existentes, no impone frameworks y exige inspeccionar el resultado renderizado cuando haya herramientas disponibles. No se usa para backend, bases de datos, lógica de negocio o pruebas puramente funcionales, ni sustituye arquitectura, seguridad o programación idiomática."
 metadata:
-  version: "0.2.0"
+  version: "0.4.0"
 ---
 
 # Diseño visual de interfaces web
@@ -38,7 +38,7 @@ Produce una interfaz que comunique mejor, no más decoración. La fuente de verd
 
 1. Reutiliza tokens, componentes y patrones adecuados. Introduce un componente reutilizable solo cuando exista una responsabilidad o repetición real; no convierte cada variación en una abstracción.
 2. Implementa jerarquía y estructura antes de detalles gráficos. Comprueba espaciado entre elementos relacionados frente a secciones, alineación de texto y controles, superficies y estados de hover, foco, activo, deshabilitado y feedback. Incluye carga, vacío, error y éxito cuando correspondan a la tarea.
-3. Para cualquier SVG, icono, ilustración, logotipo, decoración, diagrama o infografía, lee [visual-assets](references/visual-assets.md) antes de elegir formato o dibujar. Aplica los criterios de su categoría, no los de otra.
+3. Para cualquier SVG, icono, ilustración, logotipo, decoración, diagrama o infografía, lee [visual-assets](references/visual-assets.md) antes de elegir formato o dibujar. Aplica los criterios de su categoría, no los de otra. Para un diagrama técnico premium en superficie oscura o clara, lee además [premium-diagrams](references/premium-diagrams.md) y adapta su plantilla con la técnica documentada; cada plantilla es un solo SVG con las dos calibraciones.
 4. Construye accesibilidad junto con la composición: HTML semántico, orden de lectura y tabulación lógico, foco visible no oculto y controles operables por teclado. Da nombre accesible a controles de solo icono; no depende del tooltip, del color ni del hover para transmitir información esencial.
 5. Comprueba contraste [WCAG AA](https://www.w3.org/WAI/WCAG22/Understanding/contrast-minimum.html): texto normal al menos 4.5:1, texto grande (al menos 24 CSS px, o 18.67 CSS px en negrita) 3:1 y límites/indicadores necesarios de controles y gráficos 3:1, con las excepciones de la norma. Mide los colores realmente adyacentes y estados, no solo la paleta teórica.
 6. Conserva texto legible y contenido al ampliar texto al 200% y al comprobar reflow a 320 CSS px; permite scroll localizado para contenido genuinamente bidimensional, no para ocultar un fallo de layout. Usa áreas de interacción adecuadas: al menos 24×24 CSS px o una [excepción de WCAG 2.2](https://www.w3.org/WAI/WCAG22/Understanding/target-size-minimum.html) aplicable y comprobada, como separación o control equivalente.

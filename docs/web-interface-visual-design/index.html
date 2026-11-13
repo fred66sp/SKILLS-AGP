@@ -65,7 +65,8 @@
     <a href="#reglas">5. Dónde están las reglas</a>
     <a href="#preguntas">6. Preguntas cortas</a>
     <a href="#diagramas">7. Los diagramas</a>
-    <a href="#verificacion">8. Verificación</a>
+    <a href="#plantillas">8. Plantillas premium</a>
+    <a href="#verificacion">9. Verificación</a>
     <div class="toc-extra"><a href="../index.html">Volver al catálogo</a></div>
   </nav>
   <main id="contenido" tabindex="-1">
@@ -110,14 +111,18 @@
       <p class="sub">Contrato y referencias con responsabilidades distintas. No requiere un framework ni añade herramientas de ejecución propias.</p>
       <div class="code"><pre><code class="language-bash">web-interface-visual-design/
 ├── SKILL.md
+├── assets/
+│   └── premium-diagrams/  · diez plantillas SVG
 └── references/
     ├── visual-assets.md
+    ├── premium-diagrams.md
     └── visual-acceptance.md</code></pre></div>
       <div class="table-wrap"><table>
         <thead><tr><th scope="col">Fichero</th><th scope="col">Responsabilidad y momento de lectura</th></tr></thead>
         <tbody>
           <tr><td><a href="../../src/web-interface-visual-design/SKILL.md"><code>SKILL.md</code></a></td><td>Al activarse: alcance, fases A–E, accesibilidad, evidencia, errores y criterio de cierre.</td></tr>
           <tr><td><a href="../../src/web-interface-visual-design/references/visual-assets.md"><code>references/visual-assets.md</code></a></td><td>En la fase C, antes de seleccionar, crear o revisar recursos: categorías, formatos, SVG, iconografía y diagramas.</td></tr>
+          <tr><td><a href="../../src/web-interface-visual-design/references/premium-diagrams.md"><code>references/premium-diagrams.md</code></a></td><td>En la fase C, antes de dibujar un diagrama técnico: catálogo de diez plantillas con calibración clara y oscura en el mismo archivo, paleta, tipografía y técnica de adaptación.</td></tr>
           <tr><td><a href="../../src/web-interface-visual-design/references/visual-acceptance.md"><code>references/visual-acceptance.md</code></a></td><td>Al evaluar o cambiar la skill: protocolo y escenarios manuales de interfaz, ilustración SVG e infografía de proceso.</td></tr>
         </tbody>
       </table></div>
@@ -158,8 +163,59 @@
       <div class="note"><p><strong>Documentación del repositorio.</strong> Los diagramas explican la skill; no son recursos que esta deba generar en cada encargo ni evidencia de su utilidad visual.</p></div>
       <p class="sub">En pantallas pequeñas, la vista general reduce las etiquetas. Usa el buscador de nodos del visor para consultar su detalle, o amplía y desplaza el diagrama.</p>
     </section>
+    <section id="plantillas" class="section">
+      <div class="section-head"><span class="section-num">8</span><h2 class="title">Plantillas premium</h2></div>
+      <p class="sub">Diez diagramas técnicos aprobados como base, adaptables a superficie oscura y clara con el mismo archivo. No son imágenes cerradas: texto, color y estructura se sustituyen conservando la anatomía, con la técnica de <a href="../../src/web-interface-visual-design/references/premium-diagrams.md"><code>references/premium-diagrams.md</code></a>.</p>
+      <div class="surface-switch" role="group" aria-label="Superficie de las plantillas">
+        <button type="button" class="surface-btn is-on" data-surface-choice="dark" aria-pressed="true">Superficie oscura</button>
+        <button type="button" class="surface-btn" data-surface-choice="light" aria-pressed="false">Superficie clara</button>
+      </div>
+      <div class="note"><p><strong>Un archivo, dos superficies.</strong> Los colores son variables dentro del propio SVG: como <code>&lt;img&gt;</code> siguen el esquema del sistema; incrustados en la página aceptan <code>data-surface="light"</code> o <code>"dark"</code>. La galería sigue al botón <strong>Tema</strong> de la cabecera, y el conmutador de aquí permite previsualizar ambas calibraciones sobre el mismo archivo.</p></div>
+      <div class="template-gallery" data-surface="dark">
+        <figure class="template-figure">
+          <button class="template-canvas template-thumb" type="button" aria-label="Ampliar radial-orchestration.svg"><img src="../../src/web-interface-visual-design/assets/premium-diagrams/radial-orchestration.svg" alt="Orquestador central que delega en seis servicios, cada uno con su tarjeta de función y alcance."></button>
+          <figcaption><strong>radial-orchestration.svg</strong><span>Topología radial con hub · Orquestador que delega en N servicios, con detalle por tarjeta.</span></figcaption>
+        </figure>
+        <figure class="template-figure">
+          <button class="template-canvas template-thumb" type="button" aria-label="Ampliar pipeline-flow.svg"><img src="../../src/web-interface-visual-design/assets/premium-diagrams/pipeline-flow.svg" alt="Cinco etapas —captura, normaliza, ejecuta, verifica y publica— sobre una onda continua, con el detalle de cada una."></button>
+          <figcaption><strong>pipeline-flow.svg</strong><span>Pipeline secuencial en onda · Proceso de cinco etapas con subdetalle bajo cada nodo.</span></figcaption>
+        </figure>
+        <figure class="template-figure">
+          <button class="template-canvas template-thumb" type="button" aria-label="Ampliar hexagonal-architecture.svg"><img src="../../src/web-interface-visual-design/assets/premium-diagrams/hexagonal-architecture.svg" alt="Núcleo de dominio en el centro, rodeado por el hexágono de aplicación y seis adaptadores de entrada y salida."></button>
+          <figcaption><strong>hexagonal-architecture.svg</strong><span>Arquitectura hexagonal · Puertos y adaptadores, núcleo de dominio, fronteras por capas.</span></figcaption>
+        </figure>
+        <figure class="template-figure">
+          <button class="template-canvas template-thumb" type="button" aria-label="Ampliar decision-tree.svg"><img src="../../src/web-interface-visual-design/assets/premium-diagrams/decision-tree.svg" alt="Una petición que comprueba autorización y validación y ramifica hacia rechazo, revisión humana o aprobación."></button>
+          <figcaption><strong>decision-tree.svg</strong><span>Árbol de decisión · Flujo con dos comprobaciones, ramas y desenlaces.</span></figcaption>
+        </figure>
+        <figure class="template-figure">
+          <button class="template-canvas template-thumb" type="button" aria-label="Ampliar improvement-loop.svg"><img src="../../src/web-interface-visual-design/assets/premium-diagrams/improvement-loop.svg" alt="Bucle de cuatro fases —plan, build, verify y learn— alrededor de un núcleo de iteración guiado por evidencia."></button>
+          <figcaption><strong>improvement-loop.svg</strong><span>Bucle cerrado · Ciclo de cuatro fases que se repite.</span></figcaption>
+        </figure>
+        <figure class="template-figure">
+          <button class="template-canvas template-thumb" type="button" aria-label="Ampliar multiagent-protocol.svg"><img src="../../src/web-interface-visual-design/assets/premium-diagrams/multiagent-protocol.svg" alt="Cadena de client, coordinator, worker y auditor unida por los mensajes request, delegate, evidence, verdict y response."></button>
+          <figcaption><strong>multiagent-protocol.svg</strong><span>Secuencia de mensajes · Protocolo request/response entre agentes.</span></figcaption>
+        </figure>
+        <figure class="template-figure">
+          <button class="template-canvas template-thumb" type="button" aria-label="Ampliar signal-distribution.svg"><img src="../../src/web-interface-visual-design/assets/premium-diagrams/signal-distribution.svg" alt="Anillo segmentado con cinco áreas y su porcentaje de capacidad, junto a la lista con el nombre, la descripción y la cuota de cada sistema."></button>
+          <figcaption><strong>signal-distribution.svg</strong><span>Anillo segmentado y lista · Reparto de capacidad o cuota entre cinco áreas.</span></figcaption>
+        </figure>
+        <figure class="template-figure">
+          <button class="template-canvas template-thumb" type="button" aria-label="Ampliar modular-service-fabric.svg"><img src="../../src/web-interface-visual-design/assets/premium-diagrams/modular-service-fabric.svg" alt="Cadena de cinco módulos —ingest, router, worker, verify y output— con sus servicios de apoyo: API gateway, message bus y audit log."></button>
+          <figcaption><strong>modular-service-fabric.svg</strong><span>Cadena isométrica de módulos · Servicios encadenados con servicios de apoyo.</span></figcaption>
+        </figure>
+        <figure class="template-figure">
+          <button class="template-canvas template-thumb" type="button" aria-label="Ampliar adaptive-delivery-loop.svg"><img src="../../src/web-interface-visual-design/assets/premium-diagrams/adaptive-delivery-loop.svg" alt="Cuatro fases en anillo —discovery, design system, verification y release— alrededor de un centro de entrega continua."></button>
+          <figcaption><strong>adaptive-delivery-loop.svg</strong><span>Anillo de fases con lista · Ciclo con panel de fases y centro de estado.</span></figcaption>
+        </figure>
+        <figure class="template-figure">
+          <button class="template-canvas template-thumb" type="button" aria-label="Ampliar execution-arc.svg"><img src="../../src/web-interface-visual-design/assets/premium-diagrams/execution-arc.svg" alt="Arco de progreso con cinco hitos —intake, plan, build, test y ship— alrededor de un panel de control del flujo de entrega."></button>
+          <figcaption><strong>execution-arc.svg</strong><span>Arco de progreso · Hitos sobre un arco con estado actual.</span></figcaption>
+        </figure>
+      </div>
+    </section>
     <section id="verificacion" class="section">
-      <div class="section-head"><span class="section-num">8</span><h2 class="title">Verificación</h2></div>
+      <div class="section-head"><span class="section-num">9</span><h2 class="title">Verificación</h2></div>
       <p class="sub">La interfaz se renderiza e inspecciona a varios anchos; una entrega sin capturas revisadas ni estados comprobados no está terminada.</p>
 
       <div class="code"><pre><code class="language-bash">python3 scripts/check-repo.py</code></pre></div>
