@@ -97,7 +97,7 @@
       </div>
 
       <div class="note">
-        <p><strong>Lo que no hace.</strong> No toca nada fuera de <code>.explanations/</code>, no produce documentación duradera, no define el sistema visual de una interfaz de producto y no mantiene un catálogo de informes publicado. Los artefactos son desechables: se regeneran, no se versionan.</p>
+        <p><strong>Lo que no hace.</strong> No toca nada fuera de <code>.explanations/</code>, no produce documentación duradera, no define el sistema visual de una interfaz de producto y no publica en red su catálogo de artefactos. Los artefactos son desechables: se regeneran y no se versionan con Git.</p>
       </div>
     </section>
 
@@ -112,7 +112,7 @@
             <tr><td>Informes y estados, explicadores, cuestionarios, diagramas, presentaciones, prototipos, editores a medida, pases de puntos ciegos y entrevistas como HTML de revisión.</td><td>Documentación duradera del repositorio, ADR, runbooks o guías (eso es <code>document-management-software</code>).</td></tr>
             <tr><td>Exploraciones y comparaciones de alternativas que hay que ver lado a lado para elegir.</td><td>La identidad o el sistema visual de un producto (<code>design-system-architect</code>).</td></tr>
             <tr><td>Artefactos interactivos con retorno: «copiar como prompt», «copiar diff», «copiar resultado».</td><td>Implementar una interfaz real de la aplicación (<code>web-interface-visual-design</code>).</td></tr>
-            <tr><td>Artefactos que se abren por <code>file://</code> o por un servidor estático ya existente.</td><td>Publicar en red, autenticar o mantener un catálogo de informes publicado.</td></tr>
+            <tr><td>Artefactos que se abren por <code>file://</code> o por un servidor estático ya existente.</td><td>Publicar en red, autenticar o convertir el catálogo de artefactos en una aplicación.</td></tr>
           </tbody>
         </table>
       </div>
@@ -135,7 +135,7 @@
       <div class="qa"><h3>El encargo es vago o el territorio es desconocido</h3><p>No se elige familia a ciegas: se ofrece proactivamente un pase de puntos ciegos, una entrevista o el artefacto de descubrimiento más pequeño que desbloquee la siguiente decisión. Estos artefactos no representan conocimiento, lo descubren; suele bastar uno, no tres. El catálogo y el momento de cada uno —antes, durante o después de implementar— está en «Descubrir los desconocidos» de <code>SKILL.md</code>.</p></div>
       <div class="qa"><h3>¿Qué es el bloque de procedencia?</h3><p>Un comentario HTML al inicio del body con el prompt del encargo, la fecha, la familia y las fuentes. No se renderiza, sobrevive a cualquier editor y <code>check-artifact.py</code> lo exige completo: sin él, el índice no puede fechar el artefacto y el cierre no puede decir de dónde salió.</p></div>
       <div class="qa"><h3>¿Cuándo se usa el modo rápido?</h3><p>Solo para artefactos rutinarios de texto, listas, tablas, cifras y notas. <code>render-quick.py</code> valida un JSON acotado y lo renderiza de forma determinista; si no valida, se cae a la generación a medida con la plantilla de la familia, que es la vía normal para composiciones propias.</p></div>
-      <div class="qa"><h3>El encargo es una nueva vuelta sobre un artefacto anterior</h3><p>Se genera un artefacto nuevo con versión en el nombre y se conserva el anterior. <code>lifecycle.py</code> conserva por defecto las últimas tres versiones de cada <code>&lt;slug&gt;-v&lt;N&gt;.html</code> y nunca borra la vigente ni nada fuera de <code>.explanations/</code>.</p></div>
+      <div class="qa"><h3>El encargo es una nueva vuelta sobre un artefacto anterior</h3><p>El agente pregunta antes de tocar nada: actualizar el artefacto en su sitio —mismo nombre, sin conservar la versión anterior— o generar uno nuevo con versión en el nombre y conservar el anterior. <code>lifecycle.py</code> conserva por defecto las últimas tres versiones de cada <code>&lt;slug&gt;-v&lt;N&gt;.html</code> y nunca borra la vigente ni nada fuera de <code>.explanations/</code>.</p></div>
       <div class="qa"><h3>¿Puedo usar los colores y tokens del proyecto?</h3><p>Sí, copiando sus valores, nunca enlazando su CSS. <code>tokens-from-project.py</code> extrae las custom properties de un <code>DESIGN.md</code> o los tokens de <code>design-system.json</code> y emite un bloque <code>:root</code> para pegar en el artefacto. La precedencia es intención de la persona → sistema del proyecto → defaults de la plantilla; el artefacto sigue funcionando por <code>file://</code>.</p></div>
       <div class="qa"><h3>¿Puedo repartir el encargo en varios artefactos?</h3><p>Sí: exploración → plan → mockups es un bucle de páginas hermanas en <code>.explanations/</code>, enlazadas con rutas relativas. Cada página pasa <code>check-artifact.py</code> y la que conoce el bucle declara a las demás en <code>enlaces</code>; <code>build-index.py</code> muestra la relación. Los nombres con carpetas, URLs o rutas absolutas se rechazan.</p></div>
       <div class="qa"><h3>¿Y el código que muestra el artefacto?</h3><p>Se resalta con <code>highlight.py</code>, un resaltador determinista para go, python, json, bash, html, javascript y css que escapa el HTML y emite clases <code>tok-*</code>. Su CSS se pega una vez en el <code>&lt;style&gt;</code> del artefacto: sin librerías ni recursos externos.</p></div>
