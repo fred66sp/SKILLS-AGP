@@ -50,6 +50,7 @@ def make_repo(root, version="1.0.0"):
         '<link rel="stylesheet" href="../assets/site.css"></head><body>demo</body></html>\n',
     )
     write(root / "docs" / "index.html", '<a href="demo/index.html">demo</a>\n')
+    write(root / "docs" / "assets" / "site.css", "")
 
 
 def run_cli(root, *arguments):

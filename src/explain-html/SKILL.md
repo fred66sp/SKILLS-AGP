@@ -2,7 +2,7 @@
 name: explain-html
 description: "Genera artefactos HTML autocontenidos —informes, explicadores, cuestionarios, prototipos, diagramas, presentaciones, comparaciones y editores a medida— en .explanations/ del proyecto y los abre en el navegador para revisarlos. Se usa cuando se pide un informe o estado, un cuestionario, un prototipo interactivo, un diagrama o flujo, una presentación, un explicador o un editor desechable con exportación «copiar como prompt»; también ante encargos vagos o revisiones a ciegas: pase de puntos ciegos, entrevista de requisito ambiguo, bitácora de desviaciones, cuestionario de merge o pitch de compra. Cada artefacto es un .html sin dependencias externas que funciona por file:// y separa hechos verificados de desconocidos. No se usa para documentación duradera del repositorio (eso es document-management-software), para la identidad y el sistema visual de un producto (design-system-architect), para implementar una interfaz real (web-interface-visual-design) ni para mantener un catálogo de informes publicado."
 metadata:
-  version: "0.6.0"
+  version: "0.7.0"
 ---
 
 # explain-html: artefactos HTML explicativos
@@ -146,8 +146,8 @@ La salida es un fragmento con `<span class="tok-kw|tok-str|tok-com|tok-num|tok-f
 
 ### 3. Generar
 
-1. Elige la familia y copia su plantilla de `assets/plantilla-<familia>.html`. La plantilla ya trae la estructura completa de esa familia y los invariantes de [visual-language](references/visual-language.md); sustitúyela, no la rodees con otra inventada.
-2. Decide la vía: si el artefacto es rutinario y encaja en el esquema, usa `render-quick.py`; si el encargo es revisar una especificación SDD, `render-sdd.py` la escribe sin HTML a mano; si no, escribe el HTML desde la plantilla. Un JSON inválido no bloquea: se cae a la generación a medida.
+1. Elige la familia y cópiala con `cp assets/plantilla-<familia>.html ../../.explanations/<slug>.html`; después sustituye solo los huecos con ediciones dirigidas. No la reescribas desde cero ni la rodees con otra inventada: ya trae la estructura completa de la familia y los invariantes de [visual-language](references/visual-language.md). El `cp` es la diferencia entre editar dos huecos y volver a emitir 30 KB de HTML.
+2. Decide la vía: si el artefacto es rutinario y encaja en el esquema, usa `render-quick.py`; si el encargo es revisar una especificación SDD, `render-sdd.py` la escribe sin HTML a mano; si no, edita la plantilla ya copiada. Un JSON inválido no bloquea: se cae a la generación a medida.
 3. Genera un único `.explanations/<slug>.html`, con slug en kebab-case descriptivo, por ejemplo `.explanations/estado-semana-45.html`. Si el encargo es un bucle multi-artefacto, cada página es un fichero hermano y declara a las demás en `enlaces`.
 4. Rellena el bloque de procedencia con el prompt real, la fecha de hoy, el slug de la familia y las fuentes verificadas.
 5. Si el proyecto declara su sistema visual y el encargo lo pide, ejecuta `tokens-from-project.py` y copia los valores en el `:root` según la precedencia de la sección anterior; no enlaces su CSS.
@@ -164,10 +164,10 @@ La salida es un fragmento con `<span class="tok-kw|tok-str|tok-com|tok-num|tok-f
 
 ### 4. Verificar, revisar a ojo, indexar y abrir
 
-1. Ejecuta `python3 scripts/check-artifact.py ../../.explanations/<slug>.html` desde la carpeta de la skill y corrige lo que señale como error: recursos externos, HTML mal formado, título sin personalizar, procedencia incompleta o `enlaces` inválidos. Los avisos —contraste de tokens por debajo de WCAG AA y ficheros de más de 100 KB— no bloquean, pero se leen y se corrigen o se justifican.
-2. Regenera el índice: `python3 scripts/build-index.py ../../.explanations`. Lista los artefactos con su título, fecha, familia y, si la declaran, sus enlaces. Es parte de generar, no un extra. En un bucle, verifica cada página por separado y abre la que sirve de entrada.
-3. Abre en el navegador con `scripts/open-artifact.sh ../../.explanations/<slug>.html`. Si no hay navegador disponible, informa la ruta completa y sugiere servir el proyecto con `serve-web.sh` si existe.
-4. **Verificación perceptiva**, obligatoria antes de declarar el artefacto entregado. Si hay navegador automatizable —la skill `playwright-cli-usage` del repositorio indica cómo conseguirlo; no es una dependencia técnica de esta skill—, captura el artefacto renderizado y revísalo visualmente. Si no lo hay, abre el artefacto y pide a la persona que lo revise. En ambos casos mira el primer viewport, 390, 768 y 1440 px, el foco, el contraste, el desborde horizontal y el tema oscuro. No declares una revisión visual que no has hecho.
+1. Publica con `python3 scripts/publish.py ../../.explanations/<slug>.html`. Verifica con `check-artifact.py`, regenera `index.html` de la carpeta y lo abre; son los tres pasos, en ese orden y sin saltarse ninguno. Corrige lo que la verificación señale como error: recursos externos, HTML mal formado, marcador de plantilla sin sustituir, título sin personalizar, procedencia incompleta o `enlaces` inválidos. Los avisos —contraste de tokens por debajo de WCAG AA y ficheros de más de 100 KB— no bloquean, pero se leen y se corrigen o se justifican.
+2. Si la verificación falla, `publish.py` no indexa ni abre: corrige y repite. `--no-open` publica sin abrir (bucles y comprobaciones); `--quiet` calla el resumen propio. El índice lista los artefactos con su título, fecha, familia y, si la declaran, sus enlaces: es parte de generar, no un extra.
+3. En un bucle, publica cada página por separado y abre la que sirve de entrada. Si no hay navegador disponible, `publish.py` avisa con la ruta completa y sigue; sugiere servir el proyecto con `serve-web.sh` si existe.
+4. **Verificación perceptiva**, obligatoria antes de declarar el artefacto entregado. Con confirmación explícita para el primer navegador de la sesión —la skill `playwright-cli-usage` la exige antes de cada `open`—, ejecuta `python3 scripts/perceive.py ../../.explanations/<slug>.html`: abre el artefacto por `file://`, mide el desborde horizontal a 390, 768 y 1440 px, captura en claro y oscuro y recoge los errores de consola. Sin confirmación o sin navegador (sale 3), usa `--dry-run` para dejar la secuencia y abre el artefacto con `open-artifact.sh` para que lo revise la persona. Mira las capturas —primer viewport, los tres anchos, foco, contraste y tema oscuro—; el script mide, la calidad la juzgas tú. Si el informe dice «Medición incompleta», no des la revisión por hecha. No declares una revisión visual que no has hecho.
 5. Tras el feedback de la persona, genera la siguiente vuelta como artefacto nuevo y conserva el anterior.
 
 ### 5. Podar versiones antiguas
@@ -187,7 +187,8 @@ Informa: ruta del artefacto, familia elegida y por qué, qué se verificó de ca
 
 ## Gestión de errores
 
-- Navegador no disponible: informa la ruta completa y la alternativa de servir el proyecto; no reintenta la apertura.
+- Navegador no disponible: `publish.py` informa la ruta completa y sigue; `perceive.py` sale 3 y deja la alternativa manual. No reintentes la apertura más de una vez.
+- `publish.py` falla en la verificación: no ha indexado ni abierto; corrige lo que señale `check-artifact.py` y repite. Si falla al indexar, no abre: corrige el índice antes de reintentar.
 - Material fuente insuficiente: genera con los verificados y una sección «Desconocidos» explícita; no bloquea el encargo ni rellena el hueco.
 - Encargo que no encaja en ninguna familia: elige la más cercana, usa la plantilla base y decláralo en el cierre; si es claramente otro dominio, delega y di a quién.
 - JSON del modo rápido inválido: lee el mensaje, corrige el JSON si el artefacto era rutinario o cae a la generación a medida; no inventa bloques fuera del esquema.
@@ -196,5 +197,5 @@ Informa: ruta del artefacto, familia elegida y por qué, qué se verificó de ca
 - `tokens-from-project.py` no encuentra tokens: usa los defaults de la plantilla y declara en el cierre que el sistema del proyecto no aportó valores legibles; no inventes un sistema ni enlaces CSS.
 - Bucle con un eslabón roto: cada página se verifica y se enlaza por su nombre relativo; si una aún no existe, no la declares en `enlaces` ni la enlaces como si estuviera terminada.
 - Entrevista interrumpida: exporta lo respondido hasta el momento como prompt parcial y declara qué queda por preguntar; no descartes las respuestas ni generes el artefacto como si la entrevista hubiera terminado.
-- Revisión perceptiva no disponible: abre el artefacto y pide la revisión a la persona; no sustituyas la comprobación visual por una suposición.
+- Revisión perceptiva no disponible (`perceive.py` sale 3): abre el artefacto y pide la revisión a la persona; no sustituyas la comprobación visual por una suposición.
 - `lifecycle.py` con `--keep 0`: se rechaza porque borraría la versión vigente; usa 1 o más. Si un artefacto no sigue el patrón `<slug>-v<N>.html`, no se poda: renómbralo solo si el encargo lo pide.

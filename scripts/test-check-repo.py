@@ -144,6 +144,18 @@ class CheckRepoTest(unittest.TestCase):
         errors = self.errors()
         self.assertTrue(any("estilo inline" in item for item in errors))
 
+    def test_html_links_inside_scripts_are_ignored(self):
+        make_repo(self.root)
+        write(
+            self.root / "docs" / "demo" / "index.html",
+            '<!doctype html><html data-skill="demo"><head>'
+            '<link rel="stylesheet" href="../assets/site.css"></head><body>'
+            '<script>var r=\'<a href="\'+(e=s)+\'"\';'
+            'var u=`<i` + `mg src="${e=s}" alt="">`;</script>'
+            "</body></html>\n",
+        )
+        self.assertEqual(self.errors(), [])
+
     def test_broken_html_href_is_rejected(self):
         make_repo(self.root)
         write(

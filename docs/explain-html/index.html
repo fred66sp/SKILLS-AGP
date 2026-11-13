@@ -127,8 +127,8 @@
         <div class="flow-step"><code>paso 2</code><strong>Reunir el material</strong><p>Fuentes del proyecto: código, documentación, historial, salidas de comandos. Cada dato verificado lleva su fuente; lo demás va a «Desconocidos».</p></div>
         <div class="flow-step"><code>paso 3</code><strong>Elegir familia</strong><p>Comparación, explicador, informe, diagrama, prototipo, cuestionario, editor, presentación, especificación SDD, pase de puntos ciegos o entrevista; si nadie sabe aún qué preguntar, el bloque «Descubrir los desconocidos» de <code>SKILL.md</code> decide el artefacto más pequeño que desbloquee la siguiente decisión. Luego, la sección de esa familia en <code>references/artifact-patterns.md</code>.</p></div>
         <div class="flow-step"><code>paso 4</code><strong>Generar</strong><p>Copia la plantilla de la familia elegida, rellena el bloque de procedencia —prompt, fecha, familia y fuentes— y guarda un único <code>.explanations/&lt;slug&gt;.html</code>; si el encargo es rutinario, <code>render-quick.py</code> lo renderiza desde un JSON validado; si es revisar un árbol de especificación, <code>render-sdd.py</code> lo compone desde el modelo de <code>sdd_scan.py</code>. Si el proyecto declara su sistema visual, <code>tokens-from-project.py</code> copia sus valores en el <code>:root</code>; si muestra código, <code>highlight.py</code> lo resalta; si forma un bucle, cada página hermana se declara en <code>enlaces</code>.</p></div>
-        <div class="flow-step"><code>paso 5</code><strong>Verificar e indexar</strong><p><code>check-artifact.py</code> comprueba autocontención, HTML bien formado, título y procedencia, y avisa del contraste bajo y de ficheros de más de 100 KB; <code>build-index.py</code> regenera el índice de <code>.explanations/</code> con la relación de enlaces. Un artefacto con recursos externos, HTML roto o procedencia vacía no se entrega.</p></div>
-        <div class="flow-step"><code>paso 6</code><strong>Abrir, revisar a ojo y cerrar</strong><p><code>open-artifact.sh</code> lo abre en el navegador y la verificación perceptiva revisa el render —o lo revisa la persona si no hay navegador automatizable—; <code>lifecycle.py</code> conserva las últimas versiones de cada artefacto. El cierre informa ruta, familia, tokens, bucle, revisión y cómo pedir cambios.</p></div>
+        <div class="flow-step"><code>paso 5</code><strong>Publicar en un paso</strong><p><code>publish.py</code> encadena la verificación —<code>check-artifact.py</code>: autocontención, HTML bien formado, título, procedencia y marcador de plantilla sin sustituir—, la regeneración del índice de <code>.explanations/</code> con la relación de enlaces y la apertura. Si la verificación falla no escribe índice ni abre: un artefacto con recursos externos, HTML roto o procedencia vacía no se entrega. <code>--no-open</code> publica sin abrir, para bucles y comprobaciones.</p></div>
+        <div class="flow-step"><code>paso 6</code><strong>Verificación perceptiva y cierre</strong><p><code>perceive.py</code> abre el artefacto por <code>file://</code> con <code>playwright-cli</code>, mide el desborde horizontal a 390, 768 y 1440 px, captura en tema claro y oscuro y recoge los errores de consola; las capturas van por defecto a un directorio temporal, o al que fije <code>--out</code>. La primera apertura de navegador de la sesión pide confirmación explícita, como exige <code>playwright-cli-usage</code>. Sale 0 sin hallazgos, 1 con ellos y 3 sin navegador: entonces <code>--dry-run</code> deja la secuencia y la revisión la hace la persona con la ruta del artefacto. Si una medición no se entiende, el informe dice «Medición incompleta» y no se da por hecha. <code>lifecycle.py</code> conserva las últimas versiones de cada artefacto. El cierre informa ruta, familia, tokens, bucle, revisión y cómo pedir cambios.</p></div>
       </div>
 
       <div class="qa"><h3>Falta material verificado suficiente</h3><p>El artefacto se genera igualmente con lo verificado y una sección «Desconocidos» explícita, con la pregunta o la prueba que desbloquearía cada hueco. Nunca se rellena con lo plausible.</p></div>
@@ -160,8 +160,10 @@
 │   └── marked.min.js               # marked 12.0.2 minificado (MIT) para el modal de sdd
 └── scripts/
     ├── artifact_meta.py            # familias, procedencia y enlaces del bucle
-    ├── check-artifact.py           # autocontención, HTML, procedencia y avisos
+    ├── check-artifact.py           # autocontención, HTML, procedencia, marcador y avisos
     ├── build-index.py              # regenera .explanations/index.html
+    ├── publish.py                  # verifica, indexa y abre en un paso
+    ├── perceive.py                 # desborde, capturas claro/oscuro y errores de consola
     ├── render-quick.py             # modo rápido desde un JSON validado
     ├── render-sdd.py               # familia sdd desde el modelo de sdd_scan.py
     ├── sdd_scan.py                 # modelo estructural de un árbol SDD en JSON
@@ -183,10 +185,12 @@
             <tr><td><code>scripts/render-sdd.py</code></td><td>Paso 4, cuando el encargo es revisar un árbol de especificación SDD.</td></tr>
             <tr><td><code>scripts/tokens-from-project.py</code></td><td>Paso 4, si el proyecto declara su sistema visual y el encargo pide usarlo.</td></tr>
             <tr><td><code>scripts/highlight.py</code></td><td>Paso 4, cuando el artefacto muestra código.</td></tr>
-            <tr><td><code>scripts/check-artifact.py</code></td><td>Paso 5, antes de abrir el artefacto.</td></tr>
-            <tr><td><code>scripts/build-index.py</code></td><td>Paso 5, tras generar o borrar artefactos; muestra la relación de <code>enlaces</code>.</td></tr>
+            <tr><td><code>scripts/check-artifact.py</code></td><td>Paso 5, a través de <code>publish.py</code>; si falla, no hay índice ni apertura.</td></tr>
+            <tr><td><code>scripts/build-index.py</code></td><td>Paso 5, a través de <code>publish.py</code>; también a mano tras borrar artefactos, porque muestra la relación de <code>enlaces</code>.</td></tr>
+            <tr><td><code>scripts/publish.py</code></td><td>Paso 5, siempre que el artefacto esté generado: publica en un paso, salvo indicación contraria.</td></tr>
+            <tr><td><code>scripts/perceive.py</code></td><td>Paso 6, antes de declarar el artefacto entregado; mide desborde, capturas y consola.</td></tr>
             <tr><td><code>scripts/lifecycle.py</code></td><td>Paso 6, cuando una vuelta nueva deja versiones antiguas.</td></tr>
-            <tr><td><code>scripts/open-artifact.sh</code></td><td>Paso 6, tras pasar la verificación y antes de la revisión perceptiva.</td></tr>
+            <tr><td><code>scripts/open-artifact.sh</code></td><td>Paso 6, a través de <code>publish.py</code>; a mano cuando <code>perceive.py</code> sale 3 y no hay navegador automatizable.</td></tr>
           </tbody>
         </table>
       </div>
@@ -253,8 +257,8 @@
       <p class="sub">Cada artefacto pasa su verificación antes de abrirse; el repositorio entero pasa su puerta antes de cerrar un cambio.</p>
 
       <div class="code"><pre><code class="language-bash"># por artefacto, desde la carpeta de la skill
-python3 scripts/check-artifact.py ../../.explanations/&lt;slug&gt;.html
-python3 scripts/build-index.py ../../.explanations
+python3 scripts/publish.py ../../.explanations/&lt;slug&gt;.html
+python3 scripts/perceive.py ../../.explanations/&lt;slug&gt;.html
 python3 scripts/lifecycle.py ../../.explanations --dry-run
 
 # puerta del repositorio
@@ -264,14 +268,14 @@ python3 scripts/check-repo.py</code></pre></div>
         <table>
           <thead><tr><th>Código</th><th>Significado</th></tr></thead>
           <tbody>
-            <tr><td><code>0</code></td><td>Artefacto autocontenido, bien formado, con título, procedencia y enlaces válidos —aunque haya avisos de contraste o tamaño—, índice regenerado, o repositorio sin hallazgos.</td></tr>
-            <tr><td><code>distinto de 0</code></td><td>Recurso externo, HTML mal formado, título o procedencia sin personalizar, enlaces no relativos, JSON del modo rápido inválido o hallazgo estructural; se corrige antes de cerrar.</td></tr>
+            <tr><td><code>0</code></td><td>Artefacto autocontenido, bien formado, con título, procedencia, marcador sustituido y enlaces válidos —aunque haya avisos de contraste o tamaño—, índice regenerado, percepción sin hallazgos o repositorio sin hallazgos.</td></tr>
+            <tr><td><code>distinto de 0</code></td><td>Recurso externo, HTML mal formado, título, procedencia o marcador sin personalizar, enlaces no relativos, JSON del modo rápido inválido o hallazgo estructural; se corrige antes de cerrar. <code>perceive.py</code> separa el 1 —desborde o errores de consola— del 3 —sin navegador, que deja la revisión manual—.</td></tr>
           </tbody>
         </table>
       </div>
 
       <div class="note">
-        <p>El script comprueba autocontención, HTML bien formado, título, procedencia y enlaces, y avisa del contraste de los tokens y de los ficheros de más de 100 KB sin cambiar el código de salida. No comprueba la calidad del contenido ni la accesibilidad completa: eso es criterio del agente según <code>references/visual-language.md</code>, que incluye la revisión perceptiva del artefacto renderizado. Un artefacto que el script no pasa no se entrega ni se abre.</p>
+        <p><code>publish.py</code> comprueba autocontención, HTML bien formado, título, procedencia y marcador, y avisa del contraste de los tokens y de los ficheros de más de 100 KB sin cambiar el código de salida; si falla, no indexa ni abre. <code>perceive.py</code> mide el desborde horizontal a 390, 768 y 1440 px, captura en claro y oscuro y recoge los errores de consola. Ninguno juzga la calidad del contenido ni la accesibilidad completa: eso es criterio del agente según <code>references/visual-language.md</code>, que fija qué mirar en las capturas. Un artefacto que la verificación no pasa no se entrega ni se abre.</p>
       </div>
     </section>
 
