@@ -88,6 +88,8 @@ def main() -> int:
              and 'data-filtro-fecha="mes"' in text
              and 'data-filtro-fecha="anio"' in text),
             ("paginación disponible", 'id="paginador"' in text),
+            ("modo borrado", 'acciones-borrado' in text and 'selector-borrado' in text
+             and 'modal-borrado' in text and 'Copiar prompt' in text),
             ("sin marcadores sueltos", "@@" not in text),
         ]
         for name, ok in checks:

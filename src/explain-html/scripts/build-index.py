@@ -10,8 +10,9 @@ modificación del fichero. El HTML sale de `assets/plantilla-indice.html`: el
 script sustituye sus marcadores por los artefactos, los recuentos, la fecha de
 regeneración y el nombre del proyecto en el titular (la carpeta que contiene a
 `.explanations`). La plantilla trae búsqueda por título, filtro por familia y por
-bucles, vista de lista o tarjetas y paginación de 20; sin JavaScript queda la
-lista completa y enlazada. Escribe `index.html` en ese mismo directorio, sin
+bucles, vista de lista o tarjetas, paginación de 20 y modo borrado —selección
+múltiple y prompt copiable para que el agente retire los ficheros—; sin
+JavaScript queda la lista completa y enlazada. Escribe `index.html` en ese mismo directorio, sin
 dependencias y funcional por file://. No toca los artefactos ni nada fuera del
 directorio. Se ejecuta tras generar cada artefacto nuevo.
 """
