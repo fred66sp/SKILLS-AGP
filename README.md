@@ -255,7 +255,7 @@ Diseña, implementa y revisa la calidad visual de interfaces web sin imponer un 
 
 Contrato completo: [`src/web-interface-visual-design/SKILL.md`](src/web-interface-visual-design/SKILL.md). Sus referencias especializan los recursos visuales y definen escenarios de aceptación manual para interfaz, SVG e infografía, sin añadir una suite de CI.
 
-Documentación: [`docs/web-interface-visual-design/index.html`](docs/web-interface-visual-design/index.html), con diagramas de flujo de trabajo y arquitectura.
+Documentación: [`docs/web-interface-visual-design/index.html`](docs/web-interface-visual-design/index.html), con diagramas de flujo de trabajo y arquitectura, y la galería de las diez plantillas premium.
 
 La calidad visual pertenece a esta skill; arquitectura, lenguaje, lógica de negocio, seguridad y pruebas funcionales conservan sus contratos especializados. En una revisión sin autorización de cambios, solo informa de hallazgos. El sistema visual que consume pertenece a `design-system-architect`.
 
@@ -433,6 +433,7 @@ Cada skill declara su versión independiente en `metadata.version`; el procedimi
 - `docs/web-interface-visual-design/index.html`: página de entrada a la skill de diseño visual web.
 - `docs/web-interface-visual-design/flujo-de-trabajo.html`: diagrama de la inspección, implementación y verificación visual.
 - `docs/web-interface-visual-design/arquitectura.html`: diagrama del contrato, sus referencias y la evidencia renderizada.
+- `docs/web-interface-visual-design/index.html` (sección «Plantillas premium»): galería de las diez plantillas de diagrama con conmutador de superficie (clara y oscura), con tipo y mejor uso de cada una.
 - `docs/security-engineering/index.html`: página de entrada a la skill de seguridad, con el alcance, el procedimiento, el paquete y el escáner.
 - `docs/security-engineering/flujo-de-trabajo.html`: diagrama del flujo, del encargo al riesgo residual.
 - `docs/security-engineering/arquitectura.html`: diagrama del paquete, la superficie revisada y la puerta.

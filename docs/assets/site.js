@@ -141,3 +141,111 @@
     observer.observe(block);
   });
 })();
+
+// Galería de plantillas: un solo SVG sirve en claro y oscuro (data-surface);
+// la miniatura lo incrusta y el modal lo muestra a tamaño completo.
+(function () {
+  "use strict";
+  var gallery = document.querySelector(".template-gallery");
+  if (!gallery) { return; }
+  var switches = document.querySelectorAll(".surface-btn");
+  var surface = gallery.getAttribute("data-surface") || "dark";
+
+  function setSurface(next) {
+    surface = next;
+    gallery.setAttribute("data-surface", next);
+    Array.prototype.forEach.call(gallery.querySelectorAll("svg"), function (svg) {
+      svg.setAttribute("data-surface", next);
+    });
+    var dlg = document.getElementById("template-dialog");
+    if (dlg) { dlg.setAttribute("data-surface", next); }
+    Array.prototype.forEach.call(switches, function (b) {
+      var on = b.getAttribute("data-surface-choice") === next;
+      b.classList.toggle("is-on", on);
+      b.setAttribute("aria-pressed", on ? "true" : "false");
+    });
+  }
+
+  Array.prototype.forEach.call(switches, function (b) {
+    b.addEventListener("click", function () { setSurface(b.getAttribute("data-surface-choice")); });
+  });
+
+  // La galería sigue al tema de la página: el botón «Tema» de la cabecera
+  // también cambia las miniaturas y el modal. El conmutador de sección queda
+  // como vista previa manual hasta el siguiente cambio de tema.
+  var root = document.documentElement;
+  function themeSurface() {
+    return root.getAttribute("data-theme") === "light" ? "light" : "dark";
+  }
+  setSurface(themeSurface());
+  if (window.MutationObserver) {
+    new MutationObserver(function () { setSurface(themeSurface()); })
+      .observe(root, { attributes: true, attributeFilter: ["data-theme"] });
+  }
+
+  // Incrusta el SVG para que acepte data-surface; como <img> seguiría al sistema.
+  Array.prototype.forEach.call(gallery.querySelectorAll(".template-thumb img"), function (img) {
+    fetch(img.getAttribute("src")).then(function (r) {
+      if (!r.ok) { throw new Error("sin acceso local"); }
+      return r.text();
+    }).then(function (text) {
+      var doc = new DOMParser().parseFromString(text, "image/svg+xml");
+      var svg = doc && doc.documentElement;
+      if (!svg || svg.nodeName.toLowerCase() !== "svg") { throw new Error("SVG inválido"); }
+      svg = document.importNode(svg, true);
+      svg.setAttribute("data-surface", surface);
+      img.replaceWith(svg);
+    }).catch(function () { /* se queda el <img>: seguirá al sistema */ });
+  });
+
+  // Modal: mueve el mismo nodo (sin duplicar ids) y lo devuelve al cerrar.
+  var dialog = null, canvas = null, title = null, opener = null, moved = null;
+
+  function build() {
+    dialog = document.createElement("dialog");
+    dialog.id = "template-dialog";
+    dialog.className = "template-dialog";
+    dialog.setAttribute("data-surface", surface);
+    dialog.innerHTML =
+      '<div class="template-dialog-head"><p class="template-dialog-title"></p>' +
+      '<button type="button" class="template-dialog-close" aria-label="Cerrar vista ampliada">' +
+      '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>' +
+      '</button></div><div class="template-dialog-canvas"></div>';
+    document.body.appendChild(dialog);
+    canvas = dialog.querySelector(".template-dialog-canvas");
+    title = dialog.querySelector(".template-dialog-title");
+    dialog.querySelector(".template-dialog-close").addEventListener("click", function () { dialog.close(); });
+    dialog.addEventListener("click", function (ev) { if (ev.target === dialog) { dialog.close(); } });
+    dialog.addEventListener("close", function () {
+      if (moved && opener) { opener.appendChild(moved); }
+      moved = null;
+      if (opener) { opener.focus(); opener = null; }
+    });
+  }
+
+  Array.prototype.forEach.call(gallery.querySelectorAll(".template-thumb"), function (btn) {
+    btn.addEventListener("click", function () {
+      if (!dialog) { build(); }
+      var svg = btn.querySelector("svg");
+      var img = btn.querySelector("img");
+      if (typeof dialog.showModal !== "function") {
+        if (img) { window.open(img.src, "_blank", "noopener"); }
+        return;
+      }
+      opener = btn;
+      moved = null;
+      var caption = btn.parentElement && btn.parentElement.querySelector("figcaption strong");
+      title.textContent = caption ? caption.textContent : "Plantilla";
+      dialog.setAttribute("data-surface", surface);
+      canvas.innerHTML = "";
+      if (svg) { moved = svg; canvas.appendChild(svg); }
+      else if (img) {
+        var big = document.createElement("img");
+        big.src = img.getAttribute("src");
+        big.alt = img.getAttribute("alt") || "";
+        canvas.appendChild(big);
+      }
+      dialog.showModal();
+    });
+  });
+})();
