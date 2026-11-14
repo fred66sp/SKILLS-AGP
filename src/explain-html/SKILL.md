@@ -87,7 +87,7 @@ Para artefactos rutinarios —texto, listas, tablas, cifras y notas, sin composi
 python3 scripts/render-quick.py <esquema.json> ../../.explanations/<slug>.html
 ```
 
-El JSON lleva `titulo`, `familia`, `procedencia` (`prompt`, `fecha`, `fuentes`) y `secciones`; cada sección tiene `titulo` y `bloques`, y cada bloque es uno de `parrafo`, `lista`, `tabla`, `cifra` o `nota`. `desconocidos` es opcional. El esquema completo, con las claves admitidas por bloque, está en la cabecera de [render-quick.py](scripts/render-quick.py). La salida usa los mismos tokens y estructura que la plantilla, escapa todo el texto y no depende del reloj: el mismo JSON produce el mismo HTML.
+El JSON lleva `titulo`, `familia`, `procedencia` (`prompt`, `fecha`, `fuentes`) y `secciones`; cada sección tiene `titulo` y `bloques`, y cada bloque es uno de `parrafo`, `lista`, `tabla`, `cifra` o `nota`. `desconocidos` es opcional. El esquema completo, con las claves admitidas por bloque, está en la cabecera de [render-quick.py](scripts/render-quick.py). La salida usa los mismos tokens que las plantillas y copia el esqueleto base ([plantilla-artefacto](assets/plantilla-artefacto.html)), no la plantilla de familia: si el encargo encaja en una familia, esa plantilla copiada a mano es la vía. Escapa todo el texto y no depende del reloj: el mismo JSON produce el mismo HTML.
 
 Si el JSON no valida, el script imprime los problemas y sale con código distinto de 0; en ese caso **no se fuerza el esquema**: se cae a la generación a medida normal con la plantilla de familia. El modo rápido es para lo rutinario, no para lo que pide una composición específica.
 
