@@ -1,0 +1,382 @@
+{
+  "schema_version": 2,
+  "diagram_type": "workflow",
+  "meta": {
+    "title": "Flujo de trabajo de Frontend Architecture Boundaries",
+    "subtitle": "De la inspección a la verificación: qué se etiqueta como evidencia, cuándo se pide el dato que falta, qué se compara y qué se demuestra antes de cerrar.",
+    "locale": "es",
+    "output": "docs/frontend-architecture-boundaries/flujo-de-trabajo.html",
+    "visual_preset": "signal-flow",
+    "quality_profile": "showcase"
+  },
+  "lanes": [
+    {
+      "id": "encargo",
+      "label": "Persona y encargo"
+    },
+    {
+      "id": "skill",
+      "label": "La skill: siete fases"
+    },
+    {
+      "id": "juicio",
+      "label": "Registro y entrega"
+    },
+    {
+      "id": "control",
+      "label": "Evidencia y paradas",
+      "variant": "exception"
+    }
+  ],
+  "phases": [
+    {
+      "id": "inspeccion",
+      "label": "Inspeccionar",
+      "fromCol": 0,
+      "toCol": 0
+    },
+    {
+      "id": "diagnostico",
+      "label": "Diagnosticar",
+      "fromCol": 1,
+      "toCol": 1,
+      "variant": "emphasis"
+    },
+    {
+      "id": "comparacion",
+      "label": "Comparar",
+      "fromCol": 2,
+      "toCol": 2
+    },
+    {
+      "id": "decision",
+      "label": "Decidir",
+      "fromCol": 3,
+      "toCol": 3,
+      "variant": "emphasis"
+    },
+    {
+      "id": "diseno",
+      "label": "Diseñar",
+      "fromCol": 4,
+      "toCol": 4
+    },
+    {
+      "id": "ejecucion",
+      "label": "Ejecutar y verificar",
+      "fromCol": 5,
+      "toCol": 5,
+      "variant": "security"
+    }
+  ],
+  "groups": [
+    {
+      "id": "evidencia-no-contexto",
+      "label": "Evidencia, no contexto",
+      "lane": "skill",
+      "fromCol": 1,
+      "toCol": 2,
+      "variant": "emphasis"
+    },
+    {
+      "id": "puerta",
+      "label": "La puerta exige evidencia",
+      "lane": "control",
+      "fromCol": 4,
+      "toCol": 5,
+      "variant": "security"
+    }
+  ],
+  "mainPath": [
+    "encargo",
+    "inspecciona",
+    "diagnostica",
+    "compara",
+    "decide",
+    "disena",
+    "ejecuta",
+    "verifica",
+    "resultado"
+  ],
+  "nodes": [
+    {
+      "id": "encargo",
+      "lane": "encargo",
+      "col": 0,
+      "type": "external",
+      "label": "Encargo",
+      "sublabel": "auditar · decidir",
+      "tag": "alcance primero",
+      "icon": "start",
+      "width": 135
+    },
+    {
+      "id": "inspecciona",
+      "lane": "skill",
+      "col": 0,
+      "type": "backend",
+      "label": "1 · Inspeccionar",
+      "sublabel": "stack y entrega",
+      "tag": "diagnóstico",
+      "width": 135
+    },
+    {
+      "id": "diagnostica",
+      "lane": "skill",
+      "col": 1,
+      "type": "backend",
+      "label": "2 · Diagnosticar",
+      "sublabel": "con evidencia",
+      "tag": "hechos primero",
+      "width": 135
+    },
+    {
+      "id": "compara",
+      "lane": "skill",
+      "col": 2,
+      "type": "backend",
+      "label": "3 · Comparar",
+      "sublabel": "cinco opciones",
+      "tag": "diez criterios",
+      "width": 135
+    },
+    {
+      "id": "decide",
+      "lane": "skill",
+      "col": 3,
+      "type": "backend",
+      "label": "4 · Decidir",
+      "sublabel": "menor complejidad",
+      "tag": "requisito primero",
+      "width": 135
+    },
+    {
+      "id": "disena",
+      "lane": "skill",
+      "col": 4,
+      "type": "backend",
+      "label": "5 · Diseñar",
+      "sublabel": "interfaz y contrato",
+      "tag": "pruebas y vuelta",
+      "width": 135
+    },
+    {
+      "id": "ejecuta",
+      "lane": "skill",
+      "col": 5,
+      "type": "backend",
+      "label": "6 · Ejecutar",
+      "sublabel": "alcance autorizado",
+      "width": 135
+    },
+    {
+      "id": "evidencia",
+      "lane": "juicio",
+      "col": 1,
+      "type": "database",
+      "label": "Evidencia",
+      "sublabel": "hecho · inferencia",
+      "width": 135
+    },
+    {
+      "id": "registro",
+      "lane": "juicio",
+      "col": 3,
+      "type": "database",
+      "label": "Registro",
+      "sublabel": "opciones y coste",
+      "width": 135
+    },
+    {
+      "id": "contrato",
+      "lane": "juicio",
+      "col": 4,
+      "type": "database",
+      "label": "Contrato",
+      "sublabel": "contexto y eventos",
+      "width": 135
+    },
+    {
+      "id": "resultado",
+      "lane": "juicio",
+      "col": 5,
+      "type": "database",
+      "label": "Resultado",
+      "sublabel": "decisión probada",
+      "icon": "success",
+      "width": 135
+    },
+    {
+      "id": "desconocido",
+      "lane": "control",
+      "col": 2,
+      "type": "security",
+      "label": "Sin evidencia",
+      "sublabel": "diagnóstico provisional",
+      "tag": "se pide el dato",
+      "icon": "stop",
+      "width": 135
+    },
+    {
+      "id": "sin-permiso",
+      "lane": "control",
+      "col": 4,
+      "type": "security",
+      "label": "Sin autorización",
+      "sublabel": "auditoría sin cambios",
+      "tag": "no se toca",
+      "icon": "stop",
+      "width": 135
+    },
+    {
+      "id": "verifica",
+      "lane": "control",
+      "col": 5,
+      "type": "security",
+      "label": "7 · Verificar",
+      "sublabel": "fallos y rollback",
+      "tag": "criterios probados",
+      "width": 135
+    }
+  ],
+  "edges": [
+    {
+      "id": "pide",
+      "from": "encargo",
+      "to": "inspecciona",
+      "label": "pide",
+      "variant": "emphasis",
+      "role": "main"
+    },
+    {
+      "id": "alcance",
+      "from": "inspecciona",
+      "to": "diagnostica",
+      "label": "inspección",
+      "role": "main"
+    },
+    {
+      "id": "registra",
+      "from": "diagnostica",
+      "to": "evidencia",
+      "label": "registra",
+      "variant": "dashed",
+      "role": "branch"
+    },
+    {
+      "id": "opciones",
+      "from": "diagnostica",
+      "to": "compara",
+      "label": "con evidencia",
+      "variant": "emphasis",
+      "role": "main"
+    },
+    {
+      "id": "sin-datos",
+      "from": "diagnostica",
+      "to": "desconocido",
+      "label": "faltan datos",
+      "variant": "security",
+      "role": "return"
+    },
+    {
+      "id": "pide-datos",
+      "from": "desconocido",
+      "to": "compara",
+      "label": "dato nuevo",
+      "variant": "dashed",
+      "role": "branch"
+    },
+    {
+      "id": "compara-opciones",
+      "from": "compara",
+      "to": "decide",
+      "label": "compara",
+      "role": "main"
+    },
+    {
+      "id": "documenta",
+      "from": "decide",
+      "to": "registro",
+      "label": "documenta",
+      "variant": "dashed",
+      "role": "branch"
+    },
+    {
+      "id": "diseno",
+      "from": "decide",
+      "to": "disena",
+      "label": "opción",
+      "variant": "emphasis",
+      "role": "main"
+    },
+    {
+      "id": "interfaz",
+      "from": "disena",
+      "to": "contrato",
+      "label": "interfaz",
+      "variant": "dashed",
+      "role": "branch"
+    },
+    {
+      "id": "implementa",
+      "from": "disena",
+      "to": "ejecuta",
+      "label": "autorizado",
+      "role": "main"
+    },
+    {
+      "id": "sin-autorizacion",
+      "from": "ejecuta",
+      "to": "sin-permiso",
+      "label": "sin permiso",
+      "variant": "security",
+      "role": "return"
+    },
+    {
+      "id": "verifica-ejecucion",
+      "from": "ejecuta",
+      "to": "verifica",
+      "label": "verifica",
+      "variant": "emphasis",
+      "role": "main"
+    },
+    {
+      "id": "demuestra",
+      "from": "verifica",
+      "to": "resultado",
+      "label": "demuestra",
+      "variant": "emphasis",
+      "role": "main"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "Qué se etiqueta",
+      "items": [
+        "Cada hallazgo es Hecho, Inferencia o Desconocido: un hecho tiene ruta, comando, métrica o declaración identificable",
+        "Una inferencia explica de qué hechos se deriva y qué la debilitaría; un desconocido dice qué dato falta y cómo obtenerlo",
+        "Un monorepo, una aplicación grande o varios equipos son contexto; la prueba es un bloqueo, una espera o un incidente medido"
+      ]
+    },
+    {
+      "dot": "rose",
+      "title": "Dónde se detiene",
+      "items": [
+        "Sin datos de bloqueos, esperas o cambios conjuntos no se justifica una migración: se entrega diagnóstico provisional y se pide evidencia",
+        "Un encargo de auditoría no modifica archivos; la implementación exige autorización escrita y un alcance acotado",
+        "Si la opción elegida necesita un runtime de módulos sin un requisito que lo exija, la decisión vuelve a la comparación"
+      ]
+    },
+    {
+      "dot": "emerald",
+      "title": "Qué se demuestra al cerrar",
+      "items": [
+        "La opción recomendada es la de menor complejidad que resuelve el problema demostrado, con las descartadas y su motivo",
+        "El contrato no expone estado interno del módulo y la autorización se decide en el servidor",
+        "Los cuatro modos de fallo, el rollback y la independencia de despliegue se comprueban; lo no verificado se declara"
+      ]
+    }
+  ]
+}

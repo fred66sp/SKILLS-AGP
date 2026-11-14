@@ -1,0 +1,444 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "Arquitectura de la skill frontend-architecture-boundaries",
+    "subtitle": "Qué piezas la componen, qué fronteras diseña y sobre qué superficie actúa: el paquete instalado, el contrato de despliegue y la página que lo documenta.",
+    "locale": "es",
+    "output": "docs/frontend-architecture-boundaries/arquitectura.html",
+    "quality_profile": "showcase"
+  },
+  "components": [
+    {
+      "id": "persona",
+      "type": "external",
+      "label": "Persona",
+      "sublabel": "decide el encargo",
+      "icon": "person",
+      "pos": [
+        40,
+        40
+      ],
+      "size": [
+        140,
+        60
+      ]
+    },
+    {
+      "id": "agente",
+      "type": "external",
+      "label": "Agente anfitrión",
+      "sublabel": "Pi · Claude Code · Codex",
+      "pos": [
+        220,
+        40
+      ],
+      "size": [
+        180,
+        64
+      ]
+    },
+    {
+      "id": "skill",
+      "type": "frontend",
+      "label": "SKILL.md",
+      "sublabel": "siete fases y puerta",
+      "pos": [
+        60,
+        140
+      ],
+      "size": [
+        230,
+        64
+      ]
+    },
+    {
+      "id": "ref-arquitectura",
+      "type": "database",
+      "label": "architecture-decision",
+      "sublabel": "opciones y criterios",
+      "pos": [
+        60,
+        250
+      ],
+      "size": [
+        220,
+        52
+      ]
+    },
+    {
+      "id": "ref-dominios",
+      "type": "database",
+      "label": "domain-boundaries",
+      "sublabel": "evidencia y límites",
+      "pos": [
+        320,
+        250
+      ],
+      "size": [
+        220,
+        52
+      ]
+    },
+    {
+      "id": "ref-integracion",
+      "type": "database",
+      "label": "integration-patterns",
+      "sublabel": "build · rutas · runtime",
+      "pos": [
+        60,
+        315
+      ],
+      "size": [
+        220,
+        52
+      ]
+    },
+    {
+      "id": "ref-contratos",
+      "type": "database",
+      "label": "contracts-and-lifecycle",
+      "sublabel": "shell · montaje · confianza",
+      "pos": [
+        320,
+        315
+      ],
+      "size": [
+        220,
+        52
+      ]
+    },
+    {
+      "id": "ref-despliegue",
+      "type": "database",
+      "label": "deployment-and-rollback",
+      "sublabel": "versiones · fallos · vuelta",
+      "pos": [
+        60,
+        380
+      ],
+      "size": [
+        220,
+        52
+      ]
+    },
+    {
+      "id": "ref-casos",
+      "type": "database",
+      "label": "acceptance-cases",
+      "sublabel": "ocho desenlaces",
+      "pos": [
+        320,
+        380
+      ],
+      "size": [
+        220,
+        52
+      ]
+    },
+    {
+      "id": "ref-fuentes",
+      "type": "database",
+      "label": "research-sources",
+      "sublabel": "qué fundamenta cada fuente",
+      "pos": [
+        60,
+        445
+      ],
+      "size": [
+        220,
+        52
+      ]
+    },
+    {
+      "id": "asset-diagnostico",
+      "type": "database",
+      "label": "architecture-assessment",
+      "sublabel": "plantilla de diagnóstico",
+      "pos": [
+        320,
+        445
+      ],
+      "size": [
+        220,
+        52
+      ]
+    },
+    {
+      "id": "asset-decision",
+      "type": "database",
+      "label": "decision-record",
+      "sublabel": "decisión trazable",
+      "pos": [
+        60,
+        510
+      ],
+      "size": [
+        220,
+        52
+      ]
+    },
+    {
+      "id": "asset-migracion",
+      "type": "database",
+      "label": "migration-checklist",
+      "sublabel": "migración incremental",
+      "pos": [
+        320,
+        510
+      ],
+      "size": [
+        220,
+        52
+      ]
+    },
+    {
+      "id": "limites",
+      "type": "frontend",
+      "label": "Límites de dominio",
+      "sublabel": "imports · responsabilidades",
+      "pos": [
+        640,
+        250
+      ],
+      "size": [
+        240,
+        64
+      ]
+    },
+    {
+      "id": "shell",
+      "type": "security",
+      "label": "Contrato shell-módulo",
+      "sublabel": "contexto · eventos · autorización",
+      "pos": [
+        640,
+        345
+      ],
+      "size": [
+        240,
+        64
+      ]
+    },
+    {
+      "id": "artefactos",
+      "type": "database",
+      "label": "Artefactos y versiones",
+      "sublabel": "selección explícita por versión",
+      "pos": [
+        640,
+        440
+      ],
+      "size": [
+        240,
+        64
+      ]
+    },
+    {
+      "id": "rollback",
+      "type": "security",
+      "label": "Fallos y rollback",
+      "sublabel": "cuatro modos · línea base",
+      "pos": [
+        640,
+        535
+      ],
+      "size": [
+        240,
+        64
+      ]
+    },
+    {
+      "id": "puerta",
+      "type": "security",
+      "label": "Puerta de verificación",
+      "sublabel": "criterios demostrados",
+      "tag": "evidencia o nada",
+      "pos": [
+        960,
+        140
+      ],
+      "size": [
+        220,
+        64
+      ]
+    },
+    {
+      "id": "decision",
+      "type": "database",
+      "label": "Decisión trazable",
+      "sublabel": "mantener · modularizar · migrar",
+      "pos": [
+        960,
+        250
+      ],
+      "size": [
+        220,
+        64
+      ]
+    },
+    {
+      "id": "docs",
+      "type": "external",
+      "label": "Página de docs",
+      "sublabel": "index · flujo · arquitectura",
+      "pos": [
+        960,
+        360
+      ],
+      "size": [
+        220,
+        64
+      ]
+    }
+  ],
+  "boundaries": [
+    {
+      "kind": "region",
+      "label": "Paquete instalado",
+      "wraps": [
+        "skill",
+        "ref-arquitectura",
+        "ref-dominios",
+        "ref-integracion",
+        "ref-contratos",
+        "ref-despliegue",
+        "ref-casos",
+        "ref-fuentes",
+        "asset-diagnostico",
+        "asset-decision",
+        "asset-migracion"
+      ]
+    },
+    {
+      "kind": "region",
+      "label": "Fronteras que se diseñan",
+      "wraps": [
+        "limites",
+        "shell",
+        "artefactos",
+        "rollback"
+      ]
+    },
+    {
+      "kind": "security-group",
+      "label": "Salida, verificación y documentación",
+      "wraps": [
+        "puerta",
+        "decision",
+        "docs"
+      ]
+    }
+  ],
+  "connections": [
+    {
+      "id": "encarga",
+      "from": "persona",
+      "to": "agente",
+      "label": "encarga",
+      "variant": "emphasis"
+    },
+    {
+      "id": "carga",
+      "from": "agente",
+      "to": "skill",
+      "label": "carga",
+      "variant": "emphasis"
+    },
+    {
+      "id": "consulta",
+      "from": "skill",
+      "to": "ref-arquitectura",
+      "label": "consulta JiT",
+      "variant": "dashed"
+    },
+    {
+      "id": "copia",
+      "from": "skill",
+      "to": "asset-diagnostico",
+      "label": "copia la plantilla",
+      "variant": "dashed"
+    },
+    {
+      "id": "disena",
+      "from": "skill",
+      "to": "limites",
+      "label": "diseña los límites",
+      "variant": "emphasis"
+    },
+    {
+      "id": "define",
+      "from": "limites",
+      "to": "shell",
+      "label": "define"
+    },
+    {
+      "id": "publica",
+      "from": "shell",
+      "to": "artefactos",
+      "label": "publica"
+    },
+    {
+      "id": "revierte",
+      "from": "artefactos",
+      "to": "rollback",
+      "label": "permite revertir"
+    },
+    {
+      "id": "prueba",
+      "from": "rollback",
+      "to": "puerta",
+      "label": "recuperación probada"
+    },
+    {
+      "id": "fundamenta",
+      "from": "ref-fuentes",
+      "to": "puerta",
+      "label": "fundamenta",
+      "variant": "dashed"
+    },
+    {
+      "id": "sostiene",
+      "from": "puerta",
+      "to": "decision",
+      "label": "sostiene",
+      "variant": "emphasis"
+    },
+    {
+      "id": "documenta",
+      "from": "decision",
+      "to": "docs",
+      "label": "documenta",
+      "variant": "dashed"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "El paquete instalado",
+      "items": [
+        "SKILL.md fija las siete fases, la evidencia etiquetada y la puerta de verificación; no recomienda microfrontends por defecto",
+        "references/ se carga justo a tiempo: decisión, límites, integración, contratos, despliegue, casos y fuentes",
+        "assets/ fija el diagnóstico, el registro de decisión y la migración para no improvisar la salida"
+      ]
+    },
+    {
+      "dot": "rose",
+      "title": "Las fronteras que se diseñan",
+      "items": [
+        "Los límites de dominio se sostienen en responsabilidad de negocio, datos propios e interfaz pública pequeña",
+        "El contrato shell-módulo acota contexto y eventos; la autorización se decide en el servidor",
+        "Artefactos por versión y rollback ensayado convierten la independencia de despliegue en algo comprobable"
+      ]
+    },
+    {
+      "dot": "emerald",
+      "title": "Lo que la skill no hace",
+      "items": [
+        "No decide colores, tipografía ni componentes: eso pertenece al sistema de diseño y al diseño visual",
+        "No diseña backend, microservicios ni infraestructura de datos",
+        "No justifica una migración con una hipótesis ni la presenta como aprobada sin decisión de la persona"
+      ]
+    }
+  ]
+}

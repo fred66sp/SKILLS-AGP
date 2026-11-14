@@ -32,6 +32,7 @@
 - [`software-testing`](src/software-testing/SKILL.md)
 - [`design-system-architect`](src/design-system-architect/SKILL.md)
 - [`web-interface-visual-design`](src/web-interface-visual-design/SKILL.md)
+- [`frontend-architecture-boundaries`](src/frontend-architecture-boundaries/SKILL.md)
 
 ## Terceros
 

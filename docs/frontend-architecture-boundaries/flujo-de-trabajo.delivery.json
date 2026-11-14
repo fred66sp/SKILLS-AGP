@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "773b5d6f-e2c4-44b8-b29a-ea1ff66e247b",
+  "status": "current",
+  "command": "deliver",
+  "type": "workflow",
+  "input": "/home/alfredo/PROJECTS/SKILLS-AGP/docs/frontend-architecture-boundaries/flujo-de-trabajo.json",
+  "output": "/home/alfredo/PROJECTS/SKILLS-AGP/docs/frontend-architecture-boundaries/flujo-de-trabajo.html",
+  "specification": {
+    "sha256": "48e8d97a443e0e16189f375b94151055ea01b0b5d2f193c23fb92877ee6073c3",
+    "bytes": 8946
+  },
+  "artifact": {
+    "sha256": "84eb7236bcb607f24dc3c5c6fc108e24dace5d16a4614931ce6790905a9418e2",
+    "bytes": 842198
+  }
+}

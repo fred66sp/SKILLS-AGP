@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "57bf24fb-bb36-4faf-8185-fb089d424d62",
+  "status": "current",
+  "command": "deliver",
+  "type": "architecture",
+  "input": "/home/alfredo/PROJECTS/SKILLS-AGP/docs/frontend-architecture-boundaries/arquitectura.json",
+  "output": "/home/alfredo/PROJECTS/SKILLS-AGP/docs/frontend-architecture-boundaries/arquitectura.html",
+  "specification": {
+    "sha256": "7f7276cb27a733a5743b264ffedff81e5cc7a35eb3645de76b28057db324c8e0",
+    "bytes": 9170
+  },
+  "artifact": {
+    "sha256": "670fb7109ce71b8fb88ce3e64dca4411943310276c4b98d2a4c6237106006be3",
+    "bytes": 849010
+  }
+}
