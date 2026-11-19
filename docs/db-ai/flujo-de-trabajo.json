@@ -1,0 +1,313 @@
+{
+  "schema_version": 2,
+  "diagram_type": "workflow",
+  "meta": {
+    "title": "Flujo de trabajo de db-ai",
+    "subtitle": "Descubrir con el mínimo contexto, leer, escribir con permiso y ETag, ejecutar lotes y verificar antes de cerrar.",
+    "locale": "es",
+    "output": "docs/db-ai/flujo-de-trabajo.html",
+    "visual_preset": "signal-flow",
+    "quality_profile": "showcase"
+  },
+  "lanes": [
+    {
+      "id": "agente",
+      "label": "Agente y encargo"
+    },
+    {
+      "id": "operacion",
+      "label": "La skill: cinco fases"
+    },
+    {
+      "id": "guardas",
+      "label": "Guardas y paradas",
+      "variant": "exception"
+    }
+  ],
+  "phases": [
+    {
+      "id": "descubrir",
+      "label": "Descubrir",
+      "fromCol": 0,
+      "toCol": 0,
+      "variant": "emphasis"
+    },
+    {
+      "id": "leer",
+      "label": "Leer",
+      "fromCol": 1,
+      "toCol": 1
+    },
+    {
+      "id": "escribir",
+      "label": "Escribir",
+      "fromCol": 2,
+      "toCol": 2,
+      "variant": "security"
+    },
+    {
+      "id": "lote",
+      "label": "Lote",
+      "fromCol": 3,
+      "toCol": 3,
+      "variant": "security"
+    },
+    {
+      "id": "verificar",
+      "label": "Verificar",
+      "fromCol": 4,
+      "toCol": 4
+    },
+    {
+      "id": "cerrar",
+      "label": "Cerrar",
+      "fromCol": 5,
+      "toCol": 5
+    }
+  ],
+  "groups": [
+    {
+      "id": "mutacion-segura",
+      "label": "Permiso, ETag y plan",
+      "lane": "operacion",
+      "fromCol": 2,
+      "toCol": 3,
+      "variant": "security"
+    }
+  ],
+  "mainPath": [
+    "encargo",
+    "montajes",
+    "lee",
+    "escribe",
+    "lote",
+    "verifica",
+    "resultado"
+  ],
+  "nodes": [
+    {
+      "id": "encargo",
+      "lane": "agente",
+      "col": 0,
+      "type": "external",
+      "label": "Encargo",
+      "sublabel": "pregunta o cambio",
+      "tag": "alcance mínimo",
+      "icon": "start",
+      "width": 128
+    },
+    {
+      "id": "montajes",
+      "lane": "operacion",
+      "col": 0,
+      "type": "backend",
+      "label": "1 · Descubrir",
+      "sublabel": "mounts · ls · tree",
+      "tag": "mínimo contexto",
+      "width": 128
+    },
+    {
+      "id": "lee",
+      "lane": "operacion",
+      "col": 1,
+      "type": "backend",
+      "label": "2 · Leer",
+      "sublabel": "cat · find · grep",
+      "tag": "página acotada",
+      "width": 128
+    },
+    {
+      "id": "escribe",
+      "lane": "operacion",
+      "col": 2,
+      "type": "security",
+      "label": "3 · Escribir",
+      "sublabel": "dry-run primero",
+      "tag": "rw y política",
+      "width": 128
+    },
+    {
+      "id": "lote",
+      "lane": "operacion",
+      "col": 3,
+      "type": "security",
+      "label": "4 · Batch",
+      "sublabel": "máx 100 · una tx",
+      "tag": "sin encadenar",
+      "width": 128
+    },
+    {
+      "id": "verifica",
+      "lane": "operacion",
+      "col": 4,
+      "type": "backend",
+      "label": "5 · Verificar",
+      "sublabel": "releer y ETag",
+      "width": 128
+    },
+    {
+      "id": "resultado",
+      "lane": "operacion",
+      "col": 5,
+      "type": "database",
+      "label": "Resultado",
+      "sublabel": "dato comprobado",
+      "icon": "success",
+      "width": 128
+    },
+    {
+      "id": "sin-permiso",
+      "lane": "guardas",
+      "col": 2,
+      "type": "security",
+      "label": "E_DENIED",
+      "sublabel": "ro o política",
+      "tag": "no se escala",
+      "icon": "stop",
+      "width": 128
+    },
+    {
+      "id": "conflicto",
+      "lane": "guardas",
+      "col": 3,
+      "type": "security",
+      "label": "E_CONFLICT",
+      "sublabel": "ETag o destino",
+      "tag": "releer",
+      "icon": "stop",
+      "width": 128
+    },
+    {
+      "id": "incierto",
+      "lane": "guardas",
+      "col": 4,
+      "type": "security",
+      "label": "E_COMMIT_UNKNOWN",
+      "sublabel": "commit incierto",
+      "tag": "reconciliar leyendo",
+      "icon": "stop",
+      "width": 128
+    },
+    {
+      "id": "limite",
+      "lane": "guardas",
+      "col": 1,
+      "type": "security",
+      "label": "E_LIMIT",
+      "sublabel": "presupuesto",
+      "tag": "acotar",
+      "icon": "stop",
+      "width": 128
+    }
+  ],
+  "edges": [
+    {
+      "id": "pide",
+      "from": "encargo",
+      "to": "montajes",
+      "label": "pide",
+      "variant": "emphasis",
+      "role": "main"
+    },
+    {
+      "id": "consulta",
+      "from": "montajes",
+      "to": "lee",
+      "label": "pregunta acotada",
+      "variant": "emphasis",
+      "role": "main"
+    },
+    {
+      "id": "presupuesto",
+      "from": "lee",
+      "to": "limite",
+      "label": "excede",
+      "variant": "security",
+      "role": "return"
+    },
+    {
+      "id": "cambio",
+      "from": "lee",
+      "to": "escribe",
+      "label": "cambio pedido",
+      "variant": "emphasis",
+      "role": "main"
+    },
+    {
+      "id": "deniega",
+      "from": "escribe",
+      "to": "sin-permiso",
+      "label": "sin permiso",
+      "variant": "security",
+      "role": "return"
+    },
+    {
+      "id": "atomicidad",
+      "from": "escribe",
+      "to": "lote",
+      "label": "varias ops",
+      "role": "main"
+    },
+    {
+      "id": "choca",
+      "from": "lote",
+      "to": "conflicto",
+      "label": "ETag viejo",
+      "variant": "security",
+      "role": "return"
+    },
+    {
+      "id": "comprueba",
+      "from": "lote",
+      "to": "verifica",
+      "label": "comprueba",
+      "variant": "emphasis",
+      "role": "main"
+    },
+    {
+      "id": "commit",
+      "from": "verifica",
+      "to": "incierto",
+      "label": "commit incierto",
+      "variant": "security",
+      "role": "return"
+    },
+    {
+      "id": "cierra",
+      "from": "verifica",
+      "to": "resultado",
+      "label": "dato verificado",
+      "variant": "emphasis",
+      "role": "main"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "Descubrir sin arrastrar contexto",
+      "items": [
+        "mounts dice qué alias y modo hay; ls y tree acotan la estructura; describe y stat resuelven tabla, columnas y ruta",
+        "La profundidad de tree no pasa de 4 y la respuesta se detiene cuando la pregunta ya está respondida",
+        "Una tabla sin PK estable solo ofrece la primera página: no se insiste con cursores"
+      ]
+    },
+    {
+      "dot": "rose",
+      "title": "Las guardas que no se negocian",
+      "items": [
+        "ro es el defecto y rw exige política explícita; rw no concede escritura por sí solo",
+        "write, cp, mv y rm exigen --if-match; cp usa el ETag del origen y --apply solo se admite en mv y rm",
+        "El if_match del lote describe el estado previo: no se encadena sobre una fila creada o modificada en el mismo lote"
+      ]
+    },
+    {
+      "dot": "emerald",
+      "title": "Cerrar con evidencia",
+      "items": [
+        "Toda mutación se relee para comprobar el resultado y el ETag nuevo; el código de salida no es prueba de éxito",
+        "E_COMMIT_UNKNOWN se reconcilia leyendo la base, nunca reintentando a ciegas",
+        "Lo no verificado y los errores no resueltos se declaran en el informe"
+      ]
+    }
+  ]
+}

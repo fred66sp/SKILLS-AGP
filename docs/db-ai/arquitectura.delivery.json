@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "84bc31e8-e3ed-4f4b-8a9a-9265d7dfed85",
+  "status": "current",
+  "command": "deliver",
+  "type": "architecture",
+  "input": "/home/desarrollo/PROJECTS/SKILLS-AGP/docs/db-ai/arquitectura.json",
+  "output": "/home/desarrollo/PROJECTS/SKILLS-AGP/docs/db-ai/arquitectura.html",
+  "specification": {
+    "sha256": "767aa7fb7c38eb6d5e00d61469c2eb2a8611102bc5c7268f85f232977639ac15",
+    "bytes": 6413
+  },
+  "artifact": {
+    "sha256": "16128e1c9e0f42fd92f8626cb8e0a58ff4eb9d298eb73f50dbe6757d14bce85b",
+    "bytes": 839678
+  }
+}
