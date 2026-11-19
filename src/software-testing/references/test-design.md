@@ -55,6 +55,45 @@ Sin guion previo, con objetivo y tiempo límite. Sirve para encontrar lo que las
 
 - Regla: sesiones cortas, objetivo declarado, notas de lo recorrido. Sin notas no es prueba, es paseo.
 
+## Cuando la misma fuente escribe el código y los casos
+
+Quien diseña los casos hereda los puntos ciegos de quien escribió el código: la suite sale en verde, la cobertura luce y el defecto sobrevive dentro de la correlación. Es el pesticida en su forma más grave: no que la suite repite ángulos, sino que el diseñador y el autor comparten el mismo mapa mental. Cuando el autor del código y el de los casos son la misma fuente —una persona sola o un agente que hace ambos—, añade al menos un ángulo ajeno al autor. Las técnicas, cada una con su cuándo y su cuándo no:
+
+### Revisión adversarial
+
+Otra fuente, en contexto nuevo y sin ver la conversación ni el diseño, recibe solo el código y el objetivo con una sola misión: encontrar lo que está roto o sin probar. No se le pide aprobar: un revisor al que invitas a aprobar, aprueba. Cada hallazgo llega con evidencia, gravedad y confianza, y un juez lo acepta o lo rechaza con su motivo: quien solo busca fallos siempre encuentra alguno, y sin juez se persiguen falsos positivos.
+
+- Cuándo: en todo cambio que ha escrito un agente, sobre todo si toca dinero, permisos, seguridad o validación de datos; y siempre que la misma fuente haya escrito el código y sus casos.
+- Cuándo no: en cambios triviales o prototipos que se van a tirar; y sin juez que filtre, no compensa.
+
+### Propiedad (property-based)
+
+En vez de ejemplos elegidos, una regla que se cumple para cualquier entrada —«el resultado ordenado no descarta elementos», «cifrar y descifrar devuelve el original»— y un generador que inventa cientos de casos para romperla, reduciendo el contraejemplo al mínimo. Los ejemplos prueban lo que el diseñador imaginó; la propiedad, lo que no se le ocurrió.
+
+- Cuándo: ida y vuelta (serializar y leer, comprimir y descomprimir), validaciones y parsers (toda entrada rara da un error controlado, nunca un fallo), cálculos con límites (precios, descuentos, rangos, fechas), algoritmos (ordenar, buscar, deduplicar) y migraciones donde la versión nueva debe coincidir con la vieja.
+- Cuándo no: en código pegamento, en la interfaz, o cuando la regla hay que forzarla: sin regla real, vuelve a los ejemplos.
+
+### Fuzzing
+
+Entradas masivas, raras o medio rotas, sin regla que comprobar: solo que el programa no rompa ni se cuelgue. En su forma guiada por cobertura, el fuzzer mira qué ramas aún no ha visitado y dirige las entradas hacia ellas. En aplicaciones comunes, un generador de propiedades lanzando datos basura contra la API ya cubre casi todo el valor; el fuzzer guiado brilla en parsers y en lenguajes donde un fallo de memoria es grave.
+
+- Cuándo: código que recibe datos de fuera que no controlas: parsers, decodificadores de archivos, protocolos de red, entrada de usuario.
+- Cuándo no: montar un fuzzer guiado en una aplicación CRUD corriente: con entradas aleatorias basta.
+
+### Mutación
+
+Ataca los casos, no el código: introduce errores pequeños uno a uno —cambiar `>=` por `>`— y comprueba si algún caso falla. El mutante que sobrevive señala un caso que pasa sin contrastar nada. Complementa la cobertura honesta: la cobertura de código dice qué se ejecutó; la puntuación de mutación, qué se contrastó.
+
+- Cuándo: lógica crítica ya cubierta —dinero, permisos, validaciones— y suites cuya cobertura sale sospechosamente alta después de escribirlas un agente. Solo sobre el código que cambió: correr la suite entera cientos de veces no escala.
+- Cuándo no: en el proyecto entero de una vez, en código sin casos todavía o en código pegamento. No hace falta matar todos los mutantes: algunos son equivalentes y no se pueden matar.
+
+### Diferencial y metamórfico
+
+Cuando no hay oráculo único. Diferencial: versión vieja y versión nueva con las mismas entradas deben coincidir; no hace falta saber la respuesta correcta, solo que las dos digan lo mismo. Metamórfico: relaciones entre salidas cuando la respuesta correcta no se conoce —«buscar con un filtro más no devuelve más resultados»—; el terreno natural de los sistemas con IA.
+
+- Cuándo: migraciones y reescrituras grandes, refactors con referencia viva, cambios de proveedor o de modelo (diferencial); buscadores, recomendadores y productos con un modelo dentro (metamórfico).
+- Cuándo no: cuando sí se conoce la respuesta exacta: un caso normal es más claro y más directo.
+
 ## Prioridad por riesgo
 
 La prioridad decide el orden, no la cantidad: si el presupuesto se acaba, lo de baja prioridad queda fuera y se escribe en la cobertura.

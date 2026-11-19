@@ -2,7 +2,7 @@
 name: software-testing
 description: "Aplica método de prueba al software: entiende el riesgo, elige qué probar con niveles y técnicas de diseño, ejecuta con evidencia y cierra con un informe honesto que separa lo comprobado de lo no verificado. Se activa al planificar una ronda de pruebas, diseñar casos, fijar prioridades y criterio de salida, triar fallos o escribir informes de pruebas y defectos. No ejecuta la puerta del lenguaje ni sustituye al runner del proyecto, que pertenecen a las skills de verificación por lenguaje; tampoco conduce navegadores (playwright-cli-usage) ni decide calidad visual (web-interface-visual-design)."
 metadata:
-  version: "0.1.0"
+  version: "0.2.0"
 ---
 
 # Pruebas de software con método
@@ -53,7 +53,7 @@ Elige el nivel más bajo que reduzca la incertidumbre del riesgo y declara el ni
 3. Fija el criterio de salida: qué debe estar ejecutado, qué resultado global se admite y qué se documenta como no verificado. Lee [process](references/process.md).
 
 **Fase B: Planificar.**
-1. Elige niveles y técnicas por partición de riesgo, no por volumen. Las técnicas están en [test-design](references/test-design.md).
+1. Elige niveles y técnicas por partición de riesgo, no por volumen. Si la misma fuente escribió el código y sus casos, el diseño hereda sus puntos ciegos: añade al menos un ángulo ajeno al autor —revisión adversarial en contexto nuevo, propiedad, mutación—. Las técnicas están en [test-design](references/test-design.md).
 2. Declara el alcance con exclusiones: qué queda fuera y por qué. Una exclusión escrita es una decisión; una callada es un hueco.
 3. Si la ronda merece informe, reserva el número y crea el documento desde `assets/test-report.md` con resultado pendiente.
 
