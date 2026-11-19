@@ -1,0 +1,256 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "Arquitectura de la skill db-ai",
+    "subtitle": "El contrato enseña a operar una CLI que traduce rutas a tablas, filas y campos: sin SQL, con permisos, ETags y una única salida JSON.",
+    "locale": "es",
+    "output": "docs/db-ai/arquitectura.html",
+    "quality_profile": "showcase"
+  },
+  "components": [
+    {
+      "id": "persona",
+      "type": "external",
+      "label": "Persona",
+      "sublabel": "fija el encargo",
+      "icon": "person",
+      "pos": [40, 40],
+      "size": [140, 60]
+    },
+    {
+      "id": "agente",
+      "type": "external",
+      "label": "Agente anfitrión",
+      "sublabel": "descubre y opera",
+      "pos": [220, 40],
+      "size": [180, 64]
+    },
+    {
+      "id": "skill",
+      "type": "frontend",
+      "label": "SKILL.md",
+      "sublabel": "cinco fases y guardas",
+      "pos": [60, 150],
+      "size": [240, 64]
+    },
+    {
+      "id": "ref-comandos",
+      "type": "database",
+      "label": "comandos.md",
+      "sublabel": "formas, salida y cursores",
+      "pos": [60, 250],
+      "size": [230, 52]
+    },
+    {
+      "id": "ref-escritura",
+      "type": "database",
+      "label": "escritura.md",
+      "sublabel": "ETag, dry-run y batch",
+      "pos": [60, 312],
+      "size": [230, 52]
+    },
+    {
+      "id": "ref-errores",
+      "type": "database",
+      "label": "errores.md",
+      "sublabel": "códigos y recuperación",
+      "pos": [60, 374],
+      "size": [230, 52]
+    },
+    {
+      "id": "cli",
+      "type": "backend",
+      "label": "CLI db-ai",
+      "sublabel": "rutas, no SQL",
+      "pos": [380, 150],
+      "size": [240, 64]
+    },
+    {
+      "id": "envelope",
+      "type": "database",
+      "label": "Salida JSON",
+      "sublabel": "version 1 · ok · data · meta",
+      "pos": [380, 250],
+      "size": [240, 56]
+    },
+    {
+      "id": "sqlite",
+      "type": "database",
+      "label": "SQLite montado",
+      "sublabel": "tablas, filas y campos",
+      "pos": [700, 150],
+      "size": [220, 64]
+    },
+    {
+      "id": "permisos",
+      "type": "security",
+      "label": "Permisos",
+      "sublabel": "ro · rw · allow por prefijo",
+      "pos": [700, 250],
+      "size": [220, 64]
+    },
+    {
+      "id": "etag",
+      "type": "security",
+      "label": "ETag y transacción",
+      "sublabel": "contenido · if-match · rollback",
+      "pos": [700, 345],
+      "size": [220, 64]
+    },
+    {
+      "id": "fuente",
+      "type": "external",
+      "label": "Contratos fuente",
+      "sublabel": "PRD · DESIGN §3 y §8-9",
+      "pos": [380, 380],
+      "size": [240, 52]
+    },
+    {
+      "id": "docs",
+      "type": "external",
+      "label": "Página de docs",
+      "sublabel": "index · flujo · arquitectura",
+      "pos": [980, 150],
+      "size": [220, 64]
+    }
+  ],
+  "boundaries": [
+    {
+      "kind": "region",
+      "label": "Paquete instalado",
+      "wraps": [
+        "skill",
+        "ref-comandos",
+        "ref-escritura",
+        "ref-errores"
+      ]
+    },
+    {
+      "kind": "security-group",
+      "label": "Superficie que gobierna la skill",
+      "wraps": [
+        "cli",
+        "sqlite",
+        "permisos",
+        "etag",
+        "envelope"
+      ]
+    }
+  ],
+  "connections": [
+    {
+      "id": "encarga",
+      "from": "persona",
+      "to": "agente",
+      "label": "encarga",
+      "variant": "emphasis"
+    },
+    {
+      "id": "carga",
+      "from": "agente",
+      "to": "skill",
+      "label": "carga",
+      "variant": "emphasis"
+    },
+    {
+      "id": "consulta",
+      "from": "skill",
+      "to": "ref-comandos",
+      "label": "consulta JiT",
+      "variant": "dashed"
+    },
+    {
+      "id": "prepara",
+      "from": "skill",
+      "to": "ref-escritura",
+      "label": "antes de mutar",
+      "variant": "dashed"
+    },
+    {
+      "id": "recupera",
+      "from": "skill",
+      "to": "ref-errores",
+      "label": "si falla",
+      "variant": "dashed"
+    },
+    {
+      "id": "invoca",
+      "from": "skill",
+      "to": "cli",
+      "label": "invoca",
+      "variant": "emphasis"
+    },
+    {
+      "id": "traduce",
+      "from": "cli",
+      "to": "sqlite",
+      "label": "traduce rutas",
+      "variant": "emphasis"
+    },
+    {
+      "id": "devuelve",
+      "from": "cli",
+      "to": "envelope",
+      "label": "un JSON",
+      "variant": "emphasis"
+    },
+    {
+      "id": "autoriza",
+      "from": "permisos",
+      "to": "cli",
+      "label": "autoriza",
+      "variant": "security"
+    },
+    {
+      "id": "precondiciona",
+      "from": "etag",
+      "to": "cli",
+      "label": "precondiciona",
+      "variant": "security"
+    },
+    {
+      "id": "funda",
+      "from": "fuente",
+      "to": "skill",
+      "label": "fundamenta",
+      "variant": "dashed"
+    },
+    {
+      "id": "documenta",
+      "from": "skill",
+      "to": "docs",
+      "label": "documenta",
+      "variant": "dashed"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "El paquete instalado",
+      "items": [
+        "SKILL.md fija el orden de operación: descubrir, leer, escribir, verificar y cerrar",
+        "references/comandos.md concentra formas exactas, salida y cursores; references/escritura.md, ETag, dry-run, batch; references/errores.md, códigos y recuperación",
+        "No hay scripts: db-ai ya es una CLI determinista y la skill no duplica su lógica"
+      ]
+    },
+    {
+      "dot": "rose",
+      "title": "La superficie que gobierna",
+      "items": [
+        "Toda operación pasa por una ruta VFS y devuelve JSON versionado (una fila por línea con export --format jsonl); error.code es la fuente de verdad",
+        "El montaje ro es el defecto; rw exige política explícita y la escritura sigue siendo deny-by-default por operación y prefijo",
+        "El ETag representa contenido, no una versión monotónica: no detecta ABA y obliga a releer tras cada cambio"
+      ]
+    },
+    {
+      "dot": "emerald",
+      "title": "Fronteras con otros contratos",
+      "items": [
+        "La skill opera db-ai; no desarrolla ni depura la herramienta ni reproduce su especificación canónica",
+        "Si el dominio tiene una CLI con reglas de negocio, se prefiere esa CLI; db-ai es el acceso genérico por filesystem",
+        "Quedan fuera SQL libre, ORMs, migraciones de esquema, administración de motores y PostgreSQL en el MVP"
+      ]
+    }
+  ]
+}

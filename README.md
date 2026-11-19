@@ -267,6 +267,14 @@ Contrato completo: [`src/frontend-architecture-boundaries/SKILL.md`](src/fronten
 
 Documentación: [`docs/frontend-architecture-boundaries/index.html`](docs/frontend-architecture-boundaries/index.html), con diagramas de flujo de trabajo y arquitectura.
 
+### `db-ai`
+
+Opera bases de datos SQLite con la CLI `db-ai`, que expone tablas, filas y campos como un sistema de archivos y evita generar SQL. Enseña el descubrimiento progresivo —`mounts`, `ls`, `tree`, `stat`, `describe`— y los flujos de lectura, búsqueda, escritura y operaciones transaccionales con `cat`, `find`, `grep`, `export`, `touch`, `write`, `cp`, `mv`, `rm` y `batch`. Exige modo `rw` con política explícita, dry-run antes de mutar, ETag en `write`, `cp`, `mv` y `rm`, `--apply` solo en `mv` y `rm`, y reconciliación de `E_COMMIT_UNKNOWN` leyendo la base. Favorece el mínimo contexto con páginas, cursores y exportación JSONL, y prefiere la CLI propia del dominio cuando exista. No cubre el desarrollo de la herramienta, SQL libre, ORMs, migraciones de esquema ni motores fuera del MVP.
+
+Contrato completo: [`src/db-ai/SKILL.md`](src/db-ai/SKILL.md).
+
+Documentación: [`docs/db-ai/index.html`](docs/db-ai/index.html), con diagramas de flujo de trabajo y arquitectura. La especificación canónica de la CLI vive en el proyecto `database-virtual-filesystem` (`docs/PRD.md` y `docs/DESIGN.md` §3 y §8-9); esta skill enseña la operación y no la reproduce.
+
 ### `explain-html`
 
 Genera artefactos HTML explicativos para revisar fuera de la terminal: informes y estados, explicadores de código o de concepto, cuestionarios interactivos, comparaciones de alternativas lado a lado, diagramas, presentaciones, prototipos con controles y editores desechables a medida. Cada encargo produce un único fichero autocontenido en `.explanations/` del proyecto —sin CDN, todo CSS, JS y SVG en línea, funcional por `file://`— que la skill abre en el navegador. Once plantillas, una por familia, traen la estructura completa —la última, `sdd`, revisa un árbol de especificación con las fases del pipeline, las fichas GIVEN/WHEN/THEN y los hallazgos, con `render-sdd.py` sobre el modelo de `sdd_scan.py`—; el artefacto nace con un bloque de procedencia —prompt, fecha, familia y fuentes— que `check-artifact.py` exige, y puede declarar `enlaces` a otros artefactos hermanos para formar un bucle de exploración, plan y mockups con rutas relativas. Si el proyecto declara su sistema visual, `tokens-from-project.py` extrae sus custom properties de `DESIGN.md` o `design-system.json` y el artefacto copia los valores —nunca enlaza CSS— con la precedencia persona → proyecto → plantilla; `highlight.py` resalta el código mostrado con clases propias y deterministas. La puerta comprueba además que el HTML esté bien formado y avisa del contraste de los tokens por debajo de WCAG AA y de ficheros de más de 100 KB. El índice `.explanations/index.html` se regenera tras cada artefacto —con la relación de los enlaces— a partir de `assets/plantilla-indice.html`, con búsqueda por título, filtros de familia, bucles y periodo (hoy, semana, mes, año), vista de lista o tarjetas, paginación de 20 y modo borrado que copia el prompt para retirar los ficheros seleccionados; sin JavaScript queda la lista completa enlazada. El modo rápido `render-quick.py` renderiza de forma determinista los encargos rutinarios desde un JSON validado y `lifecycle.py` conserva las últimas versiones de cada artefacto versionado. Antes de entregar, el agente hace una verificación perceptiva del artefacto renderizado si tiene navegador automatizable o pide a la persona que lo revise. Separa hechos verificados, con su fuente, de una sección «Desconocidos» explícita; los artefactos interactivos terminan en un botón «copiar como prompt» que devuelve el resultado a la sesión. Los artefactos son desechables: se regeneran, no se versionan con Git. Una nueva vuelta puede actualizar el artefacto en su sitio o escribirse como `<slug>-v2.html` conservando el anterior; la skill pregunta cuál antes de tocar nada.
@@ -314,6 +322,7 @@ Documentación: [`docs/skill-creator/index.html`](docs/skill-creator/index.html)
 | [`.skills/web-interface-visual-design/SKILL.md`](.skills/web-interface-visual-design/SKILL.md) | [`src/web-interface-visual-design/SKILL.md`](src/web-interface-visual-design/SKILL.md) |
 | [`.skills/design-system-architect/SKILL.md`](.skills/design-system-architect/SKILL.md) | [`src/design-system-architect/SKILL.md`](src/design-system-architect/SKILL.md) |
 | [`.skills/frontend-architecture-boundaries/SKILL.md`](.skills/frontend-architecture-boundaries/SKILL.md) | [`src/frontend-architecture-boundaries/SKILL.md`](src/frontend-architecture-boundaries/SKILL.md) |
+| [`.skills/db-ai/SKILL.md`](.skills/db-ai/SKILL.md) | [`src/db-ai/SKILL.md`](src/db-ai/SKILL.md) |
 | [`.skills/security-engineering/SKILL.md`](.skills/security-engineering/SKILL.md) | [`src/security-engineering/SKILL.md`](src/security-engineering/SKILL.md) |
 | [`.skills/playwright-cli-usage/SKILL.md`](.skills/playwright-cli-usage/SKILL.md) | [`src/playwright-cli-usage/SKILL.md`](src/playwright-cli-usage/SKILL.md) |
 | [`.skills/explain-html/SKILL.md`](.skills/explain-html/SKILL.md) | [`src/explain-html/SKILL.md`](src/explain-html/SKILL.md) |
@@ -445,6 +454,9 @@ Cada skill declara su versión independiente en `metadata.version`; el procedimi
 - `docs/frontend-architecture-boundaries/index.html`: página de entrada a la skill de límites de arquitectura frontend.
 - `docs/frontend-architecture-boundaries/flujo-de-trabajo.html`: diagrama del flujo, del diagnóstico a la verificación con la puerta de evidencia.
 - `docs/frontend-architecture-boundaries/arquitectura.html`: diagrama del paquete, las fronteras que diseña y la página de docs.
+- `docs/db-ai/index.html`: página de entrada a la skill de operación de bases de datos con `db-ai`.
+- `docs/db-ai/flujo-de-trabajo.html`: diagrama del descubrimiento, la lectura, la escritura con guardas y la verificación.
+- `docs/db-ai/arquitectura.html`: diagrama del contrato, la CLI, la base montada y las guardas de permisos y ETag.
 - `docs/web-interface-visual-design/index.html` (sección «Plantillas premium»): galería de las diez plantillas de diagrama con conmutador de superficie (clara y oscura), con tipo y mejor uso de cada una.
 - `docs/security-engineering/index.html`: página de entrada a la skill de seguridad, con el alcance, el procedimiento, el paquete y el escáner.
 - `docs/security-engineering/flujo-de-trabajo.html`: diagrama del flujo, del encargo al riesgo residual.
