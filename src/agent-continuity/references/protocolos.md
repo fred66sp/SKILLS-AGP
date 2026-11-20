@@ -4,7 +4,7 @@ Se lee al ejecutar cualquiera de los siete protocolos. `SKILL.md` resume qué ha
 cada uno y cuándo; aquí está la secuencia de operaciones, los criterios de captura
 y la reconciliación de errores. Las formas exactas de los comandos y sus flags se
 consultan en la skill `db-ai`; este fichero solo nombra operaciones (`cat`, `find`,
-`grep`, `touch`, `write`, `batch`) y campos.
+`grep`, `upsert`, `touch`, `write`, `batch`) y campos.
 
 ## Convenciones comunes
 
@@ -19,8 +19,8 @@ consultan en la skill `db-ai`; este fichero solo nombra operaciones (`cat`, `fin
   repositorio, nunca absolutas de la máquina.
 - La sesión de ACM es una fila de `/mem/sessions`, no la sesión de db-ai que solo
   resuelve `cd` y `pwd`. No uses esa sesión para la memoria.
-- Escribe solo después de abrir la sesión de ACM: la clave foránea lo exige y un
-  `touch` huérfano devuelve `E_CONSTRAINT`.
+- Escribe solo después de abrir la sesión de ACM: la clave foránea lo exige. Sin
+  sesión, un `upsert` de observación devuelve `E_CONSTRAINT`.
 
 ## 1. Inicio de sesión y recuperación de contexto
 
@@ -29,55 +29,45 @@ Objetivo: saber dónde quedó el proyecto y qué reglas rigen antes de actuar.
 1. Comprueba el alias con `mounts` y confirma que `cat` de `meta` responde. Lee
    `project_key` con `find` por `name` y compáralo con el esperado del proyecto.
    Si no coincide, detente: la base no es de este proyecto.
-2. Abre la sesión de ACM con `touch` en `/mem/sessions`: `id`, `agent_id`,
+2. Abre la sesión de ACM con `upsert` en `/mem/sessions`: `id`, `agent_id`,
    `source`, `goal`, `status='open'`, `started_at`, `created_at` y `updated_at`.
-   La recuperación de solo lectura puede ocurrir antes; la primera escritura de
-   conocimiento, no.
-3. Preferencias aplicables: pide por `pref_key` conocido —una invocación por
-   clave que rija la tarea, como máximo tres en la reanudación— con
-   `status='active'` y límite 2. Si aún no conoces las claves, pide una página
-   mínima (`status='active'`, límite 3), elige las aplicables y, si `truncated`
-   avisa de recorte, pide por clave las que falten. No pidas todas las activas.
-   Con más de tres claves, pide ahora las que rijan la acción inmediata y el
-   resto después. Aplica cada valor o declara el conflicto con la instrucción de
-   la persona.
-4. Checkpoint vigente. Acota el alcance antes de buscar: `find` ordena por PK
-   ascendente y no garantiza el más reciente en la primera página (C-ACM-03).
-   - Sesión conocida (handoff o reanudación de una sesión concreta): `find` en
-     `/mem/checkpoints` por `session_id` y `status='active'`, con límite corto
-     (5). El UUIDv7 mayor de esa página es el vigente; dos activas para la misma
-     sesión son una anomalía y van al protocolo 7.
-   - Continuidad del proyecto sin sesión conocida: `find` en `/mem/sessions` por
-     `started_at` dentro de una ventana acotada (por defecto, los últimos 14
-     días) y límite corto (50). Si la respuesta trae `truncated`, la página no
-     contiene la más reciente: acorta el corte y repite; no uses el cursor para
-     recorrer páginas. Con la ventana entera en memoria, ordena localmente por
-     UUIDv7 mayor (recencia) y toma la primera sesión con checkpoint activo.
-     Busca después su checkpoint por `session_id`, como en el caso anterior.
-   Exige la continuidad del mismo agente solo cuando la persona o el encargo lo
-   pidan: añade `agent_id` a los filtros de sesión y checkpoint y, si no hay
-   checkpoint de ese agente, decláralo en vez de adoptar el de otro en silencio.
-   Ninguno de los dos casos recorre páginas: si la sesión buscada queda fuera de
-   la ventana, amplía el corte y repite el `find` de sesiones.
-   Lee objetivo, estado, próximos pasos, ficheros y preguntas abiertas. Si no
-   hay checkpoint, el historial de la sesión anterior es el siguiente recurso.
-5. Decisiones de la tarea: `find` en `/mem/observations` por `kind='decision'`,
-   `status='active'` y el `topic_key` de la tarea en curso, con límite 5. No
-   pidas «todas las decisiones activas». Sin `topic_key` conocido, pide una
-   página mínima (límite 3) y declara el recorte de `truncated`: ese caso es un
-   aviso, no una recuperación completa.
-6. Observaciones abiertas: `find` por `status='needs_review'` y revisa las
-   `open_questions` del checkpoint.
-7. Para cuando la pregunta esté respondida. Lee el detalle con `cat` solo si la
-   fila localizada no basta; no exportes tablas.
+   Crear no lleva `--if-match`; actualizar una sesión existente, siempre con
+   `--if-match` del ETag leído. La recuperación de solo lectura puede ocurrir
+   antes; la primera escritura de conocimiento, no.
+3. Recuperación en frío, con guion determinista de cuatro `find` y un paso de
+   decisión (presupuesto medido sobre el fixture de 10.240 observaciones:
+   ≈1.900 tokens estimados, por debajo de los 2.000 del contrato):
+   1. `find /mem/sessions --order "started_at:desc" --limit 5 --fields "id,status"`.
+      Elige la sesión del proyecto; añade el filtro `agent_id` solo si el encargo
+      exige el mismo agente. El orden lo aplica db-ai, no la skill. Lee el
+      `summary` de la sesión elegida con `cat` solo si el checkpoint no basta.
+   2. `find /mem/checkpoints --where "session_id=<id>" --where "status=active" --order "created_at:desc" --limit 1 --fields "state,next_steps"`.
+      Dos activas para la misma sesión son una anomalía del protocolo 7.
+   3. `find /mem/observations --where "session_id=<id>" --order "created_at:desc" --fields "kind,topic_key,title" --limit 5`.
+      Decisiones y contexto reciente; el detalle va con `cat` solo si se actúa.
+   4. `find /mem/preferences --where "source=human" --where "status=active" --fields "pref_key,value" --limit 20`.
+      En frío se recuperan las preferencias de la persona; las del agente
+      (`source=agent`) o importadas se piden por `pref_key` cuando el paso las
+      necesite. Aplica cada valor o declara el conflicto con la instrucción de
+      la persona.
+   5. Solo si hay una contradicción sin resolver: un `find` acotado por el
+      `topic_key` o el `pref_key` en duda.
+   6. Siguiente paso: `next_steps` del checkpoint. Lee el detalle con `cat` solo
+      si la fila proyectada no basta.
+4. Sesión conocida (handoff): salta el paso 3.1 y entra por `session_id` en
+   checkpoints (3.2) y observaciones (3.3). El historial completo de la sesión
+   no forma parte del guion: se pide después, solo si no hay checkpoint o si la
+   pregunta lo exige.
+5. Si una respuesta trae `truncated`, el límite dejó fuera filas: acota con
+   `--where` o sube el `--limit` solo del paso afectado; no recorras el cursor.
 
-Límite de contexto: apunta a seis invocaciones o menos para reanudar
-(M-ACM-01) y no acumules filas completas. El checkpoint vigente cuesta uno o
-dos `find` acotados (por `session_id`, o sesiones y luego checkpoint); nunca uno
-sin filtro. El historial de la sesión no forma parte del guion por defecto: se
-pide después, solo si no hay checkpoint o si la pregunta lo exige. `find`
-devuelve filas enteras y no hay proyección: el control está en el filtro, el
-límite y el tamaño del texto.
+Presupuesto: objetivo ≤2 000 tokens estimados para el guion en frío (M-ACM-01).
+La proyección (`--fields`) recorta el ancho de cada fila y el orden lo aplica
+db-ai; la clave del registro se emite siempre, aunque no se pida. Los errores
+esperables son `E_USAGE` (precondición o parámetro: columna inexistente o
+repetida en `--fields`, actualización sin `--if-match`) y `E_CONFLICT` (ETag
+obsoleto: releer y reintentar). Sin FTS ni búsqueda difusa: filtros, orden,
+proyección y límites deterministas.
 
 ## 2. Captura de conocimiento durante el trabajo
 
@@ -100,9 +90,10 @@ actividad.
 4. El título debe contener los términos con los que alguien lo buscará después.
    Sin FTS ni ranking, la recuperabilidad se gana en la captura (hallazgo R1 de
    ACM-03): un título genérico es una fila perdida.
-5. Genera UUIDv7 y `content_hash`, y ejecuta `touch` en la tabla que
-   corresponda. Verifica con `cat`. Si `touch` devuelve `E_CONSTRAINT` por hash,
-   aplica la deduplicación exacta del protocolo 4; no reintentes la inserción.
+5. Genera UUIDv7 y `content_hash`, y ejecuta `upsert` en la tabla que
+   corresponda: sin `--if-match` para una captura nueva, con el ETag leído para
+   corregir una existente. Verifica con `cat` cuando el resultado no baste. Si el
+   `content_hash` ya existe, aplica el protocolo 4.1 en vez de insistir.
 6. Las preferencias pueden nacer de una persona sin sesión: `session_id` nulo y
    `source='human'` son válidos y explícitos.
 
@@ -115,51 +106,55 @@ actividad.
    pregunta; 50 para el historial completo de una sesión.
 3. Por texto: `grep` con un término distintivo y límite corto. Es subcadena
    literal y sensible a mayúsculas; después lee el campo con `cat`.
-4. Recencia: dentro de una ventana acotada, el UUIDv7 mayor es el más reciente.
-   No esperes orden descendente ni recuentos baratos. Para el checkpoint vigente
-   pide por `session_id` (protocolo 1.4) en vez de ordenar la tabla.
+4. Recencia: `--order "created_at:desc"` (o `started_at`) con `--limit` corto; el
+   orden y el desempate por PK los aplica db-ai, no la skill. Para el checkpoint
+   vigente pide por `session_id` (protocolo 1.3) en vez de ordenar la tabla.
+   Recuento: `--count` en `find` y `grep` cuando solo haga falta cardinalidad;
+   es incompatible con `--cursor`.
 5. Si el término no aparece, reformula con las palabras que usaría quien
    capturó; no pidas la tabla completa. Un fallo de recuperación es una señal
    sobre la captura, no una invitación a exportar.
-6. Contexto de reanudación con presupuesto cerrado y guion acotado por defecto:
-   - Sesiones: ventana acotada del protocolo 1.4 o `session_id` conocido.
-   - Checkpoint: por `session_id` y `status='active'`; uno o dos `find`.
-   - Decisiones: solo las activas del `topic_key` de la tarea en curso, límite
-     5. Sin `topic_key`, página mínima (límite 3) con aviso de recorte.
-   - Preferencias: solo las claves aplicables, por `pref_key` y
-     `status='active'`, límite 2 por clave y como máximo tres claves; sin
-     claves, página mínima (límite 3).
+6. Contexto de reanudación con presupuesto cerrado y guion acotado por defecto
+   (protocolo 1.3):
+   - Sesiones: `--order "started_at:desc" --limit 5 --fields "id,status"`.
+   - Checkpoint: por `session_id`; uno o dos `find`.
+   - Decisiones: solo las de la sesión, `--order "created_at:desc"` y `--fields`
+     con los campos mínimos; la clave del registro viaja siempre.
+   - Preferencias: activas del humano en frío (`source=human`) y por `pref_key`
+     las del agente cuando el paso las pida, con `--fields "pref_key,value"`.
    El historial de la sesión no forma parte del guion: se pide si no hay
    checkpoint o si la pregunta lo exige. Nada de `find` sin filtro ni `cat`
-   redundante. Con `session_id` conocido y dos claves aplicables son cuatro
-   `find`; en frío, la ventana añade el quinto. La re-medición sobre la base de
-   10 000 observaciones está en
-   `scenarios/evidence/evidence-benchmark.md`, «Re-medición M-ACM-03»: el guion
-   acotado con sesión conocida cumple los 2 000 tokens; en frío la ventana de
-   sesiones lo desborda porque `find` devuelve filas enteras (C-ACM-03). El
-   objetivo no se toca: se declara el resultado. El detalle se pide después,
-   solo del elemento que vayas a usar.
+   redundante. Las cinco invocaciones en frío apuntan a ≤2 000 tokens
+   estimados; la re-medición con db-ai 0.4.0 está pendiente y se declara su
+   resultado cuando se haga. Si el guion se pasa, se acota antes de crecer:
+   menos `--fields`, `--limit` menor o un rango de fechas.
 
 ## 4. Actualización y consolidación
 
-### 4.1 Duplicado exacto
+### 4.1 Misma captura repetida
 
-`UNIQUE(content_hash)` impide la segunda fila; la segunda captura devuelve
-`E_CONSTRAINT`.
+`UNIQUE(content_hash)` impide la segunda fila. Con `upsert` la repetición es una
+actualización explícita, no un `E_CONSTRAINT` que haya que perseguir:
 
-1. No repitas el `touch`.
-2. Busca la fila existente por `content_hash`.
-3. En `observations`, actualiza `duplicate_count` y `last_seen_at` con `write` y
-   ETag vigente. En `checkpoints` y `preferences`, el duplicado es un no-op.
-4. Verifica con `cat`.
+1. Registro nuevo: `upsert <tabla> --data '<json>'` sin `--if-match`. Devuelve
+   `{"result":"created",...}`.
+2. Registro existente: lee la fila y su ETag, y repite con `--if-match`. Una
+   actualización sin `--if-match` es `E_USAGE`; un ETag obsoleto es
+   `E_CONFLICT` (relee y reintenta). Devuelve `{"result":"updated",...}`.
+3. En `observations`, la repetición suma `duplicate_count` y refresca
+   `last_seen_at`. En `checkpoints` y `preferences` es un no-op: no la ejecutes.
+4. `--dry-run` calcula el resultado sin efectos si quieres previsualizar el
+   `created`/`updated` y el ETag antes de aplicarlo.
+5. Verifica con `cat` solo si el resultado no basta.
 
 ### 4.2 Sustitución
 
 Sustituye una decisión, un checkpoint o una preferencia con un solo `batch`:
 
 1. Busca y lee la fila activa anterior; guarda su ETag.
-2. Prepara dos operaciones: `touch` de la fila nueva y `write` de la anterior con
-   `status='superseded'`, `superseded_by` igual al id nuevo y `updated_at`.
+2. Prepara dos operaciones: `upsert` de la fila nueva y actualización de la
+   anterior (`upsert --if-match` o `write` con ese ETag) con `status='superseded'`,
+   `superseded_by` igual al id nuevo y `updated_at`.
 3. Ordena el lote: inserción primero, actualización después. La actualización
    apunta a una fila preexistente; no encadenes sobre una fila creada en el mismo
    lote.
@@ -176,8 +171,8 @@ después y reconcilia según el protocolo 7.
 No hay detección automática. Compara por `topic_key`, `kind` y texto.
 
 - Si es la misma decisión con otras palabras, no crees una segunda activa.
-- Si no puedes decidir, marca la existente `needs_review` con `write` y deja la
-  duda en `rationale` o `body`. Si cambias texto semántico, recalcula
+- Si no puedes decidir, marca la existente `needs_review` con `upsert --if-match`
+  y deja la duda en `rationale` o `body`. Si cambias texto semántico, recalcula
   `content_hash` en la misma operación.
 - Nunca fusiones ni borres por iniciativa propia: la fusión es una decisión
   humana.
@@ -208,9 +203,10 @@ Un checkpoint captura el estado de reanudación de una sesión.
 ### 6.1 Cierre
 
 1. Lee la sesión y guarda su ETag vigente.
-2. Con `write`, fija `status='closed'`, `ended_at`, `summary` y `updated_at`.
-   Limítate a esos campos: no reescribas procedencia (`agent_id`, `source`,
-   `started_at`, `created_at`).
+2. Con `upsert --if-match` del ETag leído (o `write` con el mismo ETag), fija
+   `status='closed'`, `ended_at`, `summary` y `updated_at`. Sin ETag no hay
+   actualización: `E_USAGE`. Limítate a esos campos: no reescribas procedencia
+   (`agent_id`, `source`, `started_at`, `created_at`).
 3. Si el trabajo se abandona, usa `status='abandoned'` y deja un checkpoint que
    explique el estado.
 4. Verifica con `cat` y confirma que el checkpoint deja un siguiente paso
@@ -220,28 +216,28 @@ Un checkpoint captura el estado de reanudación de una sesión.
 
 1. Ejecuta el protocolo 1 con el checkpoint como pieza central y el guion
    acotado de §3.6: por `session_id` si la sesión es conocida; si no, por la
-   sesión más reciente de la ventana (protocolo 1.4). Decisiones solo del
-   `topic_key` de la tarea en curso y preferencias solo por `pref_key`
-   aplicable. No pidas la tabla de checkpoints sin filtro.
+   sesión más reciente (`--order "started_at:desc"`, protocolo 1.3). Decisiones
+   solo de la sesión y preferencias solo activas. No pidas la tabla de
+   checkpoints sin filtro.
 2. La continuidad es del proyecto por defecto, entre sesiones y agentes: un
    checkpoint de otra sesión u otro agente es válido y la procedencia queda
    registrada. Si el encargo exige el mismo agente, filtra por `agent_id` y, sin
    checkpoint suyo, decláralo.
 3. Continúa desde `next_steps`; no repitas los hallazgos ya capturados.
 4. Revisa la cola `needs_review` antes de dar por vigente una decisión dudosa.
-5. Límite residual: un checkpoint activo huérfano de una sesión anterior a la
-   ventana solo aparece ampliando el corte. Es convención de la skill, no
-   garantía del motor: `find` no tiene orden descendente (C-ACM-03) y la tabla
-   no se recorre entera.
+5. Límite residual: el guion mira las cinco sesiones más recientes. Un
+   checkpoint activo huérfano de una sesión más antigua solo aparece subiendo ese
+   `--limit`; sigue siendo convención de la skill, no garantía del motor.
 
 ## 7. Resolución de conflictos y recuerdos contradictorios
 
 | Situación | Acción |
 |---|---|
+| `E_USAGE` | Falta una precondición o un parámetro no es válido: columna inexistente o repetida en `--fields`, actualización sin `--if-match`, `--count` junto a `--cursor`. Corrige la invocación; no la reintentes igual. |
 | `E_CONFLICT` | Relee la fila, obtén el ETag nuevo y decide con el estado actual. No reutilices el ETag viejo. |
-| `E_COMMIT_UNKNOWN` | No reintentes a ciegas. Lee por `id` (en un `touch`) o por `content_hash`/`session_id` (en un `write` o `batch`). Si el cambio está, verifica y cierra; si no está, confirma la ausencia y reintenta con el mismo `id`; si no puedes concluir, informa la incertidumbre. |
+| `E_COMMIT_UNKNOWN` | No reintentes a ciegas. Lee por `id` (en un `upsert`) o por `content_hash`/`session_id` (en un `write` o `batch`). Si el cambio está, verifica y cierra; si no está, confirma la ausencia y reintenta con el mismo `id`; si no puedes concluir, informa la incertidumbre. |
 | `E_DENIED` | Detente. Reporta la operación y el prefijo; no escales privilegios, no cambies de montaje ni busques una ruta equivalente. |
-| `E_CONSTRAINT` | Distingue la causa: duplicado exacto (recupera por hash), sesión inexistente (ábrela antes), `CHECK` de decisión (falta `topic_key` o `rationale`) o enlace de sustitución incoherente. Corrige los datos; no desactives restricciones. |
+| `E_CONSTRAINT` | Distingue la causa: duplicado exacto (protocolo 4.1), sesión inexistente (ábrela antes), `CHECK` de decisión (falta `topic_key` o `rationale`) o enlace de sustitución incoherente. Corrige los datos; no desactives restricciones. |
 | `E_BUSY` o `E_TIMEOUT` | Reduce el alcance y reintenta una vez tras observar; no subas plazos a ciegas. |
 
 Recuerdos contradictorios:

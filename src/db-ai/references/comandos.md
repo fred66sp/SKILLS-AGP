@@ -15,10 +15,11 @@ db-ai describe PATH
 db-ai cat PATH
 db-ai --session ID cd PATH
 db-ai --session ID pwd
-db-ai find PATH [--where EXPR]... [--limit N] [--cursor TOKEN]
-db-ai grep PATH TEXT [--limit N] [--cursor TOKEN]
+db-ai find PATH [--where EXPR]... [--order SPEC] [--fields LIST] [--count] [--limit N] [--cursor TOKEN]
+db-ai grep PATH TEXT [--fields LIST] [--count] [--limit N] [--cursor TOKEN]
 db-ai touch PATH --data JSON|-
 db-ai write ROW_OR_FIELD --data JSON|- --if-match ETAG
+db-ai upsert TABLE --data JSON|- [--if-match ETAG] [--dry-run]
 db-ai cp ROW DEST_ROW --if-match ETAG
 db-ai mv ROW DEST_ROW --if-match ETAG --apply
 db-ai rm ROW --if-match ETAG --apply
@@ -39,7 +40,7 @@ db-ai export PATH [--where EXPR]... [--format json|jsonl] [--limit N] [--cursor 
 | `--json` | Aceptado por compatibilidad; no-op. La salida ya es JSON. |
 | `--help` | Ayuda. No abre bases. |
 
-Flags de comando: `--mode`, `--limit`, `--cursor`, `--depth`, `--where`, `--data`, `--if-match`, `--format`, `--dry-run`, `--apply`. Un flag desconocido o fuera de su comando es `E_USAGE`.
+Flags de comando: `--mode`, `--limit`, `--cursor`, `--depth`, `--where`, `--order`, `--fields`, `--count`, `--data`, `--if-match`, `--format`, `--dry-run`, `--apply`. Un flag desconocido o fuera de su comando es `E_USAGE`.
 
 ## Salida
 
@@ -55,7 +56,9 @@ Error:
 {"version":1,"ok":false,"error":{"code":"E_...","message":"..."}}
 ```
 
-- `cat` de una fila, `find` y `export` comparten la forma `{path, fields, etag}`.
+- `cat` de una fila, `find` y `export` comparten la forma `{path, fields, etag}`. Con `--fields`, `fields` contiene solo las columnas pedidas más la clave (en orden de catálogo); el `etag` sigue siendo el de la fila completa.
+- `find --count` y `grep --count` emiten `{"count":N}` sin filas: el total del conjunto filtrado, no el de la página (`--limit` no lo acota; `--count` es incompatible con `--cursor`). `grep --count` cuenta filas, no coincidencias por columna.
+- `upsert` emite `{result: "created"|"updated", applied: true|false, path, etag}`; `applied:false` y sin `etag` es la simulación `--dry-run`.
 - `cat` de un campo emite el envoltorio tipado `{kind, data}`.
 - `stat` emite `{type, path, columns|keys}`.
 - `grep` emite la fila, la columna y la posición de la coincidencia.
@@ -70,13 +73,15 @@ Error:
 4. Claves compuestas: `~k` seguido de base64url sin padding del array JSON canónico de envoltorios tipados, en orden de PK, por ejemplo `[{"kind":"text","data":"a"},{"kind":"integer","data":"42"}]`.
 5. Vistas, tablas virtuales y claves sin PK estable quedan fuera del MVP navegable. Una tabla sin orden total solo ofrece la primera página de `find`, `grep` o `export`.
 
-## Filtros y búsqueda
+## Filtros, orden y búsqueda
 
 - Operadores de `--where`: `=`, `!=`, `<`, `<=`, `>`, `>=`, `is-null`, `not-null`.
 - Varios `--where` se combinan con AND.
 - El valor se interpreta primero como JSON y, si no lo es, como texto literal: `1` es entero, `"1"` es texto, `null`/`true`/`false` son literales JSON.
+- `--order "col:asc,col2:desc"` ordena en el servidor; la dirección por defecto es `asc`. El desempate es el resto de la clave, así que el orden es total y los cursores recorren sin omisiones ni duplicados. Los nulos se ordenan al final en ambas direcciones. Sin `--order`, el orden es el interno (clave ascendente). Columna o dirección inválida: `E_USAGE`. Sin SQL libre.
+- `--fields "col1,col2"` proyecta en la salida de `find` y `cat` de fila: columnas del catálogo, sin espacios; columna desconocida, repetida o vacía: `E_USAGE`. La clave se emite siempre. El pedido es del volumen de salida, no de SQLite: la fila llega completa y el ETag no cambia.
 - `grep` busca una subcadena literal en columnas TEXT autorizadas con comparación sensible a mayúsculas; no hay FTS ni expresiones regulares.
-- Un filtro sobre una columna prohibida se rechaza con `E_DENIED`; no se filtra en cliente para esquivarlo.
+- Un filtro sobre una columna prohibida se rechaza con `E_DENIED`; no se filtra en cliente para esquivarlo. Proyectar con `--fields` no amplía acceso: el permiso es de la tabla.
 
 ## Paginación
 

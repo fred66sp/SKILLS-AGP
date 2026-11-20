@@ -15,6 +15,7 @@ Se lee antes de la primera mutación o al preparar un `batch`. Desarrolla la fas
 |---|---|---|
 | `touch PATH --data JSON\|-` | Inserta una fila con las columnas indicadas y devuelve la clave efectiva. | Ninguna; no inventa valores obligatorios omitidos. |
 | `write ROW_OR_FIELD --data JSON\|- --if-match ETAG` | Actualiza un campo o varios campos de una fila. Un registro recibe un mapa parcial, no un reemplazo. | `--if-match` con el ETag actual. |
+| `upsert TABLE --data JSON\|- [--if-match ETAG] [--dry-run]` | Crea si la clave no existe (`result:"created"`), actualiza si existe (`result:"updated"`). El destino de conflicto es la clave primaria. | Crear: ninguno. Actualizar: `--if-match` con el ETag vigente — actualizar sin `--if-match` se rechaza; `--if-match` con fila inexistente se rechaza sin crear; ETag obsoleto: `E_CONFLICT`. |
 | `cp ROW DEST_ROW --if-match ETAG` | Copia los campos ordinarios de una fila a una clave destino explícita dentro de la misma tabla. | `--if-match` con el ETag de la fila **origen**. |
 | `mv ROW DEST_ROW --if-match ETAG --apply` | Renombra una PK simple. | ETag actual y `--apply`. |
 | `rm ROW --if-match ETAG --apply` | Borra una fila. No es recursivo. | ETag actual y `--apply`. |
@@ -31,7 +32,7 @@ Reglas de identidad y forma:
 
 ## Dry-run y confirmación
 
-- `--dry-run` está disponible en `touch`, `write`, `cp`, `mv`, `rm` y `batch`.
+- `--dry-run` está disponible en `touch`, `write`, `cp`, `mv`, `rm`, `upsert` y `batch`. En `upsert`, la simulación devuelve `applied:false` y el resultado de rama previsto, sin escribir.
 - Solo planifica y consulta: no ejecuta la mutación, no dispara triggers y no promete superar restricciones. El plan no es una autorización futura.
 - `--apply` es obligatorio únicamente en `mv` y `rm`.
 - `--apply` es confirmación no interactiva de una operación destructiva, no permiso. La política sigue mandando.

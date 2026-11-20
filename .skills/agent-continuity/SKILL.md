@@ -2,7 +2,7 @@
 name: agent-continuity
 description: "Memoria de continuidad de proyecto (ACM) sobre db-ai: sesiones, decisiones, checkpoints y preferencias. Úsala al iniciar o cerrar sesión, capturar conocimiento durable, consolidar o reanudar. No para operar db-ai (skill db-ai) ni memoria global."
 metadata:
-  version: "0.1.0"
+  version: "0.2.0"
 ---
 
 # Enrutador de la skill de memoria de continuidad de agente (ACM)

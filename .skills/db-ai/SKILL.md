@@ -1,8 +1,8 @@
 ---
 name: db-ai
-description: "Explora, consulta y modifica bases de datos SQLite con la CLI db-ai, que expone tablas, filas y campos como un sistema de archivos y evita generar SQL. Úsala cuando un agente necesite descubrir qué bases hay montadas, inspeccionar tablas y columnas, leer o buscar filas, exportar resultados o escribir con permisos, ETags, dry-run y transacciones. Cubre el descubrimiento progresivo con mounts, ls, tree, stat y describe; la lectura con cat, find, grep y export; y la escritura con touch, write, cp, mv, rm y batch, incluidos cursores, sesiones y códigos de error. No la uses para desarrollar, modificar o depurar la herramienta db-ai, ni para escribir SQL directo, ORMs, migraciones de esquema o administración de motores; tampoco para PostgreSQL u otros motores fuera del MVP. Prefiere la CLI propia del dominio cuando exista y aplique reglas de negocio."
+description: "Explora, consulta y modifica bases de datos SQLite con la CLI db-ai, que expone tablas, filas y campos como un sistema de archivos y evita generar SQL. Úsala cuando un agente necesite descubrir qué bases hay montadas, inspeccionar tablas y columnas, leer o buscar filas, exportar resultados o escribir con permisos, ETags, dry-run y transacciones. Cubre el descubrimiento progresivo con mounts, ls, tree, stat y describe; la lectura con cat, find, grep y export, con proyección (--fields), ordenación (--order) y recuento (--count); y la escritura con touch, write, upsert, cp, mv, rm y batch, incluidos cursores, sesiones y códigos de error. No la uses para desarrollar, modificar o depurar la herramienta db-ai, ni para escribir SQL directo, ORMs, migraciones de esquema o administración de motores; tampoco para PostgreSQL u otros motores fuera del MVP. Prefiere la CLI propia del dominio cuando exista y aplique reglas de negocio."
 metadata:
-  version: "0.1.0"
+  version: "0.2.0"
 ---
 
 # Enrutador de la skill de operación de bases de datos con db-ai
