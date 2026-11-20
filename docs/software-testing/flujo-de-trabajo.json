@@ -286,6 +286,7 @@
       "items": [
         "El riesgo elige el nivel: revisión, humo, casos escritos o ronda completa; el presupuesto se declara antes de empezar",
         "Un caso sin ángulo declarado repite a otro: partición, límite, tabla de decisión o transición",
+        "Si la misma fuente escribió el código y sus casos, añade un ángulo ajeno: revisión adversarial, propiedad o mutación",
         "El resultado esperado se escribe antes de ejecutar; después solo se escribe lo observado"
       ]
     },
