@@ -45,6 +45,8 @@
 }
 
 /* Acento por skill: el mismo que documenta DESIGN.md. */
+:root[data-skill="agent-continuity"] {--accent: #475569;--accent-2: #64748b;--accent-3: #334155;--accent-soft: rgba(71, 85, 105, .10)}
+:root[data-skill="agent-continuity"][data-theme="dark"] {--accent: #cbd5e1;--accent-2: #94a3b8;--accent-3: #e2e8f0;--accent-soft: rgba(203, 213, 225, .16)}
 :root[data-skill="adr-software"] {--accent: #92400e;--accent-2: #d97706;--accent-3: #b45309;--accent-soft: rgba(30, 64, 175, .10)}
 :root[data-skill="adr-software"][data-theme="dark"] {--accent: #fcd34d;--accent-2: #fbbf24;--accent-3: #fde68a;--accent-soft: rgba(147, 197, 253, .14)}
 :root[data-skill="document-management-software"] {--accent: #1e40af;--accent-2: #0ea5e9;--accent-3: #6366f1;--accent-soft: rgba(30, 64, 175, .10)}

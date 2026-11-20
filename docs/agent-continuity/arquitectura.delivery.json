@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "88dc5e2b-b94d-45d4-a0c8-f9d7ab73ca41",
+  "status": "current",
+  "command": "deliver",
+  "type": "architecture",
+  "input": "/home/alfredo/PROJECTS/SKILLS-AGP/docs/agent-continuity/arquitectura.json",
+  "output": "/home/alfredo/PROJECTS/SKILLS-AGP/docs/agent-continuity/arquitectura.html",
+  "specification": {
+    "sha256": "938440e87dd6de422206fb11fd5f6840eb808cd1079c7752aa2b06845b003fc0",
+    "bytes": 6708
+  },
+  "artifact": {
+    "sha256": "6777e5f1e6657c5ac370a77323115e76fc87aca76560da2fe799bc39a8def51a",
+    "bytes": 836912
+  }
+}

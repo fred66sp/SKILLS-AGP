@@ -1,0 +1,315 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "Arquitectura de la skill agent-continuity",
+    "subtitle": "La skill compone convenciones de memoria sobre la CLI db-ai: un SQLite local del proyecto montado como rutas, con identidad, ETag y transacciones.",
+    "locale": "es",
+    "output": "docs/agent-continuity/arquitectura.html",
+    "quality_profile": "showcase"
+  },
+  "components": [
+    {
+      "id": "persona",
+      "type": "external",
+      "label": "Persona",
+      "sublabel": "fija el encargo",
+      "icon": "person",
+      "pos": [
+        40,
+        40
+      ],
+      "size": [
+        140,
+        60
+      ]
+    },
+    {
+      "id": "agente",
+      "type": "external",
+      "label": "Agente anfitrión",
+      "sublabel": "reanuda y captura",
+      "pos": [
+        220,
+        40
+      ],
+      "size": [
+        180,
+        64
+      ]
+    },
+    {
+      "id": "skill",
+      "type": "frontend",
+      "label": "SKILL.md",
+      "sublabel": "siete protocolos y guardas",
+      "pos": [
+        60,
+        150
+      ],
+      "size": [
+        240,
+        64
+      ]
+    },
+    {
+      "id": "ref-protocolos",
+      "type": "database",
+      "label": "protocolos.md",
+      "sublabel": "secuencias y reconciliación",
+      "pos": [
+        60,
+        250
+      ],
+      "size": [
+        240,
+        52
+      ]
+    },
+    {
+      "id": "cli",
+      "type": "backend",
+      "label": "CLI db-ai",
+      "sublabel": "cat · find · touch · write",
+      "pos": [
+        380,
+        150
+      ],
+      "size": [
+        240,
+        64
+      ]
+    },
+    {
+      "id": "alias",
+      "type": "backend",
+      "label": "Montaje /mem",
+      "sublabel": "alias mem · ACM_ALIAS",
+      "pos": [
+        380,
+        250
+      ],
+      "size": [
+        240,
+        56
+      ]
+    },
+    {
+      "id": "fuente",
+      "type": "external",
+      "label": "Contratos fuente",
+      "sublabel": "DESIGN del ACM · ACM-03",
+      "pos": [
+        60,
+        345
+      ],
+      "size": [
+        240,
+        52
+      ]
+    },
+    {
+      "id": "memory",
+      "type": "database",
+      "label": "memory.db",
+      "sublabel": ".agent-memory · SQLite local",
+      "pos": [
+        700,
+        150
+      ],
+      "size": [
+        220,
+        64
+      ]
+    },
+    {
+      "id": "etag",
+      "type": "security",
+      "label": "ETag y batch",
+      "sublabel": "precondición · una transacción",
+      "pos": [
+        700,
+        250
+      ],
+      "size": [
+        220,
+        64
+      ]
+    },
+    {
+      "id": "identidad",
+      "type": "security",
+      "label": "project_key",
+      "sublabel": "meta · solo lectura",
+      "pos": [
+        700,
+        345
+      ],
+      "size": [
+        220,
+        64
+      ]
+    },
+    {
+      "id": "siguiente",
+      "type": "external",
+      "label": "Siguiente sesión",
+      "sublabel": "retoma el checkpoint",
+      "pos": [
+        980,
+        150
+      ],
+      "size": [
+        220,
+        64
+      ]
+    },
+    {
+      "id": "docs",
+      "type": "external",
+      "label": "Página de docs",
+      "sublabel": "index · flujo · arquitectura",
+      "pos": [
+        980,
+        250
+      ],
+      "size": [
+        220,
+        64
+      ]
+    }
+  ],
+  "boundaries": [
+    {
+      "kind": "region",
+      "label": "Paquete instalado",
+      "wraps": [
+        "skill",
+        "ref-protocolos"
+      ]
+    },
+    {
+      "kind": "security-group",
+      "label": "Superficie que gobierna la skill",
+      "wraps": [
+        "cli",
+        "alias",
+        "memory",
+        "etag",
+        "identidad"
+      ]
+    }
+  ],
+  "connections": [
+    {
+      "id": "encarga",
+      "from": "persona",
+      "to": "agente",
+      "label": "encarga",
+      "variant": "emphasis"
+    },
+    {
+      "id": "carga",
+      "from": "agente",
+      "to": "skill",
+      "label": "carga",
+      "variant": "emphasis"
+    },
+    {
+      "id": "consulta",
+      "from": "skill",
+      "to": "ref-protocolos",
+      "label": "consulta JiT",
+      "variant": "dashed"
+    },
+    {
+      "id": "invoca",
+      "from": "skill",
+      "to": "cli",
+      "label": "invoca",
+      "variant": "emphasis"
+    },
+    {
+      "id": "resuelve",
+      "from": "cli",
+      "to": "alias",
+      "label": "resuelve montaje",
+      "variant": "emphasis"
+    },
+    {
+      "id": "escribe",
+      "from": "alias",
+      "to": "memory",
+      "label": "rutas /mem/*",
+      "variant": "emphasis",
+      "labelAt": [
+        735,
+        226
+      ]
+    },
+    {
+      "id": "verifica",
+      "from": "identidad",
+      "to": "cli",
+      "label": "project_key",
+      "variant": "security"
+    },
+    {
+      "id": "precondiciona",
+      "from": "etag",
+      "to": "cli",
+      "label": "precondiciona",
+      "variant": "security"
+    },
+    {
+      "id": "funda",
+      "from": "fuente",
+      "to": "skill",
+      "label": "fundamenta",
+      "variant": "dashed"
+    },
+    {
+      "id": "retoma",
+      "from": "memory",
+      "to": "siguiente",
+      "label": "checkpoint vigente",
+      "variant": "dashed"
+    },
+    {
+      "id": "documenta",
+      "from": "skill",
+      "to": "docs",
+      "label": "documenta",
+      "variant": "dashed"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "El paquete instalado",
+      "items": [
+        "SKILL.md fija alcance, reglas transversales y los siete protocolos; no posee la operación de la CLI ni el esquema",
+        "references/protocolos.md concentra las secuencias, los criterios de captura y la reconciliación de errores",
+        "No hay scripts: el content_hash y el esquema viven en el proyecto del ACM; la skill solo compone convenciones"
+      ]
+    },
+    {
+      "dot": "rose",
+      "title": "La superficie que gobierna",
+      "items": [
+        "Toda operación pasa por una ruta /mem/<tabla>/<uuid> sobre el alias mem; meta es de solo lectura y ningún prefijo admite borrado ni renombrado",
+        "El ETag serializa la escritura y el batch sustituye en una transacción; UNIQUE(content_hash), CHECK y claves foráneas son del esquema",
+        "Los id son UUIDv7 textuales que genera el productor; la base no los inventa y las marcas van en ISO-8601 UTC"
+      ]
+    },
+    {
+      "dot": "emerald",
+      "title": "Fronteras con otros contratos",
+      "items": [
+        "No opera db-ai: las formas de los comandos, flags, ETags y errores se consultan en la skill db-ai",
+        "No posee el esquema ni el bootstrap: schema.sql, seed.sql e init.sh pertenecen a ACM-03",
+        "La memoria es del proyecto y local, también válida entre agentes; no es memoria global ni registro de conversaciones"
+      ]
+    }
+  ]
+}

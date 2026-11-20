@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "b915d3fd-e415-4980-8afa-680d64b72c15",
+  "status": "current",
+  "command": "deliver",
+  "type": "workflow",
+  "input": "/home/alfredo/PROJECTS/SKILLS-AGP/docs/agent-continuity/flujo-de-trabajo.json",
+  "output": "/home/alfredo/PROJECTS/SKILLS-AGP/docs/agent-continuity/flujo-de-trabajo.html",
+  "specification": {
+    "sha256": "13511e7a1ce313485a7a4945a012f7bbb38242e0f26e200653c640e3f24e83b7",
+    "bytes": 8452
+  },
+  "artifact": {
+    "sha256": "b325e92dd6c7400094efef93bf9558c3c72b0be61e5a845cca33a3dec07ff25c",
+    "bytes": 839515
+  }
+}
