@@ -6,6 +6,14 @@ Las categorías —Añadido, Corregido, Modificado— vienen de [Keep a Changelo
 
 ## Historial
 
+### Añadido
+
+- Skill `db-ai` 0.2.0: los comandos de lectura `find` y `cat` de fila aceptan `--fields` (proyección de columnas en la salida: claves pedidas más la clave del registro, en orden de catálogo; el ETag sigue siendo el de la fila completa), `find` acepta `--order "col:asc|desc"` (ordenación en el servidor con desempate determinista y nulos al final en ambas direcciones) y `find` y `grep` aceptan `--count` (cardinalidad del conjunto filtrado en `{"count":N}`, incompatible con `--cursor`), y la escritura gana `upsert TABLA --data --if-match` (crea o actualiza con resultado explícito `created|updated` y `applied`; actualizar exige el ETag vigente). Sincronizado con db-ai 0.4.0. Fuente: `src/db-ai/`, enrutador incluido. (tk-35.)
+
+- Skill `agent-continuity` 0.2.0: los protocolos simplificados conforme a db-ai 0.4.0 —recencia con `--order` del servidor en lugar de ventanas temporales y ordenación local, campos mínimos con `--fields`, cardinalidad con `--count`, consolidación con `upsert` (actualizar siempre con `--if-match`) y recuperación en frío en cinco `find` con el guion concreto y presupuesto ≤2.000 tokens— más la nota de prueba de campo (instalación, activación, backup, diagnóstico y desactivación reversible). Sincronizada con el ejemplo ACM del repositorio db-vfs. Fuente: `src/agent-continuity/`, enrutador incluido. (tk-35.)
+
+### Modificado
+
 ### Modificado
 
 - Skill `explain-html` 0.10.0: el índice de `.explanations/` gana un modo borrado que no borra nada: la papelera del bloque de búsqueda activa una selección múltiple con círculos del color de familia, «Borrar (n)» abre un modal con los ficheros y un prompt copiable para que el agente los retire y regenere el índice con `build-index.py`; Esc, la X y el clic en el overlay cierran, el foco vuelve al botón de origen y sin JavaScript nada cambia. El mecanismo vive en `assets/plantilla-indice.html`, así que `build-index.py` lo emite siempre; una aserción nueva en `test-build-index.py`, el README, el contrato y `docs/explain-html/index.html` quedan sincronizados. Decisión de la persona tras aprobar el prototipo en `.explanations/index.html`, que se regeneró desde la plantilla. (sk-55.)

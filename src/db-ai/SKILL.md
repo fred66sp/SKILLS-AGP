@@ -1,8 +1,8 @@
 ---
 name: db-ai
-description: "Explora, consulta y modifica bases de datos SQLite con la CLI db-ai, que expone tablas, filas y campos como un sistema de archivos y evita generar SQL. Úsala cuando un agente necesite descubrir qué bases hay montadas, inspeccionar tablas y columnas, leer o buscar filas, exportar resultados o escribir con permisos, ETags, dry-run y transacciones. Cubre el descubrimiento progresivo con mounts, ls, tree, stat y describe; la lectura con cat, find, grep y export; y la escritura con touch, write, cp, mv, rm y batch, incluidos cursores, sesiones y códigos de error. No la uses para desarrollar, modificar o depurar la herramienta db-ai, ni para escribir SQL directo, ORMs, migraciones de esquema o administración de motores; tampoco para PostgreSQL u otros motores fuera del MVP. Prefiere la CLI propia del dominio cuando exista y aplique reglas de negocio."
+description: "Explora, consulta y modifica bases de datos SQLite con la CLI db-ai, que expone tablas, filas y campos como un sistema de archivos y evita generar SQL. Úsala cuando un agente necesite descubrir qué bases hay montadas, inspeccionar tablas y columnas, leer o buscar filas, exportar resultados o escribir con permisos, ETags, dry-run y transacciones. Cubre el descubrimiento progresivo con mounts, ls, tree, stat y describe; la lectura con cat, find, grep y export, con proyección (--fields), ordenación (--order) y recuento (--count); y la escritura con touch, write, upsert, cp, mv, rm y batch, incluidos cursores, sesiones y códigos de error. No la uses para desarrollar, modificar o depurar la herramienta db-ai, ni para escribir SQL directo, ORMs, migraciones de esquema o administración de motores; tampoco para PostgreSQL u otros motores fuera del MVP. Prefiere la CLI propia del dominio cuando exista y aplique reglas de negocio."
 metadata:
-  version: "0.1.0"
+  version: "0.2.0"
 ---
 
 # Operación de bases de datos con db-ai
@@ -43,11 +43,12 @@ Descubre antes de leer, lee antes de escribir y verifica después de escribir. D
 
 1. Si conoces la clave, lee la fila con `db-ai cat /alias/tabla/clave`; si solo necesitas un valor, lee el campo con `db-ai cat /alias/tabla/clave/campo`.
 2. Si buscas por condiciones, usa `db-ai find /alias/tabla --where 'columna=valor'`. Los operadores son `=`, `!=`, `<`, `<=`, `>`, `>=`, `is-null` y `not-null`; varios `--where` se combinan con AND. No hay SQL ni expresiones libres.
-3. Si buscas texto, usa `db-ai grep /alias/tabla TEXTO`. Es una subcadena literal, sensible a mayúsculas, sobre columnas de texto autorizadas; no es búsqueda semántica ni FTS.
-4. Acota siempre con `--limit`. Una página razonable empieza en 20 o 50 filas; el máximo duro es 1000 y superarlo devuelve `E_LIMIT`.
-5. Si `meta.next_cursor` aparece, pide la página siguiente con `--cursor TOKEN`. Repite hasta que no haya cursor o hasta responder la pregunta. El cursor no es una foto del conjunto: los datos pueden cambiar entre páginas, y una tabla sin orden total solo ofrece la primera página.
-6. Para volumen, usa `db-ai export /alias/tabla --where ... --format jsonl`. Exporta por stdout y no escribe ficheros; captura solo lo necesario y evita volcar la tabla entera en la conversación.
-7. Lee [comandos](references/comandos.md) si dudas de la forma exacta de un comando, sus flags o la forma de la salida.
+3. Ajusta la forma de la respuesta a la pregunta: `--fields "col1,col2"` devuelve solo esas columnas (la clave se emite siempre; el ETag sigue siendo el de la fila completa), `--order "col:desc"` ordena en el servidor —lo más reciente primero— y `--count` devuelve `{"count":N}` sin filas. Son modificadores de `find` y `cat` de fila; no añaden superficie de acceso.
+4. Si buscas texto, usa `db-ai grep /alias/tabla TEXTO`. Es una subcadena literal, sensible a mayúsculas, sobre columnas de texto autorizadas; no es búsqueda semántica ni FTS. Con `--count` devuelve el número de **filas** coincidentes.
+5. Acota siempre con `--limit`. Una página razonable empieza en 20 o 50 filas; el máximo duro es 1000 y superarlo devuelve `E_LIMIT`.
+6. Si `meta.next_cursor` aparece, pide la página siguiente con `--cursor TOKEN`. Repite hasta que no haya cursor o hasta responder la pregunta. El cursor no es una foto del conjunto: los datos pueden cambiar entre páginas, y una tabla sin orden total solo ofrece la primera página.
+7. Para volumen, usa `db-ai export /alias/tabla --where ... --format jsonl`. Exporta por stdout y no escribe ficheros; captura solo lo necesario y evita volcar la tabla entera en la conversación.
+8. Lee [comandos](references/comandos.md) si dudas de la forma exacta de un comando, sus flags o la forma de la salida.
 
 ### Fase 3: Escribir
 
@@ -55,11 +56,12 @@ Descubre antes de leer, lee antes de escribir y verifica después de escribir. D
 2. Lee la fila objetivo con `db-ai cat` y guarda su `etag`. El ETag representa el contenido actual; no es un número de versión.
 3. Planifica primero con `--dry-run` en `touch`, `write`, `cp`, `mv`, `rm` o `batch`. El plan no ejecuta la mutación ni garantiza superar restricciones, pero revela permisos y conflictos antes de tocar datos.
 4. Ejecuta la mutación con su precondición: `--if-match ETAG` en `write`, `cp`, `mv` y `rm`; en `cp`, el ETag es el de la fila **origen**. `touch` no lleva ETag porque crea una fila nueva.
-5. `--apply` es obligatorio solo en `mv` y `rm`, y es confirmación no interactiva, no permiso. `--dry-run` y `--apply` son incompatibles en la misma invocación.
-6. Para varias mutaciones, usa `db-ai batch --data -` o `--data JSON`: máximo 100 operaciones, un solo montaje, una transacción y reversión total si una falla. Cada elemento es `{op, path, ...args}`. El `if_match` de cada operación describe el estado **previo** al lote: no encadenes una operación sobre una fila creada o modificada en el mismo lote; divídelo en dos invocaciones.
-7. No cambies campos de identidad con `write`, no muevas filas entre tablas, no crees tablas, no borres de forma recursiva y no busques `--force`. Nada de eso existe.
-8. Tras escribir, vuelve a leer la fila y comprueba el resultado y el ETag nuevo. No declares éxito por el código de salida.
-9. Lee [escritura](references/escritura.md) antes de la primera mutación o de preparar un lote.
+5. Para consolidar (crear o actualizar en una operación), usa `db-ai upsert /alias/tabla --data '{...}'`: crear exige sin `--if-match`; **actualizar exige `--if-match` del ETag leído antes** — sin él la actualización se rechaza, no hay update incondicional. La respuesta distingue `{"result":"created"|"updated","applied":true,...}` y el `upsert --dry-run` informa sin escribir (`applied:false`). No sustituye a `touch`/`write`: usa la operación específica cuando el caso sea inequívoco.
+6. `--apply` es obligatorio solo en `mv` y `rm`, y es confirmación no interactiva, no permiso. `--dry-run` y `--apply` son incompatibles en la misma invocación.
+7. Para varias mutaciones, usa `db-ai batch --data -` o `--data JSON`: máximo 100 operaciones, un solo montaje, una transacción y reversión total si una falla. Cada elemento es `{op, path, ...args}`. El `if_match` de cada operación describe el estado **previo** al lote: no encadenes una operación sobre una fila creada o modificada en el mismo lote; divídelo en dos invocaciones.
+8. No cambies campos de identidad con `write`, no muevas filas entre tablas, no crees tablas, no borres de forma recursiva y no busques `--force`. Nada de eso existe.
+9. Tras escribir, vuelve a leer la fila y comprueba el resultado y el ETag nuevo. No declares éxito por el código de salida.
+10. Lee [escritura](references/escritura.md) antes de la primera mutación o de preparar un lote.
 
 ### Fase 4: Cerrar
 
@@ -78,7 +80,7 @@ Descubre antes de leer, lee antes de escribir y verifica después de escribir. D
 
 ## ETags
 
-1. Formato `sha256:<hex>`. Se obtiene de `cat` de una fila y se exige en `write`, `cp` (origen), `mv` y `rm`.
+1. Formato `sha256:<hex>`. Se obtiene de `cat` de una fila y se exige en `write`, `cp` (origen), `mv` y `rm`. En `upsert`, la actualización exige el `--if-match` del ETag vigente; la creación no lleva. Con `--fields`, el ETag sigue siendo el de la fila completa: una proyección no lo cambia.
 2. Representa el contenido, no una versión monotónica: no detecta el ciclo ABA. Tras cada cambio, vuelve a leer para obtener el ETag vigente.
 3. Un ETag viejo devuelve `E_CONFLICT`. Relee la fila, decide con el estado actual y no reintentes con el mismo ETag.
 4. En `batch`, cada `if_match` se compara con el estado previo al lote. Si una operación necesita el resultado de otra anterior, usa dos invocaciones.

@@ -2,7 +2,7 @@
 name: agent-continuity
 description: "Memoria de continuidad de proyecto (ACM) sobre db-ai: sesiones, decisiones, checkpoints y preferencias. Úsala al iniciar o cerrar sesión, capturar conocimiento durable, consolidar o reanudar. No para operar db-ai (skill db-ai) ni memoria global."
 metadata:
-  version: "0.1.0"
+  version: "0.2.0"
 ---
 
 # Memoria de continuidad de agente (ACM)
@@ -10,7 +10,7 @@ metadata:
 ACM guarda el conocimiento que una sesión necesita para que la siguiente retome el
 trabajo: sesiones, observaciones (incluidas las decisiones), checkpoints y
 preferencias, en una base SQLite local del proyecto. No añade motor, CLI ni
-servidor: compone SQLite, la CLI `db-ai` y esta skill.
+servidor: compone SQLite, la CLI `db-ai` (≥0.4.0) y esta skill.
 
 ## Alcance y límites
 
@@ -44,10 +44,11 @@ servidor: compone SQLite, la CLI `db-ai` y esta skill.
 5. **Lectura sin escritura.** Al recuperar, no escribas: si `review_after` está
    vencido, informa y propón `needs_review` a la persona. Es la opción
    conservadora adoptada mientras el PRD §14 no fije otra.
-6. **Contexto acotado.** Usa páginas cortas, lee el campo después de localizar la
-   fila y no exportes tablas para responder una pregunta. El checkpoint vigente
-   se localiza por `session_id` o por la sesión más reciente de una ventana
-   corta; nunca con la tabla sin filtro.
+6. **Contexto acotado.** Filtra, ordena con `--order`, proyecta con `--fields` y
+   acota con `--limit`; la clave del registro se emite siempre. No exportes
+   tablas para responder una pregunta. El checkpoint vigente se localiza por
+   `session_id`; sin sesión conocida, por la sesión más reciente
+   (`--order "started_at:desc" --limit 5`).
 
 ## Inicialización
 
@@ -61,24 +62,28 @@ por el alias en todas las rutas. El detalle está en el README del ejemplo.
 ## Los siete protocolos
 
 1. **Inicio de sesión y recuperación de contexto.** Verifica el montaje y abre la
-   sesión de ACM antes de escribir. Recupera con el guion acotado: preferencias
-   aplicables (por `pref_key` conocido o página mínima), checkpoint vigente
-   (por `session_id` o la sesión más reciente de una ventana corta) y decisiones
-   activas solo del `topic_key` de la tarea en curso; sin tema conocido, página
-   mínima con aviso de recorte. El historial de la sesión se pide después, solo
-   si no hay checkpoint o si la pregunta lo exige. Nunca la tabla entera. Para
-   cuando la pregunta esté respondida.
+   sesión de ACM antes de escribir. Recupera con el guion acotado de cinco
+   `find`: las sesiones recientes (`--order "started_at:desc" --limit 5`), el
+   checkpoint vigente por `session_id`, las observaciones de la sesión
+   (`--order "created_at:desc"`, campos mínimos y límite 10) y las preferencias
+   activas (`--fields "pref_key,value"`, límite 20). Un `find` extra solo si hay
+   contradicción. El historial completo se pide después, solo si la pregunta lo
+   exige. Nunca la tabla entera. Para cuando la pregunta esté respondida.
 2. **Captura de conocimiento durante el trabajo.** Captura observaciones
    durables, decisiones con `kind='decision'`, preferencias y checkpoints. No
    captures conversaciones ni pasos rutinarios. `topic_key` y títulos con
    términos distintivos son la disciplina que hace recuperable la memoria: sin
    FTS, la recuperabilidad se gana en la captura (hallazgo R1 de ACM-03).
 3. **Recuperación selectiva.** Localiza con `find` filtrado y `grep` literal; no
-   hay FTS ni ranking. Asume el límite: un término que no está en el texto no
-   aparece.
-4. **Actualización y consolidación.** Sustituye con un `batch`: la fila nueva
-   activa y la anterior `superseded` con `superseded_by`, en una transacción. Los
-   duplicados semánticos se marcan `needs_review`; nunca se fusionan solos.
+   hay FTS ni ranking. Usa `--count` cuando solo haga falta cardinalidad y
+   `--fields` para el ancho mínimo. Asume el límite: un término que no está en el
+   texto no aparece.
+4. **Actualización y consolidación.** Crea con `upsert` sin `--if-match`;
+   actualiza siempre con el ETag leído. Una actualización sin `--if-match` es
+   `E_USAGE`; un ETag obsoleto, `E_CONFLICT` (relee y reintenta). Para sustituir,
+   un `batch`: la fila nueva activa y la anterior `superseded` con
+   `superseded_by`, en una transacción. Los duplicados semánticos se marcan
+   `needs_review`; nunca se fusionan solos.
 5. **Creación de checkpoints.** Al cerrar y en cada hito: objetivo, estado,
    próximos pasos, ficheros y preguntas abiertas. Un checkpoint activo por
    sesión.
@@ -102,10 +107,13 @@ defecto; `ACM_ALIAS` lo cambia). Rutas: `/mem/sessions/<uuid>`,
 `/mem/observations/<uuid>`, `/mem/checkpoints/<uuid>`,
 `/mem/preferences/<uuid>` y `/mem/meta/<uuid>`. `meta` es de solo lectura a
 través de db-ai. `sessions`, `observations`, `checkpoints` y `preferences`
-admiten `touch` y `write`; ningún prefijo admite borrado ni renombrado.
+admiten `upsert`, `touch` y `write`; ningún prefijo admite borrado ni renombrado.
 
 ## Errores de memoria
 
+- `E_USAGE`: precondición o parámetro inválido (columna inexistente o repetida en
+  `--fields`, actualización sin `--if-match`, `--count` con `--cursor`). Corrige
+  la invocación; no la reintentes igual.
 - `E_CONFLICT`: relee la fila y decide con el ETag vigente; no reutilices el
   viejo.
 - `E_COMMIT_UNKNOWN`: lee por identificador o por `content_hash` antes de
@@ -120,7 +128,7 @@ admiten `touch` y `write`; ningún prefijo admite borrado ni renombrado.
 | Fichero | Cuándo se lee |
 |---|---|
 | [protocolos](references/protocolos.md) | Al ejecutar cualquiera de los siete protocolos: secuencia de operaciones, criterios de captura y reconciliación de errores. |
-| DESIGN del ACM, en el proyecto database-virtual-filesystem (`examples/agent-continuity/docs/DESIGN.md`) | Al necesitar el detalle del esquema, del `content_hash` o de los estados; esta skill no lo copia. |
+| [DESIGN](../docs/DESIGN.md) | Al necesitar el detalle del esquema, del `content_hash` o de los estados; esta skill no lo copia. |
 
 ## Antes de cerrar
 
@@ -129,3 +137,16 @@ admiten `touch` y `write`; ningún prefijo admite borrado ni renombrado.
 3. Lo capturado es conocimiento reutilizable, no conversación ni actividad.
 4. Las filas dudosas o contradictorias están en `needs_review`, no borradas.
 5. Los errores no resueltos y lo no verificado están declarados.
+
+## Nota de prueba de campo
+
+- Binario: db-ai ≥0.4.0; confírmalo con `db-ai version`.
+- Memoria del proyecto en `.agent-memory/`; `init.sh` la crea de forma
+  idempotente.
+- Activación: una referencia a esta skill en el `AGENTS.md` del proyecto.
+- Al iniciar y cerrar sesión, sigue los protocolos 1 y 6.
+- Tras una interrupción o compactación, relanza la recuperación en frío del
+  protocolo 1.
+- Copia de seguridad: copiar el directorio `.agent-memory/`.
+- Diagnóstico: `cat` y `find` sobre las tablas.
+- Desactivación reversible: retirar la referencia a la skill del `AGENTS.md`.
