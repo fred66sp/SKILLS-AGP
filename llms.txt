@@ -34,7 +34,6 @@
 - [`web-interface-visual-design`](src/web-interface-visual-design/SKILL.md)
 - [`frontend-architecture-boundaries`](src/frontend-architecture-boundaries/SKILL.md)
 - [`db-ai`](src/db-ai/SKILL.md)
-- [`agent-continuity`](src/agent-continuity/SKILL.md)
 
 ## Terceros
 
