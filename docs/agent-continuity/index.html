@@ -54,6 +54,7 @@
       <a class="btn btn-ghost" href="#reanudar">Cómo se reanuda</a>
       <a class="btn btn-ghost" href="#protocolos">Los siete protocolos</a>
       <a class="btn btn-ghost" href="#reglas">Dónde están las reglas</a>
+      <a class="btn btn-ghost" href="#diagramas">Los diagramas</a>
       <a class="btn btn-ghost" href="../index.html">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 19l-7-7 7-7"></path></svg>
         Volver al catálogo
@@ -76,7 +77,8 @@
     <a href="#reglas">9. Dónde están las reglas</a>
     <a href="#preguntas">10. Preguntas cortas</a>
     <a href="#cierre">11. Antes de cerrar</a>
-    <a href="#verificacion">12. Verificación</a>
+    <a href="#diagramas">12. Los diagramas</a>
+    <a href="#verificacion">13. Verificación</a>
     <div class="toc-extra"><a href="../index.html">Volver al catálogo</a></div>
   </nav>
 
@@ -300,8 +302,34 @@
       </div>
     </section>
 
+    <section id="diagramas" class="section">
+      <div class="section-head"><span class="section-num">12</span><h2 class="title">Los diagramas</h2><span class="chip-repo">de este repositorio</span></div>
+      <p class="sub">Dos vistas del mismo contrato: el recorrido de la sesión y las piezas que la sostienen.</p>
+
+      <div class="grid cols-2">
+        <a class="card card-link" href="flujo-de-trabajo.html">
+          <div class="card-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h6v5H4zM14 13h6v5h-6z"></path><path d="M10 8.5h2a2 2 0 0 1 2 2v5"></path></svg></div>
+          <h3>Flujo de trabajo</h3>
+          <p>Verificar el proyecto, abrir sesión, recuperar con guion acotado, capturar, consolidar y cerrar con checkpoint.</p>
+          <span class="go">Abrir el diagrama →</span>
+        </a>
+        <a class="card card-link" href="arquitectura.html">
+          <div class="card-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1.5"></rect><rect x="14" y="3" width="7" height="7" rx="1.5"></rect><rect x="3" y="14" width="7" height="7" rx="1.5"></rect><rect x="14" y="14" width="7" height="7" rx="1.5"></rect></svg></div>
+          <h3>Arquitectura</h3>
+          <p>El contrato y su referencia, la CLI que resuelve el montaje, la base local del proyecto y las guardas de identidad y ETag.</p>
+          <span class="go">Abrir el diagrama →</span>
+        </a>
+      </div>
+
+      <p>Cada diagrama se abre como página suelta. Archify no enlaza el artefacto con una página local: se vuelve con el botón atrás o con el índice de arriba.</p>
+
+      <div class="note">
+        <p><strong>Es un convenio de este repositorio, no un mandato de la skill:</strong> los diagramas son artefactos de Archify con su especificación (<code>.json</code>) y su recibo (<code>.delivery.json</code>). El comando de regeneración y la comprobación del recibo están en la sección Documentación del <code>README.md</code>.</p>
+      </div>
+    </section>
+
     <section id="verificacion" class="section">
-      <div class="section-head"><span class="section-num">12</span><h2 class="title">Verificación</h2></div>
+      <div class="section-head"><span class="section-num">13</span><h2 class="title">Verificación</h2></div>
       <p class="sub">El paquete se contrasta con la puerta del repositorio; la memoria se contrasta leyendo la base después de escribir.</p>
 
       <div class="code"><pre><code class="language-bash">python3 scripts/check-repo.py</code></pre></div>
@@ -326,7 +354,7 @@
 
 <footer class="footer">
   <span><code>docs/agent-continuity/</code> · skill <code>agent-continuity</code> · documento en español</span>
-  <span><a href="../index.html">Catálogo</a> · <a href="#top">Volver arriba</a> · <a href="../../src/agent-continuity/SKILL.md">SKILL.md</a> · <a href="../../src/agent-continuity/references/protocolos.md">Protocolos</a></span>
+  <span><a href="../index.html">Catálogo</a> · <a href="#top">Volver arriba</a> · <a href="../../src/agent-continuity/SKILL.md">SKILL.md</a> · <a href="../../src/agent-continuity/references/protocolos.md">Protocolos</a> · <a href="flujo-de-trabajo.html">Flujo</a> · <a href="arquitectura.html">Arquitectura</a></span>
   <span>Página estática: no envía datos ni carga recursos externos · <code>docs/agent-continuity/index.html</code></span>
 </footer>
 

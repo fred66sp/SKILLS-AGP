@@ -467,6 +467,8 @@ Cada skill declara su versión independiente en `metadata.version`; el procedimi
 - `docs/db-ai/flujo-de-trabajo.html`: diagrama del descubrimiento, la lectura, la escritura con guardas y la verificación.
 - `docs/db-ai/arquitectura.html`: diagrama del contrato, la CLI, la base montada y las guardas de permisos y ETag.
 - `docs/agent-continuity/index.html`: página de entrada a la skill de memoria de continuidad de proyecto (ACM) sobre `db-ai`.
+- `docs/agent-continuity/flujo-de-trabajo.html`: diagrama de la reanudación acotada, la captura, la consolidación y el cierre con checkpoint.
+- `docs/agent-continuity/arquitectura.html`: diagrama del contrato, la CLI, la base local del proyecto y las guardas de identidad y ETag.
 - `docs/web-interface-visual-design/index.html` (sección «Plantillas premium»): galería de las diez plantillas de diagrama con conmutador de superficie (clara y oscura), con tipo y mejor uso de cada una.
 - `docs/security-engineering/index.html`: página de entrada a la skill de seguridad, con el alcance, el procedimiento, el paquete y el escáner.
 - `docs/security-engineering/flujo-de-trabajo.html`: diagrama del flujo, del encargo al riesgo residual.

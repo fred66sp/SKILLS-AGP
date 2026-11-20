@@ -173,11 +173,14 @@ El acento de cada skill vive en `docs/assets/site.css`, en un bloque `:root[data
 | Skill | Acento | Segundo |
 |---|---|---|
 | `adr-software` | #92400e | #d97706 |
+| `agent-continuity` | #475569 | #64748b |
 | `best-practices-create-skills` | #0f766e | #2563eb |
+| `db-ai` | #0f766e | #0d9488 |
 | `design-system-architect` | #6d28d9 | #2563eb |
 | `document-management-software` | #1e40af | #0ea5e9 |
 | `document-redactor` | #9b2c4a | #b45309 |
 | `explain-html` | #4f46e5 | #2563eb |
+| `frontend-architecture-boundaries` | #d97706 | #0e7490 |
 | `git-flow-management` | #0f766e | #2563eb |
 | `go-cli-ai-first` | #0369a1 | #2563eb |
 | `go-errors-and-lifecycle` | #c2410c | #b91c1c |
