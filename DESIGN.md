@@ -173,7 +173,6 @@ El acento de cada skill vive en `docs/assets/site.css`, en un bloque `:root[data
 | Skill | Acento | Segundo |
 |---|---|---|
 | `adr-software` | #92400e | #d97706 |
-| `agent-continuity` | #475569 | #64748b |
 | `best-practices-create-skills` | #0f766e | #2563eb |
 | `db-ai` | #0f766e | #0d9488 |
 | `design-system-architect` | #6d28d9 | #2563eb |
