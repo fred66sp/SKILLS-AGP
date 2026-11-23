@@ -33,7 +33,7 @@ Este repositorio se inspira y se basa en dos fuentes externas:
 | `.gitattributes` | Fin de línea del repositorio: todo texto en LF, sin depender de la máquina que clona |
 | `opencode.json` | Configuración compartida de OpenCode: los agentes, el modelo de cada uno y el plugin del tablero |
 
-Queda fuera de git por ser estado local de cada máquina: `.atl/`, `.codegraph/`, `.engram/`, `.impeccable/`, `.pi/`, el estado del tablero (`.tasks-ai/tasks.db*`, `.tasks-ai/bin/`, `.tasks-ai/extensions/`), `.run/`, además de los secretos que cubre el `.gitignore`. Sí se versiona `.skills/`, porque contiene las skills de terceros que necesita el entorno de trabajo y los enrutadores de las skills propias de `src/`.
+Queda fuera de git por ser estado local de cada máquina: `.atl/`, `.codegraph/`, `.impeccable/`, `.pi/`, `.agent-memory/`, el estado del tablero (`.tasks-ai/tasks.db*`, `.tasks-ai/bin/`, `.tasks-ai/extensions/`), `.run/`, además de los secretos que cubre el `.gitignore`. Sí se versiona `.skills/`, porque contiene las skills de terceros que necesita el entorno de trabajo y los enrutadores de las skills propias de `src/`.
 
 
 ## Tablero de tareas

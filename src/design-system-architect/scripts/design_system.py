@@ -135,7 +135,6 @@ SKIP_DIRS = {
     ".pi",
     ".codegraph",
     ".atl",
-    ".engram",
     "node_modules",
     "__pycache__",
     ".venv",

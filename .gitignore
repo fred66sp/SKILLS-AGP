@@ -112,9 +112,8 @@ secrets/
 .atl/
 # .alt/ is a guard: nothing creates it today, but it is kept ignored on purpose.
 .alt/
+.agent-memory/
 .codegraph/
-# Engram keeps per-machine agent memory and session state here.
-.engram/
 .harnessed/
 .impeccable/
 .lore/

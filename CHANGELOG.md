@@ -14,7 +14,7 @@ Las categorías —Añadido, Corregido, Modificado— vienen de [Keep a Changelo
 
 ### Modificado
 
-### Modificado
+- Retiradas las referencias vivas a `.engram/` tras la migración a ACM: `.gitignore` (línea y comentario, junto a la nueva `.agent-memory/`), la lista de estado local de `README.md`, y los directorios omitidos de `SKIP_DIRS` en `src/design-system-architect/scripts/design_system.py` y `SKIP` en `src/explain-html/scripts/test-perceive.py`. La entrada histórica de este fichero se conserva. (sk-65.)
 
 - Skill `explain-html` 0.10.0: el índice de `.explanations/` gana un modo borrado que no borra nada: la papelera del bloque de búsqueda activa una selección múltiple con círculos del color de familia, «Borrar (n)» abre un modal con los ficheros y un prompt copiable para que el agente los retire y regenere el índice con `build-index.py`; Esc, la X y el clic en el overlay cierran, el foco vuelve al botón de origen y sin JavaScript nada cambia. El mecanismo vive en `assets/plantilla-indice.html`, así que `build-index.py` lo emite siempre; una aserción nueva en `test-build-index.py`, el README, el contrato y `docs/explain-html/index.html` quedan sincronizados. Decisión de la persona tras aprobar el prototipo en `.explanations/index.html`, que se regeneró desde la plantilla. (sk-55.)
 

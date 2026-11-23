@@ -106,7 +106,7 @@ def run(env: dict[str, str], *args: str, cwd: Path | None = None) -> subprocess.
 
 SKIP = {
     ".git", ".tasks-ai", ".explanations", ".run", ".playwright-cli",
-    ".codegraph", ".engram", ".impeccable", ".pi", "__pycache__",
+    ".codegraph", ".impeccable", ".pi", "__pycache__",
     "archify", "node_modules",
 }
 
