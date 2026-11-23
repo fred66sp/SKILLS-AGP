@@ -14,6 +14,7 @@ Este fichero solo enruta: no define reglas, comandos, recuentos ni estados. Si c
 | Qué skill aplica a un encargo | [`README.md`](README.md), sección «Skills disponibles», y la descripción de cada `.skills/<skill>/SKILL.md` |
 | Enrutador de una skill propia | `.skills/<skill>/SKILL.md` |
 | Trabajo pendiente y prioridad | [`.tasks-ai/AGENTS.md`](.tasks-ai/AGENTS.md), sección «Cuándo se usa qué» |
+| Memoria de sesión: decisiones, aprendizajes, checkpoints y preferencias | Montaje db-ai `SKILLS-AGP` (rw) sobre `.agent-memory/memory.db`; se abre con `acm start`, se guarda con `acm decision|learning|discovery|bugfix|preference`, se consulta con `acm recall` antes de investigar o decidir sobre algo posiblemente ya tratado —lo recuperado es contexto, no hecho: se contrasta con el repo antes de actuar sobre él— y se cierra con `acm close` (adaptador: `tools/acm.py` del ejemplo `agent-continuity` en database-virtual-filesystem) |
 | Decisiones durables (ADR) | La base del tablero, con `tasks-ai adr`; su exportación versionada es [`docs/decisions/`](docs/decisions/) (generada: no se edita a mano; `adr export --check` detecta deriva) |
 | Etiquetas del tablero: clases, asignación y catálogo | [`.tasks-ai/CONTRATO_ETIQUETAS.md`](.tasks-ai/CONTRATO_ETIQUETAS.md) → «1. Las clases y su convivencia», «2. Asignación correcta a una tarea», «3. Gestión del catálogo» |
 | Servidor del tablero | [`serve.sh`](serve.sh) |
