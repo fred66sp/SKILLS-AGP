@@ -59,8 +59,9 @@ env/
 .ipynb_checkpoints/
 
 # --- Tablero tasks-ai ----------------------------------------------------------
-# Instrucciones, contrato y ajustes se versionan; la base, el binario y las
-# extensiones son estado local que `tasks-ai init` restaura.
+# Instrucciones, contrato, versión y ajustes se versionan; la base y el binario
+# son estado local que `tasks-ai init` restaura. La carpeta de extensiones se
+# excluye como protección ante instalaciones anteriores a la v0.2.0.
 .tasks-ai/tasks.db
 .tasks-ai/tasks.db-wal
 .tasks-ai/tasks.db-shm

@@ -25,22 +25,22 @@ Este repositorio se inspira y se basa en dos fuentes externas:
 | `README.md` | Este fichero |
 | `CONTRIBUTING.md` | Política de ramas, commits e integración |
 | `CHANGELOG.md` | Historial de cambios |
-| `.tasks-ai/` | Tablero de tareas del repositorio: instrucciones, contrato de etiquetas y ajustes versionados; base, binario y extensiones como estado local |
+| `.tasks-ai/` | Tablero de tareas del repositorio: instrucciones, contrato de etiquetas, versión y ajustes versionados; base y binario como estado local |
 | `serve.sh` | Servidor del tablero en segundo plano: start, status y stop, con pid y registro en `.run/` |
 | `serve-web.sh` | Servidor HTTP de la documentación HTML en segundo plano: start, status y stop, con pid y registro en `.run/` |
 | `PRODUCT.md` | Contexto de producto que consume el trabajo de diseño: usuarios, propósito, límites y ausencias declaradas |
 | `DESIGN.md` | Sistema visual del catálogo y de las páginas de skill: tokens, tipografía, componentes y reglas |
 | `.gitattributes` | Fin de línea del repositorio: todo texto en LF, sin depender de la máquina que clona |
-| `opencode.json` | Configuración compartida de OpenCode: los agentes, el modelo de cada uno y el plugin del tablero |
+| `opencode.json` | Configuración compartida de OpenCode; los agentes gestionan el tablero por AIF (`tasks-ai aif`) |
 
-Queda fuera de git por ser estado local de cada máquina: `.atl/`, `.codegraph/`, `.impeccable/`, `.pi/`, `.agent-memory/`, el estado del tablero (`.tasks-ai/tasks.db*`, `.tasks-ai/bin/`, `.tasks-ai/extensions/`), `.run/`, además de los secretos que cubre el `.gitignore`. Sí se versiona `.skills/`, porque contiene las skills de terceros que necesita el entorno de trabajo y los enrutadores de las skills propias de `src/`.
+Queda fuera de git por ser estado local de cada máquina: `.atl/`, `.codegraph/`, `.impeccable/`, `.pi/`, `.agent-memory/`, el estado del tablero (`.tasks-ai/tasks.db*`, `.tasks-ai/bin/`, la carpeta `.tasks-ai/extensions/` de instalaciones anteriores a la v0.2.0), `.run/`, además de los secretos que cubre el `.gitignore`. Sí se versiona `.skills/`, porque contiene las skills de terceros que necesita el entorno de trabajo y los enrutadores de las skills propias de `src/`.
 
 
 ## Tablero de tareas
 
 El trabajo pendiente y en curso vive en el tablero tasks-ai de `.tasks-ai/`, con referencias `sk-N`. Sustituye a `BACKLOG.md`, que se retiró: su contenido pasó a las tareas del tablero y lo retirado o descartado queda en el historial de Git. Las instrucciones de uso están en [`.tasks-ai/AGENTS.md`](.tasks-ai/AGENTS.md) y el contrato de etiquetas en [`.tasks-ai/CONTRATO_ETIQUETAS.md`](.tasks-ai/CONTRATO_ETIQUETAS.md).
 
-Tras un clon, el tablero se restaura desde la raíz con un binario de tasks-ai de cualquier instalación: `tasks-ai init` completa la base, el binario y las extensiones sin tocar lo versionado.
+Tras un clon, el tablero se restaura desde la raíz con un binario de tasks-ai v0.2.0: `tasks-ai init` completa la base y el binario sin tocar lo versionado, y el agente gestiona el tablero por AIF (`tasks-ai aif`), la única superficie de interacción.
 
 `./serve.sh start` deja la interfaz en http://127.0.0.1:8892; `./serve.sh status` dice si sigue en marcha y `./serve.sh stop` la para. El pid y el registro se guardan en `.run/`, fuera de Git.
 
